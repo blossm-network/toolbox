@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { findError, string } = require("..");
+import * as chai from "chai";
+import { findError, string } from "../index.js";
+
+const { expect } = chai;
 
 describe("Errors exist", () => {
   it("should return the first error that is found", () => {

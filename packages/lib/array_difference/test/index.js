@@ -1,5 +1,5 @@
-const { expect } = require("chai");
-const arrayDifference = require("..");
+import { expect } from "chai";
+import arrayDifference from "../index.js";
 
 describe("Difference", () => {
   it("should return the difference items if one exist", () => {

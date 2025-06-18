@@ -1,7 +1,10 @@
-const { Number: tNumber } = require("tcomb-validation");
-const validator = require("./_validator");
+import tcombValidation from "tcomb-validation";
 
-module.exports = ({
+import validator from "./_validator.js";
+
+const { Number: tNumber } = tcombValidation;
+
+export default ({
   value,
   baseMessageFn,
   refinementFn,

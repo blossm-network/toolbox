@@ -1,3 +1,3 @@
-const stringFromDate = require("./string_from_date");
+import stringFromDate from "./string_from_date.js";
 
-module.exports = () => stringFromDate(new Date());
+export default () => stringFromDate(new Date());

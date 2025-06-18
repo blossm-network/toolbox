@@ -1,4 +1,4 @@
-const format = require("./src/format");
-const prettify = require("./src/prettify");
+import format from "./src/format.js";
+import prettify from "./src/prettify.js";
 
-module.exports = { format, prettify };
+export default { format, prettify };

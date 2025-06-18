@@ -1,7 +1,9 @@
-const request = require("request");
-const urlEncodeQueryData = require("@blossm/url-encode-query-data");
-const union = require("sorted-union-stream");
+import request from "request";
+import urlEncodeQueryData from "@blossm/url-encode-query-data";
+import union from "sorted-union-stream";
 
-exports.request = request;
-exports.urlEncodeQueryData = urlEncodeQueryData;
-exports.union = union;
+export default {
+  request,
+  urlEncodeQueryData,
+  union,
+};

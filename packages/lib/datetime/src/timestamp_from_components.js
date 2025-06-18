@@ -1,7 +1,7 @@
-const momentFromComponents = require("./moment_from_components");
-const timestampFromMoment = require("./timestamp_from_moment");
+import momentFromComponents from "./moment_from_components.js";
+import timestampFromMoment from "./timestamp_from_moment.js";
 
-module.exports = ({ year, month, day, time }) => {
+export default ({ year, month, day, time }) => {
   const moment = momentFromComponents({ year, month, day, time });
   return timestampFromMoment(moment);
 };

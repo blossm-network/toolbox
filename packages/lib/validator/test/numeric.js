@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { numeric } = require("..");
+import * as chai from "chai";
+import { numeric } from "../index.js";
+
+const { expect } = chai;
 
 describe("Valid numeric", () => {
   it("should not contain errors if the numeric is formatted correctly", () => {

@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { dateComponents } = require("..");
+import * as chai from "chai";
+import { dateComponents } from "../index.js";
+
+const { expect } = chai;
 
 describe("Valid date components", () => {
   it("should not contain errors if the data components are formatted correctly", () => {

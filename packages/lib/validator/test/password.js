@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { password } = require("..");
+import * as chai from "chai";
+import { password } from "../index.js";
+
+const { expect } = chai;
 
 describe("Valid passwords", () => {
   it("should not contain errors if the password is formatted correctly", () => {

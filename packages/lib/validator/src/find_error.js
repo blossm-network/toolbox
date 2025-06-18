@@ -1,4 +1,4 @@
-const deps = require("../deps");
+import deps from "../deps.js";
 
 const getErrors = (results) => {
   const errors = [];
@@ -22,7 +22,7 @@ const getErrors = (results) => {
   return errors;
 };
 
-module.exports = (results) => {
+export default (results) => {
   const errors = getErrors(results);
 
   if (!errors.length) return null;

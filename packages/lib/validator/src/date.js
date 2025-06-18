@@ -1,8 +1,8 @@
-const { string: stringValidator } = require("@blossm/validation");
-const findError = require("./find_error");
-const number = require("./number");
+import { string as stringValidator } from "@blossm/validation";
+import findError from "./find_error.js";
+import number from "./number.js";
 
-module.exports = (
+export default (
   value,
   { baseMessageFn, title = "date", path, optional } = {}
 ) =>

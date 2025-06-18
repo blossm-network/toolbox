@@ -1,4 +1,4 @@
-module.exports = (moment) => {
+export default (moment) => {
   const time = moment.second() + moment.minute() * 60 + moment.hour() * 3600;
   const day = moment.date();
   const month = moment.month();

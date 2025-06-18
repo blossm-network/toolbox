@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { fn } = require("..");
+import * as chai from "chai";
+import { fn } from "../index.js";
+
+const { expect } = chai;
 
 const invalidFunctions = ["hello", 0, false, {}];
 const validFunction = () => {};

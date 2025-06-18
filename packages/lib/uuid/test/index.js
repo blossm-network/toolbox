@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const uuid = require("..");
+import * as chai from "chai";
+import uuid from "../index.js";
+
+const { expect } = chai;
 
 describe("UUID", () => {
   it("should create a guid.", () => {

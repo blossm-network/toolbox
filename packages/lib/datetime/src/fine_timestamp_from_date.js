@@ -1,1 +1,1 @@
-module.exports = (date) => Math.floor(date.getTime());
+export default (date) => Math.floor(date.getTime());

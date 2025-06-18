@@ -1,7 +1,7 @@
-const Moment = require("moment");
-const { expect } = require("chai");
+import Moment from "moment";
+import { expect } from "chai";
 
-const { copyMoment } = require("..");
+import { copyMoment } from "../index.js";
 
 describe("Creates correctly", () => {
   it("it should create a new moment that equals the passed in moment", async () => {

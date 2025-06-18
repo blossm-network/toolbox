@@ -1,4 +1,4 @@
-const { string: stringValidator } = require("@blossm/validation");
+import { string as stringValidator } from "@blossm/validation";
 
 const maxPasswordLength = 30;
 const minPasswordLength = 8;
@@ -46,7 +46,7 @@ let isFormattedCorrectly = (string) => {
   );
 };
 
-module.exports = (
+export default (
   value,
   { baseMessageFn, title = "password", path, optional } = {}
 ) =>

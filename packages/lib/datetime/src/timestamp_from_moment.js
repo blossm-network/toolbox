@@ -1,5 +1,5 @@
-const timestampFromDate = require("./timestamp_from_date");
+import timestampFromDate from "./timestamp_from_date.js";
 
-module.exports = (moment) => {
+export default (moment) => {
   return timestampFromDate(moment.toDate());
 };

@@ -3,6 +3,7 @@
   "version": "0.0.16",
   "description": "Creates a token to access an operation.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

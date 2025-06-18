@@ -1,6 +1,6 @@
-const { number: numberValidator } = require("@blossm/validation");
+import { number as numberValidator } from "@blossm/validation";
 
-module.exports = (number, { fn, title, path, optional } = {}) =>
+export default (number, { fn, title, path, optional } = {}) =>
   numberValidator({
     value: number,
     title,

@@ -3,6 +3,7 @@
   "version": "0.0.16",
   "description": "Formats a schema.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

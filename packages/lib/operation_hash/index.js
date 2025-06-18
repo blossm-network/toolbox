@@ -1,3 +1,3 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = (...operation) => deps.hash(operation.join("")).toString();
+export default (...operation) => deps.hash(operation.join("")).toString();

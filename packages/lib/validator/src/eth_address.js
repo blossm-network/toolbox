@@ -1,7 +1,7 @@
-const { string: stringValidator } = require("@blossm/validation");
-const { isValidChecksumAddress } = require("ethereumjs-util");
+import { string as stringValidator } from "@blossm/validation";
+import { isValidChecksumAddress } from "ethereumjs-util";
 
-module.exports = (
+export default (
   value,
   { baseMessageFn, title = "ethereum address", path, optional } = {}
 ) =>

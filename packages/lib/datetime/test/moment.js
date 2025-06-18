@@ -1,7 +1,11 @@
-const { expect } = require("chai");
-const { useFakeTimers } = require("sinon");
+import * as chai from "chai";
+import chaiDatetime from "chai-datetime";
+import { expect } from "chai";
+import { useFakeTimers } from "sinon";
 
-const { moment } = require("..");
+import { moment } from "../index.js";
+
+chai.use(chaiDatetime);
 
 let clock;
 

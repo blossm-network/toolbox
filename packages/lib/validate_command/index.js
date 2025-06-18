@@ -1,9 +1,11 @@
-const { object, string, date, findError } = require("@blossm/validator");
-const { MILLISECONDS_IN_HOUR } = require("@blossm/duration-consts");
+import { object, string, date, findError } from "@blossm/validator";
+import durationConsts from "@blossm/duration-consts";
 
-const deps = require("./deps");
+const { MILLISECONDS_IN_HOUR } = durationConsts;
 
-module.exports = async (params) => {
+import deps from "./deps.js";
+
+export default async (params) => {
   const error = findError([
     object(params.headers, { title: "headers", path: "headers" }),
     object(params.payload, {

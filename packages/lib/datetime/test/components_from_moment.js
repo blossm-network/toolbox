@@ -1,7 +1,9 @@
-const { utc } = require("moment");
-const { expect } = require("chai");
+import moment from "moment";
+import { expect } from "chai";
 
-const { componentsFromMoment } = require("..");
+const { utc } = moment;
+
+import { componentsFromMoment } from "../index.js";
 
 describe("Converts correctly", () => {
   it("it should return correct components", async () => {

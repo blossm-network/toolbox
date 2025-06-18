@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { boolean } = require("..");
+import * as chai from "chai";
+import { boolean } from "../index.js";
+
+const { expect } = chai;
 
 const invalidBooleans = ["hello", 0, () => 0, {}];
 const validBoolean = false;

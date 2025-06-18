@@ -1,8 +1,10 @@
-const { refinement, list } = require("tcomb-validation");
+import tcombValidation from "tcomb-validation";
 
-const process = require("./_process");
+import process from "./_process.js";
 
-module.exports = ({
+const { refinement, list } = tcombValidation;
+
+export default ({
   value,
   isArray,
   baseFn,

@@ -1,1 +1,3 @@
-module.exports = require("string-hash");
+import stringHash from "string-hash";
+
+export default stringHash;

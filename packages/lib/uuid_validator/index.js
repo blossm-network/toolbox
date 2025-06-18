@@ -1,3 +1,3 @@
-const { v4 } = require("is-uuid");
+import { v4 } from "is-uuid";
 
-module.exports = v4;
+export default v4;

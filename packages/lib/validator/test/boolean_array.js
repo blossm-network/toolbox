@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { booleanArray } = require("..");
+import * as chai from "chai";
+import { booleanArray } from "../index.js";
+
+const { expect } = chai;
 
 const validBooleanArray = [false, true];
 const invalidBooleanArray = ["Hello", true];

@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const randomInt = require("../index");
+import * as chai from "chai";
+import randomInt from "../index.js";
+
+const { expect } = chai;
 
 describe("Difference", () => {
   it("should return a number between the range", () => {

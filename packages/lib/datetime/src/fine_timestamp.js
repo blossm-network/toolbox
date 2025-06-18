@@ -1,3 +1,3 @@
-const fineTimestampFromDate = require("./fine_timestamp_from_date");
+import fineTimestampFromDate from "./fine_timestamp_from_date.js";
 
-module.exports = () => fineTimestampFromDate(new Date());
+export default () => fineTimestampFromDate(new Date());

@@ -1,4 +1,4 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
 const common = async ({ method, url, params, headers, formData }) =>
   new Promise((resolve, reject) =>
@@ -43,27 +43,27 @@ const jointStream = (streams, sortFn) => {
   }
 };
 
-exports.post = (url, { body, headers, formData } = {}) =>
+const post = (url, { body, headers, formData } = {}) =>
   common({ method: "POST", url, params: body, headers, formData });
 
-exports.put = (url, { body, headers } = {}) =>
+const put = (url, { body, headers } = {}) =>
   common({ method: "PUT", url, params: body, headers });
 
-exports.delete = (url, { query, headers } = {}) =>
+const del = (url, { query, headers } = {}) =>
   common({
     method: "DELETE",
     url: deps.urlEncodeQueryData(url, query),
     headers,
   });
 
-exports.get = (url, { query, headers } = {}) =>
+const get = (url, { query, headers } = {}) =>
   common({
     method: "GET",
     url: deps.urlEncodeQueryData(url, query),
     headers,
   });
 
-exports.stream = async (url, onDataFn, { query, headers } = {}) => {
+const stream = async (url, onDataFn, { query, headers } = {}) => {
   let ended = false;
   let rejected = false;
   let processingCount = 0;
@@ -102,7 +102,7 @@ exports.stream = async (url, onDataFn, { query, headers } = {}) => {
   });
 };
 
-exports.streamMany = async (requests, onDataFn, sortFn) => {
+const streamMany = async (requests, onDataFn, sortFn) => {
   const requestStreams = requests.map(({ url, query, headers }) =>
     deps.request({
       url: deps.urlEncodeQueryData(url, query),
@@ -142,4 +142,13 @@ exports.streamMany = async (requests, onDataFn, sortFn) => {
         if (!rejected && processingCount == 0) resolve();
       });
   });
+};
+
+export default {
+  post,
+  put,
+  del,
+  get,
+  stream,
+  streamMany,
 };

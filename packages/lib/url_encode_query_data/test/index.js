@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const encode = require("..");
+import * as chai from "chai";
+import encode from "../index.js";
+
+const { expect } = chai;
 
 describe("Url encode", () => {
   beforeEach(() => {

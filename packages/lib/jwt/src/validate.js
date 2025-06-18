@@ -1,9 +1,9 @@
-const base64url = require("base64url");
-const decode = require("./decode");
+import base64url from "base64url";
+import decode from "./decode.js";
 
-const deps = require("../deps");
+import deps from "../deps.js";
 
-module.exports = async ({ token, verifyFn, audience, algorithm }) => {
+export default async ({ token, verifyFn, audience, algorithm }) => {
   const [header, payload, signature] = token.split(".");
 
   const isVerified = await verifyFn({

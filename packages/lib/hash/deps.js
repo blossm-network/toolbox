@@ -1,3 +1,3 @@
-const cononicalString = require("@blossm/cononical-string");
+import cononicalString from "@blossm/cononical-string";
 
-exports.cononicalString = cononicalString;
+export default { cononicalString };

@@ -1,6 +1,6 @@
-const format = require("./format");
+import format from "./format.js";
 
-module.exports = (number) => {
+export default (number) => {
   const cleaned = `${number}`.replace(/\D/g, "");
   const match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
   if (match) {

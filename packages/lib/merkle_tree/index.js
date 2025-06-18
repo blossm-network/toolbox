@@ -1,6 +1,6 @@
-const { BaseTrie: Trie } = require("merkle-patricia-tree");
+import { BaseTrie as Trie } from "merkle-patricia-tree";
 
-exports.root = async (pairs) => {
+export const root = async (pairs) => {
   const trie = new Trie();
   const ops = pairs.map((pair) => ({
     type: "put",
@@ -11,7 +11,7 @@ exports.root = async (pairs) => {
   return trie.root;
 };
 
-exports.verify = async ({ pairs, key, value, root }) => {
+export const verify = async ({ pairs, key, value, root }) => {
   const trie = new Trie();
   const ops = pairs.map((pair) => ({
     type: "put",

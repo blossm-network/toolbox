@@ -1,8 +1,8 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
 chai.use(sinonChai);
 const { expect } = chai;
-const basicToken = require("..");
+import basicToken from "../index.js";
 
 describe("Basic token", () => {
   it("should call correctly", async () => {

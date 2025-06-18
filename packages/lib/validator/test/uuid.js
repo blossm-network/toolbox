@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { uuid } = require("..");
+import * as chai from "chai";
+import { uuid } from "../index.js";
+
+const { expect } = chai;
 
 describe("Valid uuid", () => {
   it("should not contain errors if the uuid is formatted correctly", () => {

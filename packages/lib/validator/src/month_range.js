@@ -1,6 +1,6 @@
-const numberRange = require("./number_range");
+import numberRange from "./number_range.js";
 
-module.exports = (
+export default (
   number,
   { baseMessageFn, title = "month", path, optional } = {}
 ) =>

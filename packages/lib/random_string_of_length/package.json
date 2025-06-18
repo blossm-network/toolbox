@@ -3,6 +3,7 @@
   "version": "0.0.6",
   "description": "Creates a random string that has the specified number of characters.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

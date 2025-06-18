@@ -1,6 +1,7 @@
-const { expect } = require("chai");
+import * as chai from "chai";
+import nonce from "../index.js";
 
-const nonce = require("..");
+const { expect } = chai;
 
 describe("Create", () => {
   it("it should create a unique nonce", async () => {

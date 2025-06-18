@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const randomChar = require("../index");
+import * as chai from "chai";
+import randomChar from "../index.js";
+
+const { expect } = chai;
 
 const characters =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

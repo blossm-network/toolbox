@@ -1,7 +1,7 @@
-const deps = require("../deps");
-const base64url = require("base64url");
+import deps from "../deps.js";
+import base64url from "base64url";
 
-module.exports = async ({
+export default async ({
   options: { issuer, subject, audience, expiresIn, activeIn = 0 },
   payload = {},
   signFn,

@@ -1,15 +1,19 @@
-const { expect } = require("chai")
-  .use(require("chai-datetime"))
-  .use(require("chai-as-promised"));
-const { fake, replace, restore, useFakeTimers } = require("sinon");
-const base64url = require("base64url");
+import * as chai from "chai";
+import chaiAsPromised from "chai-as-promised";
+import chaiDatetime from "chai-datetime";
+import { fake, replace, restore, useFakeTimers } from "sinon";
+import base64url from "base64url";
 
-const deps = require("../deps");
+import deps from "../deps.js";
+import { create, validate } from "../index.js";
+
+const { expect } = chai;
+
+chai.use(chaiAsPromised);
+chai.use(chaiDatetime);
 
 let clock;
 const now = new Date();
-
-const { create, validate } = require("..");
 
 const audience = "some-aud";
 const algorithm = "ES256";

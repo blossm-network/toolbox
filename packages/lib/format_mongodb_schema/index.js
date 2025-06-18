@@ -129,7 +129,7 @@ const removeIds = ({ schema, typeKey, subdocumentsOnly = true }) => {
   return newSchema;
 };
 
-module.exports = (schema, typeKey, { options } = {}) => {
+export default (schema, typeKey, { options } = {}) => {
   const newSchema = {};
   for (const property in schema) {
     newSchema[property] = {

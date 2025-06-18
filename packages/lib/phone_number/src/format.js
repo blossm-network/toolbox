@@ -1,5 +1,5 @@
-const { phone } = require("phone");
-const libphonenumber = require("google-libphonenumber");
+import { phone } from "phone";
+import libphonenumber from "google-libphonenumber";
 
 const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
 const PNF = libphonenumber.PhoneNumberFormat;
@@ -24,7 +24,7 @@ function backupFormatter(number) {
   }
 }
 
-module.exports = (number) => {
+export default (number) => {
   const formattedNumber = defaultFormatter(number);
   if (formattedNumber != null) return formattedNumber;
   return backupFormatter(number);

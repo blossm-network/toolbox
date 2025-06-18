@@ -1,9 +1,9 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
 const cacheKeyPrefix = "_cToken";
 const WEEK_IN_SECONDS = 604800;
 
-module.exports = ({ credentialsFn }) => async ({ network }) => {
+export default ({ credentialsFn }) => async ({ network }) => {
   const cacheKey = `${cacheKeyPrefix}.${network}`;
   let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
   if (!token || new Date(Date.parse(exp)) < new Date()) {

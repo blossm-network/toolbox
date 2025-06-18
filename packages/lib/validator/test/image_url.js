@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { imageUrl } = require("..");
+import * as chai from "chai";
+import { imageUrl } from "../index.js";
+
+const { expect } = chai;
 
 describe("Image url", () => {
   it("should not contain errors if the image url is formatted correctly", () => {

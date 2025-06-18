@@ -1,5 +1,7 @@
-const { validate } = require("@blossm/jwt");
-const { invalidCredentials } = require("@blossm/errors");
+import { validate } from "@blossm/jwt";
+import { invalidCredentials } from "@blossm/errors";
 
-exports.validate = validate;
-exports.invalidCredentialsError = invalidCredentials;
+export default {
+  validate,
+  invalidCredentialsError: invalidCredentials
+};

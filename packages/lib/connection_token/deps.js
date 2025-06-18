@@ -1,9 +1,11 @@
-const basicToken = require("@blossm/basic-token");
-const command = require("@blossm/command-rpc");
-const redis = require("@blossm/redis");
-const { decode } = require("@blossm/jwt");
+import basicToken from "@blossm/basic-token";
+import command from "@blossm/command-rpc";
+import redis from "@blossm/redis";
+import { decode } from "@blossm/jwt";
 
-exports.basicToken = basicToken;
-exports.command = command;
-exports.decode = decode;
-exports.redis = redis;
+export default {
+  basicToken,
+  command,
+  decode,
+  redis,
+};

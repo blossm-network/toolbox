@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { fnArray } = require("..");
+import * as chai from "chai";
+import { fnArray } from "../index.js";
+
+const { expect } = chai;
 
 const validFunctionArray = [() => {}, () => {}];
 const invalidFunctionArray = ["Hello", () => {}];

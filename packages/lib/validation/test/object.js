@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { object } = require("..");
+import * as chai from "chai";
+import { object } from "../index.js";
+
+const { expect } = chai;
 
 const invalidObjects = ["hello", 0, () => 0, false];
 const validObject = { key: "value" };

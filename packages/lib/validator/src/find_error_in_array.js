@@ -1,4 +1,4 @@
-const findError = require("./find_error");
+import findError from "./find_error.js";
 
-module.exports = (array, filter) =>
+export default (array, filter) =>
   findError(array.map((obj) => filter(obj))) || null;

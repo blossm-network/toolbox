@@ -1,6 +1,6 @@
-const { fn: fnValidator } = require("@blossm/validation");
+import { fn as fnValidator } from "@blossm/validation";
 
-module.exports = (
+export default (
   fn,
   { baseMessageFn, fn: func, refinementMessageFn, title, path, optional } = {}
 ) =>

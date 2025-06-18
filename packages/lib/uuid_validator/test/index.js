@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const uuidValidator = require("..");
+import * as chai from "chai";
+import uuidValidator from "../index.js";
+
+const { expect } = chai;
 
 describe("UUID", () => {
   it("should validate a guid.", () => {

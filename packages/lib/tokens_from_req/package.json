@@ -3,6 +3,7 @@
   "version": "0.0.32",
   "description": "Parses the jwt Bearer token and the Basic Auth token from the Authorization header of the request.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

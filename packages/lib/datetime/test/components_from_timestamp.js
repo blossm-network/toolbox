@@ -1,6 +1,6 @@
-const { expect } = require("chai");
+import { expect } from "chai";
 
-const { componentsFromTimestamp } = require("..");
+import { componentsFromTimestamp } from "../index.js";
 
 describe("Converts correctly", () => {
   it("it should return correct components", async () => {

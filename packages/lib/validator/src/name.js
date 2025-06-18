@@ -1,8 +1,8 @@
-const findError = require("./find_error");
-const object = require("./object");
-const string = require("./string");
+import findError from "./find_error.js";
+import object from "./object.js";
+import string from "./string.js";
 
-module.exports = (
+export default (
   name,
   { optional, title = "name", path, lastNameOptional } = {}
 ) => {

@@ -1,11 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
-chai.use(sinonChai);
-const { expect } = chai;
-const { restore, replace, fake } = require("sinon");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake } from "sinon";
 
-const operationUrl = require("..");
-const deps = require("../deps");
+import deps from "../deps.js";
+import operationUrl from "../index.js";
+
+chai.use(sinonChai);
+
+const { expect } = chai;
 
 const hash = 12345;
 const operation = "some-operation";

@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { domain } = require("..");
+import * as chai from "chai";
+import { domain } from "../index.js";
+
+const { expect } = chai;
 
 describe("Domain", () => {
   it("should not contain errors if the domain is formatted correctly", () => {

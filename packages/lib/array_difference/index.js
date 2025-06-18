@@ -1,3 +1,3 @@
-const difference = require("lodash.difference");
+import difference from "lodash.difference";
 
-module.exports = (...arrays) => difference(...arrays);
+export default (...arrays) => difference(...arrays);

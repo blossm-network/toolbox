@@ -1,11 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake, stub } from "sinon";
+import { Readable } from "streamx";
+import deps from "../deps.js";
+import request from "../index.js";
+
 chai.use(sinonChai);
+
 const { expect } = chai;
-const { restore, replace, fake, stub } = require("sinon");
-const { Readable } = require("streamx");
-const deps = require("../deps");
-const request = require("..");
 
 const statusCode = "some-status-code";
 const statusMessage = "some-status-message";
@@ -116,7 +118,7 @@ describe("Request", () => {
       });
       callback(null, response, body);
     });
-    const reply = await request.delete(url, { query: params });
+    const reply = await request.del(url, { query: params });
     expect(urlEncodeQueryDataFake).to.have.been.calledWith(url, params);
     expect(reply).to.deep.equal({ ...response, body });
   });

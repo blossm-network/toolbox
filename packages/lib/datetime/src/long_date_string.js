@@ -1,4 +1,4 @@
-const moment = require("moment");
+import moment from "moment";
 
-module.exports = (string) =>
+export default (string) =>
   moment(string).utc().format("MMMM Do YYYY, h:mm:ss a");

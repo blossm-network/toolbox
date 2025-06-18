@@ -1,8 +1,8 @@
-const findError = require("./find_error");
-const string = require("./string");
-const isImageUrl = require("is-image-url");
+import findError from "./find_error.js";
+import string from "./string.js";
+import isImageUrl from "is-image-url";
 
-module.exports = (url, { optional, title = "image", path } = {}) => {
+export default (url, { optional, title = "image", path } = {}) => {
   const err = findError([
     string(url, { fn: (url) => isImageUrl(url), optional, title, path }),
   ]);

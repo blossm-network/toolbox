@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { positiveNumber } = require("..");
+import * as chai from "chai";
+import { positiveNumber } from "../index.js";
+
+const { expect } = chai;
 
 describe("Valid positive number", () => {
   it("should not contain errors if the number is positive", () => {

@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { location } = require("..");
+import * as chai from "chai";
+import { location } from "../index.js";
+
+const { expect } = chai;
 
 describe("Valid location", () => {
   it("should not contain errors if the location is formatted correctly", () => {

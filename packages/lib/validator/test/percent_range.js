@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { percentRange } = require("..");
+import * as chai from "chai";
+import { percentRange } from "../index.js";
+
+const { expect } = chai;
 
 describe("Valid percent", () => {
   it("should not contain errors if the number is within range", () => {

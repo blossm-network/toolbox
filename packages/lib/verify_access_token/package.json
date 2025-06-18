@@ -3,6 +3,7 @@
   "version": "0.0.66",
   "description": "Verifies that the signature is correct given a message and a public key.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

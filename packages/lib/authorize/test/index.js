@@ -1,10 +1,11 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, fake, replace } = require("sinon");
+import { restore, fake, replace } from "sinon";
 
-const authorize = require("..");
+import deps from "../deps.js";
+import authorize from "../index.js";
 
 const domain = "some-domain";
 const service = "some-service";
@@ -21,8 +22,6 @@ const context = {
   any: "any-root",
   principal,
 };
-
-const deps = require("../deps");
 
 describe("Authorize", () => {
   afterEach(() => {

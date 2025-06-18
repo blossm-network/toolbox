@@ -3,6 +3,7 @@
   "version": "0.0.68",
   "description": "JWT token creating and validating.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

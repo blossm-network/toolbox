@@ -1,5 +1,5 @@
-const { expect } = require("chai");
-const formatUpdate = require("..");
+import { expect } from "chai";
+import formatUpdate from "../index.js";
 
 describe("Format update", () => {
   it("should return the composed update with two parts", () => {

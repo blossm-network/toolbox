@@ -3,6 +3,7 @@
   "version": "0.0.73",
   "description": "Validates the paramaters found in command requests.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

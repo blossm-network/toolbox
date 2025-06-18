@@ -1,7 +1,7 @@
-const { decodeJwt } = require("../deps");
+import deps from "../deps.js";
 
-module.exports = (token) => {
-  const headers = decodeJwt(token, { header: true });
-  const claims = decodeJwt(token);
+export default (token) => {
+  const headers = deps.decodeJwt(token, { header: true });
+  const claims = deps.decodeJwt(token);
   return { headers, claims };
 };

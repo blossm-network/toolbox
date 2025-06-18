@@ -1,5 +1,5 @@
-const { expect } = require("chai");
-const arrayIntersection = require("..");
+import { expect } from "chai";
+import arrayIntersection from "../index.js";
 
 describe("Intersection", () => {
   it("should return the common items if one exist", () => {

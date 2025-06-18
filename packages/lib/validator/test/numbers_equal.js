@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { numbersEqual } = require("..");
+import * as chai from "chai";
+import { numbersEqual } from "../index.js";
+
+const { expect } = chai;
 
 describe("Valid numbers equal", () => {
   it("should not contain errors if the two numbers are the same", () => {

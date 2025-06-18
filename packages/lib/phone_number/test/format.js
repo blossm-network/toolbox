@@ -1,5 +1,9 @@
-const { expect } = require("chai");
-const { format } = require("..");
+import * as chai from "chai";
+import phoneNumber from "../index.js";
+
+const { format } = phoneNumber;
+
+const { expect } = chai;
 
 describe("Valid numbers", () => {
   it("should return an E164 formatted phone number, if the input is a valid phone number", () => {

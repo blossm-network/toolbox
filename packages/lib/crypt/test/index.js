@@ -1,6 +1,6 @@
-const { expect } = require("chai");
+import { expect } from "chai";
 
-const { hash, compare } = require("..");
+import { hash, compare } from "../index.js";
 
 describe("Hash", () => {
   it("it should create a unique hash and compare successfully", async () => {

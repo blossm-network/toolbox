@@ -1,5 +1,7 @@
-const uuid = require("@blossm/uuid");
-const cononicalString = require("@blossm/cononical-string");
+import uuid from "@blossm/uuid";
+import cononicalString from "@blossm/cononical-string";
 
-exports.cononicalString = cononicalString;
-exports.uuid = uuid;
+export default {
+  cononicalString,
+  uuid,
+};

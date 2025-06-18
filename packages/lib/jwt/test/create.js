@@ -1,12 +1,15 @@
-const { expect } = require("chai")
-  .use(require("sinon-chai"))
-  .use(require("chai-datetime"));
-const { restore, replace, useFakeTimers, fake } = require("sinon");
-const base64url = require("base64url");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import chaiDatetime from "chai-datetime";
+const { expect } = chai;
+import { restore, replace, useFakeTimers, fake } from "sinon";
+import base64url from "base64url";
 
-const { create } = require("..");
+import deps from "../deps.js";
+import { create } from "../index.js";
 
-const deps = require("../deps");
+chai.use(sinonChai);
+chai.use(chaiDatetime);
 
 const expiresIn = 300;
 const activeIn = 10;

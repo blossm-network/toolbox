@@ -1,6 +1,7 @@
-const { expect } = require("chai");
+import * as chai from "chai";
+import { encode, decode } from "../index.js";
 
-const { encode, decode } = require("..");
+const { expect } = chai;
 
 describe("Rlp", () => {
   it("it should create a unique hash", async () => {

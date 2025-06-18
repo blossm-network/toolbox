@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { yearRange } = require("..");
+import * as chai from "chai";
+import { yearRange } from "../index.js";
+
+const { expect } = chai;
 
 describe("Valid year", () => {
   it("should not contain errors if the number is within range", () => {

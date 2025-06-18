@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = async ({
+export default async ({
   jwt,
   basic,
   verifyFn,

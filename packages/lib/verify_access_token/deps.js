@@ -1,3 +1,3 @@
-const { get } = require("@blossm/request");
+import request from "@blossm/request";
 
-exports.get = get;
+export default { get: request.get };

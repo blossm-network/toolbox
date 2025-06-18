@@ -1,9 +1,9 @@
-const crypto = require("crypto");
-const deps = require("./deps");
+import crypto from "crypto";
+import deps from "./deps.js";
 
 let publicKey;
 
-module.exports = ({ url, algorithm = "SHA256" }) => async ({
+export default ({ url, algorithm = "SHA256" }) => async ({
   message,
   signature,
 }) => {

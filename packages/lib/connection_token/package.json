@@ -3,6 +3,7 @@
   "version": "0.0.218",
   "description": "Opens a connection to get a token to another node.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

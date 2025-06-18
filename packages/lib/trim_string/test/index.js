@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const trim = require("..");
+import * as chai from "chai";
+import trim from "../index.js";
+
+const { expect } = chai;
 
 describe("Trim string", () => {
   it("should trim correctly", () => {

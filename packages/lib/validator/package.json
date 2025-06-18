@@ -3,6 +3,7 @@
   "version": "0.0.57",
   "description": "Value validation for common and custom types.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { scheduleIntervalRange } = require("..");
+import * as chai from "chai";
+import { scheduleIntervalRange } from "../index.js";
+
+const { expect } = chai;
 
 describe("Valid positive number", () => {
   it("should not contain errors if the number is within range", () => {

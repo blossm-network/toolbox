@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { date } = require("..");
+import * as chai from "chai";
+import { date } from "../index.js";
+
+const { expect } = chai;
 
 describe("Valid date", () => {
   it("should not contain errors if the date is formatted correctly", () => {

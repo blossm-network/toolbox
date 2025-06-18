@@ -1,7 +1,8 @@
-const { utc } = require("moment");
+import moment from "moment";
+const { utc } = moment;
 
-const millisecondsToSecondsRatio = require("./_milliseconds_to_seconds_ratio");
+import millisecondsToSecondsRatio from "./_milliseconds_to_seconds_ratio.js";
 
-module.exports = (timestamp) => {
+export default (timestamp) => {
   return utc(timestamp / millisecondsToSecondsRatio);
 };

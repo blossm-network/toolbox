@@ -1,6 +1,6 @@
-const keccak = require("keccak");
+import keccak from "keccak";
 
-const deps = require("./deps");
+import deps from "./deps.js";
 
 const update = (value, { hash } = {}) => {
   const newHash = (hash || keccak("keccak256")).update(
@@ -12,4 +12,4 @@ const update = (value, { hash } = {}) => {
   };
 };
 
-module.exports = update;
+export default update;

@@ -1,6 +1,6 @@
-const moment = require("moment-timezone");
+import moment from "moment-timezone";
 
-module.exports = (string, offset) =>
+export default (string, offset) =>
   moment(string)
     .utcOffset(
       offset + (moment.tz(string, "America/New_York").isDST() ? 60 : 0)

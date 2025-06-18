@@ -1,5 +1,5 @@
-const { expect } = require("chai");
-const canonicalJson = require("..");
+import { expect } from "chai";
+import canonicalJson from "../index.js";
 
 describe("Stringify object", () => {
   it("should return the correct values", () => {

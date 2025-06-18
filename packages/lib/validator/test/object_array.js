@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { objectArray } = require("..");
+import * as chai from "chai";
+import { objectArray } from "../index.js";
+
+const { expect } = chai;
 
 const validObjectArray = [{}, {}];
 const invalidObjectArray = [{}, true];

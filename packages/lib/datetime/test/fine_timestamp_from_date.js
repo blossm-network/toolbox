@@ -1,6 +1,6 @@
-const { expect } = require("chai");
+import { expect } from "chai";
 
-const { fineTimestampFromDate } = require("..");
+import { fineTimestampFromDate } from "../index.js";
 
 describe("Converts correctly", () => {
   it("it should return a timestamp used to create the date", async () => {

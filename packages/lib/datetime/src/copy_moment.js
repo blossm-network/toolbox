@@ -1,3 +1,3 @@
-const Moment = require("moment");
+import Moment from "moment";
 
-module.exports = (moment) => Moment(moment);
+export default (moment) => Moment(moment);

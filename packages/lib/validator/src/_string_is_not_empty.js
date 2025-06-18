@@ -1,1 +1,1 @@
-module.exports = (string) => string != null && string.length > 0;
+export default (string) => string != null && string.length > 0;

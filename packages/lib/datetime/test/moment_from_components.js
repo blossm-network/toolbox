@@ -1,6 +1,10 @@
-const { expect } = require("chai");
+import * as chai from "chai";
+import chaiDatetime from "chai-datetime";
+import { expect } from "chai";
 
-const { momentFromComponents } = require("..");
+import { momentFromComponents } from "../index.js";
+
+chai.use(chaiDatetime);
 
 describe("Converts correctly", () => {
   it("it should return the correct moment", async () => {

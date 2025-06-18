@@ -1,13 +1,14 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake } from "sinon";
+import verifyAccessToken from "../index.js";
+
+import deps from "../deps.js";
+import crypto from "crypto";
+
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, fake } = require("sinon");
-const verifyAccessToken = require("..");
-
-const crypto = require("crypto");
-
-const deps = require("../deps");
 
 describe("Verify access token", () => {
   afterEach(() => {

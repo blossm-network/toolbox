@@ -1,10 +1,10 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, fake, replace, match, stub } = require("sinon");
-const deps = require("../deps");
-const connectionToken = require("..");
+import { restore, fake, replace, match, stub } from "sinon";
+import deps from "../deps.js";
+import connectionToken from "../index.js";
 
 const token = "some-token";
 const root = "some-credentials-root";

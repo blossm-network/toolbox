@@ -1,6 +1,6 @@
-const randomChar = require("@blossm/random-char");
+import randomChar from "@blossm/random-char";
 
-module.exports = (length) => {
+export default (length) => {
   let charString = "";
   for (let i = 0; i < length; i++) {
     let nextChar = randomChar();

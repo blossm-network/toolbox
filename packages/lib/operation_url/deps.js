@@ -1,3 +1,5 @@
-const hash = require("@blossm/operation-hash");
+import hash from "@blossm/operation-hash";
 
-exports.hash = hash;
+export default {
+  hash,
+};

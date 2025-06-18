@@ -1,6 +1,6 @@
-const { objectArray: objectArrayValidator } = require("@blossm/validation");
+import { objectArray as objectArrayValidator } from "@blossm/validation";
 
-module.exports = (
+export default (
   objectArray,
   { title, path, baseMessageFn, fn, refinementMessageFn, optional } = {}
 ) =>

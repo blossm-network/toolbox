@@ -1,6 +1,6 @@
-const { boolean: booleanValidator } = require("@blossm/validation");
+import { boolean as booleanValidator } from "@blossm/validation";
 
-module.exports = (
+export default (
   boolean,
   { baseMessageFn, refinementMessageFn, fn, title, path, optional } = {}
 ) =>

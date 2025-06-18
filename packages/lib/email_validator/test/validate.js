@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const validate = require("..");
+import * as chai from "chai";
+import validate from "../index.js";
+
+const { expect } = chai;
 
 describe("Valid emails", () => {
   it("should not throw when given a valid email", () => {

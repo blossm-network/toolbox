@@ -1,10 +1,12 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
-chai.use(sinonChai);
-const { expect } = chai;
-const { fake } = require("sinon");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { fake } from "sinon";
 
-const operationToken = require("..");
+import operationToken from "../index.js";
+
+chai.use(sinonChai);
+
+const { expect } = chai;
 
 const network = "some-network";
 const token = "some-token";

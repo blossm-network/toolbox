@@ -214,4 +214,4 @@ const composeUpdate = (update, query, matchDelimiter) => {
   return result;
 };
 
-module.exports = composeUpdate;
+export default composeUpdate;

@@ -1,6 +1,7 @@
-const { utc } = require("moment");
+import moment from "moment";
+const { utc } = moment;
 
-module.exports = () => {
+export default () => {
   const date = new Date();
   return utc(date.getTime());
 };

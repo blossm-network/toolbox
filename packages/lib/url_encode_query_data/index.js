@@ -1,4 +1,4 @@
-const queryString = require("qs");
+import queryString from "qs";
 
-module.exports = (url, params) =>
+export default (url, params) =>
   params == undefined ? url : `${url}?${queryString.stringify(params)}`;

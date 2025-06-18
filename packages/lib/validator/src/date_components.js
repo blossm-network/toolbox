@@ -1,11 +1,11 @@
-const dayTimeRange = require("./day_time_range");
-const dateRange = require("./date_range");
-const monthRange = require("./month_range");
-const yearRange = require("./year_range");
-const findError = require("./find_error");
-const object = require("./object");
+import dayTimeRange from "./day_time_range.js";
+import dateRange from "./date_range.js";
+import monthRange from "./month_range.js";
+import yearRange from "./year_range.js";
+import findError from "./find_error.js";
+import object from "./object.js";
 
-module.exports = (dateComponents, { title = "date", path, optional } = {}) => {
+export default (dateComponents, { title = "date", path, optional } = {}) => {
   const err = findError([object(dateComponents, { optional, path, title })]);
   if (err) return err;
 

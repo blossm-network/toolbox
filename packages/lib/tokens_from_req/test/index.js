@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const tokensFromReq = require("..");
+import * as chai from "chai";
+import tokensFromReq from "../index.js";
+
+const { expect } = chai;
 
 const cookieKey = "some-key";
 

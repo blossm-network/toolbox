@@ -1,3 +1,3 @@
-const canonicalJson = require("canonical-json");
+import canonicalJson from "canonical-json";
 
-module.exports = canonicalJson.stringify;
+export default canonicalJson;

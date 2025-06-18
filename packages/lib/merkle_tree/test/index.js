@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { root: merkleRoot, verify } = require("..");
+import * as chai from "chai";
+import { root as merkleRoot, verify } from "../index.js";
+
+const { expect } = chai;
 
 describe("Merkle tree", () => {
   it("should return root correctly", async () => {

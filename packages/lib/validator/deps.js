@@ -1,3 +1,5 @@
-const { invalidArgument } = require("@blossm/errors");
+import { invalidArgument } from "@blossm/errors";
 
-exports.invalidArgumentError = invalidArgument;
+export default {
+  invalidArgumentError: invalidArgument,
+};

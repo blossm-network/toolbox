@@ -1,3 +1,5 @@
-const { invalidCredentials } = require("@blossm/errors");
+import { invalidCredentials } from "@blossm/errors";
 
-exports.invalidCredentialsError = invalidCredentials;
+export default {
+  invalidCredentialsError: invalidCredentials,
+};

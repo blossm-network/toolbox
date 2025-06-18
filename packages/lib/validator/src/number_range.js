@@ -1,9 +1,9 @@
-const { number: numberValidator } = require("@blossm/validation");
-const isNumberInRange = require("./_is_number_in_range");
-const numberTooBigMessage = require("./_number_too_big_message");
-const numberTooSmallMessage = require("./_number_too_small_message");
+import { number as numberValidator } from "@blossm/validation";
+import isNumberInRange from "./_is_number_in_range.js";
+import numberTooBigMessage from "./_number_too_big_message.js";
+import numberTooSmallMessage from "./_number_too_small_message.js";
 
-module.exports = (
+export default (
   number,
   {
     baseMessageFn,

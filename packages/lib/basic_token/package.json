@@ -3,6 +3,7 @@
   "version": "0.0.9",
   "description": "Gets a basic token to communicate with a network.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

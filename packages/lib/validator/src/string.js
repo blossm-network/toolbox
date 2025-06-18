@@ -1,10 +1,10 @@
-const { string: stringValidator } = require("@blossm/validation");
+import { string as stringValidator } from "@blossm/validation";
 
-const stringIsNotEmpty = require("./_string_is_not_empty");
-const stringEmptyMessage = require("./_string_empty_message");
-const stringTooLongMessage = require("./_string_too_long_message");
+import stringIsNotEmpty from "./_string_is_not_empty.js";
+import stringEmptyMessage from "./_string_empty_message.js";
+import stringTooLongMessage from "./_string_too_long_message.js";
 
-module.exports = (
+export default (
   value,
   { fn, optional, title, path, maxLength, shouldAllowEmptyString = true } = {}
 ) => {

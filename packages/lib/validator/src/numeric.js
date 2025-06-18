@@ -1,8 +1,8 @@
-const { string: stringValidator } = require("@blossm/validation");
+import { string as stringValidator } from "@blossm/validation";
 
 const regex = /^[+-]?([0-9]*[.])?[0-9]+$/;
 
-module.exports = (value, { baseMessageFn, title, path, optional } = {}) =>
+export default (value, { baseMessageFn, title, path, optional } = {}) =>
   stringValidator({
     value,
     title,

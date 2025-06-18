@@ -1,3 +1,3 @@
-const timestampFromDate = require("./timestamp_from_date");
+import timestampFromDate from "./timestamp_from_date.js";
 
-module.exports = () => timestampFromDate(new Date());
+export default () => timestampFromDate(new Date());

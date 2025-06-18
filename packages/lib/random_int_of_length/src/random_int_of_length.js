@@ -1,6 +1,6 @@
-const randomInt = require("@blossm/random-int");
+import randomInt from "@blossm/random-int";
 
-module.exports = (length) => {
+export default (length) => {
   let numberString = "";
   for (let i = 0; i < length; i++) {
     //Don't lead a zero;

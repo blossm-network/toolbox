@@ -1,1 +1,3 @@
-module.exports = require("./src/random_int_of_length");
+import randomIntOfLength from "./src/random_int_of_length.js";
+
+export default randomIntOfLength;

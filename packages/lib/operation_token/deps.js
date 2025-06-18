@@ -1,5 +1,7 @@
-const hash = require("@blossm/operation-hash");
-const trim = require("@blossm/trim-string");
+import hash from "@blossm/operation-hash";
+import trim from "@blossm/trim-string";
 
-exports.hash = hash;
-exports.trim = trim;
+export default {
+  hash,
+  trim,
+};

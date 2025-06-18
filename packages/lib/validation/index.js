@@ -1,15 +1,15 @@
-const string = require("./src/string");
-const number = require("./src/number");
-const boolean = require("./src/boolean");
-const object = require("./src/object");
-const fn = require("./src/function");
-const stringArray = require("./src/string_array");
-const numberArray = require("./src/number_array");
-const booleanArray = require("./src/boolean_array");
-const objectArray = require("./src/object_array");
-const fnArray = require("./src/function_array");
+import string from "./src/string.js";
+import number from "./src/number.js";
+import boolean from "./src/boolean.js";
+import object from "./src/object.js";
+import fn from "./src/function.js";
+import stringArray from "./src/string_array.js";
+import numberArray from "./src/number_array.js";
+import booleanArray from "./src/boolean_array.js";
+import objectArray from "./src/object_array.js";
+import fnArray from "./src/function_array.js";
 
-module.exports = {
+export {
   string,
   number,
   boolean,

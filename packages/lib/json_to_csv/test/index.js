@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const jsonToCSV = require("..");
+import * as chai from "chai";
+import jsonToCSV from "../index.js";
+
+const { expect } = chai;
 
 describe("JSON to CSV", () => {
   it("should return the correct download", () => {

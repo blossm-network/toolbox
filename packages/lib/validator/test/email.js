@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { email } = require("..");
+import * as chai from "chai";
+import { email } from "../index.js";
+
+const { expect } = chai;
 
 describe("Valid email", () => {
   it("should not contain errors if the email is formatted correctly", () => {

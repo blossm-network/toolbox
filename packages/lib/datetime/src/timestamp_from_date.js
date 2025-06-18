@@ -1,5 +1,5 @@
-const millisecondsToSecondsRatio = require("./_milliseconds_to_seconds_ratio");
+import millisecondsToSecondsRatio from "./_milliseconds_to_seconds_ratio.js";
 
-module.exports = (date) => {
+export default (date) => {
   return Math.floor(date.getTime() * millisecondsToSecondsRatio);
 };

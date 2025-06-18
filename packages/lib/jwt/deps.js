@@ -1,15 +1,17 @@
-const {
+import {
   fineTimestamp,
   stringFromDate,
-  string: dateString,
-} = require("@blossm/datetime");
-const uuid = require("@blossm/uuid");
-const { invalidCredentials } = require("@blossm/errors");
-const { jwtDecode } = require("jwt-decode");
+  string as dateString,
+} from "@blossm/datetime";
+import uuid from "@blossm/uuid";
+import { invalidCredentials } from "@blossm/errors";
+import { jwtDecode } from "jwt-decode";
 
-exports.fineTimestamp = fineTimestamp;
-exports.stringFromDate = stringFromDate;
-exports.dateString = dateString;
-exports.uuid = uuid;
-exports.decodeJwt = jwtDecode;
-exports.invalidCredentialsError = invalidCredentials;
+export default {
+  fineTimestamp,
+  stringFromDate,
+  dateString,
+  uuid,
+  decodeJwt: jwtDecode,
+  invalidCredentialsError: invalidCredentials,
+};

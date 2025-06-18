@@ -1,3 +1,5 @@
-const hashString = require("@blossm/hash-string");
+import hashString from "@blossm/hash-string";
 
-exports.hash = hashString;
+export default {
+  hash: hashString,
+};

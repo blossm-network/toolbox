@@ -4,6 +4,7 @@
   "description": "Finds the items different between two arrays.",
   "main": "index.js",
   "author": "blossm.network",
+  "type": "module",
   "engines": {
     "node": ">= 20.19.0"
   },

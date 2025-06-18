@@ -3,6 +3,7 @@
   "version": "0.0.5",
   "description": "Trims a string to a fixed length and optionally adds three dots to the end.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

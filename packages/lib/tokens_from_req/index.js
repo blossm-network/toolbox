@@ -1,4 +1,4 @@
-module.exports = (req, { cookieKey } = {}) => {
+export default (req, { cookieKey } = {}) => {
   const authorization = req.headers.authorization;
   const cookies = req.cookies || {};
 

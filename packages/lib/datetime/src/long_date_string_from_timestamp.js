@@ -1,4 +1,4 @@
-const momentFromTimestamp = require("./moment_from_timestamp");
+import momentFromTimestamp from "./moment_from_timestamp.js";
 
-module.exports = (timestamp) =>
+export default (timestamp) =>
   momentFromTimestamp(timestamp).format("MMMM Do YYYY, h:mm:ss a");

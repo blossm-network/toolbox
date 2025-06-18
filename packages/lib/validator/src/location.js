@@ -1,9 +1,9 @@
-const findError = require("./find_error");
-const object = require("./object");
-const string = require("./string");
-const countryCode = require("./country_code");
+import findError from "./find_error.js";
+import object from "./object.js";
+import string from "./string.js";
+import countryCode from "./country_code.js";
 
-module.exports = (location, { title = "location", path, optional } = {}) => {
+export default (location, { title = "location", path, optional } = {}) => {
   const err = findError([object(location, { optional, title, path })]);
   if (err) return err;
 

@@ -1,3 +1,3 @@
-const { Parser } = require("@json2csv/plainjs");
+import { Parser } from "@json2csv/plainjs";
 
-module.exports = ({ data, fields }) => new Parser({ fields }).parse(data);
+export default ({ data, fields }) => new Parser({ fields }).parse(data);

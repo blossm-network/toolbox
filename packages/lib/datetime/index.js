@@ -1,24 +1,24 @@
-const timestampFromDate = require("./src/timestamp_from_date");
-const fineTimestampFromDate = require("./src/fine_timestamp_from_date");
-const stringFromDate = require("./src/string_from_date");
-const timestampFromMoment = require("./src/timestamp_from_moment");
-const timestamp = require("./src/timestamp");
-const fineTimestamp = require("./src/fine_timestamp");
-const string = require("./src/string");
-const moment = require("./src/moment");
-const copyMoment = require("./src/copy_moment");
-const momentFromTimestamp = require("./src/moment_from_timestamp");
-const longDateStringFromTimestamp = require("./src/long_date_string_from_timestamp");
-const longDateString = require("./src/long_date_string");
-const localizedLongDateString = require("./src/localized_long_date_string");
-const weekdayDateStringFromTimestamp = require("./src/weekday_date_string_from_timestamp");
-const componentsFromMoment = require("./src/components_from_moment");
-const componentsFromTimestamp = require("./src/components_from_timestamp");
-const momentFromComponents = require("./src/moment_from_components");
-const timestampFromComponents = require("./src/timestamp_from_components");
-const localizedFormat = require("./src/localized_format");
+import timestampFromDate from "./src/timestamp_from_date.js";
+import fineTimestampFromDate from "./src/fine_timestamp_from_date.js";
+import stringFromDate from "./src/string_from_date.js";
+import timestampFromMoment from "./src/timestamp_from_moment.js";
+import timestamp from "./src/timestamp.js";
+import fineTimestamp from "./src/fine_timestamp.js";
+import string from "./src/string.js";
+import moment from "./src/moment.js";
+import copyMoment from "./src/copy_moment.js";
+import momentFromTimestamp from "./src/moment_from_timestamp.js";
+import longDateStringFromTimestamp from "./src/long_date_string_from_timestamp.js";
+import longDateString from "./src/long_date_string.js";
+import localizedLongDateString from "./src/localized_long_date_string.js";
+import weekdayDateStringFromTimestamp from "./src/weekday_date_string_from_timestamp.js";
+import componentsFromMoment from "./src/components_from_moment.js";
+import componentsFromTimestamp from "./src/components_from_timestamp.js";
+import momentFromComponents from "./src/moment_from_components.js";
+import timestampFromComponents from "./src/timestamp_from_components.js";
+import localizedFormat from "./src/localized_format.js";
 
-module.exports = {
+export {
   timestampFromDate,
   fineTimestampFromDate,
   stringFromDate,

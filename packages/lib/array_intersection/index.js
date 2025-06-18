@@ -1,3 +1,3 @@
-const intersection = require("lodash.intersection");
+import intersection from "lodash.intersection";
 
-module.exports = (...array) => intersection(...array);
+export default (...array) => intersection(...array);

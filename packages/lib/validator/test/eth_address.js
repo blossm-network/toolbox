@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { ethAddress } = require("..");
+import * as chai from "chai";
+import { ethAddress } from "../index.js";
+
+const { expect } = chai;
 
 describe("Valid Ethereum address", () => {
   it("should not contain errors if the address is formatted correctly", () => {

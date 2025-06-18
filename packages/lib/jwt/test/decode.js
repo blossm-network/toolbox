@@ -1,6 +1,8 @@
-const { expect } = require("chai").use(require("chai-as-promised"));
-
-const { create, decode } = require("..");
+import * as chai from "chai";
+import chaiAsPromised from "chai-as-promised";
+chai.use(chaiAsPromised);
+const { expect } = chai;
+import { create, decode } from "../index.js";
 
 const audience = "some-aud";
 const algorithm = "ES256";

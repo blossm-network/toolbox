@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { name } = require("..");
+import * as chai from "chai";
+import { name } from "../index.js";
+
+const { expect } = chai;
 
 describe("Valid name", () => {
   it("should not contain errors if the name is formatted correctly", () => {

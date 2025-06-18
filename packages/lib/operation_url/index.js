@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ operation, host, path = "", id }) =>
+export default ({ operation, host, path = "", id }) =>
   `${process.env.NODE_ENV == "local" ? "http" : "https"}://${deps.hash(
     ...operation
   )}.${host}${path}${id != undefined ? `/${id}` : ""}`;

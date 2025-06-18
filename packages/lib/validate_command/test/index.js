@@ -1,10 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
-chai.use(sinonChai);
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { useFakeTimers } from "sinon";
+import { string as dateString, stringFromDate } from "@blossm/datetime";
+
+import validateCommand from "../index.js";
+
 const { expect } = chai;
-const { useFakeTimers } = require("sinon");
-const { string: dateString, stringFromDate } = require("@blossm/datetime");
-const validateCommand = require("..");
+
+chai.use(sinonChai);
 
 const now = new Date();
 

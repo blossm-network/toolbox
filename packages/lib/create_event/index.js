@@ -1,7 +1,7 @@
-const { string: dateString } = require("@blossm/datetime");
-const deps = require("./deps");
+import { string as dateString } from "@blossm/datetime";
+import deps from "./deps.js";
 
-module.exports = ({
+export default ({
   root,
   payload,
   version = 0,

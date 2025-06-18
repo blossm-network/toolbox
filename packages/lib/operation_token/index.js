@@ -1,7 +1,9 @@
-const deps = require("./deps");
-const { MAX_LENGTH } = require("@blossm/service-name-consts");
+import deps from "./deps.js";
+import serviceNameConsts from "@blossm/service-name-consts";
 
-module.exports = async ({ tokenFn, operation }) =>
+const { MAX_LENGTH } = serviceNameConsts;
+
+export default async ({ tokenFn, operation }) =>
   tokenFn
     ? await tokenFn({
         hash: deps.hash(...operation),

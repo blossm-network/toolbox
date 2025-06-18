@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const formatSchema = require("..");
+import * as chai from "chai";
+import formatSchema from "../index.js";
+
+const { expect } = chai;
 
 describe("Format schema", () => {
   it("should format correctly", () => {

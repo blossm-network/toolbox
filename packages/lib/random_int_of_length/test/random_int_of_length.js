@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const randomIntOfLength = require("../index");
+import * as chai from "chai";
+import randomIntOfLength from "../index.js";
+
+const { expect } = chai;
 
 describe("Random", () => {
   it("should return an int of the specified length", () => {

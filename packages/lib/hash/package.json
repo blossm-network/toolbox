@@ -3,6 +3,7 @@
   "version": "0.0.12",
   "description": "SHA 256 hash.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

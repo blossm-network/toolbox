@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { buffer } = require("..");
+import * as chai from "chai";
+import { buffer } from "../index.js";
+
+const { expect } = chai;
 
 const invalidBuffers = ["hello", 0, () => 0, {}];
 const validBuffer = new Buffer.from([0x62, 0x75, 0x66, 0x66, 0x65, 0x72]);

@@ -3,6 +3,7 @@
   "version": "0.0.7",
   "description": "Crypt functions for hashing and comparing.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

@@ -1,7 +1,7 @@
-const { string: stringValidator } = require("@blossm/validation");
-const emailValidator = require("@blossm/email-validator");
+import { string as stringValidator } from "@blossm/validation";
+import emailValidator from "@blossm/email-validator";
 
-module.exports = (
+export default (
   value,
   { baseMessageFn, title = "email", path, optional } = {}
 ) =>

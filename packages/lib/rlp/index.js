@@ -1,4 +1,4 @@
-const rlp = require("rlp");
+import rlp from "rlp";
 
-exports.encode = rlp.encode;
-exports.decode = rlp.decode;
+export const encode = rlp.encode;
+export const decode = rlp.decode;

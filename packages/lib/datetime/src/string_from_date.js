@@ -1,1 +1,1 @@
-module.exports = (date) => date.toISOString();
+export default (date) => date.toISOString();

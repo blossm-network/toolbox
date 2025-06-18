@@ -1,13 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, fake } = require("sinon");
-const { string: dateString } = require("@blossm/datetime");
+import { restore, replace, fake } from "sinon";
+import { string as dateString } from "@blossm/datetime";
 
-const deps = require("../deps");
+import deps from "../deps.js";
 
-const authenticate = require("..");
+import authenticate from "../index.js";
 
 const verifyFn = "some-verify-fn";
 

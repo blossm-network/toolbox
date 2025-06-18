@@ -1,7 +1,7 @@
-const { string: stringValidator } = require("@blossm/validation");
-const isUuid = require("@blossm/uuid-validator");
+import { string as stringValidator } from "@blossm/validation";
+import isUuid from "@blossm/uuid-validator";
 
-module.exports = (
+export default (
   value,
   { baseMessageFn, title = "uuid", path, optional } = {}
 ) =>

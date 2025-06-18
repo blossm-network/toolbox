@@ -1,5 +1,5 @@
-const { expect } = require("chai");
-const channelName = require("..");
+import { expect } from "chai";
+import channelName from "../index.js";
 
 const name = "some-name";
 const contextRoot = "some-context-root";

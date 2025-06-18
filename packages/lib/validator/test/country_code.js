@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { countryCode } = require("..");
+import * as chai from "chai";
+import { countryCode } from "../index.js";
+
+const { expect } = chai;
 
 const invalidCountryCodes = [0, "Hello", false, () => {}, {}];
 const validCountryCodes = [

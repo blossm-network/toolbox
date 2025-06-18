@@ -1,6 +1,10 @@
-const { expect } = require("chai");
+import * as chai from "chai";
+import chaiDatetime from "chai-datetime";
+import { expect } from "chai";
 
-const { longDateString } = require("..");
+import { longDateString } from "../index.js";
+
+chai.use(chaiDatetime);
 
 describe("Converts correctly", () => {
   it("it should return an expected string based on the utc timestamp", async () => {

@@ -1,6 +1,6 @@
-const { object: objectValidator } = require("@blossm/validation");
+import { object as objectValidator } from "@blossm/validation";
 
-module.exports = (
+export default (
   buffer,
   { baseMessageFn, title = "buffer", path, optional } = {}
 ) =>

@@ -3,6 +3,7 @@
   "version": "0.0.3",
   "description": "Recursive length prefix encoding and decoding.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

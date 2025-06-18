@@ -1,6 +1,6 @@
-const { stringArray: stringArrayValidator } = require("@blossm/validation");
+import { stringArray as stringArrayValidator } from "@blossm/validation";
 
-module.exports = (
+export default (
   stringArray,
   { baseMessageFn, fn, refinementMessageFn, title, path, optional } = {}
 ) =>

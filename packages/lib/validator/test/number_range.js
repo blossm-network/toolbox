@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { numberRange } = require("..");
+import * as chai from "chai";
+import { numberRange } from "../index.js";
+
+const { expect } = chai;
 
 const bounds = { lowerBound: 2, upperBound: 3 };
 
