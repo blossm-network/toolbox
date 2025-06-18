@@ -1,3 +1,3 @@
-const transports = require("@blossm/gcp-log-transports");
+import transports from "@blossm/gcp-log-transports";
 
-module.exports = (message, metadata) => transports.error(message, metadata);
+export default (message, metadata) => transports.error(message, metadata);

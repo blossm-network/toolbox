@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { construct } = require("..");
+import * as chai from "chai";
+import { construct } from "../index.js";
+
+const { expect } = chai;
 
 const message = "some-message";
 const info = { some: "info" };

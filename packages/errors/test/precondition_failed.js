@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { preconditionFailed } = require("..");
+import * as chai from "chai";
+import { preconditionFailed } from "../index.js";
+
+const { expect } = chai;
 
 const cause = new Error();
 const info = { some: "info" };

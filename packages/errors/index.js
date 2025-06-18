@@ -1,3 +1,5 @@
+import restifyErrors from "restify-errors";
+
 const {
   BadRequestError,
   InternalServerError,
@@ -8,9 +10,9 @@ const {
   InvalidCredentialsError,
   ForbiddenError,
   PreconditionFailedError,
-} = require("restify-errors");
+} = restifyErrors;
 
-const toJSON = require("./src/to_json");
+import toJSON from "./src/to_json.js";
 
 const badRequest = {
   message: (message, { cause, info } = {}) =>
@@ -72,7 +74,7 @@ const construct = ({ statusCode, code, message, info }) => {
   }
 };
 
-module.exports = {
+export {
   badRequest,
   resourceNotFound,
   construct,

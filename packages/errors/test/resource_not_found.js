@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { resourceNotFound } = require("..");
+import * as chai from "chai";
+import { resourceNotFound } from "../index.js";
+
+const { expect } = chai;
 
 const cause = new Error();
 const info = { some: "info" };

@@ -1,11 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
-chai.use(sinonChai);
-const { expect } = chai;
-const { restore, replace, fake } = require("sinon");
-const transports = require("@blossm/gcp-log-transports");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake } from "sinon";
+import transports from "@blossm/gcp-log-transports";
 
-const { verbose } = require("../index");
+import { verbose } from "../index.js";
+
+chai.use(sinonChai);
+
+const { expect } = chai;
 
 describe("Logging", () => {
   afterEach(() => {

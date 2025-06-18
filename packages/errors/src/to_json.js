@@ -1,4 +1,4 @@
-module.exports = function () {
+export default function () {
   return {
     statusCode: this.statusCode,
     code: this.body.code,

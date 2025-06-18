@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { badRequest } = require("..");
+import * as chai from "chai";
+import { badRequest } from "../index.js";
+
+const { expect } = chai;
 
 const cause = new Error();
 const info = { some: "info" };

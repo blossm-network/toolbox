@@ -1,5 +1,7 @@
-const { expect } = require("chai");
-const { forbidden } = require("..");
+import * as chai from "chai";
+import { forbidden } from "../index.js";
+
+const { expect } = chai;
 
 const cause = new Error();
 const info = { some: "info" };
