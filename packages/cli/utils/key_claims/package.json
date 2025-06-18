@@ -20,6 +20,6 @@
     "@blossm/gcp-token": "^0.0.80"
   },
   "devDependencies": {
-    "mocha": "^7.1.1"
+    "mocha": "^11.7.0"
   }
 }

@@ -18,6 +18,6 @@
     "@blossm/gcp-secret": "^0.0.57"
   },
   "devDependencies": {
-    "mocha": "^7.1.1"
+    "mocha": "^11.7.0"
   }
 }

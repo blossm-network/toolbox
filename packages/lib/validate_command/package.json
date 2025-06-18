@@ -21,7 +21,7 @@
   "devDependencies": {
     "@blossm/datetime": "^0.0.15",
     "mocha": "^11.6.0",
-    "sinon": "^20.0.0",
+    "sinon": "^21.0.0",
     "sinon-chai": "^3.5.0"
   }
 }
