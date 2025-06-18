@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ name, domain, service }) => {
+export default ({ name, domain, service }) => {
   const trigger = ({
     context,
     claims,

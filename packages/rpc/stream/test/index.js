@@ -1,11 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
-chai.use(sinonChai);
-const { expect } = chai;
-const { restore, replace, fake, stub, match } = require("sinon");
-const stream = require("..");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake, stub, match } from "sinon";
 
-const deps = require("../deps");
+import deps from "../deps.js";
+import stream from "../index.js";
+
+chai.use(sinonChai);
+
+const { expect } = chai;
 
 const context = { b: 4 };
 const claims = "some-claims";

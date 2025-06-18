@@ -1,7 +1,9 @@
-const { unauthorized } = require("@blossm/errors");
-const cors = require("cors");
-const allow = require("./src/allow");
+import { unauthorized } from "@blossm/errors";
+import cors from "cors";
+import allow from "./src/allow.js";
 
-exports.cors = cors;
-exports.allow = allow;
-exports.unauthorizedError = unauthorized;
+export default {
+  cors,
+  allow,
+  unauthorizedError: unauthorized,
+};

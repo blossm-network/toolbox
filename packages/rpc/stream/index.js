@@ -1,6 +1,6 @@
-const logger = require("@blossm/logger");
+import logger from "@blossm/logger";
 
-const deps = require("./deps");
+import deps from "./deps.js";
 
 const jsonString = (string) => {
   let objectOpenIndex;
@@ -26,7 +26,7 @@ const jsonString = (string) => {
   return { parsedData, leftover: string.substr(objectCloseIndex) };
 };
 
-module.exports = (operationQueries, fn, sortFn) => {
+export default (operationQueries, fn, sortFn) => {
   return {
     in: ({ context, network, host = process.env.HOST }) => {
       return {

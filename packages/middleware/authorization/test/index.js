@@ -1,10 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, fake, replace, match } from "sinon";
+
+import deps from "../deps.js";
+import authorizationMiddleware from "../index.js";
+
 chai.use(sinonChai);
+
 const { expect } = chai;
-const { restore, fake, replace, match } = require("sinon");
-const deps = require("../deps");
-const authorizationMiddleware = require("..");
 
 const permissionsLookupFn = "some-permissions-lookup-fn";
 const permissions = "some-permissions";

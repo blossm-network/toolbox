@@ -1,7 +1,9 @@
-const authenticate = require("@blossm/authenticate");
-const tokensFromReq = require("@blossm/tokens-from-req");
-const { unauthorized } = require("@blossm/errors");
+import authenticate from "@blossm/authenticate";
+import tokensFromReq from "@blossm/tokens-from-req";
+import { unauthorized } from "@blossm/errors";
 
-exports.authenticate = authenticate;
-exports.tokensFromReq = tokensFromReq;
-exports.unauthorizedError = unauthorized;
+export default {
+  authenticate,
+  tokensFromReq,
+  unauthorizedError: unauthorized,
+};

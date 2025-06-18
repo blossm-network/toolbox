@@ -1,4 +1,7 @@
-const { string: dateString } = require("@blossm/datetime");
+import { string as dateString } from "@blossm/datetime";
+import rpc from "@blossm/rpc";
 
-exports.rpc = require("@blossm/rpc");
-exports.dateString = dateString;
+export default {
+  rpc,
+  dateString,
+};

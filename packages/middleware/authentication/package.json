@@ -3,6 +3,7 @@
   "version": "0.0.144",
   "description": "Authentication middleware for the network.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

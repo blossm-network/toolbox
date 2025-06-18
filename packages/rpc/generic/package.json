@@ -3,6 +3,7 @@
   "description": "Calls a remote procedure within the network.",
   "version": "0.0.254",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

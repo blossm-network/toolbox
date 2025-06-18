@@ -1,6 +1,6 @@
-const logger = require("@blossm/logger");
+import logger from "@blossm/logger";
 
-const deps = require("./deps");
+import deps from "./deps.js";
 
 const formatResponse = (data) => {
   try {
@@ -100,8 +100,8 @@ const common = ({ method, dataParam, operation, id, data, raw, onDataFn }) => {
                       ? "post"
                       : method == deps.put
                       ? "put"
-                      : method == deps.delete
-                      ? "delete"
+                      : method == deps.del
+                      ? "del"
                       : null,
                 })
               : await method(url, {
@@ -162,7 +162,7 @@ const common = ({ method, dataParam, operation, id, data, raw, onDataFn }) => {
   };
 };
 
-module.exports = (...operation) => ({
+export default (...operation) => ({
   post: (data) =>
     common({
       method: deps.post,
@@ -172,9 +172,9 @@ module.exports = (...operation) => ({
     }),
   put: (id, data) =>
     common({ method: deps.put, dataParam: "body", operation, id, data }),
-  delete: (id, data) =>
+  del: (id, data) =>
     common({
-      method: deps.delete,
+      method: deps.del,
       dataParam: "query",
       operation,
       id,

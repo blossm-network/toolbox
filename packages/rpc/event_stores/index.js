@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = (storeQueries) => {
+export default (storeQueries) => {
   const stream = ({
     context,
     claims,

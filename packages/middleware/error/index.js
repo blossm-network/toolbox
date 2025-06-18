@@ -1,6 +1,6 @@
-const logger = require("@blossm/logger");
+import logger from "@blossm/logger";
 
-module.exports = (err, req, res, next) => {
+export default (err, req, res, next) => {
   if (res.headersSent) return next(err);
 
   if (!err.statusCode || err.statusCode >= 500) {

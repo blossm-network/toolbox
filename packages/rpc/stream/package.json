@@ -3,6 +3,7 @@
   "description": "Calls one or many remote stream procedure within the network.",
   "version": "0.0.56",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

@@ -1,7 +1,8 @@
-const asyncHandler = require("express-async-handler");
-const deps = require("./deps");
+import asyncHandler from "express-async-handler";
 
-module.exports = ({
+import deps from "./deps.js";
+
+export default ({
   permissionsLookupFn,
   terminatedSessionCheckFn,
   deletedSceneCheckFn,

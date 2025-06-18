@@ -3,7 +3,9 @@ import sinonChai from "sinon-chai";
 import { restore, replace, fake } from "sinon";
 import transports from "@blossm/gcp-log-transports";
 
-import { info } from "../index.js";
+import logger from "../index.js";
+
+const { info } = logger;
 
 chai.use(sinonChai);
 

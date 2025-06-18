@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ name, context }) => {
+export default ({ name, context }) => {
   const play = ({
     token: { internalFn: internalTokenFn } = {},
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},

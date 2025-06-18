@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ name, context = process.env.CONTEXT }) => {
+export default ({ name, context = process.env.CONTEXT }) => {
   const read = ({
     contexts,
     currentToken,

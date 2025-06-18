@@ -1,10 +1,15 @@
-const { expect } = require("chai")
-  .use(require("chai-datetime"))
-  .use(require("sinon-chai"));
-const { restore, replace, fake, useFakeTimers } = require("sinon");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import chaiDatetime from "chai-datetime";
+import { restore, replace, fake, useFakeTimers } from "sinon";
 
-const deps = require("../deps");
-const command = require("..");
+import deps from "../deps.js";
+import command from "../index.js";
+
+chai.use(sinonChai);
+chai.use(chaiDatetime);
+
+const { expect } = chai;
 
 let clock;
 

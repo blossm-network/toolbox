@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ name, context = process.env.CONTEXT, network }) => {
+export default ({ name, context = process.env.CONTEXT, network }) => {
   const internal = !network || network == process.env.NETWORK;
   const read = ({
     contexts,

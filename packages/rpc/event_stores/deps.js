@@ -1,3 +1,5 @@
-const stream = require("@blossm/stream-rpc");
+import stream from "@blossm/stream-rpc";
 
-exports.stream = stream;
+export default {
+  stream,
+};

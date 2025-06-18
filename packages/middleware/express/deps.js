@@ -1,5 +1,7 @@
-const { json } = require("body-parser");
-const cookieParser = require("cookie-parser");
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 
-exports.jsonBodyParser = json;
-exports.cookieParser = cookieParser;
+export default {
+  jsonBodyParser: bodyParser.json,
+  cookieParser,
+};

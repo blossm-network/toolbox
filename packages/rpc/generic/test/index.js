@@ -1,11 +1,14 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
-chai.use(sinonChai);
-const { expect } = chai;
-const { restore, replace, fake, match } = require("sinon");
-const operation = require("..");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake, match } from "sinon";
 
-const deps = require("../deps");
+chai.use(sinonChai);
+
+const { expect } = chai;
+
+import operation from "../index.js";
+
+import deps from "../deps.js";
 
 const data = { a: 1, context: 3 };
 const context = { b: 4 };
@@ -156,7 +159,7 @@ describe("Operation", () => {
 
     const enqueueFn = "some-enqueue-fn";
     await operation(operarationPart1, operarationPart2)
-      .delete(id, data)
+      .del(id, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims, enqueueFn });
 
@@ -169,7 +172,7 @@ describe("Operation", () => {
         claims,
       },
       operation: [operarationPart1, operarationPart2],
-      method: "delete",
+      method: "del",
     });
   });
   it("should call post with the correct params with enqueueFn in local env", async () => {
@@ -735,7 +738,7 @@ describe("Operation", () => {
   });
   it("should call delete with the correct params", async () => {
     const del = fake.returns(response);
-    replace(deps, "delete", del);
+    replace(deps, "del", del);
 
     const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
@@ -744,7 +747,7 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const result = await operation(operarationPart1, operarationPart2)
-      .delete(id, data)
+      .del(id, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
 
@@ -782,7 +785,7 @@ describe("Operation", () => {
       statusMessage,
       body: JSON.stringify(errBody),
     });
-    replace(deps, "delete", del);
+    replace(deps, "del", del);
 
     const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
@@ -797,7 +800,7 @@ describe("Operation", () => {
     const network = "some-network";
     try {
       await operation(operarationPart1, operarationPart2)
-        .delete(id)
+        .del(id)
         .in({ context, host, network })
         .with({ tokenFn, claims });
 
@@ -831,7 +834,7 @@ describe("Operation", () => {
       statusMessage,
       body: JSON.stringify(errBody),
     });
-    replace(deps, "delete", del);
+    replace(deps, "del", del);
 
     const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
@@ -846,7 +849,7 @@ describe("Operation", () => {
     const network = "some-network";
     try {
       await operation(operarationPart1, operarationPart2)
-        .delete(id)
+        .del(id)
         .in({ context, host, network })
         .with({ tokenFn, claims });
 
@@ -875,7 +878,7 @@ describe("Operation", () => {
       statusMessage,
       body: JSON.stringify(errBody),
     });
-    replace(deps, "delete", del);
+    replace(deps, "del", del);
 
     const operationTokenFake = fake.returns({ token, type });
     replace(deps, "operationToken", operationTokenFake);
@@ -885,7 +888,7 @@ describe("Operation", () => {
 
     try {
       await operation(operarationPart1, operarationPart2)
-        .delete(query)
+        .del(query)
         .in({ context, host })
         .with({ tokenFn, claims });
 

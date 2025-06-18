@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = (app) => {
+export default (app) => {
   app.use(deps.jsonBodyParser());
   app.use(deps.cookieParser());
 };

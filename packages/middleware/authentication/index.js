@@ -1,8 +1,8 @@
-const asyncHandler = require("express-async-handler");
+import asyncHandler from "express-async-handler";
 
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({
+export default ({
   verifyFn,
   keyClaimsFn,
   protection = "strict",

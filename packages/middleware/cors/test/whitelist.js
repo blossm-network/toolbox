@@ -1,8 +1,11 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+
+import allow from "../src/allow.js";
+
 chai.use(sinonChai);
+
 const { expect } = chai;
-const allow = require("../src/allow");
 
 describe("Allow", () => {
   it("should call correctly", async () => {

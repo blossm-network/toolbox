@@ -1,1 +1,5 @@
-exports.rpc = require("@blossm/rpc");
+import rpc from "@blossm/rpc";
+
+export default {
+  rpc
+};

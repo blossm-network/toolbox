@@ -3,6 +3,7 @@
   "description": "Gets a fact.",
   "version": "0.0.193",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"
