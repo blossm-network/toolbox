@@ -6,8 +6,9 @@ import normalize from "@blossm/normalize-cli";
 import roboSay from "@blossm/robo-say";
 import { upload as uploadFile } from "@blossm/gcp-storage";
 import rootDir from "@blossm/cli-root-dir";
-import { red } from "chalk";
+import chalk from "chalk";
 
+const { red } = chalk;
 const { prompt } = inquirer;
 
 const envRolesBucket = ({ env, config }) => {

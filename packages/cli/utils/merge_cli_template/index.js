@@ -5,7 +5,9 @@ import { promisify } from "util";
 import yaml from "yaml";
 import path from "path";
 import fs from "fs-extra";
-import { red } from "chalk";
+import chalk from "chalk";
+
+const { red } = chalk;
 
 const access = promisify(fs.access);
 

@@ -2,7 +2,9 @@ import roboSay from "@blossm/robo-say";
 import { spawnSync } from "child_process";
 import path from "path";
 import fs from "fs-extra";
-import { red } from "chalk";
+import chalk from "chalk";
+
+const { red } = chalk;
 
 const installDependenciesIfNeeded = async (workingDir, input) => {
   const lockFile = "yarn.lock";

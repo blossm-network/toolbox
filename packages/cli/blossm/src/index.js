@@ -3,7 +3,7 @@ import roboSay from "@blossm/robo-say";
 import fs from "fs";
 import yaml from "yaml";
 import path from "path";
-import { red } from "chalk";
+import chalk from "chalk";
 
 import init from "./init/index.js";
 import secret from "./secret/index.js";
@@ -19,6 +19,8 @@ import roles from "./roles/index.js";
 import job from "./job/index.js";
 import fact from "./fact/index.js";
 import viewComposite from "./view_composite/index.js";
+
+const { red } = chalk;
 
 const domains = [
   "begin",

@@ -2,8 +2,10 @@ import roboSay from "@blossm/robo-say";
 import normalize from "@blossm/normalize-cli";
 import fs from "fs-extra";
 import path from "path";
-import { green, red } from "chalk";
+import chalk from "chalk";
 import { promisify } from "util";
+
+const { green, red } = chalk;
 
 const access = promisify(fs.access);
 

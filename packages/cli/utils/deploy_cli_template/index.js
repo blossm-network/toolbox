@@ -6,8 +6,10 @@ import fs from "fs-extra";
 import { spawnSync } from "child_process";
 import rootDir from "@blossm/cli-root-dir";
 import path from "path";
-import { green, red } from "chalk";
+import chalk from "chalk";
 import os from "os";
+
+const { green, red } = chalk;
 
 const envProject = ({ env, config }) => {
   switch (env) {

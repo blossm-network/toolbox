@@ -1,7 +1,9 @@
 import roboSay from "@blossm/robo-say";
 import arg from "arg";
 import inquirer from "inquirer";
-import { red } from "chalk";
+import chalk from "chalk";
+
+const { red } = chalk;
 
 const { prompt } = inquirer;
 
