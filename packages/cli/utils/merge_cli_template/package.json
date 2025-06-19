@@ -3,6 +3,7 @@
   "version": "0.0.610",
   "description": "Merges the contents of a file with a template.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

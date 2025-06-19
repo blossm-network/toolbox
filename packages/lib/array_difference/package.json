@@ -3,8 +3,8 @@
   "version": "0.0.8",
   "description": "Finds the items different between two arrays.",
   "main": "index.js",
-  "author": "blossm.network",
   "type": "module",
+  "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"
   },
