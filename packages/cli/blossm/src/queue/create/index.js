@@ -1,8 +1,10 @@
-import { prompt } from "inquirer";
+import inquirer from "inquirer";
 import normalize from "@blossm/normalize-cli";
 import roboSay from "@blossm/robo-say";
 import { create as createQueue } from "@blossm/gcp-queue";
 import rootDir from "@blossm/cli-root-dir";
+
+const { prompt } = inquirer;
 
 const envProject = ({ env, config }) => {
   switch (env) {

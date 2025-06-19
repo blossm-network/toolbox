@@ -1,7 +1,9 @@
 import roboSay from "@blossm/robo-say";
 import arg from "arg";
-import { prompt } from "inquirer";
+import inquirer from "inquirer";
 import { red } from "chalk";
+
+const { prompt } = inquirer;
 
 const camelCased = (str) =>
   str.replace(/-([a-z])/g, function (g) {

@@ -1,4 +1,4 @@
-import { prompt } from "inquirer";
+import inquirer from "inquirer";
 import fs from "fs";
 import yaml from "yaml";
 import path from "path";
@@ -7,6 +7,8 @@ import roboSay from "@blossm/robo-say";
 import { upload as uploadFile } from "@blossm/gcp-storage";
 import rootDir from "@blossm/cli-root-dir";
 import { red } from "chalk";
+
+const { prompt } = inquirer;
 
 const envRolesBucket = ({ env, config }) => {
   switch (env) {

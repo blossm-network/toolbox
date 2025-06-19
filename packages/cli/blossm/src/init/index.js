@@ -1,8 +1,10 @@
 import fs from "fs-extra";
 import path from "path";
-import { prompt } from "inquirer";
+import inquirer from "inquirer";
 import normalize from "@blossm/normalize-cli";
 import roboSay from "@blossm/robo-say";
+
+const { prompt } = inquirer;
 
 const create = async (input) => {
   const blossmDir = path.resolve(process.cwd(), input.dir || "");
