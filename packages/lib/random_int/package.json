@@ -1,6 +1,6 @@
 {
   "name": "@blossm/random-int",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Returns a random integer within the given bounds.",
   "main": "index.js",
   "type": "module",
