@@ -2,9 +2,9 @@ import fs from "fs-extra";
 import yaml from "yaml";
 import path from "path";
 
-import mainService from "./main_service";
-import procedureServices from "./procedure_services";
-import databaseService from "./database_service";
+import mainService from "./main_service.js";
+import procedureServices from "./procedure_services.js";
+import databaseService from "./database_service.js";
 
 const databaseServiceKey = "db";
 

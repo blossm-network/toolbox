@@ -9,9 +9,9 @@ import { red } from "chalk";
 
 const access = promisify(fs.access);
 
-import writeCompose from "./src/write_compose";
-import writeBuild from "./src/write_build";
-import resolveTransientInfo from "./src/resolve_transient_info";
+import writeCompose from "./src/write_compose.js";
+import writeBuild from "./src/write_build.js";
+import resolveTransientInfo from "./src/resolve_transient_info.js";
 
 const envUriSpecifier = (env) => {
   switch (env) {

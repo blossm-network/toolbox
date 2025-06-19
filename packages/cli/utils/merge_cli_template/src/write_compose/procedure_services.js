@@ -5,7 +5,7 @@ import fs from "fs-extra";
 import hash from "@blossm/operation-hash";
 import rootDir from "@blossm/cli-root-dir";
 
-import databaseService from "./database_service";
+import databaseService from "./database_service.js";
 
 const findEnvForDependency = (env, dependency, dir) => {
   for (const file of fs.readdirSync(dir)) {

@@ -1,16 +1,16 @@
 import yaml from "yaml";
 import path from "path";
 
-import viewStore from "./view_store";
-import commandGateway from "./command_gateway";
-import viewGateway from "./view_gateway";
-import factGateway from "./fact_gateway";
-import command from "./command";
-import projection from "./projection";
-import eventStore from "./event_store";
-import job from "./job";
-import fact from "./fact";
-import viewComposite from "./view_composite";
+import viewStore from "./view_store.js";
+import commandGateway from "./command_gateway.js";
+import viewGateway from "./view_gateway.js";
+import factGateway from "./fact_gateway.js";
+import command from "./command.js";
+import projection from "./projection.js";
+import eventStore from "./event_store.js";
+import job from "./job.js";
+import fact from "./fact.js";
+import viewComposite from "./view_composite.js";
 
 const checkInPath = "_check-in";
 const checkInSchedule = "0 * * * *";
