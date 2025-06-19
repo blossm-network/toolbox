@@ -1,6 +1,6 @@
 {
   "name": "@blossm/test-cli-template",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Tests a template.",
   "main": "index.js",
   "type": "module",
