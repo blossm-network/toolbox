@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
-//eslint-disable-next-line
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const esm = require("esm");
-const esmRequire = esm(module);
-import("../src").then(mod => mod.cli(process.argv));
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import * as mod from '../src/index.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+mod.cli(process.argv);
