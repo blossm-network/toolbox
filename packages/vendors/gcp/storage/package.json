@@ -1,6 +1,6 @@
 {
   "name": "@blossm/gcp-storage",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Tools for accessing stored files.",
   "main": "index.js",
   "type": "module",

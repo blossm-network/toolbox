@@ -1,6 +1,6 @@
 {
   "name": "@blossm/cli-root-dir",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Finds the nearest root blossm directory.",
   "main": "index.js",
   "type": "module",
@@ -15,7 +15,7 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@blossm/robo-say": "^0.0.10",
+    "@blossm/robo-say": "^0.0.11",
     "chalk": "^5.4.1",
     "find-up": "^7.0.0",
     "yaml": "^2.8.0"

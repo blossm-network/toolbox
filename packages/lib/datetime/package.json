@@ -1,6 +1,6 @@
 {
   "name": "@blossm/datetime",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Date and time functionality.",
   "main": "index.js",
   "type": "module",

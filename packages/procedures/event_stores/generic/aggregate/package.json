@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-aggregate",
   "description": "An event store server aggregate function.",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -15,7 +15,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.39"
+    "@blossm/errors": "^0.0.40"
   },
   "devDependencies": {
     "mocha": "^11.6.0",

@@ -1,6 +1,6 @@
 {
   "name": "@blossm/crypt",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Crypt functions for hashing and comparing.",
   "main": "index.js",
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@blossm/url-encode-query-data",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Encodes query data into a url.",
   "main": "index.js",
   "type": "module",

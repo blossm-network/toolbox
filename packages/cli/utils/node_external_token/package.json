@@ -1,6 +1,6 @@
 {
   "name": "@blossm/node-external-token",
-  "version": "0.0.178",
+  "version": "0.0.179",
   "description": "Creates a token for calling external services on behalf of the node.",
   "main": "index.js",
   "type": "module",
@@ -15,8 +15,8 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@blossm/connection-token": "^0.0.218",
-    "@blossm/gcp-secret": "^0.0.57"
+    "@blossm/connection-token": "^0.0.219",
+    "@blossm/gcp-secret": "^0.0.58"
   },
   "devDependencies": {
     "mocha": "^11.7.0"

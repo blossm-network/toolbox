@@ -1,6 +1,6 @@
 {
   "name": "@blossm/validator",
-  "version": "0.0.57",
+  "version": "0.0.58",
   "description": "Value validation for common and custom types.",
   "main": "index.js",
   "type": "module",
@@ -12,11 +12,11 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/email-validator": "^0.0.9",
-    "@blossm/errors": "^0.0.39",
-    "@blossm/phone-number": "^0.0.8",
-    "@blossm/uuid-validator": "^0.0.2",
-    "@blossm/validation": "^0.0.9",
+    "@blossm/email-validator": "^0.0.10",
+    "@blossm/errors": "^0.0.40",
+    "@blossm/phone-number": "^0.0.9",
+    "@blossm/uuid-validator": "^0.0.3",
+    "@blossm/validation": "^0.0.10",
     "ethereumjs-util": "^7.0.7",
     "is-image-url": "^1.1.8"
   },

@@ -1,6 +1,6 @@
 {
   "name": "@blossm/chainpoint",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Anchors a hash to a blockchain.",
   "main": "index.js",
   "type": "module",

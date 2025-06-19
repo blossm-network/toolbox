@@ -1,6 +1,6 @@
 {
   "name": "@blossm/network-token",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Creates a token to access an network.",
   "main": "index.js",
   "type": "module",
