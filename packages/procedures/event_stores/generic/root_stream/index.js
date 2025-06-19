@@ -1,4 +1,4 @@
-module.exports = ({ rootStreamFn }) => async (req, res) => {
+export default ({ rootStreamFn }) => async (req, res) => {
   await rootStreamFn({
     ...(req.query.parallel && { parallel: req.query.parallel }),
     fn: (data) =>

@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = (accountSid, authToken) => {
+export default (accountSid, authToken) => {
   const { messages } = deps.twilio(accountSid, authToken);
   return {
     send: async ({ to, from, body, media }) =>

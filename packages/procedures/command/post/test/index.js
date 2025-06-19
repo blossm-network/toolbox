@@ -1,11 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
-chai.use(sinonChai);
-const { expect } = chai;
-const { restore, fake, stub, replace, useFakeTimers, match } = require("sinon");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, fake, stub, replace, useFakeTimers, match } from "sinon";
 
-const post = require("..");
-const deps = require("../deps");
+import deps from "../deps.js";
+import post from "../index.js";
+
+chai.use(sinonChai);
+
+const { expect } = chai;
 
 let clock;
 

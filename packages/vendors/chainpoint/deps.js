@@ -1,3 +1,5 @@
-const chainpoint = require("chainpoint-js");
+import chainpoint from "chainpoint-js";
 
-exports.chainpoint = chainpoint;
+export default {
+  chainpoint,
+};

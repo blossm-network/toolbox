@@ -1,7 +1,8 @@
-const deps = require("./deps");
-const logger = require("@blossm/logger");
+import logger from "@blossm/logger";
 
-module.exports = ({ eventStore, handlers }) => async ({
+import deps from "./deps.js";
+
+export default ({ eventStore, handlers }) => async ({
   events,
   transaction,
 }) => {

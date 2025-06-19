@@ -1,18 +1,18 @@
-const remove = require("./src/operations/remove");
-const find = require("./src/operations/find");
-const aggregate = require("./src/operations/aggregate");
-const findOne = require("./src/operations/find_one");
-const write = require("./src/operations/write");
-const create = require("./src/operations/create");
-const mapReduce = require("./src/operations/map_reduce");
-const forEach = require("./src/operations/for_each");
-const count = require("./src/operations/count");
-const updateMany = require("./src/operations/update_many");
-const connect = require("./src/connect");
-const store = require("./src/store");
-const startSession = require("./src/start_session");
+import remove from "./src/operations/remove.js";
+import find from "./src/operations/find.js";
+import aggregate from "./src/operations/aggregate.js";
+import findOne from "./src/operations/find_one.js";
+import write from "./src/operations/write.js";
+import create from "./src/operations/create.js";
+import mapReduce from "./src/operations/map_reduce.js";
+import forEach from "./src/operations/for_each.js";
+import count from "./src/operations/count.js";
+import updateMany from "./src/operations/update_many.js";
+import connect from "./src/connect.js";
+import store from "./src/store.js";
+import startSession from "./src/start_session.js";
 
-module.exports = {
+export {
   find,
   aggregate,
   remove,

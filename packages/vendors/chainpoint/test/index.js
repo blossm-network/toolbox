@@ -1,11 +1,14 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
-chai.use(sinonChai);
-const { expect } = chai;
-const { restore, fake, replace } = require("sinon");
-const { submitHash, getProof } = require("../index");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, fake, replace } from "sinon";
 
-const deps = require("../deps");
+import deps from "../deps.js";
+import { submitHash, getProof } from "../index.js";
+
+chai.use(sinonChai);
+
+const { expect } = chai;
+
 describe("Chainpoint", () => {
   afterEach(() => {
     restore();

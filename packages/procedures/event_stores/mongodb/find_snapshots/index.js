@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ snapshotStore }) => async ({ query, sort }) =>
+export default ({ snapshotStore }) => async ({ query, sort }) =>
   deps.db.find({
     store: snapshotStore,
     query,

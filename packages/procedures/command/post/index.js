@@ -1,4 +1,4 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
 const processEvents = async ({
   events,
@@ -79,7 +79,7 @@ const processEvents = async ({
   await Promise.all(fns);
 };
 
-module.exports = ({
+export default ({
   mainFn,
   validateFn,
   normalizeFn,

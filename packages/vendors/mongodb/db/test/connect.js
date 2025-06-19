@@ -1,11 +1,12 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, replaceGetter, fake } from "sinon";
+
+import { connect } from "../index.js";
+import deps from "../deps.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, replaceGetter, fake } = require("sinon");
-
-const { connect } = require("../index");
-const deps = require("../deps");
 
 const protocol = "some-protocol";
 const user = "user";

@@ -1,4 +1,11 @@
-exports.express = require("express");
-exports.asyncHandler = require("express-async-handler");
-exports.errorMiddleware = require("@blossm/error-middleware");
-exports.expressMiddleware = require("@blossm/express-middleware");
+import express from "express";
+import asyncHandler from "express-async-handler";
+import errorMiddleware from "@blossm/error-middleware";
+import expressMiddleware from "@blossm/express-middleware";
+
+export default {
+  express,
+  asyncHandler,
+  errorMiddleware,
+  expressMiddleware,
+};

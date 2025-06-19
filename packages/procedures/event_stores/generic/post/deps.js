@@ -1,5 +1,7 @@
-const postTransaction = require("@blossm/event-store-post-transaction");
-const { string: dateString } = require("@blossm/datetime");
+import postTransaction from "@blossm/event-store-post-transaction";
+import { string as dateString } from "@blossm/datetime";
 
-exports.postTransaction = postTransaction;
-exports.dateString = dateString;
+export default {
+  postTransaction,
+  dateString,
+};

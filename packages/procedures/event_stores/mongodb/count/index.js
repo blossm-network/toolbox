@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ countsStore }) => async ({ root }) => {
+export default ({ countsStore }) => async ({ root }) => {
   const [{ value } = { value: 0 }] = await deps.db.find({
     store: countsStore,
     query: { root },

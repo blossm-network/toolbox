@@ -1,3 +1,3 @@
-const redis = require("redis");
+import redis from "redis";
 
-exports.redis = redis;
+export default { redis };

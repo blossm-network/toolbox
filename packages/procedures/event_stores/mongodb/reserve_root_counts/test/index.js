@@ -1,11 +1,15 @@
-const { expect } = require("chai")
-  .use(require("chai-datetime"))
-  .use(require("sinon-chai"));
-const { restore, replace, fake, useFakeTimers } = require("sinon");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import chaiDatetime from "chai-datetime";
+import { restore, replace, fake, useFakeTimers } from "sinon";
 
-const reserveRootCount = require("..");
+import reserveRootCount from "../index.js";
 
-const deps = require("../deps");
+import deps from "../deps.js";
+
+chai.use(sinonChai);
+chai.use(chaiDatetime);
+const { expect } = chai;
 
 const root = "some-root";
 const amount = 1;

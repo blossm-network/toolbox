@@ -3,6 +3,7 @@
   "description": "Exposes an express function to run.",
   "version": "0.0.38",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

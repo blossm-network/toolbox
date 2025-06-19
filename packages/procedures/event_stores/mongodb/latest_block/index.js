@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ blockchainStore }) => () =>
+export default ({ blockchainStore }) => () =>
   deps.db.findOne({
     store: blockchainStore,
     query: {},

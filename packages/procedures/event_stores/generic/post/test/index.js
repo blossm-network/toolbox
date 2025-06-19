@@ -1,12 +1,12 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, fake, stub, replace, useFakeTimers } from "sinon";
+
+import post from "../index.js";
+import deps from "../deps.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-
-const { restore, fake, stub, replace, useFakeTimers } = require("sinon");
-
-const post = require("..");
-const deps = require("../deps");
 
 const eventData = [
   { event: { headers: {} }, number: 0 },

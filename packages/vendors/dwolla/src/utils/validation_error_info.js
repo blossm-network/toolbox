@@ -1,4 +1,4 @@
-module.exports = (err) =>
+export default (err) =>
   err && err.body && err.body._embedded && err.body._embedded.errors
     ? {
         errors: err.body._embedded.errors.map((error) => {

@@ -1,12 +1,14 @@
-const createEvent = require("@blossm/create-event");
-const eventStore = require("@blossm/event-store-rpc");
-const { string: dateString } = require("@blossm/datetime");
-const uuid = require("@blossm/uuid");
-const { forbidden, badRequest } = require("@blossm/errors");
+import createEvent from "@blossm/create-event";
+import eventStore from "@blossm/event-store-rpc";
+import { string as dateString } from "@blossm/datetime";
+import uuid from "@blossm/uuid";
+import { forbidden, badRequest } from "@blossm/errors";
 
-exports.createEvent = createEvent;
-exports.eventStore = eventStore;
-exports.dateString = dateString;
-exports.uuid = uuid;
-exports.forbiddenError = forbidden;
-exports.badRequestError = badRequest;
+export default {
+  createEvent,
+  eventStore,
+  dateString,
+  uuid,
+  forbiddenError: forbidden,
+  badRequestError: badRequest,
+};

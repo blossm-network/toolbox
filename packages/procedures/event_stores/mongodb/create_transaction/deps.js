@@ -1,3 +1,5 @@
-const { startSession } = require("@blossm/mongodb-database");
+import { startSession } from "@blossm/mongodb-database";
 
-exports.db = { startSession };
+export default {
+  db: { startSession },
+};

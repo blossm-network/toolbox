@@ -1,11 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
-chai.use(sinonChai);
-const { expect } = chai;
-const { restore, replace, fake } = require("sinon");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake } from "sinon";
 
-const deps = require("../deps");
-const command = require("..");
+import deps from "../deps.js";
+import command from "../index.js";
+
+chai.use(sinonChai);
+
+const { expect } = chai;
 
 const mainFn = "some-main-fn";
 const aggregateFn = "some-aggregate-fn";

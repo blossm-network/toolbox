@@ -1,11 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
-chai.use(sinonChai);
-const { expect } = chai;
-const { restore, replace, fake } = require("sinon");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake } from "sinon";
 
-const get = require("..");
-const deps = require("../deps");
+import deps from "../deps.js";
+import get from "../index.js";
+
+chai.use(sinonChai);
+
+const { expect } = chai;
 
 const found = "some-objs";
 const root = "some-root";

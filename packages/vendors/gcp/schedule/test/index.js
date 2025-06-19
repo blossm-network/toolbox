@@ -1,9 +1,10 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake } from "sinon";
+import deps from "../deps.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, fake } = require("sinon");
-const gcp = require("@google-cloud/scheduler");
 
 let schedule;
 
@@ -20,14 +21,14 @@ const location = "some-location";
 const token = "some-token";
 
 describe("Schedule", () => {
-  before(() => {
+  before(async () => {
     const client = function () {};
     client.prototype.locationPath = locationPathFake;
     client.prototype.createJob = createJobFake;
 
-    replace(gcp, "CloudSchedulerClient", client);
+    replace(deps, "CloudSchedulerClient", client);
 
-    schedule = require("..");
+    schedule = (await import("../index.js?update=" + Date.now())).default;
   });
   after(() => {
     restore();

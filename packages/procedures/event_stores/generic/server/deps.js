@@ -1,17 +1,19 @@
-const server = require("@blossm/server");
-const { store } = require("@blossm/mongodb-database");
-const get = require("@blossm/event-store-get");
-const aggregateStream = require("@blossm/event-store-aggregate-stream");
-const rootStream = require("@blossm/event-store-root-stream");
-const count = require("@blossm/event-store-count");
-const post = require("@blossm/event-store-post");
-const createBlock = require("@blossm/event-store-create-block");
+import server from "@blossm/server";
+import { store } from "@blossm/mongodb-database";
+import get from "@blossm/event-store-get";
+import aggregateStream from "@blossm/event-store-aggregate-stream";
+import rootStream from "@blossm/event-store-root-stream";
+import count from "@blossm/event-store-count";
+import post from "@blossm/event-store-post";
+import createBlock from "@blossm/event-store-create-block";
 
-exports.store = store;
-exports.server = server;
-exports.get = get;
-exports.post = post;
-exports.rootStream = rootStream;
-exports.count = count;
-exports.aggregateStream = aggregateStream;
-exports.createBlock = createBlock;
+export default {
+  store,
+  server,
+  get,
+  post,
+  rootStream,
+  count,
+  aggregateStream,
+  createBlock,
+};

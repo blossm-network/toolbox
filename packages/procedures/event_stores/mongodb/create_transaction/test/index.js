@@ -1,11 +1,15 @@
-const { expect } = require("chai")
-  .use(require("chai-datetime"))
-  .use(require("sinon-chai"));
-const { restore, replace, fake } = require("sinon");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import chaiDatetime from "chai-datetime";
+import { restore, replace, fake } from "sinon";
 
-const createTransaction = require("..");
+import createTransaction from "../index.js";
 
-const deps = require("../deps");
+import deps from "../deps.js";
+
+chai.use(sinonChai);
+chai.use(chaiDatetime);
+const { expect } = chai;
 
 describe("Mongodb event store create transaction", () => {
   beforeEach(() => {

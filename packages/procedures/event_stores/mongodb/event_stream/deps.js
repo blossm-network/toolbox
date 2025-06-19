@@ -1,3 +1,5 @@
-const { find } = require("@blossm/mongodb-database");
+import { find } from "@blossm/mongodb-database";
 
-exports.db = { find };
+export default {
+  db: { find },
+};

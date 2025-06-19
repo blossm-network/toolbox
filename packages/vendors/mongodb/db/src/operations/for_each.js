@@ -1,4 +1,4 @@
-module.exports = async ({ store, query, fn }) =>
+export default async ({ store, query, fn }) =>
   await new Promise((resolve, reject) => {
     store
       .find(query)

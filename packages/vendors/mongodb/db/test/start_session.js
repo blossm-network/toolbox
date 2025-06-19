@@ -1,11 +1,10 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
-chai.use(sinonChai);
-const { expect } = chai;
-const { restore, replace, fake } = require("sinon");
-const { startSession } = require("../index");
+import * as chai from "chai";
+import { restore, replace, fake } from "sinon";
+import { startSession } from "../index.js";
 
-const deps = require("../deps");
+import deps from "../deps.js";
+
+const { expect } = chai;
 
 describe("Start session", () => {
   afterEach(() => {

@@ -1,9 +1,14 @@
-const { expect } = require("chai")
-  .use(require("chai-datetime"))
-  .use(require("sinon-chai"));
-const { restore, replace, fake, stub, useFakeTimers } = require("sinon");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import chaiDatetime from "chai-datetime";
+import { restore, replace, fake, stub, useFakeTimers } from "sinon";
 
-const deps = require("../deps");
+import deps from "../deps.js";
+import { __resetStoresForTest } from "../index.js";
+
+chai.use(sinonChai);
+chai.use(chaiDatetime);
+const { expect } = chai;
 
 let clock;
 
@@ -35,8 +40,8 @@ process.env.MONGODB_DATABASE = database;
 const publishFn = "some-publish-fn";
 
 describe("Mongodb event store", () => {
-  beforeEach(() => {
-    delete require.cache[require.resolve("..")];
+  beforeEach(async () => {
+    __resetStoresForTest();
     process.env.NODE_ENV = "some-env";
     clock = useFakeTimers(now.getTime());
   });
@@ -45,7 +50,7 @@ describe("Mongodb event store", () => {
     restore();
   });
   it("should call with the correct params", async () => {
-    const mongodbEventStore = require("..");
+    const mongodbEventStore = (await import("../index.js")).default; 
     const eStore = "some-event-store";
     const sStore = "some-snapshot-store";
     const cStore = "some-counts-store";
@@ -446,7 +451,7 @@ describe("Mongodb event store", () => {
     expect(storeFake).to.have.been.callCount(4);
   });
   it("should call with the correct params with indexes and local env", async () => {
-    const mongodbEventStore = require("..");
+    const mongodbEventStore = (await import("../index.js")).default;
     const eStore = "some-event-store";
     const sStore = "some-snapshot-store";
     const cStore = "some-counts-store";
@@ -802,7 +807,7 @@ describe("Mongodb event store", () => {
     });
   });
   it("should call with the correct params when schema has object property", async () => {
-    const mongodbEventStore = require("..");
+    const mongodbEventStore = (await import("../index.js")).default;
     const eStore = "some-event-store";
     const sStore = "some-snapshot-store";
     const cStore = "some-counts-store";

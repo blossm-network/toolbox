@@ -3,6 +3,7 @@
   "description": "An event store GET handler.",
   "version": "0.0.78",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
+export default ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
   root,
   { timestamp, includeEvents = false, eventLimit } = {}
 ) => {

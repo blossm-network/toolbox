@@ -1,1 +1,1 @@
-module.exports = ({ store, query }) => store.deleteOne(query);
+export default ({ store, query }) => store.deleteOne(query);

@@ -1,6 +1,8 @@
-const { expect } = require("chai");
-const { fake, restore } = require("sinon");
-const { remove } = require("../index");
+import * as chai from "chai";
+import { fake, restore } from "sinon";
+import { remove } from "../index.js";
+
+const { expect } = chai;
 
 const query = "some-query";
 

@@ -1,7 +1,7 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
 //TODO store the merkle proofs elsewhere for O(log(n)) verification. Not important now.
-module.exports = ({
+export default ({
   saveSnapshotFn,
   rootStreamFn,
   latestBlockFn,

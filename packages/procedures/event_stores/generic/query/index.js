@@ -1,4 +1,4 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
 const doesMatchQuery = ({ state, query }) => {
   try {
@@ -16,7 +16,7 @@ const doesMatchQuery = ({ state, query }) => {
   }
 };
 
-module.exports = ({
+export default ({
   findSnapshotsFn,
   findEventsFn,
   findOneSnapshotFn,

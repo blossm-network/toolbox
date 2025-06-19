@@ -1,10 +1,11 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake } from "sinon";
+
+import deps from "../deps.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, fake } = require("sinon");
-
-const deps = require("../deps");
 
 const findSnapshotsFn = "some-find-snapshots-fn";
 const findEventsFn = "some-find-events-fn";
@@ -27,14 +28,8 @@ const signFn = "some-sign-fn";
 const blockPublisherPublicKeyFn = "some-block-publisher-public-key-fn";
 
 describe("Event store", () => {
-  beforeEach(() => {
-    delete require.cache[require.resolve("..")];
-  });
-  afterEach(() => {
-    restore();
-  });
   it("should call with the correct params", async () => {
-    const eventStore = require("..");
+    const eventStore = (await import("../index.js")).default;
     const listenFake = fake();
     const postFake = fake.returns({
       listen: listenFake,

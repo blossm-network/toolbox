@@ -3,6 +3,7 @@
   "version": "0.0.128",
   "description": "Read and write from a MongoDB database.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

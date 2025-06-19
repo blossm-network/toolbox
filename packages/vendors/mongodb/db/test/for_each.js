@@ -1,6 +1,8 @@
-const { expect } = require("chai");
-const { fake, restore } = require("sinon");
-const { forEach } = require("../index");
+import * as chai from "chai";
+import { fake, restore } from "sinon";
+import { forEach } from "../index.js";
+
+const { expect } = chai;
 
 const query = "some-query";
 

@@ -1,3 +1,5 @@
-const aggregate = require("@blossm/event-store-aggregate");
+import aggregate from "@blossm/event-store-aggregate";
 
-exports.aggregate = aggregate;
+export default {
+  aggregate,
+};

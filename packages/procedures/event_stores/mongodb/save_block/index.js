@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ blockchainStore }) => ({ block, transaction }) =>
+export default ({ blockchainStore }) => ({ block, transaction }) =>
   deps.db.write({
     store: blockchainStore,
     query: {

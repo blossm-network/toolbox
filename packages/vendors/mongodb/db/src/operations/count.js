@@ -1,1 +1,1 @@
-module.exports = async ({ store, query }) => await store.countDocuments(query);
+export default async ({ store, query }) => await store.countDocuments(query);

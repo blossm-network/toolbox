@@ -1,7 +1,9 @@
-const { resourceNotFound } = require("@blossm/errors");
-const query = require("@blossm/event-store-query");
-const aggregate = require("@blossm/event-store-aggregate");
+import { resourceNotFound } from "@blossm/errors";
+import query from "@blossm/event-store-query";
+import aggregate from "@blossm/event-store-aggregate";
 
-exports.resourceNotFoundError = resourceNotFound;
-exports.query = query;
-exports.aggregate = aggregate;
+export default {
+  resourceNotFoundError: resourceNotFound,
+  query,
+  aggregate,
+};

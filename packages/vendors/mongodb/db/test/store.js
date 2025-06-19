@@ -1,9 +1,11 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, replaceGetter, fake } from "sinon";
+import { store } from "../index.js";
+import deps from "../deps.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, replaceGetter, fake } = require("sinon");
-const { store } = require("../index");
 
 const name = "some-name";
 const commonKey = "key";
@@ -11,7 +13,6 @@ const schema = {};
 const schemaValue = "some-schema-value";
 schema[commonKey] = { type: String, default: schemaValue };
 
-const deps = require("../deps");
 
 describe("Store", () => {
   afterEach(() => {

@@ -9,15 +9,16 @@
 //   }
 // }
 
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake } from "sinon";
+import crypto from "crypto";
+import kms from "@google-cloud/kms";
+
+import { verify } from "../index.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, fake } = require("sinon");
-const { /*sign,*/ verify } = require("..");
-const crypto = require("crypto");
-
-const kms = require("@google-cloud/kms");
 
 const project = "some-gcp-project";
 const ring = "some-key-ring";

@@ -1,3 +1,5 @@
-const { write } = require("@blossm/mongodb-database");
+import { write } from "@blossm/mongodb-database";
 
-exports.db = { write };
+export default {
+  db: { write },
+};

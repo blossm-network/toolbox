@@ -1,3 +1,5 @@
-const createBlockTransaction = require("@blossm/event-store-create-block-transaction");
+import createBlockTransaction from "@blossm/event-store-create-block-transaction";
 
-exports.createBlockTransaction = createBlockTransaction;
+export default {
+  createBlockTransaction,
+};

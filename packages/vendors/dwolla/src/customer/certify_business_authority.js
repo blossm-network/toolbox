@@ -1,6 +1,6 @@
-const deps = require("../../deps");
+import deps from "../../deps.js";
 
-module.exports = (dwolla) => async (id, { idempotencyKey } = {}) => {
+export default (dwolla) => async (id, { idempotencyKey } = {}) => {
   try {
     await dwolla.post(
       `customers/${id}/beneficial-ownership`,

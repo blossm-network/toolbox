@@ -1,6 +1,8 @@
-const { create } = require("@blossm/mongodb-database");
-const { preconditionFailed, badRequest } = require("@blossm/errors");
+import { create } from "@blossm/mongodb-database";
+import { preconditionFailed, badRequest } from "@blossm/errors";
 
-exports.db = { create };
-exports.badRequestError = badRequest;
-exports.preconditionFailedError = preconditionFailed;
+export default {
+  db: { create },
+  badRequestError: badRequest,
+  preconditionFailedError: preconditionFailed,
+};

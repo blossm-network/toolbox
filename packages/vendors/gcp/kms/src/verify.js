@@ -1,10 +1,10 @@
-const crypto = require("crypto");
+import crypto from "crypto";
 
-const publicKey = require("./public_key");
+import publicKey from "./public_key.js";
 
 let publicKeys = {};
 
-module.exports = ({ key, ring, location, version, project }) => async ({
+export default ({ key, ring, location, version, project }) => async ({
   message,
   signature,
   format = "base64",

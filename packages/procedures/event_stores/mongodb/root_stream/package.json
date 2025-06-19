@@ -3,6 +3,7 @@
   "description": "A mongodb event store server function to stream all roots.",
   "version": "0.0.88",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

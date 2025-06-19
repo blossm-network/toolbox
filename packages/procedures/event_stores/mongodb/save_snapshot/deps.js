@@ -1,5 +1,7 @@
-const { write } = require("@blossm/mongodb-database");
-const { root: merkleRoot } = require("@blossm/merkle-tree");
+import { write } from "@blossm/mongodb-database";
+import { root as merkleRoot } from "@blossm/merkle-tree";
 
-exports.db = { write };
-exports.merkleRoot = merkleRoot;
+export default {
+  db: { write },
+  merkleRoot,
+};

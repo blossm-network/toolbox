@@ -1,7 +1,8 @@
-const { CloudSchedulerClient } = require("@google-cloud/scheduler");
-const client = new CloudSchedulerClient();
+import deps from "./deps.js";
 
-module.exports = async ({
+const client = new deps.CloudSchedulerClient();
+
+export default async ({
   url,
   data,
   schedule,

@@ -1,12 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake } from "sinon";
+import crypto from "crypto";
+import kms from "@google-cloud/kms";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, fake } = require("sinon");
-const crypto = require("crypto");
-const { sign } = require("..");
 
-const kms = require("@google-cloud/kms");
+import { sign } from "../index.js";
 
 const project = "some-gcp-project";
 const ring = "some-key-ring";

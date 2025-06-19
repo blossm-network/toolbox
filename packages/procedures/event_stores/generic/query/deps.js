@@ -1,7 +1,9 @@
-const { find } = require("@blossm/mongodb-database");
-const aggregate = require("@blossm/event-store-aggregate");
-const { badRequest } = require("@blossm/errors");
+import { find } from "@blossm/mongodb-database";
+import aggregate from "@blossm/event-store-aggregate";
+import { badRequest } from "@blossm/errors";
 
-exports.db = { find };
-exports.aggregate = aggregate;
-exports.badRequestError = badRequest;
+export default {
+  db: { find },
+  aggregate,
+  badRequestError: badRequest,
+};

@@ -1,6 +1,6 @@
-const logger = require("@blossm/logger");
+import logger from "@blossm/logger";
 
-const deps = require("../deps");
+import deps from "../deps.js";
 
 const maxRetryCount = 10;
 
@@ -29,7 +29,8 @@ const connect = ({ autoIndex, poolSize, connectionString }) => {
     }
   );
 };
-module.exports = ({
+
+export default ({
   protocol,
   user,
   password,

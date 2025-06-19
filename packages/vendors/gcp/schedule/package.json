@@ -2,7 +2,7 @@
   "name": "@blossm/gcp-schedule",
   "version": "0.0.6",
   "description": "Schedules a job.",
-  "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

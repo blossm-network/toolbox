@@ -3,6 +3,7 @@
   "description": "A mongodb event store server function that allocated event numbers.",
   "version": "0.0.111",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

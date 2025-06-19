@@ -1,6 +1,6 @@
-const kms = require("@google-cloud/kms");
+import kms from "@google-cloud/kms";
 
-module.exports = async ({ key, ring, location, version, project }) => {
+export default async ({ key, ring, location, version, project }) => {
   const client = new kms.KeyManagementServiceClient();
 
   const versionPath = client.cryptoKeyVersionPath(

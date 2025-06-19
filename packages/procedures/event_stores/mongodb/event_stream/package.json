@@ -3,6 +3,7 @@
   "description": "A mongodb event store server event stream function.",
   "version": "0.0.55",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ countsStore }) => ({ root, amount, transaction }) =>
+export default ({ countsStore }) => ({ root, amount, transaction }) =>
   deps.db.write({
     store: countsStore,
     query: { root },

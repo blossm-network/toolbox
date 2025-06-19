@@ -1,5 +1,7 @@
-const server = require("@blossm/server");
-const post = require("@blossm/command-post");
+import server from "@blossm/server";
+import post from "@blossm/command-post";
 
-exports.server = server;
-exports.post = post;
+export default {
+  server,
+  post,
+};

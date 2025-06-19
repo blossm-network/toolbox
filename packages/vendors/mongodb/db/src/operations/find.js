@@ -1,4 +1,4 @@
-module.exports = ({
+export default ({
   store,
   query,
   sort = null,

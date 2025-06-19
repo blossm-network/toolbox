@@ -1,4 +1,4 @@
-module.exports = ({ store, query, select = null, sort, options }) =>
+export default ({ store, query, select = null, sort, options }) =>
   store.findOne(
     query,
     {

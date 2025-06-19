@@ -1,10 +1,11 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore } from "sinon";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore } = require("sinon");
 
-const validateErrorInfo = require("../../src/utils/validation_error_info");
+import validateErrorInfo from "../../src/utils/validation_error_info.js";
 
 describe("Validate error info", () => {
   afterEach(() => {

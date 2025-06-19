@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ snapshotStore }) => ({ snapshot, transaction }) =>
+export default ({ snapshotStore }) => ({ snapshot, transaction }) =>
   deps.db.write({
     store: snapshotStore,
     query: {

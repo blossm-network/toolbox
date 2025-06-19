@@ -1,12 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { fake, stub, replace, restore, match } from "sinon";
+
+import deps from "../deps.js";
+import { writeObject, readObject, setExpiry } from "../index.js";
+
 chai.use(sinonChai);
+
 const { expect } = chai;
-const { fake, stub, replace, restore, match } = require("sinon");
-
-const deps = require("../deps");
-
-process.env.REDIS_IP = "some-cache-ip";
 
 const value = { some: "value" };
 const hmsetFake = stub().yields(null);
@@ -20,13 +21,13 @@ const createClientFake = fake.returns({
   on: onFake,
 });
 
-replace(deps, "redis", {
-  createClient: createClientFake,
-});
-
-const { writeObject, readObject, setExpiry } = require("..");
-
 describe("Cache", () => {
+  before(() => {
+    process.env.REDIS_IP = "some-cache-ip";
+    replace(deps, "redis", {
+      createClient: createClientFake,
+    });
+  });
   afterEach(() => {
     restore();
   });

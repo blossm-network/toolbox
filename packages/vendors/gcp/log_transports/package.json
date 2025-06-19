@@ -3,6 +3,7 @@
   "version": "0.0.6",
   "description": "Destinations to publish logs to.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

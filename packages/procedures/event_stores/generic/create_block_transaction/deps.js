@@ -1,13 +1,15 @@
-const aggregate = require("@blossm/event-store-aggregate");
-const { string: dateString } = require("@blossm/datetime");
-const cononicalString = require("@blossm/cononical-string");
-const { root: merkleRoot } = require("@blossm/merkle-tree");
-const hash = require("@blossm/hash");
-const { encode } = require("@blossm/rlp");
+import aggregate from "@blossm/event-store-aggregate";
+import { string as dateString } from "@blossm/datetime";
+import cononicalString from "@blossm/cononical-string";
+import { root as merkleRoot } from "@blossm/merkle-tree";
+import hash from "@blossm/hash";
+import { encode } from "@blossm/rlp";
 
-exports.aggregate = aggregate;
-exports.dateString = dateString;
-exports.cononicalString = cononicalString;
-exports.merkleRoot = merkleRoot;
-exports.hash = hash;
-exports.encode = encode;
+export default {
+  aggregate,
+  dateString,
+  cononicalString,
+  merkleRoot,
+  hash,
+  encode,
+};

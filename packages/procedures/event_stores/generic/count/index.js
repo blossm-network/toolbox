@@ -1,4 +1,4 @@
-module.exports = ({ countFn }) => async (req, res) => {
+export default ({ countFn }) => async (req, res) => {
   const result = await countFn({
     root: req.params.root,
   });

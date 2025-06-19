@@ -1,12 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, fake, replace } from "sinon";
+
+import deps from "../deps.js";
+import createBlock from "../index.js";
+
 chai.use(sinonChai);
+
 const { expect } = chai;
-
-const { restore, fake, replace } = require("sinon");
-
-const createBlock = require("..");
-const deps = require("../deps");
 
 describe("Event store post", () => {
   afterEach(() => {

@@ -1,41 +1,42 @@
-const { PubSub } = require("@google-cloud/pubsub");
-const pubsub = new PubSub();
+import deps from "./deps.js";
 
-exports.publish = async (data, topic) => {
+const pubsub = new deps.PubSub();
+
+export const publish = async (data, topic) => {
   const string = JSON.stringify(data);
   const buffer = Buffer.from(string);
-  return pubsub.topic(topic).publish(buffer);
+  return pubsub.topic(topic).publishMessage({ data:buffer });
 };
 
-exports.subscribe = async ({ topic, name, fn }) => {
+export const subscribe = async ({ topic, name, fn }) => {
   const subscription = pubsub.topic(topic).subscription(name);
   const [exists] = await subscription.exists();
   if (exists) await subscription.delete();
   subscription.create(fn);
 };
 
-exports.unsubscribe = async ({ topic, name }) => {
+export const unsubscribe = async ({ topic, name }) => {
   const subscription = pubsub.topic(topic).subscription(name);
   const [exists] = await subscription.exists();
   if (!exists) return;
   await subscription.delete();
 };
 
-exports.create = async (name) => {
+export const create = async (name) => {
   const topic = pubsub.topic(name);
   const [exists] = await topic.exists();
   if (exists) return;
   await topic.create();
 };
 
-exports.delete = async (name) => {
+export const del = async (name) => {
   const topic = pubsub.topic(name);
   const [exists] = await topic.exists();
   if (!exists) return;
   await topic.delete();
 };
 
-exports.exists = async (name) => {
+export const exists = async (name) => {
   const topic = pubsub.topic(name);
   const [exists] = await topic.exists();
   return exists;

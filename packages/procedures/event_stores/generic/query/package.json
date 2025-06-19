@@ -3,6 +3,7 @@
   "description": "Am event store server query function.",
   "version": "0.0.21",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

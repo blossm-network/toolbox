@@ -1,24 +1,24 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-const certifyCustomerBusinessAuthority = require("./src/customer/certify_business_authority");
-const createBusinessAuthority = require("./src/business_authority/create");
-const createBusinessAuthorityDocument = require("./src/business_authority/create_document");
-const createDocument = require("./src/customer/create_document");
-const createReceiveOnlyCustomer = require("./src/customer/create_receive_only");
-const createUnverifiedCustomer = require("./src/customer/create_unverified");
-const createVerifiedBusinessCustomer = require("./src/customer/create_verified_business");
-const createVerifiedPersonalCustomer = require("./src/customer/create_verified_personal");
-const deactivateCustomer = require("./src/customer/deactivate");
-const deleteBusinessAuthority = require("./src/business_authority/delete");
-const getBusinessAuthority = require("./src/business_authority/get");
-const reactivateCustomer = require("./src/customer/reactivate");
-const suspendCustomer = require("./src/customer/suspend");
-const updateBusinessAuthority = require("./src/business_authority/update");
-const updateUnverifiedCustomer = require("./src/customer/update_unverified");
-const updateVerifiedCustomer = require("./src/customer/update_verified");
-const getBusinessAuthorityStatus = require("./src/customer/get_business_authority_status");
+import certifyCustomerBusinessAuthority from "./src/customer/certify_business_authority.js";
+import createBusinessAuthority from "./src/business_authority/create.js";
+import createBusinessAuthorityDocument from "./src/business_authority/create_document.js";
+import createDocument from "./src/customer/create_document.js";
+import createReceiveOnlyCustomer from "./src/customer/create_receive_only.js";
+import createUnverifiedCustomer from "./src/customer/create_unverified.js";
+import createVerifiedBusinessCustomer from "./src/customer/create_verified_business.js";
+import createVerifiedPersonalCustomer from "./src/customer/create_verified_personal.js";
+import deactivateCustomer from "./src/customer/deactivate.js";
+import deleteBusinessAuthority from "./src/business_authority/delete.js";
+import getBusinessAuthority from "./src/business_authority/get.js";
+import reactivateCustomer from "./src/customer/reactivate.js";
+import suspendCustomer from "./src/customer/suspend.js";
+import updateBusinessAuthority from "./src/business_authority/update.js";
+import updateUnverifiedCustomer from "./src/customer/update_unverified.js";
+import updateVerifiedCustomer from "./src/customer/update_verified.js";
+import getBusinessAuthorityStatus from "./src/customer/get_business_authority_status.js";
 
-module.exports = (key, secret, { environment }) => {
+export default (key, secret, { environment }) => {
   const dwolla = deps.dwolla(key, secret, { environment });
   return {
     businessAuthority: {

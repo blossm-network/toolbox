@@ -1,9 +1,10 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake, useFakeTimers } from "sinon";
+import deps from "../deps.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, fake, useFakeTimers } = require("sinon");
-const gcp = require("@google-cloud/tasks");
 
 let clock;
 const now = new Date();
@@ -41,16 +42,16 @@ describe("Queue", () => {
   afterEach(() => {
     clock.restore();
   });
-  before(() => {
+  before(async () => {
     const client = function () {};
     client.prototype.queuePath = queuePathFake;
     client.prototype.locationPath = locationPathFake;
     client.prototype.createTask = createTaskFake;
     client.prototype.createQueue = createQueueFake;
 
-    replace(gcp, "CloudTasksClient", client);
+    replace(deps, "CloudTasksClient", client);
 
-    queue = require("..");
+    queue = (await import("../index.js?update=" + Date.now()));
   });
   after(() => {
     restore();

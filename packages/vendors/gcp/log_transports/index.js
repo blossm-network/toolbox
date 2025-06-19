@@ -1,5 +1,5 @@
-const { createLogger, transports, format } = require("winston");
-const { LoggingWinston } = require("@google-cloud/logging-winston");
+import { createLogger, transports, format } from "winston";
+import { LoggingWinston } from "@google-cloud/logging-winston";
 
 const loggerTransports = createLogger({
   level: "debug",
@@ -42,4 +42,4 @@ const loggerTransports = createLogger({
   ],
 });
 
-module.exports = loggerTransports;
+export default loggerTransports;

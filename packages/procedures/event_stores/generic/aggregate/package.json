@@ -3,6 +3,7 @@
   "description": "An event store server aggregate function.",
   "version": "0.0.16",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

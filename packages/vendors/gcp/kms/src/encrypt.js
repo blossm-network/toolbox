@@ -1,6 +1,6 @@
-const kms = require("@google-cloud/kms");
+import kms from "@google-cloud/kms";
 
-module.exports = async ({
+export default async ({
   message,
   key,
   ring,

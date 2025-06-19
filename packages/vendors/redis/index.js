@@ -1,5 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
+console.log({ REDIS_IP: process.env.REDIS_IP });
 const client =
   process.env.REDIS_IP &&
   deps.redis.createClient({
@@ -9,24 +10,34 @@ const client =
 client && client.on("error", () => {});
 
 const fallbackObjectCache = {};
-module.exports = {
-  writeObject: (key, object) =>
-    client
-      ? new Promise((resolve, reject) =>
-          client.hmset(key, object, (err) => (err ? reject(err) : resolve()))
+
+const writeObject = (key, object) => {
+  console.log({ client });
+  return client
+    ? new Promise((resolve, reject) =>
+        client.hmset(key, object, (err) => (err ? reject(err) : resolve()))
+      )
+    : (fallbackObjectCache[key] = object);
+}
+
+
+const readObject = (key) =>
+  client
+    ? new Promise((resolve, reject) =>
+        client.hgetall(key, (err, object) =>
+          err ? reject(err) : resolve(object)
         )
-      : (fallbackObjectCache[key] = object),
-  readObject: (key) =>
-    client
-      ? new Promise((resolve, reject) =>
-          client.hgetall(key, (err, object) =>
-            err ? reject(err) : resolve(object)
-          )
-        )
-      : fallbackObjectCache[key],
-  setExpiry: (key, { seconds }) =>
-    client &&
-    new Promise((resolve, reject) =>
-      client.expire(key, seconds, (err) => (err ? reject(err) : resolve()))
-    ),
+      )
+    : fallbackObjectCache[key];
+
+const setExpiry = (key, { seconds }) =>
+  client &&
+  new Promise((resolve, reject) =>
+    client.expire(key, seconds, (err) => (err ? reject(err) : resolve()))
+  );
+
+export {
+  writeObject,
+  readObject,
+  setExpiry,
 };

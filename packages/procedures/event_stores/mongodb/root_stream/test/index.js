@@ -1,12 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake } from "sinon";
+
+import stream from "../index.js";
+
+import deps from "../deps.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, fake } = require("sinon");
-
-const stream = require("..");
-
-const deps = require("../deps");
 
 const countsStore = "some-counts-store";
 const parallel = "some-parallel";

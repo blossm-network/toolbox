@@ -3,6 +3,7 @@
   "version": "0.0.10",
   "description": "Anchors a hash to a blockchain.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

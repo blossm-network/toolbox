@@ -1,8 +1,8 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
 const blockLimit = 100;
 
-module.exports = ({
+export default ({
   saveSnapshotFn,
   rootStreamFn,
   latestBlockFn,

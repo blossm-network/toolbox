@@ -3,6 +3,7 @@
   "description": "An event store GET handler for streaming aggregates.",
   "version": "0.0.20",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

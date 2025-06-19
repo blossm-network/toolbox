@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({
+export default ({
   saveEventsFn,
   reserveRootCountsFn,
   publishFn,

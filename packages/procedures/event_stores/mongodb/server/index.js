@@ -1,11 +1,18 @@
-const logger = require("@blossm/logger");
+import logger from "@blossm/logger";
 
-const deps = require("./deps");
+import deps from "./deps.js";
 
 let _eventStore;
 let _snapshotStore;
 let _countsStore;
 let _blockchainStore;
+
+export function __resetStoresForTest() {
+  _eventStore = undefined;
+  _snapshotStore = undefined;
+  _countsStore = undefined;
+  _blockchainStore = undefined;
+}
 
 const typeKey = "$type";
 
@@ -279,7 +286,7 @@ const blockchainStore = async () => {
   return _blockchainStore;
 };
 
-module.exports = async ({
+export default async ({
   schema,
   indexes = [],
   handlers,

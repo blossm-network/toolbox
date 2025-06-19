@@ -1,2 +1,3 @@
-const deps = require("../deps");
-module.exports = () => deps.mongoose.startSession();
+import deps from "../deps.js";
+
+export default () => deps.mongoose.startSession();

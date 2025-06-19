@@ -1,10 +1,9 @@
-require("localenv");
+import "localenv";
+import logger from "@blossm/logger";
 
-const logger = require("@blossm/logger");
+import deps from "./deps.js";
 
-const deps = require("./deps");
-
-module.exports = ({ prehook, posthook } = {}) => {
+export default ({ prehook, posthook } = {}) => {
   const app = deps.express();
   if (prehook) prehook(app);
   deps.expressMiddleware(app);

@@ -1,11 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
-chai.use(sinonChai);
-const { expect } = chai;
-const { restore, replace, fake, stub, match } = require("sinon");
-const aggregate = require("..");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake, stub, match } from "sinon";
 
-const deps = require("../deps");
+import deps from "../deps.js";
+import aggregate from "../index.js";
+
+chai.use(sinonChai);
+
+const { expect } = chai;
 
 const root = "some-root";
 const action = "some-action";

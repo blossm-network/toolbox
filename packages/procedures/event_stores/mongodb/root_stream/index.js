@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ countsStore }) => async ({
+export default ({ countsStore }) => async ({
   parallel = 1,
   updatedOnOrAfter,
   updatedBefore,

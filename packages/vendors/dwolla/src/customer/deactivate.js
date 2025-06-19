@@ -1,8 +1,8 @@
-const validationErrorInfo = require("../utils/validation_error_info");
+import validationErrorInfo from "../utils/validation_error_info.js";
 
-const deps = require("../../deps");
+import deps from "../../deps.js";
 
-module.exports = (dwolla) => async (id, { idempotencyKey } = {}) => {
+export default (dwolla) => async (id, { idempotencyKey } = {}) => {
   try {
     const { body } = await dwolla.post(
       `customers/${id}`,

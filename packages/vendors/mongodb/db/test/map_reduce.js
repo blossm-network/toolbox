@@ -1,6 +1,8 @@
-const { expect } = require("chai").use(require("chai-as-promised"));
-const { restore, fake } = require("sinon");
-const { mapReduce } = require("..");
+import * as chai from "chai";
+import { restore, fake } from "sinon";
+import { mapReduce } from "../index.js";
+
+const { expect } = chai;
 
 const query = "some-query";
 const map = "some-map-fn";

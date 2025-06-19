@@ -1,5 +1,7 @@
-const { write } = require("@blossm/mongodb-database");
-const { string: dateString } = require("@blossm/datetime");
+import { write } from "@blossm/mongodb-database";
+import { string as dateString } from "@blossm/datetime";
 
-exports.db = { write };
-exports.dateString = dateString;
+export default {
+  db: { write },
+  dateString,
+};

@@ -1,7 +1,7 @@
-const kms = require("@google-cloud/kms");
-const crypto = require("crypto");
+import kms from "@google-cloud/kms";
+import crypto from "crypto";
 
-module.exports = async ({
+export default async ({
   message,
   format = "base64",
   key,

@@ -1,7 +1,7 @@
-const connect = require("./connect");
-const deps = require("../deps");
+import connect from "./connect.js";
+import deps from "../deps.js";
 
-module.exports = ({
+export default ({
   name,
   schema,
   indexes = [],

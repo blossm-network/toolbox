@@ -3,6 +3,7 @@
   "version": "0.0.5",
   "description": "Dwolla payment functionality.",
   "main": "index.js",
+  "type": "module",
   "author": "sustainers.market",
   "engines": {
     "node": ">= 20.19.0"

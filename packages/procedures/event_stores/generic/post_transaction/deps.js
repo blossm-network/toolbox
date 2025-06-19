@@ -1,8 +1,10 @@
-const { string: dateString } = require("@blossm/datetime");
-const hash = require("@blossm/hash");
-const { preconditionFailed, badRequest } = require("@blossm/errors");
+import { string as dateString } from "@blossm/datetime";
+import hash from "@blossm/hash";
+import { preconditionFailed, badRequest } from "@blossm/errors";
 
-exports.dateString = dateString;
-exports.preconditionFailedError = preconditionFailed;
-exports.badRequestError = badRequest;
-exports.hash = hash;
+export default {
+  dateString,
+  preconditionFailedError: preconditionFailed,
+  badRequestError: badRequest,
+  hash,
+};

@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = async (fn) => {
+export default async (fn) => {
   if (process.env.NODE_ENV == "local") return await fn();
   const session = await deps.db.startSession();
   let result;

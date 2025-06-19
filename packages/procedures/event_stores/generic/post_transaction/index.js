@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({
+export default ({
   // eventData is { event, number }, where `number` is the only acceptable number for this event.
   eventData,
   saveEventsFn,

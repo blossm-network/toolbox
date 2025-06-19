@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ eventStore }) => async ({
+export default ({ eventStore }) => async ({
   parallel = 1,
   query,
   sort,

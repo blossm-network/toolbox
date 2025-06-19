@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ eventStore }) => ({ query, sort }) =>
+export default ({ eventStore }) => ({ query, sort }) =>
   deps.db.find({
     store: eventStore,
     query,

@@ -1,5 +1,6 @@
-const deps = require("./deps");
-exports.submitHash = async (hash) => {
+import deps from "./deps.js";
+
+export const submitHash = async (hash) => {
   const submittedHashes = await deps.chainpoint.submitHashes([hash]);
   return submittedHashes
     .filter((submittedHash) => submittedHash.hash == hash)
@@ -7,7 +8,8 @@ exports.submitHash = async (hash) => {
       return { id: submittedHash.proofId, uri: submittedHash.uri };
     });
 };
-exports.getProof = async ({ id, uri }) => {
+
+export const getProof = async ({ id, uri }) => {
   const [result] = await deps.chainpoint.getProofs([{ proofId: id, uri }]);
   if (!result || id != result.proofId) return null;
   return {

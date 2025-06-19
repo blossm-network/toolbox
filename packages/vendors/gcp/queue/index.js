@@ -1,7 +1,8 @@
-const { CloudTasksClient } = require("@google-cloud/tasks");
-const client = new CloudTasksClient();
+import deps from "./deps.js";
 
-exports.create = async ({ project, location, name }) => {
+const client = new deps.CloudTasksClient();
+
+export const create = async ({ project, location, name }) => {
   const parent = client.locationPath(project, location);
 
   const [response] = await client.createQueue({
@@ -13,7 +14,7 @@ exports.create = async ({ project, location, name }) => {
   return response;
 };
 
-exports.enqueue = ({
+export const enqueue = ({
   serviceAccountEmail,
   project = process.env.GCP_PROJECT,
   location = process.env.GCP_REGION,

@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = ({ eventStore }) => async (idempotency) => {
+export default ({ eventStore }) => async (idempotency) => {
   const conflict = await deps.db.findOne({
     store: eventStore,
     query: { "headers.idempotency": idempotency },

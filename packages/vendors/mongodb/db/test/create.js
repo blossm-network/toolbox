@@ -1,6 +1,8 @@
-const { expect } = require("chai").use(require("chai-as-promised"));
-const { restore, fake } = require("sinon");
-const { create } = require("../index");
+import * as chai from "chai";
+import { restore, fake } from "sinon";
+import { create } from "../index.js";
+
+const { expect } = chai;
 
 const data = "some-data";
 const options = "some-options";

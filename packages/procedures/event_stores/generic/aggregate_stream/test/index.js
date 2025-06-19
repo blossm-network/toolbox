@@ -1,12 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake, stub, match } from "sinon";
+
+import deps from "../deps.js";
+import aggregateStream from "../index.js";
+
 chai.use(sinonChai);
+
 const { expect } = chai;
-const { restore, replace, fake, stub, match } = require("sinon");
-
-const aggregateStream = require("..");
-
-const deps = require("../deps");
 
 const findOneSnapshotFn = "some-find-one-snapshot-fn";
 const eventStreamFn = "some-event-stream-fn";
