@@ -8,7 +8,7 @@ const { fake, expect } = chai;
 
 const services =
   fs.existsSync(path.resolve(__dirname, "../../services.js")) &&
-  require("../../services");
+  import("../../services");
 
 describe("Command gateway services tests", () => {
   if (!services) return;

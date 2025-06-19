@@ -1,7 +1,7 @@
 import roboSay from "@blossm/robo-say";
 import rootDir from "@blossm/cli-root-dir";
 import hash from "@blossm/operation-hash";
-const { promisify } = require("util");
+import { promisify } from "util";
 import yaml from "yaml";
 import path from "path";
 import fs from "fs-extra";
@@ -682,7 +682,7 @@ const configure = async (workingDir, configFn, env, strict) => {
 
   try {
     const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
-    const baseConfig = require(baseConfigPath);
+    const baseConfig = import(baseConfigPath);
     writePackage({ config, baseConfig, workingDir });
     delete config.dependencies;
     delete config.devDependencies;

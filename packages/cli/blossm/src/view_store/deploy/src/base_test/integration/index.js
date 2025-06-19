@@ -3,8 +3,8 @@ import * as chai from "chai";
 
 import request from "@blossm/request";
 import uuid from "@blossm/uuid";
-// const eventStore = require("@blossm/event-store-rpc");
-// const createEvent = require("@blossm/create-event");
+// const eventStore = import("@blossm/event-store-rpc");
+// const createEvent = import("@blossm/create-event");
 
 import { schema, key, testing, one, group, indexes } from "../../config.json";
 

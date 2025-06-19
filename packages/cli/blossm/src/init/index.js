@@ -1,8 +1,8 @@
-const fs = require("fs-extra");
-const path = require("path");
-const { prompt } = require("inquirer");
-const normalize = require("@blossm/normalize-cli");
-const roboSay = require("@blossm/robo-say");
+import fs from "fs-extra";
+import path from "path";
+import { prompt } from "inquirer";
+import normalize from "@blossm/normalize-cli";
+import roboSay from "@blossm/robo-say";
 
 const create = async (input) => {
   const blossmDir = path.resolve(process.cwd(), input.dir || "");
@@ -43,7 +43,7 @@ const create = async (input) => {
   await fs.copy(templateViewsDir, destinationViewsDir);
 };
 
-module.exports = async (args) => {
+export default async (args) => {
   const input = await normalize({
     entrypointType: "dir",
     entrypointDefault: "blossm",

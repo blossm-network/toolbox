@@ -1,4 +1,4 @@
-const config = require("./config.json");
+import config from "./config.json";
 
 const fillPayload = ({ payload, schema }) => {
   const newPayload = { ...payload };
@@ -24,5 +24,5 @@ const fillPayload = ({ payload, schema }) => {
   return newPayload;
 };
 
-module.exports = async (payload) =>
+export default async (payload) =>
   fillPayload({ payload, schema: config.payload });

@@ -13,7 +13,7 @@ chai.use(chaiDatetime);
 const { expect } = chai;
 
 const { domain, service, testing, schema, indexes } =
-  require("./../../config.json");
+  import("./../../config.json");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 

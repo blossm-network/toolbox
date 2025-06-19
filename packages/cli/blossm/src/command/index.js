@@ -24,7 +24,7 @@ const configFn = (config) => {
   };
 };
 
-module.exports = async (args) => {
+export default async (args) => {
   const input = await normalize({
     entrypointType: "action",
     choices: ["deploy", "init"],

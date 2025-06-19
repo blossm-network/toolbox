@@ -352,7 +352,7 @@ const cleanQuery = (query, update) => {
   return cleanedQuery;
 };
 
-module.exports = projection({
+export default projection({
   mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
     //Must be able to handle this aggregate.
     if (

@@ -1,26 +1,26 @@
-const fs = require("fs");
-const path = require("path");
-const commandProcedure = require("@blossm/command");
-const command = require("@blossm/command-rpc");
-const fact = require("@blossm/fact-rpc");
-const eventStore = require("@blossm/event-store-rpc");
-const nodeExternalToken = require("@blossm/node-external-token");
-const gcpToken = require("@blossm/gcp-token");
-const { enqueue } = require("@blossm/gcp-queue");
+import fs from "fs";
+import path from "path";
+import commandProcedure from "@blossm/command";
+import command from "@blossm/command-rpc";
+import fact from "@blossm/fact-rpc";
+import eventStore from "@blossm/event-store-rpc";
+import nodeExternalToken from "@blossm/node-external-token";
+import gcpToken from "@blossm/gcp-token";
+import { enqueue } from "@blossm/gcp-queue";
 
-const main = require("./main.js");
+import main from "./main.js";
 const validate =
   fs.existsSync(path.resolve(__dirname, "./validate.js")) &&
-  require("./validate");
+  import("./validate");
 const normalize =
   fs.existsSync(path.resolve(__dirname, "./normalize.js")) &&
-  require("./normalize");
+  import("./normalize");
 const fill =
-  fs.existsSync(path.resolve(__dirname, "./fill.js")) && require("./fill");
+  fs.existsSync(path.resolve(__dirname, "./fill.js")) && import("./fill");
 
-const config = require("./config.json");
+const config = import("./config.json");
 
-module.exports = commandProcedure({
+export default commandProcedure({
   mainFn: main,
   ...(config.contexts && { contexts: config.contexts }),
   ...(config.root && { requiresRoot: config.root }),

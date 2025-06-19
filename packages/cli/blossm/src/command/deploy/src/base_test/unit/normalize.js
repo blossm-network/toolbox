@@ -7,9 +7,9 @@ const { expect } = chai;
 
 const normalize =
   fs.existsSync(path.resolve(__dirname, "../../normalize.js")) &&
-  require("../../normalize");
+  import("../../normalize");
 
-const { testing } = require("../../config.json");
+const { testing } = import("../../config.json");
 
 describe("Command handler store normalize tests", () => {
   it("should have at least one example", async () => {

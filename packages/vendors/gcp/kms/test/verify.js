@@ -1,8 +1,8 @@
 //ovveride process.env with local .env file.
-// const fs = require("fs");
+// import fs from "fs";
 
 // if (fs.existsSync(".blossm-application-credentials.json")) {
-//   const dotenv = require("dotenv");
+//   import dotenv from "dotenv";
 //   const envConfig = dotenv.parse(fs.readFileSync(".env"));
 //   for (const k in envConfig) {
 //     process.env[k] = envConfig[k];

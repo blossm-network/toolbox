@@ -8,7 +8,7 @@
  *
  */
 
-// const deps = require("./deps");
+// const deps = import("./deps");
 
 export default async ({ query, viewsFn }) => {
   await viewsFn({

@@ -1,6 +1,6 @@
-const validator = require("@blossm/validator");
+import validator from "@blossm/validator";
 
-const config = require("./config.json");
+import config from "./config.json";
 
 const validateObject = ({ object, expectation, path, context }) => {
   for (const property in expectation) {
@@ -151,7 +151,7 @@ const validateObject = ({ object, expectation, path, context }) => {
   }
 };
 
-module.exports = (payload, { context } = {}) =>
+export default (payload, { context } = {}) =>
   validateObject({
     object: payload,
     expectation: config.payload,
