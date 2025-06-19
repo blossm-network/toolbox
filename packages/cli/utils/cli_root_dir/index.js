@@ -1,9 +1,9 @@
 import path from "path";
-import findUp from "find-up";
+import { findUpSync } from "find-up";
 import yaml from "yaml";
 import fs from "fs";
 import roboSay from "@blossm/robo-say";
-const configPath = findUp.sync("config.yaml", { type: "file" });
+const configPath = findUpSync("config.yaml", { type: "file" });
 
 export default {
   path: () => {
