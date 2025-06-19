@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   animals: {
     bird: ({ state, id }) => ({
       id,

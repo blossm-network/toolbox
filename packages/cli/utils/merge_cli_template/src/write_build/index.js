@@ -1,17 +1,16 @@
-const fs = require("fs-extra");
-const yaml = require("yaml");
-const path = require("path");
+import yaml from "yaml";
+import path from "path";
 
-const viewStore = require("./view_store");
-const commandGateway = require("./command_gateway");
-const viewGateway = require("./view_gateway");
-const factGateway = require("./fact_gateway");
-const command = require("./command");
-const projection = require("./projection");
-const eventStore = require("./event_store");
-const job = require("./job");
-const fact = require("./fact");
-const viewComposite = require("./view_composite");
+import viewStore from "./view_store";
+import commandGateway from "./command_gateway";
+import viewGateway from "./view_gateway";
+import factGateway from "./fact_gateway";
+import command from "./command";
+import projection from "./projection";
+import eventStore from "./event_store";
+import job from "./job";
+import fact from "./fact";
+import viewComposite from "./view_composite";
 
 const checkInPath = "_check-in";
 const checkInSchedule = "0 * * * *";
@@ -507,7 +506,7 @@ const imageExtension = ({ service, context, domain, name, procedure }) => {
   }
 };
 
-module.exports = ({
+export default ({
   workingDir,
   region,
   domain,

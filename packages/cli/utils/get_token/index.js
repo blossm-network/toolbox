@@ -1,10 +1,10 @@
-const eventStore = require("@blossm/event-store-rpc");
-const command = require("@blossm/command-rpc");
-const uuid = require("@blossm/uuid");
-const createEvent = require("@blossm/create-event");
-const { hash } = require("@blossm/crypt");
+import eventStore from "@blossm/event-store-rpc";
+import command from "@blossm/command-rpc";
+import uuid from "@blossm/uuid";
+import createEvent from "@blossm/create-event";
+import { hash } from "@blossm/crypt";
 
-module.exports = async ({
+export default async ({
   permissions = [],
   context = {},
   password = "asdfasdfasdf",

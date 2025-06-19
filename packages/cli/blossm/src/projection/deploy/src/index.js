@@ -1,20 +1,20 @@
-const projection = require("@blossm/projection");
-const projectionRpc = require("@blossm/projection-rpc");
-const command = require("@blossm/command-rpc");
-const fact = require("@blossm/fact-rpc");
-const gcpToken = require("@blossm/gcp-token");
-const nodeExternalToken = require("@blossm/node-external-token");
-const viewStore = require("@blossm/view-store-rpc");
-const eventStore = require("@blossm/event-store-rpc");
-const channelName = require("@blossm/channel-name");
-const logger = require("@blossm/logger");
-const { get: secret } = require("@blossm/gcp-secret");
-const { enqueue } = require("@blossm/gcp-queue");
-const composeUpdate = require("@blossm/compose-update");
+import projection from "@blossm/projection";
+import projectionRpc from "@blossm/projection-rpc";
+import command from "@blossm/command-rpc";
+import fact from "@blossm/fact-rpc";
+import gcpToken from "@blossm/gcp-token";
+import nodeExternalToken from "@blossm/node-external-token";
+import viewStore from "@blossm/view-store-rpc";
+import eventStore from "@blossm/event-store-rpc";
+import channelName from "@blossm/channel-name";
+import logger from "@blossm/logger";
+import { get as secret } from "@blossm/gcp-secret";
+import { enqueue } from "@blossm/gcp-queue";
+import composeUpdate from "@blossm/compose-update";
 
-const handlers = require("./handlers.js");
+import handlers from "./handlers.js";
 
-const config = require("./config.json");
+import config from "./config.json";
 
 const matchDelimiter = ".$.";
 

@@ -8,9 +8,9 @@
  *
  */
 
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = async ({ query, root, context, claims }) => {
+export default async ({ query, root, context, claims }) => {
   await deps
     .eventStore({
       domain: "some-domain",

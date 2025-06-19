@@ -1,6 +1,6 @@
-const { oneLine } = require("common-tags");
+import { oneLine } from "common-tags";
 
-module.exports = ({ name, maxDispatchPerSecond, maxConcurrentDispatches }) => {
+export default ({ name, maxDispatchPerSecond, maxConcurrentDispatches }) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
     entrypoint: "bash",

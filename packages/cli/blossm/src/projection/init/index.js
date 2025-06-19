@@ -1,5 +1,5 @@
-const init = require("@blossm/init-cli-template");
-module.exports = init({
+import init from "@blossm/init-cli-template";
+export default init({
   domain: "projection",
   dir: __dirname,
   customActionSuggestions: `

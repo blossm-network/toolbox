@@ -1,16 +1,16 @@
-const gateway = require("@blossm/view-gateway");
-const { verify: verifyGcp } = require("@blossm/gcp-kms");
-const verify = require("@blossm/verify-access-token");
-const gcpToken = require("@blossm/gcp-token");
+import gateway from "@blossm/view-gateway";
+import { verify as verifyGcp } from "@blossm/gcp-kms";
+import verify from "@blossm/verify-access-token";
+import gcpToken from "@blossm/gcp-token";
 // const terminatedSessionCheck = require("@blossm/terminated-session-check");
 // const deletedSceneCheck = require("@blossm/deleted-scene-check");
-const permissionsLookup = require("@blossm/permissions-lookup");
-const nodeExternalToken = require("@blossm/node-external-token");
-const { download: downloadFile } = require("@blossm/gcp-storage");
+import permissionsLookup from "@blossm/permissions-lookup";
+import nodeExternalToken from "@blossm/node-external-token";
+import { download as downloadFile } from "@blossm/gcp-storage";
 
-const config = require("./config.json");
+import config from "./config.json";
 
-module.exports = gateway({
+export default gateway({
   views: config.views.map((view) => ({
     ...view,
     ...(view.network && {

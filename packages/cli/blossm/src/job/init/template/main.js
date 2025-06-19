@@ -8,9 +8,9 @@
  *
  */
 
-//const deps = require("./deps");
+//import deps from "./deps.js";
 
-module.exports = async ({ payload }) => {
+export default async ({ payload }) => {
   //eslint-disable-next-line no-console
   console.log("Do something with: ", { payload });
 };

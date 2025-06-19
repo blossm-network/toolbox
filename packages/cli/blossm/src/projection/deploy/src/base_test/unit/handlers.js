@@ -1,12 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { stub, restore } from "sinon";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { stub, restore } = require("sinon");
 
-const { testing } = require("../../config.json");
+import { testing } from "../../config.json";
 
-const handlers = require("../../handlers.js");
+import handlers from "../../handlers.js";
 
 process.env.NETWORK = "local.network";
 

@@ -1,11 +1,11 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
 chai.use(sinonChai);
 const { expect } = chai;
 
-const validate = require("../../validate");
+import validate from "../../validate.js";
 
-const { testing } = require("../../config.json");
+import { testing } from "../../config.json";
 
 describe("Command handler store validator tests", () => {
   it("should handle correct payload correctly", async () => {

@@ -1,8 +1,9 @@
-require("localenv");
-const { expect } = require("chai");
-const { string: dateString } = require("@blossm/datetime");
+import "localenv";
+import * as chai from "chai";
+import { string as dateString } from "@blossm/datetime";
+import request from "@blossm/request";
 
-const request = require("@blossm/request");
+const { expect } = chai;
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 

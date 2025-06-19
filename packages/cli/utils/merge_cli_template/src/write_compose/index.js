@@ -1,10 +1,10 @@
-const fs = require("fs-extra");
-const yaml = require("yaml");
-const path = require("path");
+import fs from "fs-extra";
+import yaml from "yaml";
+import path from "path";
 
-const mainService = require("./main_service");
-const procedureServices = require("./procedure_services");
-const databaseService = require("./database_service");
+import mainService from "./main_service";
+import procedureServices from "./procedure_services";
+import databaseService from "./database_service";
 
 const databaseServiceKey = "db";
 
@@ -17,7 +17,7 @@ const includeDatabase = (config) => {
   return false;
 };
 
-module.exports = ({
+export default ({
   config,
   workingDir,
   procedure,

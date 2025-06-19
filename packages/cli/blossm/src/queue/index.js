@@ -1,8 +1,8 @@
-const normalize = require("@blossm/normalize-cli");
+import normalize from "@blossm/normalize-cli";
 
-const create = require("./create");
+import create from "./create/index.js";
 
-module.exports = async (args) => {
+export default async (args) => {
   const input = await normalize({
     entrypointType: "action",
     choices: ["create"],

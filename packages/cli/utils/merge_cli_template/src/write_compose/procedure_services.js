@@ -1,11 +1,11 @@
-const yaml = require("yaml");
-const path = require("path");
-const fs = require("fs-extra");
+import yaml from "yaml";
+import path from "path";
+import fs from "fs-extra";
 
-const hash = require("@blossm/operation-hash");
-const rootDir = require("@blossm/cli-root-dir");
+import hash from "@blossm/operation-hash";
+import rootDir from "@blossm/cli-root-dir";
 
-const databaseService = require("./database_service");
+import databaseService from "./database_service";
 
 const findEnvForDependency = (env, dependency, dir) => {
   for (const file of fs.readdirSync(dir)) {
@@ -28,7 +28,7 @@ const findEnvForDependency = (env, dependency, dir) => {
   }
 };
 
-module.exports = ({
+export default ({
   config,
   databaseServiceKey,
   project,

@@ -12,7 +12,7 @@
  *
  */
 
-// module.exports = body => {
+// export default body => {
 //   // body.context is the context
 //   return {
 //     $set: {

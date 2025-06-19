@@ -7,9 +7,9 @@
  *
  */
 
-const { findError, string } = require("@blossm/validator");
+import { findError, string } from "@blossm/validator";
 
-module.exports = (payload) => {
+export default (payload) => {
   const error = findError([
     string(payload.onomonopeoa, {
       title: "onomonopeoa",

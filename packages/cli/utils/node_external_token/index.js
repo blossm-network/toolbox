@@ -1,7 +1,7 @@
-const { get: secret } = require("@blossm/gcp-secret");
-const connectionToken = require("@blossm/connection-token");
+import { get as secret } from "@blossm/gcp-secret";
+import connectionToken from "@blossm/connection-token";
 
-module.exports = connectionToken({
+export default connectionToken({
   credentialsFn: async ({ network }) => {
     const nameRoot = network.toUpperCase().split(".").slice(-2).join("_");
 

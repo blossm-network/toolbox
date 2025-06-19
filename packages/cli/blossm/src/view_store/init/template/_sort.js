@@ -14,6 +14,6 @@
  *
  */
 
-// module.exports = (sort) => {
+// export default (sort) => {
 //   return { name: sort.name };
 // };

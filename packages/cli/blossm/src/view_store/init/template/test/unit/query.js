@@ -1,13 +1,14 @@
-const fs = require("fs");
-const path = require("path");
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import fs from "fs";
+import path from "path";
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+
 chai.use(sinonChai);
 const { expect } = chai;
 
 const get =
   fs.existsSync(path.resolve(__dirname, "../../query.js")) &&
-  require("../../query");
+  import("../../query");
 
 describe("View store get tests", () => {
   if (!get) return;

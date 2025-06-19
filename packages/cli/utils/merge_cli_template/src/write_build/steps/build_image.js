@@ -1,4 +1,4 @@
-module.exports = ({ extension, containerRegistery, procedure } = {}) => {
+export default ({ extension, containerRegistery, procedure } = {}) => {
   return {
     name: "gcr.io/cloud-builders/docker",
     args: [

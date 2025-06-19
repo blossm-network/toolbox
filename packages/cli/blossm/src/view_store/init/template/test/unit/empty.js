@@ -1,13 +1,14 @@
-const fs = require("fs");
-const path = require("path");
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import fs from "fs";
+import path from "path";
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+
 chai.use(sinonChai);
 const { expect } = chai;
 
 const empty =
   fs.existsSync(path.resolve(__dirname, "../../get.js")) &&
-  require("../../empty");
+  import("../../empty");
 
 describe("View store format tests", () => {
   if (!empty) return;

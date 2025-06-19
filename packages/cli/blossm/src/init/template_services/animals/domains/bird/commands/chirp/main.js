@@ -8,7 +8,7 @@ The docs at the bottom give in-depth info of the tools you have at your disposal
 
 //const deps = require("./deps");
 
-module.exports = async ({
+export default async ({
   payload,
   // uncomment the stuff you need.
   root,

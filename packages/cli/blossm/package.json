@@ -3,6 +3,7 @@
   "version": "0.0.1850",
   "description": "A command line tool for interacting with blossm.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0"
   },

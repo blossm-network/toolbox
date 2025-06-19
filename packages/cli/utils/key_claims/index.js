@@ -1,9 +1,9 @@
-const fact = require("@blossm/fact-rpc");
-const { invalidCredentials } = require("@blossm/errors");
-const { compare } = require("@blossm/crypt");
+import fact from "@blossm/fact-rpc";
+import { invalidCredentials } from "@blossm/errors";
+import { compare } from "@blossm/crypt";
 
 //TODO write unit tests
-module.exports = ({ token }) => async ({ root, secret }) => {
+export default ({ token }) => async ({ root, secret }) => {
   const { body: key } = await fact({
     name: "state",
     domain: "key",

@@ -1,10 +1,12 @@
-const normalize = require("@blossm/normalize-cli");
-const hash = require("@blossm/operation-hash");
-const trim = require("@blossm/trim-string");
-const { MAX_LENGTH } = require("@blossm/service-name-consts");
+import normalize from "@blossm/normalize-cli";
+import hash from "@blossm/operation-hash";
+import trim from "@blossm/trim-string";
+import serviceNameConsts from "@blossm/service-name-consts";
 
-const deploy = require("./deploy");
-const init = require("./init");
+import deploy from "./deploy/index.js";
+import init from "./init/index.js";
+
+const { MAX_LENGTH } = serviceNameConsts;
 
 const configFn = (config) => {
   return {
@@ -22,7 +24,7 @@ const configFn = (config) => {
   };
 };
 
-module.exports = async (args) => {
+export default async (args) => {
   const input = await normalize({
     entrypointType: "action",
     choices: ["deploy", "init"],

@@ -11,7 +11,7 @@
  *
  */
 
-module.exports = async (payload) => ({
+export default async (payload) => ({
   volume: payload.volume,
   sound: payload.sound.toLowerCase()
 });

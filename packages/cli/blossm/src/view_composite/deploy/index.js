@@ -1,6 +1,6 @@
-const deployCliTemplate = require("@blossm/deploy-cli-template");
+import deployCliTemplate from "@blossm/deploy-cli-template";
 
-module.exports = deployCliTemplate({
+export default deployCliTemplate({
   domain: "view-composite",
   dir: __dirname,
 });

@@ -1,6 +1,6 @@
-const { oneLine } = require("common-tags");
+import { oneLine } from "common-tags";
 
-module.exports = ({ name, location, project }) => {
+export default ({ name, location, project }) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
     entrypoint: "bash",

@@ -1,11 +1,13 @@
-const normalize = require("@blossm/normalize-cli");
-const hash = require("@blossm/operation-hash");
-const trim = require("@blossm/trim-string");
-const { MAX_LENGTH } = require("@blossm/service-name-consts");
+import normalize from "@blossm/normalize-cli";
+import hash from "@blossm/operation-hash";
+import trim from "@blossm/trim-string";
+import serviceNameConsts from "@blossm/service-name-consts";
 
-const deploy = require("./deploy");
-const init = require("./init");
-const replay = require("./replay");
+import deploy from "./deploy/index.js";
+import init from "./init/index.js";
+import replay from "./replay/index.js";
+
+const { MAX_LENGTH } = serviceNameConsts;
 
 const configFn = (config) => {
   return {

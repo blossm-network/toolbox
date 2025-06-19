@@ -1,6 +1,6 @@
-const { stripIndents } = require("common-tags");
+import { stripIndents } from "common-tags";
 
-module.exports = ({
+export default ({
   mainContainerName,
   procedure,
   operationHash,

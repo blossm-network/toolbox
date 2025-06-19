@@ -8,7 +8,7 @@
  * The function must be deterministic, meaning the output should always be the same for every input.
  */
 
-// module.exports = {
+// export default {
 // fn: (view) => ({
 //   name: view.name,
 // }),

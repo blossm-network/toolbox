@@ -14,6 +14,6 @@
  *
  */
 
-// module.exports = (query) => {
+// export default (query) => {
 //   return { name: query.firstName + query.lastName };
 // };

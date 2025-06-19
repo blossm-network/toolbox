@@ -1,4 +1,4 @@
-module.exports = ({ strict = true } = {}) => {
+export default ({ strict = true } = {}) => {
   return {
     name: "node:20.19.0",
     entrypoint: strict ? "yarn" : "bash",

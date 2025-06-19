@@ -3,8 +3,7 @@
  * in this file.
  */
 
-const eventStore = require("@blossm/event-store-rpc");
-const gcpToken = require("@blossm/gcp-token");
+import eventStore from "@blossm/event-store-rpc";
+import gcpToken from "@blossm/gcp-token";
 
-exports.eventStore = eventStore;
-exports.gcpToken = gcpToken;
+export default { eventStore, gcpToken };

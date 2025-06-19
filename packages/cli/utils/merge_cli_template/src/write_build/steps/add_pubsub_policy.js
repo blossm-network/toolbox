@@ -1,4 +1,4 @@
-module.exports = ({ region, serviceName, project }) => {
+export default ({ region, serviceName, project }) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
     args: [

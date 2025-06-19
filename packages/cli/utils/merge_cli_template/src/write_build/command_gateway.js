@@ -1,23 +1,23 @@
-const yarnInstall = require("./steps/yarn_install");
-const unitTests = require("./steps/unit_tests");
-const baseUnitTests = require("./steps/base_unit_tests");
-const buildImage = require("./steps/build_image");
-const dockerComposeUp = require("./steps/docker_compose_up");
-const dockerComposeProcesses = require("./steps/docker_compose_processes");
-const integrationTests = require("./steps/integration_tests");
-const scheduleJob = require("./steps/schedule_job");
-const baseIntegrationTests = require("./steps/base_integration_tests");
-const dockerComposeLogs = require("./steps/docker_compose_logs");
-const dockerPush = require("./steps/docker_push");
-const deployRun = require("./steps/deploy_run");
-const startDnsTransaction = require("./steps/start_dns_transaction");
-const addDnsTransaction = require("./steps/add_dns_transaction");
-const executeDnsTransaction = require("./steps/execute_dns_transaction");
-const abortDnsTransaction = require("./steps/abort_dns_transaction");
-const mapDomain = require("./steps/map_domain");
-const writeEnv = require("./steps/write_env");
+import yarnInstall from "./steps/yarn_install";
+import unitTests from "./steps/unit_tests";
+import baseUnitTests from "./steps/base_unit_tests";
+import buildImage from "./steps/build_image";
+import dockerComposeUp from "./steps/docker_compose_up";
+import dockerComposeProcesses from "./steps/docker_compose_processes";
+import integrationTests from "./steps/integration_tests";
+import scheduleJob from "./steps/schedule_job";
+import baseIntegrationTests from "./steps/base_integration_tests";
+import dockerComposeLogs from "./steps/docker_compose_logs";
+import dockerPush from "./steps/docker_push";
+import deployRun from "./steps/deploy_run";
+import startDnsTransaction from "./steps/start_dns_transaction";
+import addDnsTransaction from "./steps/add_dns_transaction";
+import executeDnsTransaction from "./steps/execute_dns_transaction";
+import abortDnsTransaction from "./steps/abort_dns_transaction";
+import mapDomain from "./steps/map_domain";
+import writeEnv from "./steps/write_env";
 
-module.exports = ({
+export default ({
   domain,
   region,
   project,

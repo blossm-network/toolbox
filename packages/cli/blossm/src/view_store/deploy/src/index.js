@@ -1,27 +1,27 @@
-const fs = require("fs");
-const path = require("path");
-const viewStore = require("@blossm/mongodb-view-store");
-const { get: secret } = require("@blossm/gcp-secret");
-const fact = require("@blossm/fact-rpc");
-const gcpToken = require("@blossm/gcp-token");
+import fs from "fs";
+import path from "path";
+import viewStore from "@blossm/mongodb-view-store";
+import { get as secret } from "@blossm/gcp-secret";
+import fact from "@blossm/fact-rpc";
+import gcpToken from "@blossm/gcp-token";
 
 const query =
-  fs.existsSync(path.resolve(__dirname, "./query.js")) && require("./query");
+  fs.existsSync(path.resolve(__dirname, "./query.js")) && import("./query");
 const sort =
-  fs.existsSync(path.resolve(__dirname, "./sort.js")) && require("./sort");
+  fs.existsSync(path.resolve(__dirname, "./sort.js")) && import("./sort");
 const update =
-  fs.existsSync(path.resolve(__dirname, "./update.js")) && require("./update");
+  fs.existsSync(path.resolve(__dirname, "./update.js")) && import("./update");
 const format =
-  fs.existsSync(path.resolve(__dirname, "./format.js")) && require("./format");
+  fs.existsSync(path.resolve(__dirname, "./format.js")) && import("./format");
 const empty =
-  fs.existsSync(path.resolve(__dirname, "./empty.js")) && require("./empty");
+  fs.existsSync(path.resolve(__dirname, "./empty.js")) && import("./empty");
 const formatCsv =
   fs.existsSync(path.resolve(__dirname, "./format_csv.js")) &&
-  require("./format_csv");
+  import("./format_csv");
 
-const config = require("./config.json");
+import config from "./config.json";
 
-module.exports = viewStore({
+export default viewStore({
   schema: config.schema,
   indexes: config.indexes,
   sorts: config.sorts,

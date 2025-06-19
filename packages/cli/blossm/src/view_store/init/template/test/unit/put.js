@@ -1,13 +1,14 @@
-const fs = require("fs");
-const path = require("path");
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import fs from "fs";
+import path from "path";
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+
 chai.use(sinonChai);
 const { expect } = chai;
 
 const put =
   fs.existsSync(path.resolve(__dirname, "../../put.js")) &&
-  require("../../put");
+  import("../../put");
 
 describe("View store put tests", () => {
   if (!put) return;

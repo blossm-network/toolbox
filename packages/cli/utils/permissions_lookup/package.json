@@ -3,6 +3,7 @@
   "version": "0.0.155",
   "description": "Looks up permissions for a role.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

@@ -1,7 +1,7 @@
-const fact = require("@blossm/fact-rpc");
-const { invalidCredentials } = require("@blossm/errors");
+import fact from "@blossm/fact-rpc";
+import { invalidCredentials } from "@blossm/errors";
 
-module.exports = async ({ session, token: { internalFn, externalFn } }) => {
+export default async ({ session, token: { internalFn, externalFn } }) => {
   const { body: terminated } = await fact({
     name: "terminated",
     domain: "session",

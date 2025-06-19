@@ -1,12 +1,12 @@
-const { prompt } = require("inquirer");
-const fs = require("fs");
-const yaml = require("yaml");
-const path = require("path");
-const normalize = require("@blossm/normalize-cli");
-const roboSay = require("@blossm/robo-say");
-const { upload: uploadFile } = require("@blossm/gcp-storage");
-const rootDir = require("@blossm/cli-root-dir");
-const { red } = require("chalk");
+import { prompt } from "inquirer";
+import fs from "fs";
+import yaml from "yaml";
+import path from "path";
+import normalize from "@blossm/normalize-cli";
+import roboSay from "@blossm/robo-say";
+import { upload as uploadFile } from "@blossm/gcp-storage";
+import rootDir from "@blossm/cli-root-dir";
+import { red } from "chalk";
 
 const envRolesBucket = ({ env, config }) => {
   switch (env) {
@@ -76,7 +76,7 @@ const upload = async (input) => {
   console.log(roboSay("All done. Your roles.yaml file is uploaded."));
 };
 
-module.exports = async (args) => {
+export default async (args) => {
   const blossmConfig = rootDir.config();
   const input = await normalize({
     entrypointType: "path",

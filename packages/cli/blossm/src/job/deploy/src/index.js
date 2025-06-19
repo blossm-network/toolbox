@@ -1,5 +1,5 @@
-const job = require("@blossm/job");
+import job from "@blossm/job";
 
-const main = require("./main.js");
+import main from "./main.js";
 
-module.exports = job({ mainFn: main });
+export default job({ mainFn: main });

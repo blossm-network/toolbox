@@ -1,14 +1,13 @@
-const fact = require("@blossm/fact");
-const factRpc = require("@blossm/fact-rpc");
-const eventStore = require("@blossm/event-store-rpc");
-const nodeExternalToken = require("@blossm/node-external-token");
-const gcpToken = require("@blossm/gcp-token");
+import fact from "@blossm/fact";
+import factRpc from "@blossm/fact-rpc";
+import eventStore from "@blossm/event-store-rpc";
+import nodeExternalToken from "@blossm/node-external-token";
+import gcpToken from "@blossm/gcp-token";
 
-const main = require("./main.js");
+import main from "./main.js";
+import config from "./config.json";
 
-const config = require("./config.json");
-
-module.exports = fact({
+export default fact({
   mainFn: main,
   ...(config.contexts && { contexts: config.contexts }),
   queryAggregatesFn: ({ context, claims, token }) => async ({

@@ -1,5 +1,6 @@
-const { oneLine } = require("common-tags");
-module.exports = ({
+import { oneLine } from "common-tags";
+
+export default ({
   name,
   schedule,
   uri,

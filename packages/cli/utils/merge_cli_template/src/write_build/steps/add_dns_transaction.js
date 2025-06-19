@@ -1,4 +1,4 @@
-module.exports = ({ uri, dnsZone, project }) => {
+export default ({ uri, dnsZone, project }) => {
   return {
     name: "gcr.io/cloud-builders/gcloud",
     args: [

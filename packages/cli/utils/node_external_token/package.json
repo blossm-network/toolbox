@@ -3,6 +3,7 @@
   "version": "0.0.178",
   "description": "Creates a token for calling external services on behalf of the node.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

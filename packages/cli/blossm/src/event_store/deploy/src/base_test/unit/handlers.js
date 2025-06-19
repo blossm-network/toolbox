@@ -1,8 +1,9 @@
-const { expect } = require("chai");
+import * as chai from "chai";
 
-const { testing } = require("../../config.json");
+import { testing } from "../../config.json";
+import handlers from "../../handlers.js";
 
-const handlers = require("../../handlers.js");
+const { expect } = chai;
 
 describe("Event store handlers tests", () => {
   it("should return correctly", async () => {

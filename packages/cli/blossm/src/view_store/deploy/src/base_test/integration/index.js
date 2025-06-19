@@ -1,16 +1,16 @@
-require("localenv");
-const { expect } = require("chai");
+import "localenv";
+import * as chai from "chai";
 
-const request = require("@blossm/request");
-const uuid = require("@blossm/uuid");
+import request from "@blossm/request";
+import uuid from "@blossm/uuid";
 // const eventStore = require("@blossm/event-store-rpc");
 // const createEvent = require("@blossm/create-event");
 
-const { schema, key } = require("../../config.json");
+import { schema, key, testing, one, group, indexes } from "../../config.json";
+
+const { expect } = chai;
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
-
-const { testing, one, group, indexes } = require("../../config.json");
 
 const contextRoot = "some-context-root";
 const contextService = "some-context-service";

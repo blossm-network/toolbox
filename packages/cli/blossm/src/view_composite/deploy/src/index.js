@@ -1,10 +1,10 @@
-const viewComposite = require("@blossm/view-composite");
-const viewStore = require("@blossm/view-store-rpc");
-const gcpToken = require("@blossm/gcp-token");
+import viewComposite from "@blossm/view-composite";
+import viewStore from "@blossm/view-store-rpc";
+import gcpToken from "@blossm/gcp-token";
 
-const main = require("./main.js");
+import main from "./main.js";
 
-module.exports = viewComposite({
+export default viewComposite({
   mainFn: main,
   viewsFn: ({ context: contexts, claims, token }) => async ({
     name,

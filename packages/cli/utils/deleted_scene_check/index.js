@@ -1,7 +1,7 @@
-const fact = require("@blossm/fact-rpc");
-const { invalidCredentials } = require("@blossm/errors");
+import fact from "@blossm/fact-rpc";
+import { invalidCredentials } from "@blossm/errors";
 
-module.exports = async ({ scene, token: { internalFn, externalFn } }) => {
+export default async ({ scene, token: { internalFn, externalFn } }) => {
   const { body: deleted } = await fact({
     name: "deleted",
     domain: "scene",

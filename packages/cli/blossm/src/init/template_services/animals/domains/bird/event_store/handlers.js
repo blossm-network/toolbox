@@ -10,7 +10,7 @@
  *
  */
 
-module.exports = {
+export default {
   chirp: (state, payload) => ({
     ...state,
     ...payload

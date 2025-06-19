@@ -1,24 +1,24 @@
-const normalize = require("@blossm/normalize-cli");
-const roboSay = require("@blossm/robo-say");
-const fs = require("fs");
-const yaml = require("yaml");
-const path = require("path");
-const { red } = require("chalk");
+import normalize from "@blossm/normalize-cli";
+import roboSay from "@blossm/robo-say";
+import fs from "fs";
+import yaml from "yaml";
+import path from "path";
+import { red } from "chalk";
 
-const init = require("./init");
-const secret = require("./secret");
-const queue = require("./queue");
-const command = require("./command");
-const projection = require("./projection");
-const eventStore = require("./event_store");
-const viewStore = require("./view_store");
-const commandGateway = require("./command_gateway");
-const viewGateway = require("./view_gateway");
-const factGateway = require("./fact_gateway");
-const roles = require("./roles");
-const job = require("./job");
-const fact = require("./fact");
-const viewComposite = require("./view_composite");
+import init from "./init/index.js";
+import secret from "./secret/index.js";
+import queue from "./queue/index.js";
+import command from "./command/index.js";
+import projection from "./projection/index.js";
+import eventStore from "./event_store/index.js";
+import viewStore from "./view_store/index.js";
+import commandGateway from "./command_gateway/index.js";
+import viewGateway from "./view_gateway/index.js";
+import factGateway from "./fact_gateway/index.js";
+import roles from "./roles/index.js";
+import job from "./job/index.js";
+import fact from "./fact/index.js";
+import viewComposite from "./view_composite/index.js";
 
 const domains = [
   "begin",
@@ -134,7 +134,7 @@ const forward = (input) => {
   }
 };
 
-exports.cli = async (rawArgs) => {
+export const cli = async (rawArgs) => {
   const input = await normalize({
     entrypointType: "domain",
     args: rawArgs.slice(2),

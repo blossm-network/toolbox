@@ -1,13 +1,13 @@
-const normalize = require("@blossm/normalize-cli");
-const roboSay = require("@blossm/robo-say");
-const mergeCliTemplate = require("@blossm/merge-cli-template");
-const testCliTemplate = require("@blossm/test-cli-template");
-const fs = require("fs-extra");
-const { spawnSync } = require("child_process");
-const rootDir = require("@blossm/cli-root-dir");
-const path = require("path");
-const { green, red } = require("chalk");
-const os = require("os");
+import normalize from "@blossm/normalize-cli";
+import roboSay from "@blossm/robo-say";
+import mergeCliTemplate from "@blossm/merge-cli-template";
+import testCliTemplate from "@blossm/test-cli-template";
+import fs from "fs-extra";
+import { spawnSync } from "child_process";
+import rootDir from "@blossm/cli-root-dir";
+import path from "path";
+import { green, red } from "chalk";
+import os from "os";
 
 const envProject = ({ env, config }) => {
   switch (env) {
@@ -46,7 +46,7 @@ const build = async ({ workingDir, env }) => {
   });
 };
 
-module.exports = ({ domain, dir }) => async (args, configFn) => {
+export default ({ domain, dir }) => async (args, configFn) => {
   const blossmConfig = rootDir.config();
   const input = await normalize({
     entrypointType: "path",

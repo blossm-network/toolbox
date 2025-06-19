@@ -3,6 +3,7 @@
   "version": "0.0.128",
   "description": "Checks to see if the session is terminated.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

@@ -10,7 +10,7 @@
 
 // const deps = require("./deps");
 
-module.exports = async ({ query, viewsFn }) => {
+export default async ({ query, viewsFn }) => {
   await viewsFn({
     name: "some-view-store-name",
     context: "some-view-store-context",

@@ -1,10 +1,10 @@
-const { prompt } = require("inquirer");
-const normalize = require("@blossm/normalize-cli");
-const roboSay = require("@blossm/robo-say");
-const { create: createSecret } = require("@blossm/gcp-secret");
-const rootDir = require("@blossm/cli-root-dir");
-const fs = require("fs");
-const path = require("path");
+import { prompt } from "inquirer";
+import normalize from "@blossm/normalize-cli";
+import roboSay from "@blossm/robo-say";
+import { create as createSecret } from "@blossm/gcp-secret";
+import rootDir from "@blossm/cli-root-dir";
+import fs from "fs";
+import path from "path";
 
 const envProject = ({ env, config }) => {
   switch (env) {
@@ -57,7 +57,7 @@ const create = async (input) => {
   );
 };
 
-module.exports = async (args) => {
+export default async (args) => {
   const blossmConfig = rootDir.config();
   const input = await normalize({
     entrypointType: "name",

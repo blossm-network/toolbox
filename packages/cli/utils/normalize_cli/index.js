@@ -1,7 +1,7 @@
-const roboSay = require("@blossm/robo-say");
-const arg = require("arg");
-const { prompt } = require("inquirer");
-const { red } = require("chalk");
+import roboSay from "@blossm/robo-say";
+import arg from "arg";
+import { prompt } from "inquirer";
+import { red } from "chalk";
 
 const camelCased = (str) =>
   str.replace(/-([a-z])/g, function (g) {
@@ -134,7 +134,7 @@ const format = (options, { entrypointType } = {}) => {
   return options;
 };
 
-module.exports = async ({
+export default async ({
   entrypointType,
   entrypointDefault,
   choices,

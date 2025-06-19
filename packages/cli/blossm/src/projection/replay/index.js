@@ -1,3 +1,3 @@
-const executeCliTemplate = require("@blossm/execute-cli-template");
+import executeCliTemplate from "@blossm/execute-cli-template";
 
-module.exports = executeCliTemplate({ domain: "projection" });
+export default executeCliTemplate({ domain: "projection" });

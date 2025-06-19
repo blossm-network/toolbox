@@ -8,7 +8,7 @@
  * and is in charge of fully executing the specifications of the request.
  */
 
-module.exports = {
+export default {
   "some-name": (req, res) => {
     res.status(200).send("ok!");
   },

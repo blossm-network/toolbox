@@ -8,6 +8,6 @@
  * The function must be deterministic, meaning the output should always be the same for every input.
  */
 
-module.exports = ({ query }) => {
+export default ({ query }) => {
   return { body: query };
 };

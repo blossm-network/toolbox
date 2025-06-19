@@ -1,13 +1,13 @@
-const roboSay = require("@blossm/robo-say");
-const normalize = require("@blossm/normalize-cli");
-const fs = require("fs-extra");
-const path = require("path");
-const { green, red } = require("chalk");
-const { promisify } = require("util");
+import roboSay from "@blossm/robo-say";
+import normalize from "@blossm/normalize-cli";
+import fs from "fs-extra";
+import path from "path";
+import { green, red } from "chalk";
+import { promisify } from "util";
 
 const access = promisify(fs.access);
 
-module.exports = ({ domain, dir, customActionSuggestions }) => async (args) => {
+export default ({ domain, dir, customActionSuggestions }) => async (args) => {
   //eslint-disable-next-line no-console
   console.log(roboSay(`Initializing your ${domain} codebase...`));
 

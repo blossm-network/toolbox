@@ -1,20 +1,20 @@
-const eventStore = require("@blossm/mongodb-event-store");
-const pubsub = require("@blossm/gcp-pubsub");
-const eventStoreRpc = require("@blossm/event-store-rpc");
-const { get: secret } = require("@blossm/gcp-secret");
-const { sign, encrypt, publicKey } = require("@blossm/gcp-kms");
-const gcpToken = require("@blossm/gcp-token");
-const { enqueue } = require("@blossm/gcp-queue");
-const handlers = require("./handlers");
+import eventStore from "@blossm/mongodb-event-store";
+import pubsub from "@blossm/gcp-pubsub";
+import eventStoreRpc from "@blossm/event-store-rpc";
+import { get as secret } from "@blossm/gcp-secret";
+import { sign, encrypt, publicKey } from "@blossm/gcp-kms";
+import gcpToken from "@blossm/gcp-token";
+import { enqueue } from "@blossm/gcp-queue";
+import handlers from "./handlers.js";
 
-const config = require("./config.json");
+import config from "./config.json";
 
 const blockchainProducerKey = `producer`;
 const blockchainKeyRing = `${process.env.SERVICE_NAME}-blockchain`;
 
 let blockPublisherPublicKey;
 
-module.exports = eventStore({
+export default eventStore({
   schema: config.schema,
   indexes: config.indexes,
   handlers,

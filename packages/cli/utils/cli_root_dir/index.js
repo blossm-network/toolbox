@@ -1,11 +1,11 @@
-const path = require("path");
-const findUp = require("find-up");
-const yaml = require("yaml");
-const fs = require("fs");
-const roboSay = require("@blossm/robo-say");
+import path from "path";
+import findUp from "find-up";
+import yaml from "yaml";
+import fs from "fs";
+import roboSay from "@blossm/robo-say";
 const configPath = findUp.sync("config.yaml", { type: "file" });
 
-module.exports = {
+export default {
   path: () => {
     try {
       return path.dirname(configPath);

@@ -1,12 +1,13 @@
-require("localenv");
-const { expect } = require("chai");
-const viewStore = require("@blossm/view-store-rpc");
+import "localenv";
+import * as chai from "chai";
+import viewStore from "@blossm/view-store-rpc";
+import request from "@blossm/request";
 
-const request = require("@blossm/request");
+import { testing } from "../../config.json";
+
+const { expect } = chai;
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
-
-const { testing } = require("../../config.json");
 
 // const stateTopics = [];
 

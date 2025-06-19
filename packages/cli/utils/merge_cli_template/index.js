@@ -1,18 +1,17 @@
-const roboSay = require("@blossm/robo-say");
-
-const rootDir = require("@blossm/cli-root-dir");
-const hash = require("@blossm/operation-hash");
+import roboSay from "@blossm/robo-say";
+import rootDir from "@blossm/cli-root-dir";
+import hash from "@blossm/operation-hash";
 const { promisify } = require("util");
-const yaml = require("yaml");
-const path = require("path");
-const fs = require("fs-extra");
-const { red } = require("chalk");
+import yaml from "yaml";
+import path from "path";
+import fs from "fs-extra";
+import { red } from "chalk";
 
 const access = promisify(fs.access);
 
-const writeCompose = require("./src/write_compose");
-const writeBuild = require("./src/write_build");
-const resolveTransientInfo = require("./src/resolve_transient_info");
+import writeCompose from "./src/write_compose";
+import writeBuild from "./src/write_build";
+import resolveTransientInfo from "./src/resolve_transient_info";
 
 const envUriSpecifier = (env) => {
   switch (env) {
@@ -659,7 +658,7 @@ const writePackage = ({ config, baseConfig, workingDir }) => {
     if (key in devDependencies) delete devDependencies[key];
   }
 
-  const package = {
+  const packageJson = {
     main: "index.js",
     scripts: {
       start: "node index.js",
@@ -674,7 +673,7 @@ const writePackage = ({ config, baseConfig, workingDir }) => {
   };
 
   const packagePath = path.resolve(workingDir, "package.json");
-  fs.writeFileSync(packagePath, JSON.stringify(package));
+  fs.writeFileSync(packagePath, JSON.stringify(packageJson));
 };
 
 const configure = async (workingDir, configFn, env, strict) => {
@@ -846,7 +845,7 @@ const configure = async (workingDir, configFn, env, strict) => {
   }
 };
 
-module.exports = async ({
+export default async ({
   scriptDir,
   workingDir,
   path,

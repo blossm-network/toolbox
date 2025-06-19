@@ -1,10 +1,14 @@
-require("localenv");
-const { expect } = require("chai");
-const getToken = require("@blossm/get-token");
-const { create, delete: del, exists } = require("@blossm/gcp-pubsub");
+import "localenv";
+import * as chai from "chai";
+import getToken from "@blossm/get-token";
+import { create, delete as del, exists } from "@blossm/gcp-pubsub";
 
-const request = require("@blossm/request");
-const { facts, testing } = require("./../../config.json");
+import request from "@blossm/request";
+import { facts, testing } from "./../../config.json";
+
+chai.use(sinonChai);
+chai.use(chaiDatetime);
+const { expect } = chai;
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 

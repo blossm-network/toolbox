@@ -1,4 +1,4 @@
-const express = require("express");
+import express from "express";
 
 const server = express();
 
@@ -23,4 +23,4 @@ server.listen(process.env.PORT);
 //eslint-disable-next-line no-console
 console.log(`Dependency server started on port: ${process.env.PORT}`);
 
-module.exports = server;
+export default server;

@@ -8,6 +8,6 @@
  * The function must be deterministic, meaning the output should always be the same for every input.
  */
 
-// module.exports = ({ body, id }) => {
+// export default ({ body, id }) => {
 //   return { body };
 // };

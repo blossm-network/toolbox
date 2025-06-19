@@ -1,13 +1,14 @@
-const fs = require("fs");
-const path = require("path");
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import fs from "fs";
+import path from "path";
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+
 chai.use(sinonChai);
 const { expect } = chai;
 
 const sort =
   fs.existsSync(path.resolve(__dirname, "../../sort.js")) &&
-  require("../../sort");
+  import("../../sort");
 
 describe("View store sort tests", () => {
   if (!sort) return;

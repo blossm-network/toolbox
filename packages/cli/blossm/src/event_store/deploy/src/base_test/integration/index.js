@@ -1,18 +1,19 @@
-require("localenv");
-const crypto = require("crypto");
-const { expect } = require("chai").use(require("chai-datetime"));
-const request = require("@blossm/request");
-const { string: dateString } = require("@blossm/datetime");
-const hash = require("@blossm/hash");
-const uuid = require("@blossm/uuid");
+import "localenv";
+import * as chai from "chai";
+import chaiDatetime from "chai-datetime";
+import sinonChai from "sinon-chai";
+import crypto from "crypto";
+import request from "@blossm/request";
+import { string as dateString } from "@blossm/datetime";
+import hash from "@blossm/hash";
+import uuid from "@blossm/uuid";
 
-const {
-  domain,
-  service,
-  testing,
-  schema,
-  indexes,
-} = require("../../config.json");
+chai.use(sinonChai);
+chai.use(chaiDatetime);
+const { expect } = chai;
+
+const { domain, service, testing, schema, indexes } =
+  require("./../../config.json");
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
@@ -21,7 +22,7 @@ const {
   create,
   delete: del,
   // unsubscribe,
-} = require("@blossm/gcp-pubsub");
+} = import("@blossm/gcp-pubsub");
 
 const topic = `some-topic.${process.env.DOMAIN}.${process.env.SERVICE}`;
 // const sub = `a${uuid()}`; //needs to start with a letter

@@ -1,7 +1,7 @@
-const rootDir = require("@blossm/cli-root-dir");
-const path = require("path");
-const fs = require("fs");
-const yaml = require("yaml");
+import rootDir from "@blossm/cli-root-dir";
+import path from "path";
+import fs from "fs";
+import yaml from "yaml";
 
 const dependencyIsConfig = (dependency, config) => {
   if (config.procedure != dependency.procedure) return false;
@@ -143,7 +143,7 @@ const findDependenciesAndEvents = (
   );
 };
 
-module.exports = (dependencies) => {
+export default (dependencies) => {
   if (!dependencies) return;
   const dir = rootDir.path();
   return findDependenciesAndEvents(dependencies, dir, dependencies, []);

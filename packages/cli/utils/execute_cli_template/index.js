@@ -1,10 +1,10 @@
-const normalize = require("@blossm/normalize-cli");
-const roboSay = require("@blossm/robo-say");
-const fs = require("fs-extra");
-const rootDir = require("@blossm/cli-root-dir");
-const path = require("path");
-const yaml = require("yaml");
-const { enqueue } = require("@blossm/gcp-queue");
+import normalize from "@blossm/normalize-cli";
+import roboSay from "@blossm/robo-say";
+import fs from "fs-extra";
+import rootDir from "@blossm/cli-root-dir";
+import path from "path";
+import yaml from "yaml";
+import { enqueue } from "@blossm/gcp-queue";
 
 const envProject = ({ env, config }) => {
   switch (env) {
@@ -113,7 +113,7 @@ const execute = async (input, configFn) => {
   }
 };
 
-module.exports = ({ domain }) => async (args, configFn) => {
+export default ({ domain }) => async (args, configFn) => {
   const blossmConfig = rootDir.config();
   const input = await normalize({
     entrypointType: "path",

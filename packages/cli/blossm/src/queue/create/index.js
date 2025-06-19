@@ -1,8 +1,8 @@
-const { prompt } = require("inquirer");
-const normalize = require("@blossm/normalize-cli");
-const roboSay = require("@blossm/robo-say");
-const { create: createQueue } = require("@blossm/gcp-queue");
-const rootDir = require("@blossm/cli-root-dir");
+import { prompt } from "inquirer";
+import normalize from "@blossm/normalize-cli";
+import roboSay from "@blossm/robo-say";
+import { create as createQueue } from "@blossm/gcp-queue";
+import rootDir from "@blossm/cli-root-dir";
 
 const envProject = ({ env, config }) => {
   switch (env) {
@@ -32,7 +32,7 @@ const create = async (input) => {
   console.log(roboSay("All done. Your queue has been created."));
 };
 
-module.exports = async (args) => {
+export default async (args) => {
   const blossmConfig = rootDir.config();
   const input = await normalize({
     entrypointType: "name",

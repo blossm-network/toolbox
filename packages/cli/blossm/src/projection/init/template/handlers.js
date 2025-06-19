@@ -1,5 +1,5 @@
 //TODO better documentation
-module.exports = {
+export default {
   animals: {
     bird: ({ state, id }) => {
       //eslint-disable-next-line no-console

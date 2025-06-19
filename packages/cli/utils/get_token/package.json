@@ -3,6 +3,7 @@
   "version": "0.0.388",
   "description": "Gets a token for a development environment.",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

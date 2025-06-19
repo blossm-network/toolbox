@@ -1,2 +1,1 @@
-// module.exports = (line) => `🌸 ᛫•⦁◦ ${line}`;
-module.exports = (line) => `🌸${line ? ` ${line}` : ""}`;
+export default (line) => `🌸${line ? ` ${line}` : ""}`;

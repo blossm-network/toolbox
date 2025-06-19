@@ -1,22 +1,22 @@
-const fs = require("fs");
-const path = require("path");
-const gateway = require("@blossm/fact-gateway");
-const { verify: verifyGcp } = require("@blossm/gcp-kms");
-const verify = require("@blossm/verify-access-token");
-const gcpToken = require("@blossm/gcp-token");
-const terminatedSessionCheck = require("@blossm/terminated-session-check");
-const deletedSceneCheck = require("@blossm/deleted-scene-check");
-const permissionsLookup = require("@blossm/permissions-lookup");
-const nodeExternalToken = require("@blossm/node-external-token");
-const { download: downloadFile } = require("@blossm/gcp-storage");
+import fs from "fs";
+import path from "path";
+import gateway from "@blossm/fact-gateway";
+import { verify as verifyGcp } from "@blossm/gcp-kms";
+import verify from "@blossm/verify-access-token";
+import gcpToken from "@blossm/gcp-token";
+import terminatedSessionCheck from "@blossm/terminated-session-check";
+import deletedSceneCheck from "@blossm/deleted-scene-check";
+import permissionsLookup from "@blossm/permissions-lookup";
+import nodeExternalToken from "@blossm/node-external-token";
+import { download as downloadFile } from "@blossm/gcp-storage";
 
-const config = require("./config.json");
+import config from "./config.json";
 
 const services =
   fs.existsSync(path.resolve(__dirname, "./services.js")) &&
-  require("./services");
+  import("./services.js");
 
-module.exports = gateway({
+export default gateway({
   facts: config.facts.map((fact) => ({
     ...fact,
     ...(fact.network && {

@@ -1,10 +1,14 @@
-const fs = require("fs");
-const path = require("path");
-const { fake, expect } = require("chai").use(require("sinon-chai"));
+import fs from "fs";
+import path from "path";
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+
+chai.use(sinonChai);
+const { fake, expect } = chai;
 
 const services =
   fs.existsSync(path.resolve(__dirname, "../../services.js")) &&
-  require("../../services");
+  import("../../services.js");
 
 describe("Fact gateway services tests", () => {
   if (!services) return;

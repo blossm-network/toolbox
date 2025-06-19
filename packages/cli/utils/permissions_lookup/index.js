@@ -1,12 +1,12 @@
-const yaml = require("yaml");
-const { readFile, readdir, unlink } = require("fs");
-const { promisify } = require("util");
-const fact = require("@blossm/fact-rpc");
-const rolePermissions = require("@blossm/role-permissions");
-const uuid = require("@blossm/uuid");
-const redis = require("@blossm/redis");
-const { forbidden } = require("@blossm/errors");
-const nodeExternalToken = require("@blossm/node-external-token");
+import yaml from "yaml";
+import { readFile, readdir, unlink } from "fs";
+import { promisify } from "util";
+import fact from "@blossm/fact-rpc";
+import rolePermissions from "@blossm/role-permissions";
+import uuid from "@blossm/uuid";
+import redis from "@blossm/redis";
+import { forbidden } from "@blossm/errors";
+import nodeExternalToken from "@blossm/node-external-token";
 
 const readFileAsync = promisify(readFile);
 const readDirAsync = promisify(readdir);
@@ -15,7 +15,7 @@ const unlinkAsync = promisify(unlink);
 const cacheKeyPrefix = "_permissions";
 const FIVE_MINUTES_IN_SECONDS = 60 * 5;
 
-module.exports = ({ downloadFileFn }) => async ({
+export default ({ downloadFileFn }) => async ({
   internalTokenFn,
   externalTokenFn,
   principal,
