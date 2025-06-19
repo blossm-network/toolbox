@@ -1,12 +1,11 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, replace, fake } from "sinon";
-import kms from "@google-cloud/kms";
 
 chai.use(sinonChai);
 const { expect } = chai;
 
-import { encrypt } from "../index.js";
+import { encrypt, __client } from "../index.js";
 
 const project = "some-gcp-project";
 const ring = "some-key-ring";
@@ -22,13 +21,11 @@ describe("Kms encrypt", () => {
   it("should encrypt correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function () {};
-    kmsClient.prototype.cryptoKeyPath = pathFake;
     const encrpytedMessage = "some-encrypted-message";
     const buffer = Buffer.from(encrpytedMessage);
     const encryptFake = fake.returns([{ ciphertext: buffer }]);
-    kmsClient.prototype.encrypt = encryptFake;
-    replace(kms, "KeyManagementServiceClient", kmsClient);
+    replace(__client, "cryptoKeyPath", pathFake);
+    replace(__client, "encrypt", encryptFake);
     const result = await encrypt({ message, key, ring, location, project });
     expect(pathFake).to.have.been.calledWith(project, location, ring, key);
     expect(encryptFake).to.have.been.calledWith({
@@ -40,13 +37,11 @@ describe("Kms encrypt", () => {
   it("should encrypt correctly with different format", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function () {};
-    kmsClient.prototype.cryptoKeyPath = pathFake;
     const encrpytedMessage = "some-encrypted-message";
     const buffer = Buffer.from(encrpytedMessage);
     const encryptFake = fake.returns([{ ciphertext: buffer }]);
-    kmsClient.prototype.encrypt = encryptFake;
-    replace(kms, "KeyManagementServiceClient", kmsClient);
+    replace(__client, "cryptoKeyPath", pathFake);
+    replace(__client, "encrypt", encryptFake);
     const result = await encrypt({
       message,
       key,
@@ -65,13 +60,11 @@ describe("Kms encrypt", () => {
   it("should encrypt correctly with new lines removed", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function () {};
-    kmsClient.prototype.cryptoKeyPath = pathFake;
     const encrpytedMessage = "some-encrypted-message";
     const buffer = Buffer.from(`${encrpytedMessage}\n`);
     const encryptFake = fake.returns([{ ciphertext: buffer }]);
-    kmsClient.prototype.encrypt = encryptFake;
-    replace(kms, "KeyManagementServiceClient", kmsClient);
+    replace(__client, "encrypt", encryptFake);
+    replace(__client, "cryptoKeyPath", pathFake);
     const result = await encrypt({ message, key, ring, location, project });
     expect(pathFake).to.have.been.calledWith(project, location, ring, key);
     expect(result).to.equal(buffer.toString("base64"));
@@ -83,12 +76,10 @@ describe("Kms encrypt", () => {
   it("should throw correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function () {};
-    kmsClient.prototype.cryptoKeyPath = pathFake;
     const error = new Error("some-error");
     const encryptFake = fake.rejects(error);
-    kmsClient.prototype.encrypt = encryptFake;
-    replace(kms, "KeyManagementServiceClient", kmsClient);
+    replace(__client, "cryptoKeyPath", pathFake);
+    replace(__client, "encrypt", encryptFake);
     try {
       await encrypt({ message, key, ring, location, project });
 

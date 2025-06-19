@@ -1,10 +1,10 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake } from "sinon";
+import { upload, __client } from "../index.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, fake } = require("sinon");
-const { upload } = require("..");
-const deps = require("../deps");
 
 const bucket = "some-bucket";
 const file = "some-file";
@@ -14,14 +14,12 @@ describe("upload", () => {
     restore();
   });
   it("should upload correctly", async () => {
-    const storage = function () {};
     const uploadFake = fake();
 
     const bucketFake = fake.returns({
       upload: uploadFake,
     });
-    storage.prototype.bucket = bucketFake;
-    replace(deps, "storage", storage);
+    replace(__client, "bucket", bucketFake);
     await upload({ bucket, file });
     expect(bucketFake).to.have.been.calledWith(bucket);
     expect(uploadFake).to.have.been.calledWith(file, {
@@ -29,14 +27,12 @@ describe("upload", () => {
     });
   });
   it("should upload correctly with destination", async () => {
-    const storage = function () {};
     const uploadFake = fake();
 
     const bucketFake = fake.returns({
       upload: uploadFake,
     });
-    storage.prototype.bucket = bucketFake;
-    replace(deps, "storage", storage);
+    replace(__client, "bucket", bucketFake);
     const destination = "some-destination";
     await upload({ bucket, file, destination });
     expect(bucketFake).to.have.been.calledWith(bucket);
@@ -45,15 +41,13 @@ describe("upload", () => {
     });
   });
   it("should throw correctly", async () => {
-    const storage = function () {};
     const error = new Error("some-error");
     const uploadFake = fake.rejects(error);
 
     const bucketFake = fake.returns({
       upload: uploadFake,
     });
-    storage.prototype.bucket = bucketFake;
-    replace(deps, "storage", storage);
+    replace(__client, "bucket", bucketFake);
     try {
       await upload({ bucket, file });
 

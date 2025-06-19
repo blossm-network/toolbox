@@ -1,4 +1,4 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
 const createKeyIfNeeded = async ({ key, project, ring, location }) => {
   try {
@@ -13,7 +13,7 @@ const createKeyIfNeeded = async ({ key, project, ring, location }) => {
   }
 };
 
-exports.get = async (
+export const get = async (
   key,
   {
     project = process.env.GCP_PROJECT,
@@ -40,7 +40,7 @@ exports.get = async (
   return secret;
 };
 
-exports.create = async (
+export const create = async (
   key,
   message,
   {

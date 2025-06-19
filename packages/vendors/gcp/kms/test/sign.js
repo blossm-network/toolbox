@@ -1,13 +1,12 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, replace, fake } from "sinon";
-import crypto from "crypto";
-import kms from "@google-cloud/kms";
 
 chai.use(sinonChai);
 const { expect } = chai;
 
-import { sign } from "../index.js";
+import deps from "../deps.js";
+import { sign, __client } from "../index.js";
 
 const project = "some-gcp-project";
 const ring = "some-key-ring";
@@ -23,12 +22,10 @@ describe("Kms sign", () => {
   it("should sign correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function () {};
-    kmsClient.prototype.cryptoKeyVersionPath = pathFake;
     const signature = "some-sig";
     const signFake = fake.returns([{ signature: Buffer.from(signature) }]);
-    kmsClient.prototype.asymmetricSign = signFake;
-    replace(kms, "KeyManagementServiceClient", kmsClient);
+    replace(__client, "cryptoKeyVersionPath", pathFake);
+    replace(__client, "asymmetricSign", signFake);
     const sha256 = "some-sha256-digest";
     const createHashFake = fake.returns({
       update: () => {
@@ -37,7 +34,10 @@ describe("Kms sign", () => {
         };
       },
     });
-    replace(crypto, "createHash", createHashFake);
+    const crypto = {
+      createHash: createHashFake,
+    };
+    replace(deps, "crypto", crypto);
     const result = await sign({
       ring,
       key,
@@ -65,12 +65,10 @@ describe("Kms sign", () => {
   it("should sign correctly in custom format", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function () {};
-    kmsClient.prototype.cryptoKeyVersionPath = pathFake;
     const signature = "some-sig";
     const signFake = fake.returns([{ signature: Buffer.from(signature) }]);
-    kmsClient.prototype.asymmetricSign = signFake;
-    replace(kms, "KeyManagementServiceClient", kmsClient);
+    replace(__client, "cryptoKeyVersionPath", pathFake);
+    replace(__client, "asymmetricSign", signFake);
     const sha256 = "some-sha256-digest";
     const createHashFake = fake.returns({
       update: () => {
@@ -79,7 +77,10 @@ describe("Kms sign", () => {
         };
       },
     });
-    replace(crypto, "createHash", createHashFake);
+    const crypto = {
+      createHash: createHashFake,
+    };
+    replace(deps, "crypto", crypto);
     const result = await sign({
       ring,
       key,
@@ -108,13 +109,10 @@ describe("Kms sign", () => {
   it("should throw correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function () {};
-    kmsClient.prototype.cryptoKeyVersionPath = pathFake;
-
     const errorMessage = "some-error-message";
     const signFake = fake.rejects(new Error(errorMessage));
-    kmsClient.prototype.asymmetricSign = signFake;
-    replace(kms, "KeyManagementServiceClient", kmsClient);
+    replace(__client, "cryptoKeyVersionPath", pathFake);
+    replace(__client, "asymmetricSign", signFake);
     const sha256 = "some-sha256-digest";
     const createHashFake = fake.returns({
       update: () => {
@@ -123,7 +121,10 @@ describe("Kms sign", () => {
         };
       },
     });
-    replace(crypto, "createHash", createHashFake);
+    const crypto = {
+      createHash: createHashFake,
+    };
+    replace(deps, "crypto", crypto);
     try {
       await sign({ message, key, ring, location, version, project });
 

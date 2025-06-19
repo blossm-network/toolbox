@@ -1,17 +1,14 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, replace, fake } from "sinon";
-import deps from "../deps.js";
+
+import { create, __client } from "../index.js";
 
 chai.use(sinonChai);
 const { expect } = chai;
 
-let schedule;
-
 const parent = "some-parent";
 const response = "some-response";
-const locationPathFake = fake.returns(parent);
-const createJobFake = fake.returns([response]);
 const url = "some-url";
 const data = { a: 1 };
 const scheduleString = "some-schedule";
@@ -21,21 +18,16 @@ const location = "some-location";
 const token = "some-token";
 
 describe("Schedule", () => {
-  before(async () => {
-    const client = function () {};
-    client.prototype.locationPath = locationPathFake;
-    client.prototype.createJob = createJobFake;
-
-    replace(deps, "CloudSchedulerClient", client);
-
-    schedule = (await import("../index.js?update=" + Date.now())).default;
-  });
-  after(() => {
+  afterEach(() => {
     restore();
   });
 
   it("should call create with the correct params", async () => {
-    const result = await schedule({
+    const locationPathFake = fake.returns(parent);
+    const createJobFake = fake.returns([response]);
+    replace(__client, "locationPath", locationPathFake);
+    replace(__client, "createJob", createJobFake);
+    const result = await create({
       url,
       data,
       schedule: scheduleString,

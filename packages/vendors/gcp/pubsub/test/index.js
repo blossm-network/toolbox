@@ -1,126 +1,188 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
-import { restore, replace, fake, stub } from "sinon";
-import deps from "../deps.js";
+import { restore, replace, fake } from "sinon";
+
+import { publish, subscribe, unsubscribe, create, del, exists, __pubsub } from "../index.js";
 
 chai.use(sinonChai);
 const { expect } = chai;
 
-let eventBus;
 const topic = "some-topic";
 const name = "some-name";
 const fn = "some-fn";
-const publishFake = fake();
-const existsFake = stub();
-const createFake = fake();
-const deleteFake = fake();
-const subscriptionFake = fake.returns({
-  create: createFake,
-  delete: deleteFake,
-  exists: existsFake,
-});
 
 describe("Pub sub", () => {
-  beforeEach(async () => {
-    // Force a fresh import by adding a query parameter
-    await import("../index.js?update=" + Date.now());
-  });
   afterEach(() => {
     restore();
-    deleteFake.resetHistory();
-    createFake.resetHistory();
-    existsFake.resetHistory();
-    publishFake.resetHistory();
-    subscriptionFake.resetHistory();
-  });
-  before(async () => {
-    const pubsub = function () {};
-    pubsub.prototype.topic = (t) => {
-      expect(t).to.equal(topic);
-      return {
-        subscription: subscriptionFake,
-        publishMessage: publishFake,
-        create: createFake,
-        delete: deleteFake,
-        exists: existsFake,
-      };
-    };
-    replace(deps, "PubSub", pubsub);
-    eventBus = (await import("../index.js?update=" + Date.now()));
   });
   it("should call publish with the correct params", async () => {
+    const publishFake = fake();
+    const topicFake = (t) => {
+      expect(t).to.equal(topic);
+      return {
+        publishMessage: publishFake,
+      };
+    };
+    replace(__pubsub, "topic", topicFake);
     const data = "some-data";
-    await eventBus.publish(data, topic);
+    await publish(data, topic);
     expect(publishFake).to.have.been.calledWith(
       { data: Buffer.from(JSON.stringify(data)) }
     );
   });
   it("should call subscribe with the correct params", async () => {
-    existsFake.returns([false]);
-    await eventBus.subscribe({ topic, name, fn });
+    const deleteFake = fake();
+    const createFake = fake();
+    const existsFake = fake.returns([false]);
+    const subscriptionFake = fake.returns({
+      delete: deleteFake,
+      create: createFake,
+      exists: existsFake,
+    });
+    const topicFake = (t) => {
+      expect(t).to.equal(topic);
+      return {
+        subscription: subscriptionFake,
+      };
+    };
+    replace(__pubsub, "topic", topicFake);
+    await subscribe({ topic, name, fn });
     expect(subscriptionFake).to.have.been.calledWith(name);
     expect(existsFake).to.have.been.calledWith();
     expect(createFake).to.have.been.calledWith(fn);
+    expect(deleteFake).to.have.not.been.called;
   });
   it("should call subscribe with the correct params if already exists", async () => {
-    existsFake.returns([true]);
-    await eventBus.subscribe({ topic, name, fn });
+    const createFake = fake();
+    const deleteFake = fake();
+    const existsFake = fake.returns([true]);
+    const subscriptionFake = fake.returns({
+      create: createFake,
+      delete: deleteFake,
+      exists: existsFake,
+    });
+    const topicFake = (t) => {
+      expect(t).to.equal(topic);
+      return {
+        subscription: subscriptionFake
+      };
+    };
+    replace(__pubsub, "topic", topicFake);
+    await subscribe({ topic, name, fn });
     expect(subscriptionFake).to.have.been.calledWith(name);
     expect(existsFake).to.have.been.calledWith();
     expect(deleteFake).to.have.been.calledWith();
     expect(createFake).to.have.been.calledWith(fn);
   });
   it("should call unsubscribe with the correct params", async () => {
-    existsFake.returns([true]);
-    await eventBus.unsubscribe({ topic, name, fn });
+    const deleteFake = fake();
+    const existsFake = fake.returns([true]);
+    const subscriptionFake = fake.returns({
+      delete: deleteFake,
+      exists: existsFake,
+    });
+    const topicFake = (t) => {
+      expect(t).to.equal(topic);
+      return {
+        subscription: subscriptionFake,
+      };
+    };
+    replace(__pubsub, "topic", topicFake);
+    await unsubscribe({ topic, name, fn });
     expect(subscriptionFake).to.have.been.calledWith(name);
     expect(existsFake).to.have.been.calledWith();
     expect(deleteFake).to.have.been.calledWith();
   });
   it("should call unsubscribe with the correct params if doesn't exists", async () => {
-    existsFake.returns([false]);
-    await eventBus.unsubscribe({ topic, name, fn });
+    const deleteFake = fake();
+    const existsFake = fake.returns([false]);
+    const subscriptionFake = fake.returns({
+      delete: deleteFake,
+      exists: existsFake,
+    });
+    const topicFake = (t) => {
+      expect(t).to.equal(topic);
+      return {
+        subscription: subscriptionFake
+      };
+    };
+    replace(__pubsub, "topic", topicFake);
+    await unsubscribe({ topic, name, fn });
     expect(subscriptionFake).to.have.been.calledWith(name);
     expect(existsFake).to.have.been.calledWith();
     expect(deleteFake).to.have.not.been.called;
   });
   it("should call create topic with the correct params", async () => {
-    existsFake.returns([false]);
-    await eventBus.create(topic);
+    const createFake = fake();
+    const existsFake = fake.returns([false]);
+    const topicFake = (t) => {
+      expect(t).to.equal(topic);
+      return {
+        create: createFake,
+        exists: existsFake,
+      };
+    };
+    replace(__pubsub, "topic", topicFake);
+    await create(topic);
     expect(existsFake).to.have.been.calledWith();
     expect(createFake).to.have.been.calledWith();
   });
   it("should call create topic with the correct params if exists", async () => {
-    existsFake.returns([true]);
-    await eventBus.create(topic);
+    const createFake = fake();
+    const existsFake = fake.returns([true]);
+    const topicFake = (t) => {
+      expect(t).to.equal(topic);
+      return {
+        create: createFake,
+        exists: existsFake,
+      };
+    };
+    replace(__pubsub, "topic", topicFake);
+    await create(topic);
     expect(existsFake).to.have.been.calledWith();
     expect(createFake).to.not.have.been.calledWith();
   });
   it("should call delete topic with the correct params", async () => {
-    existsFake.returns([true]);
-    await eventBus.del(topic);
+    const deleteFake = fake();
+    const existsFake = fake.returns([true]);
+    const topicFake = (t) => {
+      expect(t).to.equal(topic);
+      return {
+        delete: deleteFake,
+        exists: existsFake,
+      };
+    };
+    replace(__pubsub, "topic", topicFake);
+    await del(topic);
     expect(existsFake).to.have.been.calledWith();
     expect(deleteFake).to.have.been.calledWith();
   });
   it("should call create topic with the correct params if exists", async () => {
-    existsFake.returns([false]);
-    await eventBus.del(topic);
+    const deleteFake = fake();
+    const existsFake = fake.returns([false]);
+    const topicFake = (t) => {
+      expect(t).to.equal(topic);
+      return {
+        delete: deleteFake,
+        exists: existsFake,
+      };
+    };
+    replace(__pubsub, "topic", topicFake);
+    await del(topic);
     expect(existsFake).to.have.been.calledWith();
     expect(deleteFake).to.not.have.been.calledWith();
   });
   it("should correctly tell if a topic exists", async () => {
-    const pubsub = function () {};
-    const exists = "some-exists";
-    const existsFake = fake.returns([exists]);
-    pubsub.prototype.topic = (t) => {
+    const exist = "some-exists";
+    const existsFake = fake.returns([exist]);
+    const topicFake = (t) => {
       expect(t).to.equal(topic);
       return {
         exists: existsFake,
       };
     };
-    replace(deps, "PubSub", pubsub);
-    eventBus = (await import("../index.js?update=" + Date.now()));
-    const result = await eventBus.exists(topic);
-    expect(result).to.equal(exists);
+    replace(__pubsub, "topic", topicFake);
+    const result = await exists(topic);
+    expect(result).to.equal(exist);
   });
 });

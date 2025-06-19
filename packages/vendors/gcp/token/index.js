@@ -1,7 +1,7 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
 ///https://cloud.google.com/run/docs/authenticating/service-to-service
-module.exports = async ({ name, hash }) => {
+export default async ({ name, hash }) => {
   const metadataServerTokenUrl =
     "http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=";
 

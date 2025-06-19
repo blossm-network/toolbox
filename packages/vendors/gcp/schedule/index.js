@@ -1,8 +1,8 @@
-import deps from "./deps.js";
+import { CloudSchedulerClient } from "@google-cloud/scheduler";
 
-const client = new deps.CloudSchedulerClient();
+export const __client = new CloudSchedulerClient();
 
-export default async ({
+export const create = async ({
   url,
   data,
   schedule,
@@ -11,7 +11,7 @@ export default async ({
   project,
   location,
 }) => {
-  const parent = client.locationPath(project, location);
+  const parent = __client.locationPath(project, location);
 
   const string = JSON.stringify(data);
   const body = Buffer.from(string);
@@ -32,7 +32,7 @@ export default async ({
     job,
   };
 
-  const [response] = await client.createJob(request);
+  const [response] = await __client.createJob(request);
 
   return response;
 };

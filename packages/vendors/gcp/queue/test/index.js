@@ -1,7 +1,8 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, replace, fake, useFakeTimers } from "sinon";
-import deps from "../deps.js";
+
+import { create, enqueue, __client } from "../index.js";
 
 chai.use(sinonChai);
 const { expect } = chai;
@@ -9,16 +10,10 @@ const { expect } = chai;
 let clock;
 const now = new Date();
 
-let queue;
-
 const queueParent = "some-queue-parent";
 const locationParent = "some-location-parent";
 const taskResponse = "some-task-response";
 const queueResponse = "some-queue-response";
-const queuePathFake = fake.returns(queueParent);
-const locationPathFake = fake.returns(locationParent);
-const createTaskFake = fake.returns([taskResponse]);
-const createQueueFake = fake.returns([queueResponse]);
 const url = "some-url";
 const data = { a: 1 };
 const project = "some-project";
@@ -41,24 +36,17 @@ describe("Queue", () => {
   });
   afterEach(() => {
     clock.restore();
-  });
-  before(async () => {
-    const client = function () {};
-    client.prototype.queuePath = queuePathFake;
-    client.prototype.locationPath = locationPathFake;
-    client.prototype.createTask = createTaskFake;
-    client.prototype.createQueue = createQueueFake;
-
-    replace(deps, "CloudTasksClient", client);
-
-    queue = (await import("../index.js?update=" + Date.now()));
-  });
-  after(() => {
     restore();
   });
 
   it("should call create with the correct params", async () => {
-    const result = await queue.create({
+    const queuePathFake = fake.returns(queueParent);
+    const locationPathFake = fake.returns(locationParent);
+    const createQueueFake = fake.returns([queueResponse]);
+    replace(__client, "locationPath", locationPathFake);
+    replace(__client, "queuePath", queuePathFake);
+    replace(__client, "createQueue", createQueueFake);
+    const result = await create({
       project,
       location,
       name,
@@ -74,7 +62,11 @@ describe("Queue", () => {
     expect(result).to.equal(queueResponse);
   });
   it("should call enqueue with the correct params", async () => {
-    const result = await queue.enqueue({
+    const queuePathFake = fake.returns(queueParent);
+    const createTaskFake = fake.returns([taskResponse]);
+    replace(__client, "queuePath", queuePathFake);
+    replace(__client, "createTask", createTaskFake);
+    const result = await enqueue({
       serviceAccountEmail,
       project,
       queue: name,
@@ -87,7 +79,7 @@ describe("Queue", () => {
       hash: operationHash,
       method: "put",
     });
-    expect(queuePathFake).to.have.been.calledWith(project, location);
+    expect(queuePathFake).to.have.been.calledWith(project, "custom-region", name);
     expect(createTaskFake).to.have.been.calledWith({
       parent: queueParent,
       task: {
@@ -111,7 +103,11 @@ describe("Queue", () => {
     expect(result).to.equal(taskResponse);
   });
   it("should call enqueue with the correct params with wait and optionals missing", async () => {
-    const result = await queue.enqueue({
+    const queuePathFake = fake.returns(queueParent);
+    const createTaskFake = fake.returns([taskResponse]);
+    replace(__client, "queuePath", queuePathFake);
+    replace(__client, "createTask", createTaskFake);
+    const result = await enqueue({
       project,
       queue: name,
       wait: 4,
@@ -141,8 +137,12 @@ describe("Queue", () => {
     expect(result).to.equal(taskResponse);
   });
   it("should call enqueue with the correct params with token", async () => {
+    const queuePathFake = fake.returns(queueParent);
+    const createTaskFake = fake.returns([taskResponse]);
+    replace(__client, "queuePath", queuePathFake);
+    replace(__client, "createTask", createTaskFake);
     const token = "some-token";
-    const result = await queue.enqueue({
+    const result = await enqueue({
       serviceAccountEmail,
       project,
       queue: name,

@@ -1,15 +1,17 @@
-const { decrypt, createKey, encrypt } = require("@blossm/gcp-kms");
-const { download, upload } = require("@blossm/gcp-storage");
-const uuid = require("@blossm/uuid");
-const { writeFile, readFile, unlink } = require("fs");
-const { promisify } = require("util");
+import { decrypt, createKey, encrypt } from "@blossm/gcp-kms";
+import { download, upload } from "@blossm/gcp-storage";
+import uuid from "@blossm/uuid";
+import { writeFile, readFile, unlink } from "fs";
+import { promisify } from "util";
 
-exports.decrypt = decrypt;
-exports.encrypt = encrypt;
-exports.createKey = createKey;
-exports.download = download;
-exports.upload = upload;
-exports.uuid = uuid;
-exports.readFile = promisify(readFile);
-exports.writeFile = promisify(writeFile);
-exports.unlink = promisify(unlink);
+export default {
+  decrypt,
+  encrypt,
+  createKey,
+  download,
+  upload,
+  uuid,
+  readFile: promisify(readFile),
+  writeFile: promisify(writeFile),
+  unlink: promisify(unlink),
+};

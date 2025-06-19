@@ -1,14 +1,15 @@
-import deps from "./deps.js";
 
-const client = new deps.CloudTasksClient();
+import { CloudTasksClient } from "@google-cloud/tasks";
+
+export const __client = new CloudTasksClient();
 
 export const create = async ({ project, location, name }) => {
-  const parent = client.locationPath(project, location);
+  const parent = __client.locationPath(project, location);
 
-  const [response] = await client.createQueue({
+  const [response] = await __client.createQueue({
     parent,
     queue: {
-      name: client.queuePath(project, location, name),
+      name: __client.queuePath(project, location, name),
     },
   });
   return response;
@@ -22,7 +23,7 @@ export const enqueue = ({
   queue,
   wait = 0,
 }) => async ({ url, data = {}, token, hash, name, method = "post" }) => {
-  const parent = client.queuePath(project, location, queue);
+  const parent = __client.queuePath(project, location, queue);
 
   const string = JSON.stringify(data);
 
@@ -59,7 +60,7 @@ export const enqueue = ({
     task,
   };
 
-  const [response] = await client.createTask(request);
+  const [response] = await __client.createTask(request);
 
   return response;
 };

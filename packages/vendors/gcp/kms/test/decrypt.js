@@ -1,12 +1,11 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, replace, fake } from "sinon";
-import kms from "@google-cloud/kms";
 
 chai.use(sinonChai);
 const { expect } = chai;
 
-import { decrypt } from "../index.js";
+import { decrypt, __client } from "../index.js";
 
 const project = "some-gcp-project";
 const ring = "some-key-ring";
@@ -27,14 +26,12 @@ describe("Kms decrypt", () => {
   it("should decrypt correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function () {};
-    kmsClient.prototype.cryptoKeyPath = pathFake;
     const decrpytedMessage = "some-decrypted-message";
     const decryptFake = fake.returns([
       { plaintext: Buffer.from(decrpytedMessage) },
     ]);
-    kmsClient.prototype.decrypt = decryptFake;
-    replace(kms, "KeyManagementServiceClient", kmsClient);
+    replace(__client, "cryptoKeyPath", pathFake);
+    replace(__client, "decrypt", decryptFake);
     const result = await decrypt({ message, key, ring, location, project });
     expect(pathFake).to.have.been.calledWith(project, location, ring, key);
     expect(result).to.equal(decrpytedMessage);
@@ -46,14 +43,12 @@ describe("Kms decrypt", () => {
   it("should decrypt correctly with new lines removed", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function () {};
-    kmsClient.prototype.cryptoKeyPath = pathFake;
     const decrpytedMessage = "some-decrypted-message";
     const decryptFake = fake.returns([
       { plaintext: Buffer.from(`${decrpytedMessage}\n`) },
     ]);
-    kmsClient.prototype.decrypt = decryptFake;
-    replace(kms, "KeyManagementServiceClient", kmsClient);
+    replace(__client, "decrypt", decryptFake);
+    replace(__client, "cryptoKeyPath", pathFake);
     const result = await decrypt({ message, key, ring, location, project });
     expect(pathFake).to.have.been.calledWith(project, location, ring, key);
     expect(result).to.equal(decrpytedMessage);
@@ -65,12 +60,10 @@ describe("Kms decrypt", () => {
   it("should throw correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function () {};
-    kmsClient.prototype.cryptoKeyPath = pathFake;
     const error = new Error("some-error");
     const decryptFake = fake.rejects(error);
-    kmsClient.prototype.decrypt = decryptFake;
-    replace(kms, "KeyManagementServiceClient", kmsClient);
+    replace(__client, "cryptoKeyPath", pathFake);
+    replace(__client, "decrypt", decryptFake);
     try {
       await decrypt({ message });
 

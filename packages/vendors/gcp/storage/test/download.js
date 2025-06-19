@@ -1,10 +1,10 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake } from "sinon";
+import { download, __client } from "../index.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, fake } = require("sinon");
-const { download } = require("..");
-const deps = require("../deps");
 
 const bucket = "some-bucket";
 const file = "some-file";
@@ -15,7 +15,6 @@ describe("Download", () => {
     restore();
   });
   it("should download correctly", async () => {
-    const storage = function () {};
     const downloadFake = fake();
     const fileFake = fake.returns({
       download: downloadFake,
@@ -24,15 +23,13 @@ describe("Download", () => {
     const bucketFake = fake.returns({
       file: fileFake,
     });
-    storage.prototype.bucket = bucketFake;
-    replace(deps, "storage", storage);
+    replace(__client, "bucket", bucketFake);
     await download({ bucket, file, destination });
     expect(bucketFake).to.have.been.calledWith(bucket);
     expect(fileFake).to.have.been.calledWith(file);
     expect(downloadFake).to.have.been.calledWith({ destination });
   });
   it("should download correctly with no file", async () => {
-    const storage = function () {};
     const download1Fake = fake();
     const download2Fake = fake();
     const files = [
@@ -48,8 +45,7 @@ describe("Download", () => {
     const bucketFake = fake.returns({
       getFiles: getFilesFake,
     });
-    storage.prototype.bucket = bucketFake;
-    replace(deps, "storage", storage);
+    replace(__client, "bucket", bucketFake);
     await download({ bucket, destination });
     expect(bucketFake).to.have.been.calledWith(bucket);
     expect(getFilesFake).to.have.been.calledWith();
@@ -61,7 +57,6 @@ describe("Download", () => {
     });
   });
   it("should throw correctly", async () => {
-    const storage = function () {};
     const error = new Error("some-error");
     const downloadFake = fake.rejects(error);
     const fileFake = fake.returns({
@@ -71,8 +66,7 @@ describe("Download", () => {
     const bucketFake = fake.returns({
       file: fileFake,
     });
-    storage.prototype.bucket = bucketFake;
-    replace(deps, "storage", storage);
+    replace(__client, "bucket", bucketFake);
     try {
       await download({ bucket, file });
 

@@ -12,10 +12,10 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, replace, fake } from "sinon";
-import crypto from "crypto";
 import kms from "@google-cloud/kms";
 
-import { verify } from "../index.js";
+import deps from "../deps.js";
+import { verify, __client } from "../index.js";
 
 chai.use(sinonChai);
 const { expect } = chai;
@@ -47,8 +47,7 @@ describe("Kms verify", () => {
 
     const errorMessage = "some-error-message";
     const getKeyFake = fake.rejects(new Error(errorMessage));
-    kmsClient.prototype.getPublicKey = getKeyFake;
-    replace(kms, "KeyManagementServiceClient", kmsClient);
+    replace(__client, "getPublicKey", getKeyFake);
 
     try {
       await verify({ key, ring, location, version, project })({
@@ -65,11 +64,9 @@ describe("Kms verify", () => {
   it("should get the public key correctly", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function () {};
-    kmsClient.prototype.cryptoKeyVersionPath = pathFake;
     const getKeyFake = fake.returns([{ pem }]);
-    kmsClient.prototype.getPublicKey = getKeyFake;
-    replace(kms, "KeyManagementServiceClient", kmsClient);
+    replace(__client, "cryptoKeyVersionPath", pathFake);
+    replace(__client, "getPublicKey", getKeyFake);
 
     const isVerified = "some-result";
     const verifyFake = fake.returns(isVerified);
@@ -79,7 +76,10 @@ describe("Kms verify", () => {
     const createVerifyFake = fake.returns({
       update: updateFake,
     });
-    replace(crypto, "createVerify", createVerifyFake);
+    const crypto = {
+      createVerify: createVerifyFake,
+    };
+    replace(deps, "crypto", crypto);
 
     const result = await verify({ key, ring, location, version, project })({
       message,
@@ -102,11 +102,9 @@ describe("Kms verify", () => {
   it("shouldn't call the service if the key has already been retrieved", async () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const kmsClient = function () {};
-    kmsClient.prototype.cryptoKeyVersionPath = pathFake;
     const getKeyFake = fake.returns([{ pem }]);
-    kmsClient.prototype.getPublicKey = getKeyFake;
-    replace(kms, "KeyManagementServiceClient", kmsClient);
+    replace(__client, "cryptoKeyVersionPath", pathFake);
+    replace(__client, "getPublicKey", getKeyFake);
     const isVerified = "some-result";
     const verifyFake = fake.returns(isVerified);
     const updateFake = fake.returns({
@@ -115,7 +113,10 @@ describe("Kms verify", () => {
     const createVerifyFake = fake.returns({
       update: updateFake,
     });
-    replace(crypto, "createVerify", createVerifyFake);
+    const crypto = {
+      createVerify: createVerifyFake,
+    };
+    replace(deps, "crypto", crypto);
     const result = await verify({ key, ring, location, version, project })({
       message,
       signature,

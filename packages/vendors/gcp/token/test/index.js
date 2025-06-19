@@ -1,10 +1,11 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, fake, replace } from "sinon";
+import deps from "../deps.js";
+import gcpToken from "../index.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, fake, replace } = require("sinon");
-const deps = require("../deps");
-const gcpToken = require("..");
 
 const hash = "some-operation-hash";
 
