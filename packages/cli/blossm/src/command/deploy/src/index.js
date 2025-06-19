@@ -7,8 +7,14 @@ import eventStore from "@blossm/event-store-rpc";
 import nodeExternalToken from "@blossm/node-external-token";
 import gcpToken from "@blossm/gcp-token";
 import { enqueue } from "@blossm/gcp-queue";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 import main from "./main.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const validate =
   fs.existsSync(path.resolve(__dirname, "./validate.js")) &&
   import("./validate");

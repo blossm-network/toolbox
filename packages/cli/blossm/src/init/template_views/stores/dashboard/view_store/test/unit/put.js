@@ -2,6 +2,11 @@ import fs from "fs";
 import path from "path";
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
+import { fileURLToPath } from 'url';  
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 chai.use(sinonChai);
 const { expect } = chai;

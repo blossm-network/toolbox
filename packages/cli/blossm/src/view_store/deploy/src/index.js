@@ -5,6 +5,12 @@ import { get as secret } from "@blossm/gcp-secret";
 import fact from "@blossm/fact-rpc";
 import gcpToken from "@blossm/gcp-token";
 
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const query =
   fs.existsSync(path.resolve(__dirname, "./query.js")) && import("./query");
 const sort =

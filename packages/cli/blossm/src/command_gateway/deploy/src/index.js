@@ -10,8 +10,13 @@ import deletedSceneCheck from "@blossm/deleted-scene-check";
 import permissionsLookup from "@blossm/permissions-lookup";
 import nodeExternalToken from "@blossm/node-external-token";
 import { download as downloadFile } from "@blossm/gcp-storage";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 import config from "./config.json";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const services =
   fs.existsSync(path.resolve(__dirname, "./services.js")) &&
