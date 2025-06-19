@@ -1,10 +1,11 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { fake, match } from "sinon";
+
+import replay from "../index.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { fake, match } = require("sinon");
-
-const replay = require("..");
 
 describe("Command handler post", () => {
   it("should call with the correct params", async () => {

@@ -3,6 +3,7 @@
   "description": "A projection server POST handler for playing a root.",
   "version": "0.0.10",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

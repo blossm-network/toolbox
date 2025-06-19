@@ -3,6 +3,7 @@
   "description": "A gateway server that manages fact access.",
   "version": "0.0.317",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

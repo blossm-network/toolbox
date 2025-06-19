@@ -1,10 +1,14 @@
-const logger = require("@blossm/logger");
+import logger from "@blossm/logger";
 
-const deps = require("./deps");
+import deps from "./deps.js";
 
 let _viewStore;
 
 const typeKey = "$type";
+
+export function __resetStoresForTest() {
+  _viewStore = undefined;
+}
 
 const viewStore = async ({ schema, indexes, secretFn }) => {
   if (_viewStore != undefined) {
@@ -78,7 +82,7 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
   return _viewStore;
 };
 
-module.exports = async ({
+export default async ({
   schema,
   indexes,
   sorts,

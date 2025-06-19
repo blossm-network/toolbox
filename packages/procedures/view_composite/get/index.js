@@ -1,4 +1,4 @@
-module.exports = ({ mainFn, viewsFn }) => {
+export default ({ mainFn, viewsFn }) => {
   return async (req, res) => {
     const response = await mainFn({
       query: req.query.query,

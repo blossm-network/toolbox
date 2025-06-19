@@ -1,11 +1,13 @@
-const server = require("@blossm/server");
-const get = require("@blossm/view-store-get");
-const idStream = require("@blossm/view-store-id-stream");
-const put = require("@blossm/view-store-put");
-const del = require("@blossm/view-store-delete");
+import server from "@blossm/server";
+import get from "@blossm/view-store-get";
+import idStream from "@blossm/view-store-id-stream";
+import put from "@blossm/view-store-put";
+import del from "@blossm/view-store-delete";
 
-exports.server = server;
-exports.get = get;
-exports.idStream = idStream;
-exports.put = put;
-exports.delete = del;
+export default {
+  server,
+  get,
+  idStream,
+  put,
+  del: del,
+};

@@ -3,6 +3,7 @@
   "description": "A view composite server GET handler.",
   "version": "0.0.4",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

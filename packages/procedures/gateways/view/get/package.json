@@ -3,6 +3,7 @@
   "description": "A view gateway server GET handler.",
   "version": "0.0.350",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

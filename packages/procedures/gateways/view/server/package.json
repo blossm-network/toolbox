@@ -3,6 +3,7 @@
   "description": "A gateway server that manages view access.",
   "version": "0.0.526",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

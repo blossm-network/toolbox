@@ -1,10 +1,11 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, fake } from "sinon";
+
+import get from "../index.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, fake } = require("sinon");
-
-const get = require("..");
 
 const action = "some-action";
 const domain = "some-domain";

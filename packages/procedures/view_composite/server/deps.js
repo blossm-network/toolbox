@@ -1,5 +1,7 @@
-const server = require("@blossm/server");
-const get = require("@blossm/view-composite-get");
+import server from "@blossm/server";
+import get from "@blossm/view-composite-get";
 
-exports.server = server;
-exports.get = get;
+export default {
+  server,
+  get,
+};

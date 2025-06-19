@@ -1,5 +1,7 @@
-const fact = require("@blossm/fact-rpc");
-const { badRequest } = require("@blossm/errors");
+import fact from "@blossm/fact-rpc";
+import { badRequest } from "@blossm/errors";
 
-exports.fact = fact;
-exports.badRequestError = badRequest;
+export default {
+  fact,
+  badRequestError: badRequest,
+};

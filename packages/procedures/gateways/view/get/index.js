@@ -1,4 +1,4 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
 const getResponse = async ({
   procedure,
@@ -65,7 +65,7 @@ const getResponse = async ({
   }
 };
 
-module.exports = ({
+export default ({
   procedure,
   name,
   network,

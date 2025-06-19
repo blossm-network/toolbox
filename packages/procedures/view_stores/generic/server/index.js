@@ -1,8 +1,8 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
 const defaultFormatFn = (content) => content;
 
-module.exports = async ({
+export default async ({
   streamFn,
   findFn,
   writeFn,
@@ -55,8 +55,8 @@ module.exports = async ({
         }
       )
     )
-    .delete(
-      deps.delete(
+    .del(
+      deps.del(
         { removeFn, groupsLookupFn, ...(group && { group }) },
         {
           path: "/:id?",

@@ -1,13 +1,15 @@
-const get = require("@blossm/view-gateway-get");
-const channel = require("@blossm/view-gateway-channel");
-const server = require("@blossm/server");
-const corsMiddleware = require("@blossm/cors-middleware");
-const authorization = require("@blossm/authorization-middleware");
-const authentication = require("@blossm/authentication-middleware");
+import get from "@blossm/view-gateway-get";
+import channel from "@blossm/view-gateway-channel";
+import server from "@blossm/server";
+import corsMiddleware from "@blossm/cors-middleware";
+import authorization from "@blossm/authorization-middleware";
+import authentication from "@blossm/authentication-middleware";
 
-exports.get = get;
-exports.channel = channel;
-exports.server = server;
-exports.corsMiddleware = corsMiddleware;
-exports.authorization = authorization;
-exports.authentication = authentication;
+export default {
+  get,
+  channel,
+  server,
+  corsMiddleware,
+  authorization,
+  authentication,
+};

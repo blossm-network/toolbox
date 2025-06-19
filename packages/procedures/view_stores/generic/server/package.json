@@ -3,6 +3,7 @@
   "description": "A view store server.",
   "version": "0.0.346",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

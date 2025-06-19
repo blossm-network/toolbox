@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = async ({
+export default async ({
   commands,
   domain = process.env.DOMAIN,
   service = process.env.SERVICE,

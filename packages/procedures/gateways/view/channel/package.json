@@ -3,6 +3,7 @@
   "description": "A view gateway server GET handler for channel subscriptions.",
   "version": "0.0.23",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

@@ -1,4 +1,4 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
 const defaultFn = (update) => update;
 
@@ -29,7 +29,7 @@ const formatBody = (value) => {
 };
 
 //NOT MEANT TO BE PUBLIC SINCE THERES NO REQUIRED CONTEXT CHECK.
-module.exports = ({
+export default ({
   writeFn,
   formatFn,
   updateFn = defaultFn,

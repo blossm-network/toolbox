@@ -1,3 +1,5 @@
-const { badRequest } = require("@blossm/errors");
+import { badRequest } from "@blossm/errors";
 
-exports.badRequestError = badRequest;
+export default {
+  badRequestError: badRequest,
+};

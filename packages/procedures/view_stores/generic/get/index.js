@@ -1,4 +1,4 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
 const defaultQueryFn = (query) => query;
 const defaultSortFn = (sort) => sort;
@@ -35,7 +35,7 @@ const parseSpecialValues = (obj) => {
   return result;
 };
 
-module.exports = ({
+export default ({
   findFn,
   countFn,
   one = false,

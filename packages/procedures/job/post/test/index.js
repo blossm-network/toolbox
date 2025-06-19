@@ -1,10 +1,11 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, fake } from "sinon";
+
+import post from "../index.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, fake } = require("sinon");
-
-const post = require("..");
 
 const payload = "some-payload";
 

@@ -1,4 +1,4 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = async ({ mainFn } = {}) =>
+export default async ({ mainFn } = {}) =>
   deps.server().post(deps.post({ mainFn })).listen();

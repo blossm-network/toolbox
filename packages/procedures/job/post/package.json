@@ -3,6 +3,7 @@
   "description": "A job server POST handler.",
   "version": "0.0.30",
   "main": "index.js",
+  "type": "module",
   "author": "blossm.network",
   "engines": {
     "node": ">= 20.19.0"

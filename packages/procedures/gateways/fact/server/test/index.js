@@ -1,11 +1,13 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake, match } from "sinon";
+
+import deps from "../deps.js";
+import gateway from "../index.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, fake, match } = require("sinon");
 
-const deps = require("../deps");
-const gateway = require("..");
 const allow = "some-allow";
 const permissionsLookupFn = "some-permissions-fn";
 const terminatedSessionCheckFn = "some-terminated-session-check-fn";

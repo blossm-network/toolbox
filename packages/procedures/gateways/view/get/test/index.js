@@ -1,11 +1,12 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake, match, useFakeTimers } from "sinon";
+
+import deps from "../deps.js";
+import get from "../index.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, fake, match, useFakeTimers } = require("sinon");
-
-const deps = require("../deps");
-const get = require("..");
 
 const results = { some: "results " };
 const query = { a: 1 };

@@ -1,9 +1,14 @@
-const { expect } = require("chai")
-  .use(require("chai-datetime"))
-  .use(require("sinon-chai"));
-const { restore, replace, fake, match, useFakeTimers } = require("sinon");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import chaiDatetime from "chai-datetime";
+import { restore, replace, fake, match, useFakeTimers } from "sinon";
 
-const deps = require("../deps");
+import deps from "../deps.js";
+import { __resetStoresForTest } from "../index.js";
+
+chai.use(sinonChai);
+chai.use(chaiDatetime);
+const { expect } = chai;
 
 let clock;
 
@@ -45,9 +50,9 @@ process.env.MONGODB_DATABASE = database;
 
 let mongodbViewStore;
 describe("View store", () => {
-  beforeEach(() => {
-    delete require.cache[require.resolve("..")];
-    mongodbViewStore = require("..");
+  beforeEach(async () => {
+    __resetStoresForTest();
+    mongodbViewStore = (await import("../index.js")).default;
     process.env.NODE_ENV = "some-env";
     process.env.CONTEXT = context;
     clock = useFakeTimers(now.getTime());

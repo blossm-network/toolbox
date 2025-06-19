@@ -1,4 +1,4 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
 const data = (req) => {
   try {
@@ -11,7 +11,7 @@ const data = (req) => {
   }
 };
 
-module.exports = ({
+export default ({
   mainFn,
   aggregateFn,
   readFactFn,

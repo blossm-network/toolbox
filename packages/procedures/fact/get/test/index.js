@@ -1,11 +1,12 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, fake, replace } from "sinon";
+
+import get from "../index.js";
+import deps from "../deps.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, fake, replace } = require("sinon");
-
-const get = require("..");
-const deps = require("../deps");
 
 const queryAggregatesFn = "some-query-aggregates-fn";
 const readFactFn = "some-read-fact-fn";

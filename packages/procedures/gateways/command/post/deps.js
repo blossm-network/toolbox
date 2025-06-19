@@ -1,11 +1,13 @@
-const validate = require("@blossm/validate-command");
-const command = require("@blossm/command-rpc");
-const { string: dateString } = require("@blossm/datetime");
-const { decode } = require("@blossm/jwt");
-const { forbidden } = require("@blossm/errors");
+import validate from "@blossm/validate-command";
+import command from "@blossm/command-rpc";
+import { string as dateString } from "@blossm/datetime";
+import { decode } from "@blossm/jwt";
+import { forbidden } from "@blossm/errors";
 
-exports.validate = validate;
-exports.command = command;
-exports.dateString = dateString;
-exports.decode = decode;
-exports.forbiddenError = forbidden;
+export default {
+  validate,
+  command,
+  dateString,
+  decode,
+  forbiddenError: forbidden,
+};

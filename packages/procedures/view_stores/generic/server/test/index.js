@@ -1,14 +1,14 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake, match } from "sinon";
+
+import deps from "../deps.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, fake, match } = require("sinon");
-
-const deps = require("../deps");
 
 describe("View store", () => {
   beforeEach(() => {
-    delete require.cache[require.resolve("..")];
     process.env.NODE_ENV = "some-env";
   });
   afterEach(() => {
@@ -16,14 +16,14 @@ describe("View store", () => {
   });
 
   it("should call with the correct params", async () => {
-    const viewStore = require("..");
+    const viewStore = (await import("../index.js")).default;
 
     const listenFake = fake();
     const deleteFake = fake.returns({
       listen: listenFake,
     });
     const putFake = fake.returns({
-      delete: deleteFake,
+      del: deleteFake,
     });
     const getFake = fake.returns({
       put: putFake,
@@ -50,7 +50,7 @@ describe("View store", () => {
 
     const viewStoreDeleteResult = "some-delete-result";
     const viewStoreDeleteFake = fake.returns(viewStoreDeleteResult);
-    replace(deps, "delete", viewStoreDeleteFake);
+    replace(deps, "del", viewStoreDeleteFake);
 
     const streamFn = "some-stream-fn";
     const findFn = "some-find-fn";
@@ -127,14 +127,14 @@ describe("View store", () => {
     );
   });
   it("should call with the correct params with optionals missing", async () => {
-    const viewStore = require("..");
+    const viewStore = (await import("../index.js")).default;
 
     const listenFake = fake();
     const deleteFake = fake.returns({
       listen: listenFake,
     });
     const putFake = fake.returns({
-      delete: deleteFake,
+      del: deleteFake,
     });
     const getFake = fake.returns({
       put: putFake,
@@ -161,7 +161,7 @@ describe("View store", () => {
 
     const viewStoreDeleteResult = "some-delete-result";
     const viewStoreDeleteFake = fake.returns(viewStoreDeleteResult);
-    replace(deps, "delete", viewStoreDeleteFake);
+    replace(deps, "del", viewStoreDeleteFake);
 
     const streamFn = "some-stream-fn";
     const findFn = "some-find-fn";

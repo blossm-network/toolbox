@@ -1,11 +1,12 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, replace, fake } from "sinon";
+
+import deps from "../deps.js";
+import composite from "../index.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, replace, fake } = require("sinon");
-
-const deps = require("../deps");
-const composite = require("..");
 
 const mainFn = "some-main-fn";
 const viewsFn = "some-views-fn";

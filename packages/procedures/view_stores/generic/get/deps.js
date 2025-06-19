@@ -1,8 +1,10 @@
-const { resourceNotFound, forbidden } = require("@blossm/errors");
-const urlEncodeQueryData = require("@blossm/url-encode-query-data");
-const jsonToCsv = require("@blossm/json-to-csv");
+import { resourceNotFound, forbidden } from "@blossm/errors";
+import urlEncodeQueryData from "@blossm/url-encode-query-data";
+import jsonToCsv from "@blossm/json-to-csv";
 
-exports.resourceNotFoundError = resourceNotFound;
-exports.forbiddenError = forbidden;
-exports.urlEncodeQueryData = urlEncodeQueryData;
-exports.jsonToCsv = jsonToCsv;
+export default {
+  resourceNotFoundError: resourceNotFound,
+  forbiddenError: forbidden,
+  urlEncodeQueryData,
+  jsonToCsv,
+};

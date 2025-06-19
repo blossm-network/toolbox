@@ -1,7 +1,9 @@
-const server = require("@blossm/server");
-const play = require("@blossm/projection-play");
-const replay = require("@blossm/projection-replay");
+import server from "@blossm/server";
+import play from "@blossm/projection-play";
+import replay from "@blossm/projection-replay";
 
-exports.server = server;
-exports.play = play;
-exports.replay = replay;
+export default {
+  server,
+  play,
+  replay,
+};

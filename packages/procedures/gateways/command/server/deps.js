@@ -1,13 +1,15 @@
-const post = require("@blossm/command-gateway-post");
-const server = require("@blossm/server");
-const corsMiddleware = require("@blossm/cors-middleware");
-const authorization = require("@blossm/authorization-middleware");
-const authentication = require("@blossm/authentication-middleware");
-const multer = require("multer");
+import post from "@blossm/command-gateway-post";
+import server from "@blossm/server";
+import corsMiddleware from "@blossm/cors-middleware";
+import authorization from "@blossm/authorization-middleware";
+import authentication from "@blossm/authentication-middleware";
+import multer from "multer";
 
-exports.post = post;
-exports.server = server;
-exports.corsMiddleware = corsMiddleware;
-exports.authorization = authorization;
-exports.authentication = authentication;
-exports.uploader = multer();
+export default {
+  post,
+  server,
+  corsMiddleware,
+  authorization,
+  authentication,
+  uploader: multer(),
+};

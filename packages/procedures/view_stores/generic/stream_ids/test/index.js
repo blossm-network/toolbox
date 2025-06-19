@@ -1,10 +1,11 @@
-const chai = require("chai");
-const sinonChai = require("sinon-chai");
+import * as chai from "chai";
+import sinonChai from "sinon-chai";
+import { restore, fake, match } from "sinon";
+
+import streamIds from "../index.js";
+
 chai.use(sinonChai);
 const { expect } = chai;
-const { restore, fake, match } = require("sinon");
-
-const streamIds = require("..");
 
 const sort = "some-sort";
 

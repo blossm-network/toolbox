@@ -1,4 +1,4 @@
-module.exports = ({ mainFn }) => {
+export default ({ mainFn }) => {
   return async (req, res) => {
     await mainFn({
       payload: req.body.payload,

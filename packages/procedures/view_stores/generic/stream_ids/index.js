@@ -1,7 +1,7 @@
 const defaultFn = (query) => query;
 
 //NOT MEANT TO BE PUBLIC SINCE THERES NO REQUIRED CONTEXT CHECK.
-module.exports = ({ streamFn, queryFn = defaultFn }) => {
+export default ({ streamFn, queryFn = defaultFn }) => {
   return async (req, res) => {
     const queryBody = queryFn(req.query.query || {});
     const formattedQueryBody = {};

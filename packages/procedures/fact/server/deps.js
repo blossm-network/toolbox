@@ -1,7 +1,9 @@
-const server = require("@blossm/server");
-const get = require("@blossm/fact-get");
-const stream = require("@blossm/fact-stream");
+import server from "@blossm/server";
+import get from "@blossm/fact-get";
+import stream from "@blossm/fact-stream";
 
-exports.server = server;
-exports.get = get;
-exports.stream = stream;
+export default {
+  server,
+  get,
+  stream,
+};

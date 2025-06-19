@@ -1,6 +1,6 @@
-const deps = require("./deps");
+import deps from "./deps.js";
 
-module.exports = (req, res) => {
+export default (req, res) => {
   if (
     process.env.CONTEXT &&
     (!req.query.context || !req.query.context[process.env.CONTEXT])

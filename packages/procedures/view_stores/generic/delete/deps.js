@@ -1,4 +1,6 @@
-const { badRequest, forbidden } = require("@blossm/errors");
+import { badRequest, forbidden } from "@blossm/errors";
 
-exports.badRequestError = badRequest;
-exports.forbiddenError = forbidden;
+export default {
+  badRequestError: badRequest,
+  forbiddenError: forbidden,
+};
