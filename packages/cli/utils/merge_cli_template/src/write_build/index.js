@@ -1,5 +1,6 @@
 import yaml from "yaml";
 import path from "path";
+import fs from 'fs';
 
 import viewStore from "./view_store.js";
 import commandGateway from "./command_gateway.js";
