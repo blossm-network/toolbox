@@ -1,6 +1,6 @@
 import validator from "@blossm/validator";
 
-import config from "./config.json";
+import config from "./config.json" with { type: "json" };
 
 const validateObject = ({ object, expectation, path, context }) => {
   for (const property in expectation) {

@@ -1,6 +1,6 @@
 import * as chai from "chai";
 
-import { testing } from "../../config.json";
+import { testing } from "../../config.json" with { type: "json" };
 import handlers from "../../handlers.js";
 
 const { expect } = chai;

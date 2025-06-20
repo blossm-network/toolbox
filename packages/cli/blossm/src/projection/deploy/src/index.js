@@ -14,7 +14,7 @@ import composeUpdate from "@blossm/compose-update";
 
 import handlers from "./handlers.js";
 
-import config from "./config.json";
+import config from "./config.json" with { type: "json" };
 
 const matchDelimiter = ".$.";
 

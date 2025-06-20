@@ -5,7 +5,7 @@ import { decode } from "@blossm/jwt";
 import { create, delete as del, exists } from "@blossm/gcp-pubsub";
 
 import request from "@blossm/request";
-import { views, testing } from "./../../config.json";
+import { views, testing } from "./../../config.json" with { type: "json" };
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 

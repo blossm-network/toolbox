@@ -7,7 +7,7 @@ import gcpToken from "@blossm/gcp-token";
 import { enqueue } from "@blossm/gcp-queue";
 import handlers from "./handlers.js";
 
-import config from "./config.json";
+import config from "./config.json" with { type: "json" };
 
 const blockchainProducerKey = `producer`;
 const blockchainKeyRing = `${process.env.SERVICE_NAME}-blockchain`;

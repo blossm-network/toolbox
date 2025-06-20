@@ -5,7 +5,7 @@ const { expect } = chai;
 
 import validate from "../../validate.js";
 
-import { testing } from "../../config.json";
+import { testing } from "../../config.json" with { type: "json" };
 
 describe("Command handler store validator tests", () => {
   it("should handle correct payload correctly", async () => {

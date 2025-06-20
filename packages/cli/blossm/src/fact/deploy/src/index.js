@@ -5,7 +5,7 @@ import nodeExternalToken from "@blossm/node-external-token";
 import gcpToken from "@blossm/gcp-token";
 
 import main from "./main.js";
-import config from "./config.json";
+import config from "./config.json" with { type: "json" };
 
 export default fact({
   mainFn: main,

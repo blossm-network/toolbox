@@ -25,7 +25,7 @@ const formatCsv =
   fs.existsSync(path.resolve(__dirname, "./format_csv.js")) &&
   import("./format_csv");
 
-import config from "./config.json";
+import config from "./config.json" with { type: "json" };
 
 export default viewStore({
   schema: config.schema,

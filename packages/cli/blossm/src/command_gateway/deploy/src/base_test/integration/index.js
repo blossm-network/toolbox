@@ -5,7 +5,7 @@ import getToken from "@blossm/get-token";
 import { create, delete as del, exists } from "@blossm/gcp-pubsub";
 
 import request from "@blossm/request";
-import { commands, testing } from "./../../config.json";
+import { commands, testing } from "./../../config.json" with { type: "json" };
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 

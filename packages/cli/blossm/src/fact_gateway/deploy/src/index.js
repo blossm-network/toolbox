@@ -15,7 +15,7 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import config from "./config.json";
+import config from "./config.json" with { type: "json" };
 
 const services =
   fs.existsSync(path.resolve(__dirname, "./services.js")) &&

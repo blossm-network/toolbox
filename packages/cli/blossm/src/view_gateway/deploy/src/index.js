@@ -8,7 +8,7 @@ import permissionsLookup from "@blossm/permissions-lookup";
 import nodeExternalToken from "@blossm/node-external-token";
 import { download as downloadFile } from "@blossm/gcp-storage";
 
-import config from "./config.json";
+import config from "./config.json" with { type: "json" };
 
 export default gateway({
   views: config.views.map((view) => ({

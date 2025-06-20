@@ -6,7 +6,7 @@ import createEvent from "@blossm/create-event";
 
 import request from "@blossm/request";
 
-import { testing, name, context } from "../../config.json";
+import { testing, name, context } from "../../config.json" with { type: "json" };
 import { dateString } from "@blossm/command-rpc/deps";
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;

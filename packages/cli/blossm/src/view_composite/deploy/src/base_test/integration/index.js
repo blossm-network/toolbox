@@ -3,7 +3,7 @@ import * as chai from "chai";
 import viewStore from "@blossm/view-store-rpc";
 import request from "@blossm/request";
 
-import { testing } from "../../config.json";
+import { testing } from "../../config.json" with { type: "json" };
 
 const { expect } = chai;
 
