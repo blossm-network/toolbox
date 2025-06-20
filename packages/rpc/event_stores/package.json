@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-stores-rpc",
   "description": "Access to many event stores simultaneously.",
-  "version": "0.0.57",
+  "version": "0.0.58",
   "type": "module",
   "scripts": {
     "test": "mocha --recursive"
@@ -13,7 +13,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/stream-rpc": "^0.0.57"
+    "@blossm/stream-rpc": "^0.0.58"
   },
   "devDependencies": {
     "chai-datetime": "^1.5.0",
