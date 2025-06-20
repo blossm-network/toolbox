@@ -1,6 +1,6 @@
 {
   "name": "@blossm/terminated-session-check",
-  "version": "0.0.130",
+  "version": "0.0.131",
   "description": "Checks to see if the session is terminated.",
   "main": "index.js",
   "type": "module",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@blossm/errors": "^0.0.40",
-    "@blossm/fact-rpc": "^0.0.195"
+    "@blossm/fact-rpc": "^0.0.196"
   },
   "devDependencies": {
     "mocha": "^11.7.0"

@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-store-id-stream",
   "description": "A view store GET handler for streaming view ids.",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",

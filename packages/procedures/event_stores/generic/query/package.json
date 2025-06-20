@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-query",
   "description": "Am event store server query function.",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",

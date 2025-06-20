@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-composite-get",
   "description": "A view composite server GET handler.",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",

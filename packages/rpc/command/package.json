@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-rpc",
   "description": "Issues a command.",
-  "version": "0.0.294",
+  "version": "0.0.295",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -15,7 +15,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/datetime": "^0.0.16",
+    "@blossm/datetime": "^0.0.17",
     "@blossm/rpc": "^0.0.256"
   },
   "devDependencies": {

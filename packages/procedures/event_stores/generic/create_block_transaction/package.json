@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-create-block-transaction",
   "description": "An event store POST handler transaction for creating a block.",
-  "version": "0.0.93",
+  "version": "0.0.94",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@blossm/cononical-string": "^0.0.9",
-    "@blossm/datetime": "^0.0.16",
+    "@blossm/datetime": "^0.0.17",
     "@blossm/event-store-aggregate": "^0.0.17",
     "@blossm/hash": "^0.0.13",
     "@blossm/merkle-tree": "^0.0.9",
