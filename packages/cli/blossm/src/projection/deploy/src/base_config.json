@@ -12,7 +12,8 @@
     "@blossm/channel-name": "*",
     "@blossm/logger": "*",
     "@blossm/gcp-queue": "*",
-    "@blossm/compose-update": "*"
+    "@blossm/compose-update": "*",
+    "@blossm/datetime": "*"
   },
   "devDependencies": {
     "localenv": "^0.2.2",

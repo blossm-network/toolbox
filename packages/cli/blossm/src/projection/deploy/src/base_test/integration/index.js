@@ -3,11 +3,13 @@ import * as chai from "chai";
 import viewStore from "@blossm/view-store-rpc";
 import eventStore from "@blossm/event-store-rpc";
 import createEvent from "@blossm/create-event";
+import { string as dateString } from "@blossm/datetime";
 
 import request from "@blossm/request";
 
-import { testing, name, context } from "../../config.json" with { type: "json" };
-import { dateString } from "@blossm/command-rpc/deps";
+import config from "../../config.json" with { type: "json" };
+
+const { testing, name, context } = config;
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 

@@ -689,7 +689,7 @@ const configure = async (workingDir, configFn, env, strict) => {
 
   try {
     const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
-    const baseConfig = (await import(baseConfigPath, { assert: { type: "json" } })).default;
+    const baseConfig = (await import(baseConfigPath, { with: { type: "json" } })).default;
 
     writePackage({ config, baseConfig, workingDir });
     delete config.dependencies;

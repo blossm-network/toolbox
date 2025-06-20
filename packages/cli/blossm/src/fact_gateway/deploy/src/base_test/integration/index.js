@@ -4,7 +4,9 @@ import getToken from "@blossm/get-token";
 import { create, delete as del, exists } from "@blossm/gcp-pubsub";
 
 import request from "@blossm/request";
-import { facts, testing } from "./../../config.json" with { type: "json" };
+import config from "./../../config.json" with { type: "json" };
+
+const { facts, testing } = config;
 
 chai.use(sinonChai);
 chai.use(chaiDatetime);

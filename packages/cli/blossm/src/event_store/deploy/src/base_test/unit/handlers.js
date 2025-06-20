@@ -1,8 +1,9 @@
 import * as chai from "chai";
 
-import { testing } from "../../config.json" with { type: "json" };
+import config from "../../config.json" with { type: "json" };
 import handlers from "../../handlers.js";
 
+const { testing } = config;
 const { expect } = chai;
 
 describe("Event store handlers tests", () => {

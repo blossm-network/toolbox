@@ -8,7 +8,7 @@
  *
  */
 
-// const deps = import("./deps");
+// import deps from "./deps.js";
 
 export default async ({ query, viewsFn }) => {
   await viewsFn({

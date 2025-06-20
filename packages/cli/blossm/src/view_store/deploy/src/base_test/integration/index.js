@@ -6,7 +6,9 @@ import uuid from "@blossm/uuid";
 // const eventStore = import("@blossm/event-store-rpc");
 // const createEvent = import("@blossm/create-event");
 
-import { schema, key, testing, one, group, indexes } from "../../config.json" with { type: "json" };
+import config from "../../config.json" with { type: "json" };
+
+const { schema, key, testing, one, group, indexes } = config;
 
 const { expect } = chai;
 

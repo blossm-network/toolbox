@@ -6,7 +6,7 @@ The docs at the bottom give in-depth info of the tools you have at your disposal
 
 **/
 
-//const deps = import("./deps");
+// import deps from "./deps.js";
 
 export default async ({
   payload,

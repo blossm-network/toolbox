@@ -5,9 +5,10 @@ import { stub, restore } from "sinon";
 chai.use(sinonChai);
 const { expect } = chai;
 
-import { testing } from "../../config.json" with { type: "json" };
-
+import config from "../../config.json" with { type: "json" };
 import handlers from "../../handlers.js";
+
+const { testing } = config;
 
 process.env.NETWORK = "local.network";
 
