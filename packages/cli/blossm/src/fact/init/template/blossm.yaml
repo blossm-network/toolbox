@@ -14,7 +14,7 @@ dependencies:
   "@blossm/gcp-token": "*"
 
 devDependencies:
-  "chai-datetime": "^1.5.0"
+  "chai-datetime": "^1.8.1"
 
 #
 # The following properties are used for automated testing.

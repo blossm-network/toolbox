@@ -24,7 +24,7 @@ const normalize =
 const fill =
   fs.existsSync(path.resolve(__dirname, "./fill.js")) && import("./fill");
 
-const config = import("./config.json");
+const config = (await import("./config.json", { assert: { type: "json" } })).default;
 
 export default commandProcedure({
   mainFn: main,

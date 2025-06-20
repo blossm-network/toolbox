@@ -15,7 +15,7 @@ const normalize =
   fs.existsSync(path.resolve(__dirname, "../../normalize.js")) &&
   import("../../normalize");
 
-const { testing } = import("../../config.json");
+const { testing } = (await import("../../config.json", { assert: { type: "json" } })).default;
 
 describe("Command handler store normalize tests", () => {
   it("should have at least one example", async () => {

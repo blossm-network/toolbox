@@ -10,7 +10,7 @@ service: some-optional-service
 # Add dependencies and devDependencies, just like a package.json file.
 #
 devDependencies:
-  "chai-datetime": "^1.5.0"
+  "chai-datetime": "^1.8.1"
   "@blossm/datetime": "*"
 
 #don't change

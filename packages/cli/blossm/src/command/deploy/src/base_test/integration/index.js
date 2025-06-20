@@ -10,7 +10,7 @@ import request from "@blossm/request";
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const { testing, contexts } = import("../../config.json");
+const { testing, contexts } = (await import("../../config.json", { assert: { type: "json" } })).default;
 
 const checkResponse = ({ data, expected, tokens, revokeKeys }) => {
   for (const property in {
