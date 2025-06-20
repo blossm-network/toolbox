@@ -1,12 +1,10 @@
 import normalize from "@blossm/normalize-cli";
 import hash from "@blossm/operation-hash";
 import trim from "@blossm/trim-string";
-import serviceNameConsts from "@blossm/service-name-consts";
+import { MAX_LENGTH } from "@blossm/service-name-consts";
 
 import deploy from "./deploy/index.js";
 import init from "./init/index.js";
-
-const { MAX_LENGTH } = serviceNameConsts;
 
 const configFn = (config) => {
   return {

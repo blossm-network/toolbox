@@ -1,7 +1,5 @@
 import { object, string, date, findError } from "@blossm/validator";
-import durationConsts from "@blossm/duration-consts";
-
-const { MILLISECONDS_IN_HOUR } = durationConsts;
+import { MILLISECONDS_IN_HOUR } from "@blossm/duration-consts";
 
 import deps from "./deps.js";
 

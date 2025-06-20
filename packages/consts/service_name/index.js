@@ -1,3 +1,1 @@
-export default {
-  MAX_LENGTH: 25,
-};
+export const MAX_LENGTH = 25;

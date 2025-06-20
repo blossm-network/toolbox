@@ -1,7 +1,5 @@
 import deps from "./deps.js";
-import serviceNameConsts from "@blossm/service-name-consts";
-
-const { MAX_LENGTH } = serviceNameConsts;
+import { MAX_LENGTH } from "@blossm/service-name-consts";
 
 export default async ({ enqueueFn, url, data, operation, method }) =>
   enqueueFn({
