@@ -11,6 +11,7 @@
     "localenv": "^0.2.2",
     "mocha": "^11.6.0",
     "chai": "^5.2.0",
+    "sinon-chai": "^4.0.0",
     "chai-datetime": "^1.8.1",
     "@blossm/request": "*",
     "@blossm/datetime": "*",

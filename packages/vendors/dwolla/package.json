@@ -24,6 +24,6 @@
     "common-tags": "^1.8.0",
     "mocha": "^6.1.4",
     "sinon": "^21.0.0",
-    "sinon-chai": "^3.3.0"
+    "sinon-chai": "^4.0.0"
   }
 }

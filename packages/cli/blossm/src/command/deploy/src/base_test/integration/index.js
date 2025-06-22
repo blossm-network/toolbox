@@ -8,6 +8,8 @@ import { hash } from "@blossm/crypt";
 
 import request from "@blossm/request";
 
+const { expect } = chai;
+
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const { testing, contexts } = (await import("../../config.json", { with: { type: "json" } })).default;
