@@ -1,6 +1,6 @@
 {
   "name": "@blossm/error-middleware",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "description": "Error middleware for the network.",
   "main": "index.js",
   "type": "module",
@@ -15,7 +15,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/logger": "^0.0.12"
+    "@blossm/logger": "^0.0.13"
   },
   "devDependencies": {
     "mocha": "^11.7.0"

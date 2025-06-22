@@ -1,6 +1,6 @@
 {
   "name": "@blossm/validate-command",
-  "version": "0.0.76",
+  "version": "0.0.77",
   "description": "Validates the paramaters found in command requests.",
   "main": "index.js",
   "type": "module",
@@ -20,7 +20,7 @@
     "test": "mocha --recursive"
   },
   "devDependencies": {
-    "@blossm/datetime": "^0.0.17",
+    "@blossm/datetime": "^0.0.18",
     "mocha": "^11.6.0",
     "sinon": "^21.0.0",
     "sinon-chai": "^4.0.0"

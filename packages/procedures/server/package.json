@@ -1,7 +1,7 @@
 {
   "name": "@blossm/server",
   "description": "Exposes an express function to run.",
-  "version": "0.0.40",
+  "version": "0.0.41",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -15,9 +15,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/error-middleware": "^0.0.29",
+    "@blossm/error-middleware": "^0.0.30",
     "@blossm/express-middleware": "^0.0.9",
-    "@blossm/logger": "^0.0.12",
+    "@blossm/logger": "^0.0.13",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
     "localenv": "^0.2.2"

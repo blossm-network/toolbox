@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-aggregate-stream",
   "description": "An event store GET handler for streaming aggregates.",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -15,7 +15,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/event-store-aggregate": "^0.0.17"
+    "@blossm/event-store-aggregate": "^0.0.18"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",
