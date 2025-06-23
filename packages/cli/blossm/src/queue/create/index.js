@@ -1,7 +1,7 @@
 import inquirer from "inquirer";
 import normalize from "@blossm/normalize-cli";
 import roboSay from "@blossm/robo-say";
-import { create as createQueue } from "@blossm/gcp-queue";
+import gcpQueue from "@blossm/gcp-queue";
 import rootDir from "@blossm/cli-root-dir";
 
 const { prompt } = inquirer;
@@ -25,7 +25,7 @@ const create = async (input) => {
   const env = input.env;
 
   const blossmConfig = rootDir.config();
-  await createQueue({
+  await gcpQueue.create({
     project: envProject({ config: blossmConfig, env }),
     location: "us-central1",
     name: input.name,

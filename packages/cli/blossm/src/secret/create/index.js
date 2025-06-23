@@ -1,7 +1,7 @@
 import inquirer from "inquirer";
 import normalize from "@blossm/normalize-cli";
 import roboSay from "@blossm/robo-say";
-import { create as createSecret } from "@blossm/gcp-secret";
+import gcpSecret from "@blossm/gcp-secret";
 import rootDir from "@blossm/cli-root-dir";
 import fs from "fs";
 import path from "path";
@@ -47,7 +47,7 @@ const create = async (input) => {
     input.message ||
     fs.readFileSync(path.resolve(process.cwd(), input.file), "utf8");
 
-  await createSecret(input.name, message, {
+  await gcpSecret.create(input.name, message, {
     project: envProject({ config: blossmConfig, env }),
     ring: "secrets-bucket",
     location: "global",

@@ -4,7 +4,7 @@ import yaml from "yaml";
 import path from "path";
 import normalize from "@blossm/normalize-cli";
 import roboSay from "@blossm/robo-say";
-import { upload as uploadFile } from "@blossm/gcp-storage";
+import gcpStorage from "@blossm/gcp-storage";
 import rootDir from "@blossm/cli-root-dir";
 import chalk from "chalk";
 
@@ -65,7 +65,7 @@ const upload = async (input) => {
     }
   }
 
-  await uploadFile({
+  await gcpStorage.upload({
     bucket: envRolesBucket({ config: blossmConfig, env }),
     file: input.path,
     destination: `${
