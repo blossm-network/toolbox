@@ -1,6 +1,6 @@
 {
   "name": "@blossm/execute-cli-template",
-  "version": "0.0.72",
+  "version": "0.0.73",
   "description": "Queues a procedure for execution.",
   "main": "index.js",
   "type": "module",
