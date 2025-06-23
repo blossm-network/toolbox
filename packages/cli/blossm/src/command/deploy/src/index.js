@@ -6,7 +6,7 @@ import fact from "@blossm/fact-rpc";
 import eventStore from "@blossm/event-store-rpc";
 import nodeExternalToken from "@blossm/node-external-token";
 import gcpToken from "@blossm/gcp-token";
-import { enqueue } from "@blossm/gcp-queue";
+import gcpQueue from "@blossm/gcp-queue";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
@@ -91,7 +91,7 @@ export default commandProcedure({
               ? { token, type: "Bearer" }
               : nodeExternalToken({ network }),
         },
-        ...(async && { enqueue: { fn: enqueue, wait } }),
+        ...(async && { enqueue: { fn: gcpQueue.enqueue, wait } }),
       })
       .issue(payload, {
         ...(root && { root }),
@@ -207,7 +207,7 @@ export default commandProcedure({
         token: {
           internalFn: gcpToken,
         },
-        ...(async && { enqueue: { fn: enqueue } }),
+        ...(async && { enqueue: { fn: gcpQueue.enqueue } }),
       })
       .add({ eventData, tx }),
   countFn: ({ context, claims, token }) => ({ domain, service, root }) => {

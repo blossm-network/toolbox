@@ -4,7 +4,7 @@ import eventStoreRpc from "@blossm/event-store-rpc";
 import { get as secret } from "@blossm/gcp-secret";
 import { sign, encrypt, publicKey } from "@blossm/gcp-kms";
 import gcpToken from "@blossm/gcp-token";
-import { enqueue } from "@blossm/gcp-queue";
+import gcpQueue from "@blossm/gcp-queue";
 import handlers from "./handlers.js";
 
 import config from "./config.json" with { type: "json" };
@@ -43,7 +43,7 @@ export default eventStore({
     eventStoreRpc({ domain: process.env.DOMAIN, service: process.env.SERVICE })
       .set({
         token: { internalFn: gcpToken },
-        enqueue: { fn: enqueue },
+        enqueue: { fn: gcpQueue.enqueue },
       })
       .createBlock(),
   blockPublisherPublicKeyFn: async () => {

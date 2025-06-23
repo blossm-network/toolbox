@@ -4,7 +4,7 @@ import fs from "fs-extra";
 import rootDir from "@blossm/cli-root-dir";
 import path from "path";
 import yaml from "yaml";
-import { enqueue } from "@blossm/gcp-queue";
+import gcpQueue from "@blossm/gcp-queue";
 
 const envProject = ({ env, config }) => {
   switch (env) {
@@ -90,7 +90,7 @@ const execute = async (input, configFn) => {
       env: input.env,
     });
 
-    await enqueue({
+    await gcpQueue.enqueue({
       queue:
         input.queue || queueName({ config: blossmConfig, data: input.data }),
       location: "us-central1",

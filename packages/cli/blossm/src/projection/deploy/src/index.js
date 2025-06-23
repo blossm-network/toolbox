@@ -9,7 +9,7 @@ import eventStore from "@blossm/event-store-rpc";
 import channelName from "@blossm/channel-name";
 import logger from "@blossm/logger";
 import { get as secret } from "@blossm/gcp-secret";
-import { enqueue } from "@blossm/gcp-queue";
+import gcpQueue from "@blossm/gcp-queue";
 import composeUpdate from "@blossm/compose-update";
 
 import handlers from "./handlers.js";
@@ -144,7 +144,7 @@ const saveId = async ({
           },
         },
       }),
-      ...(!push && { enqueue: { fn: enqueue } }),
+      ...(!push && { enqueue: { fn: gcpQueue.enqueue } }),
     })
     .update({
       id,
@@ -196,7 +196,7 @@ const deleteId = ({ id, query, push, context }) =>
           },
         },
       }),
-      ...(!push && { enqueue: { fn: enqueue } }),
+      ...(!push && { enqueue: { fn: gcpQueue.enqueue } }),
     })
     .delete(id, {
       query,
@@ -518,7 +518,7 @@ export default projection({
     })
       .set({
         token: { internalFn: gcpToken },
-        enqueue: { fn: enqueue },
+        enqueue: { fn: gcpQueue.enqueue },
       })
       .play({ root, domain, service }),
   rootStreamFn: ({ fn, domain, service }) =>
