@@ -8,6 +8,7 @@ import request from "@blossm/request";
 import config from "./../../config.json" with { type: "json" };
 
 const { commands, testing } = config;
+const { expect } = chai;
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 

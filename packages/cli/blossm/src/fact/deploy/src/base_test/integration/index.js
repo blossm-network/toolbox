@@ -3,12 +3,13 @@ import * as chai from "chai";
 import eventStore from "@blossm/event-store-rpc";
 import createEvent from "@blossm/create-event";
 import { hash } from "@blossm/crypt";
-
 import request from "@blossm/request";
+import config from "./../../config.json" with { type: "json" };
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const { testing, contexts } = import("../../config.json");
+const { testing, contexts } = config; 
+const { expect } = chai;
 
 const checkResponse = ({ data, expected }) => {
   for (const property in expected) {

@@ -7,6 +7,7 @@ import request from "@blossm/request";
 import { string as dateString } from "@blossm/datetime";
 import hash from "@blossm/hash";
 import uuid from "@blossm/uuid";
+import config from "./../../config.json" with { type: "json" };
 import {
   // subscribe,
   create,
@@ -18,8 +19,7 @@ chai.use(sinonChai);
 chai.use(chaiDatetime);
 const { expect } = chai;
 
-const { domain, service, testing, schema, indexes } =
-  import("./../../config.json");
+const { domain, service, testing, schema, indexes } = config;
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
