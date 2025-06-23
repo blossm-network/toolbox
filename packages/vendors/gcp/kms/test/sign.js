@@ -6,7 +6,7 @@ chai.use(sinonChai);
 const { expect } = chai;
 
 import deps from "../deps.js";
-import { sign, __client } from "../index.js";
+import kms from "../index.js";
 
 const project = "some-gcp-project";
 const ring = "some-key-ring";
@@ -24,8 +24,8 @@ describe("Kms sign", () => {
     const pathFake = fake.returns(path);
     const signature = "some-sig";
     const signFake = fake.returns([{ signature: Buffer.from(signature) }]);
-    replace(__client, "cryptoKeyVersionPath", pathFake);
-    replace(__client, "asymmetricSign", signFake);
+    replace(kms.__client, "cryptoKeyVersionPath", pathFake);
+    replace(kms.__client, "asymmetricSign", signFake);
     const sha256 = "some-sha256-digest";
     const createHashFake = fake.returns({
       update: () => {
@@ -38,7 +38,7 @@ describe("Kms sign", () => {
       createHash: createHashFake,
     };
     replace(deps, "crypto", crypto);
-    const result = await sign({
+    const result = await kms.sign({
       ring,
       key,
       location,
@@ -67,8 +67,8 @@ describe("Kms sign", () => {
     const pathFake = fake.returns(path);
     const signature = "some-sig";
     const signFake = fake.returns([{ signature: Buffer.from(signature) }]);
-    replace(__client, "cryptoKeyVersionPath", pathFake);
-    replace(__client, "asymmetricSign", signFake);
+    replace(kms.__client, "cryptoKeyVersionPath", pathFake);
+    replace(kms.__client, "asymmetricSign", signFake);
     const sha256 = "some-sha256-digest";
     const createHashFake = fake.returns({
       update: () => {
@@ -81,7 +81,7 @@ describe("Kms sign", () => {
       createHash: createHashFake,
     };
     replace(deps, "crypto", crypto);
-    const result = await sign({
+    const result = await kms.sign({
       ring,
       key,
       location,
@@ -111,8 +111,8 @@ describe("Kms sign", () => {
     const pathFake = fake.returns(path);
     const errorMessage = "some-error-message";
     const signFake = fake.rejects(new Error(errorMessage));
-    replace(__client, "cryptoKeyVersionPath", pathFake);
-    replace(__client, "asymmetricSign", signFake);
+    replace(kms.__client, "cryptoKeyVersionPath", pathFake);
+    replace(kms.__client, "asymmetricSign", signFake);
     const sha256 = "some-sha256-digest";
     const createHashFake = fake.returns({
       update: () => {
@@ -126,7 +126,7 @@ describe("Kms sign", () => {
     };
     replace(deps, "crypto", crypto);
     try {
-      await sign({ message, key, ring, location, version, project });
+      await kms.sign({ message, key, ring, location, version, project });
 
       //shouldn't get called
       expect(1).to.equal(2);

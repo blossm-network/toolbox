@@ -6,7 +6,7 @@ const publicKeys = {};
 
 export const __client = new kms.KeyManagementServiceClient();
 
-export const createKey = async ({ id, ring, project, location }) => {
+const createKey = async ({ id, ring, project, location }) => {
   const parent = __client.keyRingPath(project, location, ring);
   await __client.createCryptoKey({
     parent,
@@ -17,7 +17,7 @@ export const createKey = async ({ id, ring, project, location }) => {
   });
 };
 
-export const decrypt = async ({ message, key, ring, location, project }) => {
+const decrypt = async ({ message, key, ring, location, project }) => {
   const name = __client.cryptoKeyPath(project, location, ring, key);
   const [result] = await __client.decrypt({
     name,
@@ -26,7 +26,7 @@ export const decrypt = async ({ message, key, ring, location, project }) => {
   return result.plaintext.toString().trim();
 };
 
-export const encrypt = async ({
+const encrypt = async ({
   message,
   key,
   ring,
@@ -42,7 +42,7 @@ export const encrypt = async ({
   return result.ciphertext.toString(format).trim();
 };
 
-export const publicKey = async ({ key, ring, location, version, project }) => {
+const publicKey = async ({ key, ring, location, version, project }) => {
   const versionPath = __client.cryptoKeyVersionPath(
     project,
     location,
@@ -58,7 +58,7 @@ export const publicKey = async ({ key, ring, location, version, project }) => {
   return pem;
 };
 
-export const sign = async ({
+const sign = async ({
   message,
   format = "base64",
   key,
@@ -85,7 +85,7 @@ export const sign = async ({
   return signature.toString(format);
 };
 
-export const verify = ({ key, ring, location, version, project }) => async ({
+const verify = ({ key, ring, location, version, project }) => async ({
   message,
   signature,
   format = "base64",
@@ -107,4 +107,14 @@ export const verify = ({ key, ring, location, version, project }) => async ({
     .createVerify("SHA256")
     .update(message)
     .verify(publicKeys[instanceKey], signature, format);
+};
+
+export default {
+  __client,
+  createKey,
+  decrypt,
+  encrypt,
+  publicKey,
+  sign,
+  verify,
 };

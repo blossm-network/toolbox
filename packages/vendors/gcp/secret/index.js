@@ -13,7 +13,7 @@ const createKeyIfNeeded = async ({ key, project, ring, location }) => {
   }
 };
 
-export const get = async (
+const get = async (
   key,
   {
     project = process.env.GCP_PROJECT,
@@ -40,7 +40,7 @@ export const get = async (
   return secret;
 };
 
-export const create = async (
+const create = async (
   key,
   message,
   {
@@ -73,4 +73,9 @@ export const create = async (
   });
 
   await deps.unlink(filename);
+};
+
+export default {
+  get,
+  create,
 };

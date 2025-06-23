@@ -2,7 +2,7 @@ import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, replace, fake } from "sinon";
 
-import { create, __client } from "../index.js";
+import schedule from "../index.js";
 
 chai.use(sinonChai);
 const { expect } = chai;
@@ -25,9 +25,9 @@ describe("Schedule", () => {
   it("should call create with the correct params", async () => {
     const locationPathFake = fake.returns(parent);
     const createJobFake = fake.returns([response]);
-    replace(__client, "locationPath", locationPathFake);
-    replace(__client, "createJob", createJobFake);
-    const result = await create({
+    replace(schedule.__client, "locationPath", locationPathFake);
+    replace(schedule.__client, "createJob", createJobFake);
+    const result = await schedule.create({
       url,
       data,
       schedule: scheduleString,

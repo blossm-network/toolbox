@@ -1,8 +1,8 @@
 import { CloudSchedulerClient } from "@google-cloud/scheduler";
 
-export const __client = new CloudSchedulerClient();
+const __client = new CloudSchedulerClient();
 
-export const create = async ({
+const create = async ({
   url,
   data,
   schedule,
@@ -35,4 +35,9 @@ export const create = async ({
   const [response] = await __client.createJob(request);
 
   return response;
+};
+
+export default {
+  __client,
+  create,
 };

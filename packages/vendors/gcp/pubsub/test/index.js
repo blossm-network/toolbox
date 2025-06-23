@@ -2,7 +2,7 @@ import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, replace, fake } from "sinon";
 
-import { publish, subscribe, unsubscribe, create, del, exists, __pubsub } from "../index.js";
+import pubsub from "../index.js";
 
 chai.use(sinonChai);
 const { expect } = chai;
@@ -23,9 +23,9 @@ describe("Pub sub", () => {
         publishMessage: publishFake,
       };
     };
-    replace(__pubsub, "topic", topicFake);
+    replace(pubsub.__pubsub, "topic", topicFake);
     const data = "some-data";
-    await publish(data, topic);
+    await pubsub.publish(data, topic);
     expect(publishFake).to.have.been.calledWith(
       { data: Buffer.from(JSON.stringify(data)) }
     );
@@ -45,8 +45,8 @@ describe("Pub sub", () => {
         subscription: subscriptionFake,
       };
     };
-    replace(__pubsub, "topic", topicFake);
-    await subscribe({ topic, name, fn });
+    replace(pubsub.__pubsub, "topic", topicFake);
+    await pubsub.subscribe({ topic, name, fn });
     expect(subscriptionFake).to.have.been.calledWith(name);
     expect(existsFake).to.have.been.calledWith();
     expect(createFake).to.have.been.calledWith(fn);
@@ -67,8 +67,8 @@ describe("Pub sub", () => {
         subscription: subscriptionFake
       };
     };
-    replace(__pubsub, "topic", topicFake);
-    await subscribe({ topic, name, fn });
+    replace(pubsub.__pubsub, "topic", topicFake);
+    await pubsub.subscribe({ topic, name, fn });
     expect(subscriptionFake).to.have.been.calledWith(name);
     expect(existsFake).to.have.been.calledWith();
     expect(deleteFake).to.have.been.calledWith();
@@ -87,8 +87,8 @@ describe("Pub sub", () => {
         subscription: subscriptionFake,
       };
     };
-    replace(__pubsub, "topic", topicFake);
-    await unsubscribe({ topic, name, fn });
+    replace(pubsub.__pubsub, "topic", topicFake);
+    await pubsub.unsubscribe({ topic, name, fn });
     expect(subscriptionFake).to.have.been.calledWith(name);
     expect(existsFake).to.have.been.calledWith();
     expect(deleteFake).to.have.been.calledWith();
@@ -106,8 +106,8 @@ describe("Pub sub", () => {
         subscription: subscriptionFake
       };
     };
-    replace(__pubsub, "topic", topicFake);
-    await unsubscribe({ topic, name, fn });
+    replace(pubsub.__pubsub, "topic", topicFake);
+    await pubsub.unsubscribe({ topic, name, fn });
     expect(subscriptionFake).to.have.been.calledWith(name);
     expect(existsFake).to.have.been.calledWith();
     expect(deleteFake).to.have.not.been.called;
@@ -122,8 +122,8 @@ describe("Pub sub", () => {
         exists: existsFake,
       };
     };
-    replace(__pubsub, "topic", topicFake);
-    await create(topic);
+    replace(pubsub.__pubsub, "topic", topicFake);
+    await pubsub.create(topic);
     expect(existsFake).to.have.been.calledWith();
     expect(createFake).to.have.been.calledWith();
   });
@@ -137,8 +137,8 @@ describe("Pub sub", () => {
         exists: existsFake,
       };
     };
-    replace(__pubsub, "topic", topicFake);
-    await create(topic);
+    replace(pubsub.__pubsub, "topic", topicFake);
+    await pubsub.create(topic);
     expect(existsFake).to.have.been.calledWith();
     expect(createFake).to.not.have.been.calledWith();
   });
@@ -152,8 +152,8 @@ describe("Pub sub", () => {
         exists: existsFake,
       };
     };
-    replace(__pubsub, "topic", topicFake);
-    await del(topic);
+    replace(pubsub.__pubsub, "topic", topicFake);
+    await pubsub.del(topic);
     expect(existsFake).to.have.been.calledWith();
     expect(deleteFake).to.have.been.calledWith();
   });
@@ -167,8 +167,8 @@ describe("Pub sub", () => {
         exists: existsFake,
       };
     };
-    replace(__pubsub, "topic", topicFake);
-    await del(topic);
+    replace(pubsub.__pubsub, "topic", topicFake);
+    await pubsub.del(topic);
     expect(existsFake).to.have.been.calledWith();
     expect(deleteFake).to.not.have.been.calledWith();
   });
@@ -181,8 +181,8 @@ describe("Pub sub", () => {
         exists: existsFake,
       };
     };
-    replace(__pubsub, "topic", topicFake);
-    const result = await exists(topic);
+    replace(pubsub.__pubsub, "topic", topicFake);
+    const result = await pubsub.exists(topic);
     expect(result).to.equal(exist);
   });
 });

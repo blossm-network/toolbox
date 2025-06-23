@@ -666,6 +666,7 @@ const writePackage = ({ config, baseConfig, workingDir }) => {
   }
 
   const packageJson = {
+    type: "module",
     main: "index.js",
     scripts: {
       start: "node index.js",

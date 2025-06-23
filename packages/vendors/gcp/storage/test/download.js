@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, replace, fake } from "sinon";
-import { download, __client } from "../index.js";
+import storage from "../index.js";
 
 chai.use(sinonChai);
 const { expect } = chai;
@@ -23,8 +23,8 @@ describe("Download", () => {
     const bucketFake = fake.returns({
       file: fileFake,
     });
-    replace(__client, "bucket", bucketFake);
-    await download({ bucket, file, destination });
+    replace(storage.__client, "bucket", bucketFake);
+    await storage.download({ bucket, file, destination });
     expect(bucketFake).to.have.been.calledWith(bucket);
     expect(fileFake).to.have.been.calledWith(file);
     expect(downloadFake).to.have.been.calledWith({ destination });
@@ -45,8 +45,8 @@ describe("Download", () => {
     const bucketFake = fake.returns({
       getFiles: getFilesFake,
     });
-    replace(__client, "bucket", bucketFake);
-    await download({ bucket, destination });
+    replace(storage.__client, "bucket", bucketFake);
+    await storage.download({ bucket, destination });
     expect(bucketFake).to.have.been.calledWith(bucket);
     expect(getFilesFake).to.have.been.calledWith();
     expect(download1Fake).to.have.been.calledWith({
@@ -66,9 +66,9 @@ describe("Download", () => {
     const bucketFake = fake.returns({
       file: fileFake,
     });
-    replace(__client, "bucket", bucketFake);
+    replace(storage.__client, "bucket", bucketFake);
     try {
-      await download({ bucket, file });
+      await storage.download({ bucket, file });
 
       //shouldn't get called
       expect(1).to.equal(0);

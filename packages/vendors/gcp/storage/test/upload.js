@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, replace, fake } from "sinon";
-import { upload, __client } from "../index.js";
+import storage from "../index.js";
 
 chai.use(sinonChai);
 const { expect } = chai;
@@ -19,8 +19,8 @@ describe("upload", () => {
     const bucketFake = fake.returns({
       upload: uploadFake,
     });
-    replace(__client, "bucket", bucketFake);
-    await upload({ bucket, file });
+    replace(storage.__client, "bucket", bucketFake);
+    await storage.upload({ bucket, file });
     expect(bucketFake).to.have.been.calledWith(bucket);
     expect(uploadFake).to.have.been.calledWith(file, {
       destination: file,
@@ -32,9 +32,9 @@ describe("upload", () => {
     const bucketFake = fake.returns({
       upload: uploadFake,
     });
-    replace(__client, "bucket", bucketFake);
+    replace(storage.__client, "bucket", bucketFake);
     const destination = "some-destination";
-    await upload({ bucket, file, destination });
+    await storage.upload({ bucket, file, destination });
     expect(bucketFake).to.have.been.calledWith(bucket);
     expect(uploadFake).to.have.been.calledWith(file, {
       destination,
@@ -47,9 +47,9 @@ describe("upload", () => {
     const bucketFake = fake.returns({
       upload: uploadFake,
     });
-    replace(__client, "bucket", bucketFake);
+    replace(storage.__client, "bucket", bucketFake);
     try {
-      await upload({ bucket, file });
+      await storage.upload({ bucket, file });
 
       //shouldn't get called
       expect(1).to.equal(0);

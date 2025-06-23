@@ -5,7 +5,7 @@ import { restore, replace, fake } from "sinon";
 chai.use(sinonChai);
 const { expect } = chai;
 
-import { encrypt, __client } from "../index.js";
+import kms from "../index.js";
 
 const project = "some-gcp-project";
 const ring = "some-key-ring";
@@ -24,9 +24,9 @@ describe("Kms encrypt", () => {
     const encrpytedMessage = "some-encrypted-message";
     const buffer = Buffer.from(encrpytedMessage);
     const encryptFake = fake.returns([{ ciphertext: buffer }]);
-    replace(__client, "cryptoKeyPath", pathFake);
-    replace(__client, "encrypt", encryptFake);
-    const result = await encrypt({ message, key, ring, location, project });
+    replace(kms.__client, "cryptoKeyPath", pathFake);
+    replace(kms.__client, "encrypt", encryptFake);
+    const result = await kms.encrypt({ message, key, ring, location, project });
     expect(pathFake).to.have.been.calledWith(project, location, ring, key);
     expect(encryptFake).to.have.been.calledWith({
       name: path,
@@ -40,9 +40,9 @@ describe("Kms encrypt", () => {
     const encrpytedMessage = "some-encrypted-message";
     const buffer = Buffer.from(encrpytedMessage);
     const encryptFake = fake.returns([{ ciphertext: buffer }]);
-    replace(__client, "cryptoKeyPath", pathFake);
-    replace(__client, "encrypt", encryptFake);
-    const result = await encrypt({
+    replace(kms.__client, "cryptoKeyPath", pathFake);
+    replace(kms.__client, "encrypt", encryptFake);
+    const result = await kms.encrypt({
       message,
       key,
       ring,
@@ -63,9 +63,9 @@ describe("Kms encrypt", () => {
     const encrpytedMessage = "some-encrypted-message";
     const buffer = Buffer.from(`${encrpytedMessage}\n`);
     const encryptFake = fake.returns([{ ciphertext: buffer }]);
-    replace(__client, "encrypt", encryptFake);
-    replace(__client, "cryptoKeyPath", pathFake);
-    const result = await encrypt({ message, key, ring, location, project });
+    replace(kms.__client, "encrypt", encryptFake);
+    replace(kms.__client, "cryptoKeyPath", pathFake);
+    const result = await kms.encrypt({ message, key, ring, location, project });
     expect(pathFake).to.have.been.calledWith(project, location, ring, key);
     expect(result).to.equal(buffer.toString("base64"));
     expect(encryptFake).to.have.been.calledWith({
@@ -78,10 +78,10 @@ describe("Kms encrypt", () => {
     const pathFake = fake.returns(path);
     const error = new Error("some-error");
     const encryptFake = fake.rejects(error);
-    replace(__client, "cryptoKeyPath", pathFake);
-    replace(__client, "encrypt", encryptFake);
+    replace(kms.__client, "cryptoKeyPath", pathFake);
+    replace(kms.__client, "encrypt", encryptFake);
     try {
-      await encrypt({ message, key, ring, location, project });
+      await kms.encrypt({ message, key, ring, location, project });
 
       //shouldn't get called
       expect(1).to.equal(0);

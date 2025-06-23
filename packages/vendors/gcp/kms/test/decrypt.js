@@ -5,7 +5,7 @@ import { restore, replace, fake } from "sinon";
 chai.use(sinonChai);
 const { expect } = chai;
 
-import { decrypt, __client } from "../index.js";
+import kms from "../index.js";
 
 const project = "some-gcp-project";
 const ring = "some-key-ring";
@@ -30,9 +30,9 @@ describe("Kms decrypt", () => {
     const decryptFake = fake.returns([
       { plaintext: Buffer.from(decrpytedMessage) },
     ]);
-    replace(__client, "cryptoKeyPath", pathFake);
-    replace(__client, "decrypt", decryptFake);
-    const result = await decrypt({ message, key, ring, location, project });
+    replace(kms.__client, "cryptoKeyPath", pathFake);
+    replace(kms.__client, "decrypt", decryptFake);
+    const result = await kms.decrypt({ message, key, ring, location, project });
     expect(pathFake).to.have.been.calledWith(project, location, ring, key);
     expect(result).to.equal(decrpytedMessage);
     expect(decryptFake).to.have.been.calledWith({
@@ -47,9 +47,9 @@ describe("Kms decrypt", () => {
     const decryptFake = fake.returns([
       { plaintext: Buffer.from(`${decrpytedMessage}\n`) },
     ]);
-    replace(__client, "decrypt", decryptFake);
-    replace(__client, "cryptoKeyPath", pathFake);
-    const result = await decrypt({ message, key, ring, location, project });
+    replace(kms.__client, "decrypt", decryptFake);
+    replace(kms.__client, "cryptoKeyPath", pathFake);
+    const result = await kms.decrypt({ message, key, ring, location, project });
     expect(pathFake).to.have.been.calledWith(project, location, ring, key);
     expect(result).to.equal(decrpytedMessage);
     expect(decryptFake).to.have.been.calledWith({
@@ -62,10 +62,10 @@ describe("Kms decrypt", () => {
     const pathFake = fake.returns(path);
     const error = new Error("some-error");
     const decryptFake = fake.rejects(error);
-    replace(__client, "cryptoKeyPath", pathFake);
-    replace(__client, "decrypt", decryptFake);
+    replace(kms.__client, "cryptoKeyPath", pathFake);
+    replace(kms.__client, "decrypt", decryptFake);
     try {
-      await decrypt({ message });
+      await kms.decrypt({ message });
 
       //shouldn't get called
       expect(1).to.equal(0);

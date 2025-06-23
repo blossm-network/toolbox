@@ -2,7 +2,7 @@ import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, replace, fake, useFakeTimers } from "sinon";
 
-import { create, enqueue, __client } from "../index.js";
+import queue from "../index.js";
 
 chai.use(sinonChai);
 const { expect } = chai;
@@ -43,10 +43,10 @@ describe("Queue", () => {
     const queuePathFake = fake.returns(queueParent);
     const locationPathFake = fake.returns(locationParent);
     const createQueueFake = fake.returns([queueResponse]);
-    replace(__client, "locationPath", locationPathFake);
-    replace(__client, "queuePath", queuePathFake);
-    replace(__client, "createQueue", createQueueFake);
-    const result = await create({
+    replace(queue.__client, "locationPath", locationPathFake);
+    replace(queue.__client, "queuePath", queuePathFake);
+    replace(queue.__client, "createQueue", createQueueFake);
+    const result = await queue.create({
       project,
       location,
       name,
@@ -64,9 +64,9 @@ describe("Queue", () => {
   it("should call enqueue with the correct params", async () => {
     const queuePathFake = fake.returns(queueParent);
     const createTaskFake = fake.returns([taskResponse]);
-    replace(__client, "queuePath", queuePathFake);
-    replace(__client, "createTask", createTaskFake);
-    const result = await enqueue({
+    replace(queue.__client, "queuePath", queuePathFake);
+    replace(queue.__client, "createTask", createTaskFake);
+    const result = await queue.enqueue({
       serviceAccountEmail,
       project,
       queue: name,
@@ -105,9 +105,9 @@ describe("Queue", () => {
   it("should call enqueue with the correct params with wait and optionals missing", async () => {
     const queuePathFake = fake.returns(queueParent);
     const createTaskFake = fake.returns([taskResponse]);
-    replace(__client, "queuePath", queuePathFake);
-    replace(__client, "createTask", createTaskFake);
-    const result = await enqueue({
+    replace(queue.__client, "queuePath", queuePathFake);
+    replace(queue.__client, "createTask", createTaskFake);
+    const result = await queue.enqueue({
       project,
       queue: name,
       wait: 4,
@@ -139,10 +139,10 @@ describe("Queue", () => {
   it("should call enqueue with the correct params with token", async () => {
     const queuePathFake = fake.returns(queueParent);
     const createTaskFake = fake.returns([taskResponse]);
-    replace(__client, "queuePath", queuePathFake);
-    replace(__client, "createTask", createTaskFake);
+    replace(queue.__client, "queuePath", queuePathFake);
+    replace(queue.__client, "createTask", createTaskFake);
     const token = "some-token";
-    const result = await enqueue({
+    const result = await queue.enqueue({
       serviceAccountEmail,
       project,
       queue: name,

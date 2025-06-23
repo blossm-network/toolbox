@@ -7,7 +7,7 @@ import deps from "../deps.js";
 chai.use(sinonChai);
 const { expect } = chai;
 
-import { publicKey, __client } from "../index.js";
+import kms from "../index.js";
 
 const project = "some-gcp-project";
 const ring = "some-key-ring";
@@ -24,8 +24,8 @@ describe("Kms verify", () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
     const getKeyFake = fake.returns([{ pem }]);
-    replace(__client, "cryptoKeyVersionPath", pathFake);
-    replace(__client, "getPublicKey", getKeyFake);
+    replace(kms.__client, "cryptoKeyVersionPath", pathFake);
+    replace(kms.__client, "getPublicKey", getKeyFake);
 
     const isVerified = "some-result";
     const verifyFake = fake.returns(isVerified);
@@ -40,7 +40,7 @@ describe("Kms verify", () => {
     };
     replace(deps, "crypto", crypto);
 
-    const result = await publicKey({ key, ring, location, version, project });
+    const result = await kms.publicKey({ key, ring, location, version, project });
 
     expect(result).to.equal(pem);
     expect(pathFake).to.have.been.calledWith(

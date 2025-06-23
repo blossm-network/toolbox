@@ -1,8 +1,8 @@
 import { Storage } from "@google-cloud/storage";
 
-export const __client = new Storage();
+const __client = new Storage();
 
-export const upload = async ({ bucket, file, destination }) => {
+const upload = async ({ bucket, file, destination }) => {
   const options = {
     destination: destination || file,
   };
@@ -10,7 +10,7 @@ export const upload = async ({ bucket, file, destination }) => {
   await __client.bucket(bucket).upload(file, options);
 };
 
-export const download = async ({ bucket: bucketName, destination, file }) => {
+const download = async ({ bucket: bucketName, destination, file }) => {
   const bucket = __client.bucket(bucketName);
 
   if (file) {
@@ -32,4 +32,10 @@ export const download = async ({ bucket: bucketName, destination, file }) => {
       counter++;
     }
   }
+};
+
+export default {
+  __client,
+  upload,
+  download,
 };

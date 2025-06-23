@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, replace, fake } from "sinon";
-import { get, create } from "../index.js";
+import secret from "../index.js";
 import deps from "../deps.js";
 
 chai.use(sinonChai);
@@ -13,7 +13,7 @@ const ring = "some-key-ring";
 const location = "some-key-location";
 const project = "some-project";
 const encrypted = "some-encrpyted-secret";
-const secret = "some-secret";
+const secretMessage = "some-secret";
 const cipher = "cipher";
 
 process.env.GCP_SECRET_BUCKET = bucket;
@@ -32,7 +32,7 @@ describe("Secrets", () => {
         return { trim: () => encrypted };
       },
     });
-    const decryptFake = fake.returns(secret);
+    const decryptFake = fake.returns(secretMessage);
     const unlinkFake = fake();
     replace(deps, "download", downloadFake);
     replace(deps, "readFile", readFileFake);
@@ -42,7 +42,7 @@ describe("Secrets", () => {
     const fileName = "some-file-name";
     replace(deps, "uuid", fake.returns(fileName));
 
-    const result = await get(key);
+    const result = await secret.get(key);
     expect(downloadFake).to.have.been.calledWith({
       bucket,
       file: `${key}.txt.encrypted`,
@@ -57,7 +57,7 @@ describe("Secrets", () => {
       project,
     });
     expect(unlinkFake).to.have.been.calledWith(`${fileName}.txt.encrypted`);
-    expect(result).to.equal(secret);
+    expect(result).to.equal(secretMessage);
   });
   it("should return the correct secret with passed in options in get", async () => {
     const downloadFake = fake();
@@ -66,7 +66,7 @@ describe("Secrets", () => {
         return { trim: () => encrypted };
       },
     });
-    const decryptFake = fake.returns(secret);
+    const decryptFake = fake.returns(secretMessage);
     const unlinkFake = fake();
     replace(deps, "download", downloadFake);
     replace(deps, "readFile", readFileFake);
@@ -76,7 +76,7 @@ describe("Secrets", () => {
     const fileName = "some-file-name";
     replace(deps, "uuid", fake.returns(fileName));
 
-    const result = await get(key, {
+    const result = await secret.get(key, {
       project: "some-other-project",
       ring: "some-other-ring",
       location: "some-other-location",
@@ -96,14 +96,14 @@ describe("Secrets", () => {
       project: "some-other-project",
     });
     expect(unlinkFake).to.have.been.calledWith(`${fileName}.txt.encrypted`);
-    expect(result).to.equal(secret);
+    expect(result).to.equal(secretMessage);
   });
   it("should throw correctly with get", async () => {
     const error = new Error("some-error");
     const downloadFake = fake.rejects(error);
     replace(deps, "download", downloadFake);
     try {
-      await get(key);
+      await secret.get(key);
 
       //shouldn't get called
       expect(1).to.equal(0);
@@ -123,7 +123,7 @@ describe("Secrets", () => {
     replace(deps, "encrypt", encryptFake);
     replace(deps, "unlink", unlinkFake);
 
-    const result = await create(key, secret);
+    const result = await secret.create(key, secretMessage);
     expect(createKeyFake).to.have.been.calledWith({
       id: key,
       project,
@@ -131,7 +131,7 @@ describe("Secrets", () => {
       location,
     });
     expect(encryptFake).to.have.been.calledWith({
-      message: secret,
+      message: secretMessage,
       key,
       ring,
       location,
@@ -160,7 +160,7 @@ describe("Secrets", () => {
     replace(deps, "encrypt", encryptFake);
     replace(deps, "unlink", unlinkFake);
 
-    const result = await create(key, secret);
+    const result = await secret.create(key, secretMessage);
     expect(createKeyFake).to.have.been.calledWith({
       id: key,
       project,
@@ -168,7 +168,7 @@ describe("Secrets", () => {
       location,
     });
     expect(encryptFake).to.have.been.calledWith({
-      message: secret,
+      message: secretMessage,
       key,
       ring,
       location,
@@ -197,7 +197,7 @@ describe("Secrets", () => {
     replace(deps, "encrypt", encryptFake);
     replace(deps, "unlink", unlinkFake);
 
-    const result = await create(key, secret, {
+    const result = await secret.create(key, secretMessage, {
       project: "some-other-project",
       ring: "some-other-ring",
       location: "some-other-location",
@@ -210,7 +210,7 @@ describe("Secrets", () => {
       location: "some-other-location",
     });
     expect(encryptFake).to.have.been.calledWith({
-      message: secret,
+      message: secretMessage,
       key,
       ring: "some-other-ring",
       location: "some-other-location",
@@ -234,7 +234,7 @@ describe("Secrets", () => {
     replace(deps, "createKey", createKeyFake);
     replace(deps, "encrypt", encryptFake);
     try {
-      await create(key, secret);
+      await secret.create(key, secretMessage);
 
       //shouldn't get called
       expect(1).to.equal(0);

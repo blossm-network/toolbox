@@ -12,10 +12,9 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, replace, fake } from "sinon";
-import kms from "@google-cloud/kms";
 
 import deps from "../deps.js";
-import { verify, __client } from "../index.js";
+import kms from "../index.js";
 
 chai.use(sinonChai);
 const { expect } = chai;
@@ -47,10 +46,10 @@ describe("Kms verify", () => {
 
     const errorMessage = "some-error-message";
     const getKeyFake = fake.rejects(new Error(errorMessage));
-    replace(__client, "getPublicKey", getKeyFake);
+    replace(kms.__client, "getPublicKey", getKeyFake);
 
     try {
-      await verify({ key, ring, location, version, project })({
+      await kms.verify({ key, ring, location, version, project })({
         message,
         signature,
       });
@@ -65,8 +64,8 @@ describe("Kms verify", () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
     const getKeyFake = fake.returns([{ pem }]);
-    replace(__client, "cryptoKeyVersionPath", pathFake);
-    replace(__client, "getPublicKey", getKeyFake);
+    replace(kms.__client, "cryptoKeyVersionPath", pathFake);
+    replace(kms.__client, "getPublicKey", getKeyFake);
 
     const isVerified = "some-result";
     const verifyFake = fake.returns(isVerified);
@@ -81,7 +80,7 @@ describe("Kms verify", () => {
     };
     replace(deps, "crypto", crypto);
 
-    const result = await verify({ key, ring, location, version, project })({
+    const result = await kms.verify({ key, ring, location, version, project })({
       message,
       signature,
     });
@@ -103,8 +102,8 @@ describe("Kms verify", () => {
     const path = "some-path";
     const pathFake = fake.returns(path);
     const getKeyFake = fake.returns([{ pem }]);
-    replace(__client, "cryptoKeyVersionPath", pathFake);
-    replace(__client, "getPublicKey", getKeyFake);
+    replace(kms.__client, "cryptoKeyVersionPath", pathFake);
+    replace(kms.__client, "getPublicKey", getKeyFake);
     const isVerified = "some-result";
     const verifyFake = fake.returns(isVerified);
     const updateFake = fake.returns({
@@ -117,7 +116,7 @@ describe("Kms verify", () => {
       createVerify: createVerifyFake,
     };
     replace(deps, "crypto", crypto);
-    const result = await verify({ key, ring, location, version, project })({
+    const result = await kms.verify({ key, ring, location, version, project })({
       message,
       signature,
       format: "hex",
