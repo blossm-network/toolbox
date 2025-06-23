@@ -1,7 +1,7 @@
 import "localenv";
 import * as chai from "chai";
 import getToken from "@blossm/get-token";
-import { create, delete as del, exists } from "@blossm/gcp-pubsub";
+import gcpPubsub from "@blossm/gcp-pubsub";
 
 import request from "@blossm/request";
 import config from "./../../config.json" with { type: "json" };
@@ -21,15 +21,15 @@ describe("Fact gateway integration tests", () => {
   before(async () => {
     existingTopics.push(
       ...testing.topics.filter(async (t) => {
-        return await exists(t);
+        return await gcpPubsub.exists(t);
       })
     );
-    await Promise.all(testing.topics.map((t) => create(t)));
+    await Promise.all(testing.topics.map((t) => gcpPubsub.create(t)));
   });
   after(
     async () =>
       await Promise.all(
-        [...testing.topics].map((t) => !existingTopics.includes(t) && del(t))
+        [...testing.topics].map((t) => !existingTopics.includes(t) && gcpPubsub.del(t))
       )
   );
   it("should return successfully", async () => {

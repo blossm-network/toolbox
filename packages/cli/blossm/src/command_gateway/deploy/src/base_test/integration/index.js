@@ -2,7 +2,7 @@ import "localenv";
 import * as chai from "chai";
 import { string as dateString } from "@blossm/datetime";
 import getToken from "@blossm/get-token";
-import { create, delete as del, exists } from "@blossm/gcp-pubsub";
+import gcpPubsub from "@blossm/gcp-pubsub";
 
 import request from "@blossm/request";
 import config from "./../../config.json" with { type: "json" };
@@ -15,13 +15,13 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 const existingTopics = [];
 describe("Command gateway integration tests", () => {
   before(async () => {
-    existingTopics.push(...testing.topics.filter((t) => exists(t)));
-    await Promise.all(testing.topics.map((t) => create(t)));
+    existingTopics.push(...testing.topics.filter((t) => gcpPubsub.exists(t)));
+    await Promise.all(testing.topics.map((t) => gcpPubsub.create(t)));
   });
   after(
     async () =>
       await Promise.all(
-        [...testing.topics].map((t) => !existingTopics.includes(t) && del(t))
+        [...testing.topics].map((t) => !existingTopics.includes(t) && gcpPubsub.del(t))
       )
   );
   it("should return successfully", async () => {
