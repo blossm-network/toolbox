@@ -1,4 +1,4 @@
 export default {
-  name: "docker/compose:1.15.0",
+  name: "docker/compose:2.27.1",
   args: ["up", "-d", "--build"],
 };

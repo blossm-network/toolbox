@@ -115,6 +115,7 @@ export default ({
     dockerComposeProcesses,
     ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
     ...(runIntegrationTests ? [integrationTests({ strict })] : []),
+    ...[dockerComposeLogs],
     ...(strict
       ? [
           dockerPush({
