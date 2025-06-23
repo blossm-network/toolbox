@@ -1,6 +1,6 @@
 {
   "name": "@blossm/gcp-schedule",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Schedules a job.",
   "type": "module",
   "author": "blossm.network",
