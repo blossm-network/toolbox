@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import viewStore from "@blossm/mongodb-view-store";
-import { get as secret } from "@blossm/gcp-secret";
+import gcpSecret from "@blossm/gcp-secret";
 import fact from "@blossm/fact-rpc";
 import gcpToken from "@blossm/gcp-token";
 
@@ -31,7 +31,7 @@ export default viewStore({
   schema: config.schema,
   indexes: config.indexes,
   sorts: config.sorts,
-  secretFn: secret,
+  secretFn: gcpSecret.get,
   ...(config.keys && { updateKeys: config.keys }),
   ...(query && { queryFn: query }),
   ...(formatCsv && { formatCsv }),

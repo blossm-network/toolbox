@@ -1,4 +1,4 @@
-import { get as secret } from "@blossm/gcp-secret";
+import gcpSecret from "@blossm/gcp-secret";
 import connectionToken from "@blossm/connection-token";
 
 export default connectionToken({
@@ -11,7 +11,7 @@ export default connectionToken({
     if (!root || !secretName) return null;
     return {
       root,
-      secret: await secret(secretName),
+      secret: await gcpSecret.get(secretName),
     };
   },
 });

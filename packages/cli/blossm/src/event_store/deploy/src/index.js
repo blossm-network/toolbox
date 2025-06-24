@@ -1,8 +1,8 @@
 import eventStore from "@blossm/mongodb-event-store";
 import gcpPubsub from "@blossm/gcp-pubsub";
 import eventStoreRpc from "@blossm/event-store-rpc";
-import { get as secret } from "@blossm/gcp-secret";
-import { sign, encrypt, publicKey } from "@blossm/gcp-kms";
+import gcpSecret from "@blossm/gcp-secret";
+import gcpKms from "@blossm/gcp-kms";
 import gcpToken from "@blossm/gcp-token";
 import gcpQueue from "@blossm/gcp-queue";
 import handlers from "./handlers.js";
@@ -18,10 +18,10 @@ export default eventStore({
   schema: config.schema,
   indexes: config.indexes,
   handlers,
-  secretFn: secret,
+  secretFn: gcpSecret.get,
   publishFn: gcpPubsub.publish,
   signFn: (message) =>
-    sign({
+    gcpKms.sign({
       message,
       format: "base64",
       key: blockchainProducerKey,
@@ -31,7 +31,7 @@ export default eventStore({
       project: process.env.GCP_PROJECT,
     }),
   encryptFn: (message) =>
-    encrypt({
+    gcpKms.encrypt({
       message,
       key: "private",
       ring: blockchainKeyRing,
@@ -48,7 +48,7 @@ export default eventStore({
       .createBlock(),
   blockPublisherPublicKeyFn: async () => {
     if (!blockPublisherPublicKey) {
-      blockPublisherPublicKey = await publicKey({
+      blockPublisherPublicKey = await gcpKms.publicKey({
         key: blockchainProducerKey,
         ring: blockchainKeyRing,
         location: "global",

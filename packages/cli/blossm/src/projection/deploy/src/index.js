@@ -8,7 +8,7 @@ import viewStore from "@blossm/view-store-rpc";
 import eventStore from "@blossm/event-store-rpc";
 import channelName from "@blossm/channel-name";
 import logger from "@blossm/logger";
-import { get as secret } from "@blossm/gcp-secret";
+import gcpSecret from "@blossm/gcp-secret";
 import gcpQueue from "@blossm/gcp-queue";
 import composeUpdate from "@blossm/compose-update";
 
@@ -530,6 +530,6 @@ export default projection({
         parallel: 100,
       }),
   replayStores: config.replay || config.events,
-  secretFn: secret,
+  secretFn: gcpSecret.get,
   mutedEvents: config.muted || [],
 });

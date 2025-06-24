@@ -1,5 +1,5 @@
 import gateway from "@blossm/view-gateway";
-import { verify as verifyGcp } from "@blossm/gcp-kms";
+import gcpKms from "@blossm/gcp-kms";
 import verify from "@blossm/verify-access-token";
 import gcpToken from "@blossm/gcp-token";
 // const terminatedSessionCheck = import("@blossm/terminated-session-check");
@@ -39,7 +39,7 @@ export default gateway({
           url: process.env.PUBLIC_KEY_URL,
           algorithm: "SHA256",
         })
-      : verifyGcp({
+      : gcpKms.verify({
           ring: "jwt",
           key,
           location: "global",

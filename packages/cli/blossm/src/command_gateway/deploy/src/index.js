@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import gateway from "@blossm/command-gateway";
-import { verify as verifyGcp } from "@blossm/gcp-kms";
+import gcpKms from "@blossm/gcp-kms";
 import verify from "@blossm/verify-access-token";
 import gcpToken from "@blossm/gcp-token";
 import keyClaims from "@blossm/key-claims";
@@ -54,7 +54,7 @@ export default gateway({
           url: process.env.PUBLIC_KEY_URL,
           algorithm: "SHA256",
         })
-      : verifyGcp({
+      : gcpKms.verify({
           ring: "jwt",
           key,
           location: "global",
