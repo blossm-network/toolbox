@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-find-one-snapshot",
   "description": "A mongodb event store server function to get a snapshot.",
-  "version": "0.0.58",
+  "version": "0.0.59",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -15,7 +15,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/mongodb-database": "^0.0.131"
+    "@blossm/mongodb-database": "^0.0.132"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",

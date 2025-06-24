@@ -1,6 +1,6 @@
 {
   "name": "@blossm/mongodb-database",
-  "version": "0.0.131",
+  "version": "0.0.132",
   "description": "Read and write from a MongoDB database.",
   "main": "index.js",
   "type": "module",
