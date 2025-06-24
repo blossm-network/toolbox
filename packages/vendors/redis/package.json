@@ -1,6 +1,6 @@
 {
   "name": "@blossm/redis",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Redis cache interactions.",
   "main": "index.js",
   "type": "module",
