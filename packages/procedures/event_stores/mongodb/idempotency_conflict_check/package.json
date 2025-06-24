@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-idempotency-conflict-check",
   "description": "A mongodb event store server idempotency check function.",
-  "version": "0.0.65",
+  "version": "0.0.66",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -15,7 +15,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/mongodb-database": "^0.0.130"
+    "@blossm/mongodb-database": "^0.0.131"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",
