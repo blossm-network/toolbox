@@ -64,7 +64,7 @@ describe("Connects", () => {
       host,
       database,
       parameters,
-      maxPoolSize,
+      poolSize,
       autoIndex,
     });
 
