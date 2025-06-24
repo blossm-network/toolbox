@@ -24,7 +24,7 @@ export default ({
       "base64"
     );
 
-    const emptyEncoding = deps.encode([]);
+    const emptyEncoding = Buffer.from(deps.encode([]));
     const emptyByteLength = Buffer.byteLength(emptyEncoding);
 
     const blockHeaders = {
@@ -134,7 +134,7 @@ export default ({
       const previousHash =
         aggregate.headers.snapshotHash || deps.hash(genesisPrevious).create();
 
-      const encodedEvents = deps.encode(stringifiedEventPairs);
+      const encodedEvents = Buffer.from(deps.encode(stringifiedEventPairs));
 
       //TODO this is a crutch so i dont have to delete all dbs rn.
       // in the future get rid of the first case.
@@ -232,9 +232,9 @@ export default ({
     deps.merkleRoot(stringifiedTxPairs),
   ]);
 
-  const encodedAllEvents = deps.encode(allStringifiedEventPairs);
-  const encodedSnapshots = deps.encode(stringifiedSnapshotPairs);
-  const encodedTxs = deps.encode(stringifiedTxPairs);
+  const encodedAllEvents = Buffer.from(deps.encode(allStringifiedEventPairs));
+  const encodedSnapshots = Buffer.from(deps.encode(stringifiedSnapshotPairs));
+  const encodedTxs = Buffer.from(deps.encode(stringifiedTxPairs));
 
   const sCount = stringifiedSnapshotPairs.length;
 
