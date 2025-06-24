@@ -4,7 +4,6 @@ import {  stub, replace, restore } from "sinon";
 import deps from "../deps.js";
 
 process.env.REDIS_IP = "some-redis-ip";
-console.log({ process: process.env.REDIS_IP });
 
 chai.use(sinonChai);
 const { expect } = chai;
