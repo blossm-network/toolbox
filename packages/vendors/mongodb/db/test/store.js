@@ -149,8 +149,6 @@ describe("Store", () => {
     const baseConnectionString = `${protocol}://${user}:${password}@${host}/${database}`;
 
     expect(connectFake).to.have.been.calledWith(baseConnectionString, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       autoIndex: false,
       maxPoolSize: 5,
     });

@@ -37,8 +37,6 @@ describe("Connects", () => {
     await connect({ protocol, user, password, host, database });
 
     expect(connectFake).to.have.been.calledWith(baseConnectionString, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       autoIndex: false,
       maxPoolSize: 5,
     });
@@ -74,8 +72,6 @@ describe("Connects", () => {
     );
 
     expect(connectFake).to.have.been.calledWith(url, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       autoIndex,
       maxPoolSize: poolSize,
     });

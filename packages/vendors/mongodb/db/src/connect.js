@@ -11,8 +11,6 @@ const connect = async ({ autoIndex, poolSize, connectionString }) => {
       await deps.mongoose.connect(
         connectionString,
         {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
           autoIndex,
           maxPoolSize: poolSize,
         }
