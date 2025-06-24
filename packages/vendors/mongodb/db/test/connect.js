@@ -18,7 +18,7 @@ const baseConnectionString = `${protocol}://${user}:${password}@${host}/${databa
 
 const onFake = fake();
 const onceFake = fake();
-const connectFake = fake();
+const connectFake = fake.resolves();
 const connectionFake = fake.returns({
   on: onFake,
   once: onceFake,
@@ -33,20 +33,18 @@ describe("Connects", () => {
     replaceGetter(deps.mongoose, "connection", connectionFake);
   });
 
-  it("it should connect if all the params are normal, and ommittable params omitted", () => {
-    connect({ protocol, user, password, host, database });
+  it("it should connect if all the params are normal, and ommittable params omitted", async () => {
+    await connect({ protocol, user, password, host, database });
 
     expect(connectFake).to.have.been.calledWith(baseConnectionString, {
       useNewUrlParser: true,
-      useCreateIndex: true,
       useUnifiedTopology: true,
-      useFindAndModify: false,
       autoIndex: false,
       poolSize: 5,
     });
   });
 
-  it("it should connect if all the params are normal, and ommittable params are passed in", () => {
+  it("it should connect if all the params are normal, and ommittable params are passed in", async () => {
     const paramKey0 = "key0";
     const paramValue0 = "value0";
     const parameters = { some: "params" };
@@ -59,7 +57,7 @@ describe("Connects", () => {
     const urlEncodeQueryDataFake = fake.returns(url);
     replace(deps, "urlEncodeQueryData", urlEncodeQueryDataFake);
 
-    connect({
+    await connect({
       protocol,
       user,
       password,
@@ -77,9 +75,7 @@ describe("Connects", () => {
 
     expect(connectFake).to.have.been.calledWith(url, {
       useNewUrlParser: true,
-      useCreateIndex: true,
       useUnifiedTopology: true,
-      useFindAndModify: false,
       autoIndex,
       poolSize,
     });

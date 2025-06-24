@@ -150,9 +150,7 @@ describe("Store", () => {
 
     expect(connectFake).to.have.been.calledWith(baseConnectionString, {
       useNewUrlParser: true,
-      useCreateIndex: true,
       useUnifiedTopology: true,
-      useFindAndModify: false,
       autoIndex: false,
       poolSize: 5,
     });

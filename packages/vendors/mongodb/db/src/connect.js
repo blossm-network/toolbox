@@ -4,33 +4,30 @@ import deps from "../deps.js";
 
 const maxRetryCount = 10;
 
-let tryCount = 0;
-
-const connect = ({ autoIndex, poolSize, connectionString }) => {
-  deps.mongoose.connect(
-    connectionString,
-    {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-      autoIndex,
-      poolSize,
-    },
-    (err) => {
+const connect = async ({ autoIndex, poolSize, connectionString }) => {
+  let tryCount = 0;
+  while (tryCount < maxRetryCount) {
+    try {
+      await deps.mongoose.connect(
+        connectionString,
+        {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          autoIndex,
+          poolSize,
+        }
+      );
+      logger.info(`Mongoose connection successful on try ${tryCount}.`);
+      break;
+    } catch (err) {
       tryCount++;
-      if (err) {
-        logger.error(`Mongoose failed to connect on try ${tryCount}`, { err });
-        if (tryCount < maxRetryCount)
-          connect({ autoIndex, poolSize, connectionString });
-      } else {
-        logger.info(`Mongoose connection successful on try ${tryCount}.`);
-      }
+      logger.error(`Mongoose failed to connect on try ${tryCount}`, { err });
+      if (tryCount >= maxRetryCount) throw err;
     }
-  );
+  }
 };
 
-export default ({
+export default async ({
   protocol,
   user,
   password,
@@ -47,7 +44,7 @@ export default ({
     ...(parameters ? [parameters] : [])
   );
 
-  connect({ connectionString, poolSize, autoIndex });
+  await connect({ connectionString, poolSize, autoIndex });
 
   const db = deps.mongoose.connection;
 
