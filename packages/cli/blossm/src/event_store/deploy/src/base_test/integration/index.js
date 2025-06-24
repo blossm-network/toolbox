@@ -8,12 +8,7 @@ import { string as dateString } from "@blossm/datetime";
 import hash from "@blossm/hash";
 import uuid from "@blossm/uuid";
 import config from "./../../config.json" with { type: "json" };
-import {
-  // subscribe,
-  create,
-  del,
-  // unsubscribe,
-} from "@blossm/gcp-pubsub";
+import gcpPubsub from "@blossm/gcp-pubsub";
 
 chai.use(sinonChai);
 chai.use(chaiDatetime);
@@ -33,8 +28,8 @@ describe("Event store integration tests", () => {
   const example0 = testing.examples[0];
   const example1 = testing.examples[1];
 
-  before(async () => await create(topic));
-  after(async () => await del(topic));
+  before(async () => await gcpPubsub.create(topic));
+  after(async () => await gcpPubsub.del(topic));
 
   it("should have examples", () => {
     expect(example0).to.exist;
