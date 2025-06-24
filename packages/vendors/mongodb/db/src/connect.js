@@ -14,7 +14,7 @@ const connect = async ({ autoIndex, poolSize, connectionString }) => {
           useNewUrlParser: true,
           useUnifiedTopology: true,
           autoIndex,
-          poolSize,
+          maxPoolSize: poolSize,
         }
       );
       logger.info(`Mongoose connection successful on try ${tryCount}.`);

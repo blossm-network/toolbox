@@ -40,7 +40,7 @@ describe("Connects", () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       autoIndex: false,
-      poolSize: 5,
+      maxPoolSize: 5,
     });
   });
 
@@ -64,7 +64,7 @@ describe("Connects", () => {
       host,
       database,
       parameters,
-      poolSize,
+      maxPoolSize,
       autoIndex,
     });
 
@@ -77,7 +77,7 @@ describe("Connects", () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       autoIndex,
-      poolSize,
+      maxPoolSize,
     });
   });
 

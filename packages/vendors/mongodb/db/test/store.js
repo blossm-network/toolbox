@@ -152,7 +152,7 @@ describe("Store", () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       autoIndex: false,
-      poolSize: 5,
+      maxPoolSize: 5,
     });
   });
 
