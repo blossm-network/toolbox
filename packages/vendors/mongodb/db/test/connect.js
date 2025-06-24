@@ -77,7 +77,7 @@ describe("Connects", () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       autoIndex,
-      maxPoolSize,
+      maxPoolSize: poolSize,
     });
   });
 
