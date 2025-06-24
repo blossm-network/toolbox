@@ -1,5 +1,5 @@
 import eventStore from "@blossm/mongodb-event-store";
-import pubsub from "@blossm/gcp-pubsub";
+import gcpPubsub from "@blossm/gcp-pubsub";
 import eventStoreRpc from "@blossm/event-store-rpc";
 import { get as secret } from "@blossm/gcp-secret";
 import { sign, encrypt, publicKey } from "@blossm/gcp-kms";
@@ -19,7 +19,7 @@ export default eventStore({
   indexes: config.indexes,
   handlers,
   secretFn: secret,
-  publishFn: pubsub.publish,
+  publishFn: gcpPubsub.publish,
   signFn: (message) =>
     sign({
       message,
