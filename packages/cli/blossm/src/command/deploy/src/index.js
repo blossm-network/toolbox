@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import commandProcedure from "@blossm/command";
 import command from "@blossm/command-rpc";
 import fact from "@blossm/fact-rpc";
@@ -7,23 +5,26 @@ import eventStore from "@blossm/event-store-rpc";
 import nodeExternalToken from "@blossm/node-external-token";
 import gcpToken from "@blossm/gcp-token";
 import gcpQueue from "@blossm/gcp-queue";
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
 import main from "./main.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const validate = fs.existsSync(path.resolve(__dirname, "./validate.js"))
-  ? (await import("./validate.js")).default
-  : undefined;
-const normalize = fs.existsSync(path.resolve(__dirname, "./normalize.js"))
-  ? (await import("./normalize.js")).default
-  : undefined;
-const fill = fs.existsSync(path.resolve(__dirname, "./fill.js"))
-  ? (await import("./fill.js")).default
-  : undefined;
+let normalize = undefined;
+let validate = undefined;
+let fill = undefined;
+try {
+  normalize = (await import("./normalize.js")).default;
+} catch (e) {
+  // normalize.js does not exist, normalize remains undefined
+}
+try {
+  validate = (await import("./validate.js")).default;
+} catch (e) {
+  // validate.js does not exist, validate remains undefined
+}
+try {
+  fill = (await import("./fill.js")).default;
+} catch (e) {
+  // fill.js does not exist, fill remains undefined
+}
 
 const config = (await import("./config.json", { with: { type: "json" } })).default;
 

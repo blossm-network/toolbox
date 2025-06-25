@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import gateway from "@blossm/fact-gateway";
 import gcpKms from "@blossm/gcp-kms";
 import verify from "@blossm/verify-access-token";
@@ -9,18 +7,15 @@ import deletedSceneCheck from "@blossm/deleted-scene-check";
 import permissionsLookup from "@blossm/permissions-lookup";
 import nodeExternalToken from "@blossm/node-external-token";
 import { download as downloadFile } from "@blossm/gcp-storage";
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 import config from "./config.json" with { type: "json" };
 
-const services =
-  fs.existsSync(path.resolve(__dirname, "./services.js"))
-    ? (await import("./services.js")).default
-    : undefined;
+let services = undefined;
+try {
+  services = (await import("./services.js")).default;
+} catch (e) {
+  // services.js does not exist, services remains undefined
+}
 
 export default gateway({
   facts: config.facts.map((fact) => ({

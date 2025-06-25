@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import viewStore from "@blossm/mongodb-view-store";
 import gcpSecret from "@blossm/gcp-secret";
 import fact from "@blossm/fact-rpc";
@@ -8,33 +6,47 @@ import gcpToken from "@blossm/gcp-token";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+let query = undefined;
+try {
+  query = (await import("./query.js")).default;
+} catch (e) {
+  // query.js does not exist, query remains undefined
+}
 
-const query =
-  fs.existsSync(path.resolve(__dirname, "./query.js"))
-    ? (await import("./query.js")).default
-    : undefined;
-const sort =
-  fs.existsSync(path.resolve(__dirname, "./sort.js"))
-    ? (await import("./sort.js")).default
-    : undefined;
-const update =
-  fs.existsSync(path.resolve(__dirname, "./update.js"))
-    ? (await import("./update.js")).default
-    : undefined;
-const format =
-  fs.existsSync(path.resolve(__dirname, "./format.js"))
-    ? (await import("./format.js")).default
-    : undefined;
-const empty =
-  fs.existsSync(path.resolve(__dirname, "./empty.js"))
-    ? (await import("./empty.js")).default
-    : undefined;
-const formatCsv =
-  fs.existsSync(path.resolve(__dirname, "./format_csv.js"))
-    ? (await import("./format_csv.js")).default
-    : undefined;
+let sort = undefined;
+try {
+  sort = (await import("./sort.js")).default;
+} catch (e) {
+  // sort.js does not exist, sort remains undefined
+}
+
+let update = undefined;
+try {
+  update = (await import("./update.js")).default;
+} catch (e) {
+  // update.js does not exist, update remains undefined
+}
+
+let format = undefined;
+try {
+  format = (await import("./format.js")).default;
+} catch (e) {
+  // format.js does not exist, format remains undefined
+}
+
+let empty = undefined;
+try {
+  empty = (await import("./empty.js")).default;
+} catch (e) {
+  // empty.js does not exist, empty remains undefined
+}
+
+let formatCsv = undefined;
+try {
+  formatCsv = (await import("./format_csv.js")).default;
+} catch (e) {
+  // format_csv.js does not exist, formatCsv remains undefined
+}
 
 import config from "./config.json" with { type: "json" };
 
