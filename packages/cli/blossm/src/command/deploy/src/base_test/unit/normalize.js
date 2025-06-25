@@ -3,7 +3,7 @@ import sinonChai from "sinon-chai";
 chai.use(sinonChai);
 const { expect } = chai;
 
-let normalize = undefined;
+let normalize;
 try {
   normalize = (await import("../../normalize.js")).default;
 } catch (e) {

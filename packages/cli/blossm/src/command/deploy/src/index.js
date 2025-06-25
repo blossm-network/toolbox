@@ -7,9 +7,9 @@ import gcpToken from "@blossm/gcp-token";
 import gcpQueue from "@blossm/gcp-queue";
 import main from "./main.js";
 
-let normalize = undefined;
-let validate = undefined;
-let fill = undefined;
+let normalize;
+let validate;
+let fill;
 try {
   normalize = (await import("./normalize.js")).default;
 } catch (e) {

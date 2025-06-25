@@ -6,42 +6,42 @@ import gcpToken from "@blossm/gcp-token";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
-let query = undefined;
+let query;
 try {
   query = (await import("./query.js")).default;
 } catch (e) {
   // query.js does not exist, query remains undefined
 }
 
-let sort = undefined;
+let sort;
 try {
   sort = (await import("./sort.js")).default;
 } catch (e) {
   // sort.js does not exist, sort remains undefined
 }
 
-let update = undefined;
+let update;
 try {
   update = (await import("./update.js")).default;
 } catch (e) {
   // update.js does not exist, update remains undefined
 }
 
-let format = undefined;
+let format;
 try {
   format = (await import("./format.js")).default;
 } catch (e) {
   // format.js does not exist, format remains undefined
 }
 
-let empty = undefined;
+let empty;
 try {
   empty = (await import("./empty.js")).default;
 } catch (e) {
   // empty.js does not exist, empty remains undefined
 }
 
-let formatCsv = undefined;
+let formatCsv;
 try {
   formatCsv = (await import("./format_csv.js")).default;
 } catch (e) {

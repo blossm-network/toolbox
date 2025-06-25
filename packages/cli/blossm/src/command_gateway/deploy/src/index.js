@@ -11,7 +11,7 @@ import { download as downloadFile } from "@blossm/gcp-storage";
 
 import config from "./config.json" with { type: "json" };
 
-let services = undefined;
+let services;
 try {
   services = (await import("./services.js")).default;
 } catch (e) {
