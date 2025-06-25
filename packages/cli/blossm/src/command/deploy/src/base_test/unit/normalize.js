@@ -11,9 +11,9 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const normalize =
-  fs.existsSync(path.resolve(__dirname, "../../normalize.js")) &&
-  import("../../normalize.js");
+const normalize = fs.existsSync(path.resolve(__dirname, "../../normalize.js"))
+  ? (await import("../../normalize.js")).default
+  : undefined;
 
 const { testing } = (await import("../../config.json", { with: { type: "json" } })).default;
 

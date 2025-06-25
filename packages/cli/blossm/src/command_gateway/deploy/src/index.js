@@ -19,8 +19,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const services =
-  fs.existsSync(path.resolve(__dirname, "./services.js")) &&
-  import("./services.js");
+  fs.existsSync(path.resolve(__dirname, "./services.js"))
+    ? (await import("./services.js")).default
+    : undefined;
 
 export default gateway({
   commands: config.commands.map((command) => ({

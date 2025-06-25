@@ -15,14 +15,15 @@ import main from "./main.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const validate =
-  fs.existsSync(path.resolve(__dirname, "./validate.js")) &&
-  import("./validate.js");
-const normalize =
-  fs.existsSync(path.resolve(__dirname, "./normalize.js")) &&
-  import("./normalize.js");
-const fill =
-  fs.existsSync(path.resolve(__dirname, "./fill.js")) && import("./fill.js");
+const validate = fs.existsSync(path.resolve(__dirname, "./validate.js"))
+  ? (await import("./validate.js")).default
+  : undefined;
+const normalize = fs.existsSync(path.resolve(__dirname, "./normalize.js"))
+  ? (await import("./normalize.js")).default
+  : undefined;
+const fill = fs.existsSync(path.resolve(__dirname, "./fill.js"))
+  ? (await import("./fill.js")).default
+  : undefined;
 
 const config = (await import("./config.json", { with: { type: "json" } })).default;
 

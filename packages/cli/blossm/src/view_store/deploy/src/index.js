@@ -12,18 +12,29 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const query =
-  fs.existsSync(path.resolve(__dirname, "./query.js")) && import("./query");
+  fs.existsSync(path.resolve(__dirname, "./query.js"))
+    ? (await import("./query.js")).default
+    : undefined;
 const sort =
-  fs.existsSync(path.resolve(__dirname, "./sort.js")) && import("./sort");
+  fs.existsSync(path.resolve(__dirname, "./sort.js"))
+    ? (await import("./sort.js")).default
+    : undefined;
 const update =
-  fs.existsSync(path.resolve(__dirname, "./update.js")) && import("./update");
+  fs.existsSync(path.resolve(__dirname, "./update.js"))
+    ? (await import("./update.js")).default
+    : undefined;
 const format =
-  fs.existsSync(path.resolve(__dirname, "./format.js")) && import("./format");
+  fs.existsSync(path.resolve(__dirname, "./format.js"))
+    ? (await import("./format.js")).default
+    : undefined;
 const empty =
-  fs.existsSync(path.resolve(__dirname, "./empty.js")) && import("./empty");
+  fs.existsSync(path.resolve(__dirname, "./empty.js"))
+    ? (await import("./empty.js")).default
+    : undefined;
 const formatCsv =
-  fs.existsSync(path.resolve(__dirname, "./format_csv.js")) &&
-  import("./format_csv");
+  fs.existsSync(path.resolve(__dirname, "./format_csv.js"))
+    ? (await import("./format_csv.js")).default
+    : undefined;
 
 import config from "./config.json" with { type: "json" };
 

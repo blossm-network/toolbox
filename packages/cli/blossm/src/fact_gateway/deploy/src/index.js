@@ -18,8 +18,9 @@ const __dirname = dirname(__filename);
 import config from "./config.json" with { type: "json" };
 
 const services =
-  fs.existsSync(path.resolve(__dirname, "./services.js")) &&
-  import("./services.js");
+  fs.existsSync(path.resolve(__dirname, "./services.js"))
+    ? (await import("./services.js")).default
+    : undefined;
 
 export default gateway({
   facts: config.facts.map((fact) => ({
