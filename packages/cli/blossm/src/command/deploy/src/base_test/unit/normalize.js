@@ -13,7 +13,7 @@ const __dirname = dirname(__filename);
 
 const normalize =
   fs.existsSync(path.resolve(__dirname, "../../normalize.js")) &&
-  import("../../normalize");
+  import("../../normalize.js");
 
 const { testing } = (await import("../../config.json", { with: { type: "json" } })).default;
 

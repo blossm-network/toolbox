@@ -17,12 +17,12 @@ const __dirname = dirname(__filename);
 
 const validate =
   fs.existsSync(path.resolve(__dirname, "./validate.js")) &&
-  import("./validate");
+  import("./validate.js");
 const normalize =
   fs.existsSync(path.resolve(__dirname, "./normalize.js")) &&
-  import("./normalize");
+  import("./normalize.js");
 const fill =
-  fs.existsSync(path.resolve(__dirname, "./fill.js")) && import("./fill");
+  fs.existsSync(path.resolve(__dirname, "./fill.js")) && import("./fill.js");
 
 const config = (await import("./config.json", { with: { type: "json" } })).default;
 
