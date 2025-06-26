@@ -15,6 +15,20 @@ export default ({
   idempotency,
   path,
 } = {}) => {
+  console.log({
+    root,
+    payload,
+    version,
+    context,
+    action,
+    domain,
+    service,
+    network,
+    groupsAdded,
+    groupsRemoved,
+    idempotency,
+    path,
+  });
   return {
     headers: {
       root: root || deps.uuid(),

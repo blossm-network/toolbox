@@ -11,6 +11,7 @@ const processEvents = async ({
   txId,
 }) => {
   const eventDataPerStore = {};
+  console.log("events", events);
   for (const {
     root,
     payload = {},
