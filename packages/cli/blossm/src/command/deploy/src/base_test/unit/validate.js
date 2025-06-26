@@ -1,11 +1,11 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 
-import validate from "../../validate.js";
+// import validate from "../../validate.js";
 import config from "../../config.json" with { type: "json" };
 
-chai.use(sinonChai);
-const { expect } = chai;
+// chai.use(sinonChai);
+// const { expect } = chai;
 
 // describe("Command handler store validator tests", () => {
 //   it("should handle correct payload correctly", async () => {
