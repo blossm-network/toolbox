@@ -1,14 +1,8 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
+import normalize from "../../normalize.js";
 chai.use(sinonChai);
 const { expect } = chai;
-
-let normalize;
-try {
-  normalize = (await import("../../normalize.js")).default;
-} catch (e) {
-  // normalize.js does not exist, normalize remains undefined
-}
 
 const { testing } = (await import("../../config.json", { with: { type: "json" } })).default;
 
