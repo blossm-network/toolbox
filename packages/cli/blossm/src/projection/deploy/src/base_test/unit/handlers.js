@@ -8,14 +8,12 @@ const { expect } = chai;
 import config from "../../config.json" with { type: "json" };
 import handlers from "../../handlers.js";
 
-const { testing } = config;
-
 process.env.NETWORK = "local.network";
 
 describe("Projection handlers tests", () => {
   afterEach(() => restore());
   it("should return correctly", async () => {
-    for (const handler of testing.handlers) {
+    for (const handler of config.testing.handlers) {
       for (const example of handler.examples) {
         let readFactFnFake;
         if (example.readFact) {
