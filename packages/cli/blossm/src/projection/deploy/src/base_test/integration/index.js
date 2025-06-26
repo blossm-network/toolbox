@@ -9,8 +9,6 @@ import request from "@blossm/request";
 
 import config from "../../config.json" with { type: "json" };
 
-const { testing, name, context } = config;
-
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const principalRoot = "some-principal-root";
@@ -62,7 +60,7 @@ const checkResponse = ({ data, expected }) => {
 describe("Projection integration tests", () => {
   it("should return successfully", async () => {
     let stepCount = 0;
-    for (const step of testing.steps) {
+    for (const step of config.testing.steps) {
       //eslint-disable-next-line no-console
       console.log(`Executing step ${stepCount++}`);
 
@@ -102,8 +100,8 @@ describe("Projection integration tests", () => {
           service: step.event.service,
           network: process.env.NETWORK,
           context: {
-            ...(context && {
-              [context]: step.context || {
+            ...(config.context && {
+              [config.context]: step.context || {
                 root: "some-context-root",
                 service: "some-context-service",
                 network: process.env.NETWORK,
@@ -144,13 +142,13 @@ describe("Projection integration tests", () => {
       expect(response.statusCode).to.equal(204);
 
       const { body: v } = await viewStore({
-        name,
-        context,
+        name: config.name,
+        context: config.context,
       })
         .set({
           context: {
-            ...(context && {
-              [context]: step.result.context || {
+            ...(config.context && {
+              [config.context]: step.result.context || {
                 root: "some-context-root",
                 service: "some-context-service",
                 network: process.env.NETWORK,

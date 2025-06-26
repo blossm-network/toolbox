@@ -6,8 +6,6 @@ import gcpPubsub from "@blossm/gcp-pubsub";
 import request from "@blossm/request";
 import config from "./../../config.json" with { type: "json" };
 
-const { facts, testing } = config;
-
 chai.use(sinonChai);
 chai.use(chaiDatetime);
 const { expect } = chai;
@@ -20,20 +18,20 @@ const existingTopics = [];
 describe("Fact gateway integration tests", () => {
   before(async () => {
     existingTopics.push(
-      ...testing.topics.filter(async (t) => {
+      ...config.testing.topics.filter(async (t) => {
         return await gcpPubsub.exists(t);
       })
     );
-    await Promise.all(testing.topics.map((t) => gcpPubsub.create(t)));
+    await Promise.all(config.testing.topics.map((t) => gcpPubsub.create(t)));
   });
   after(
     async () =>
       await Promise.all(
-        [...testing.topics].map((t) => !existingTopics.includes(t) && gcpPubsub.del(t))
+        [...config.testing.topics].map((t) => !existingTopics.includes(t) && gcpPubsub.del(t))
       )
   );
   it("should return successfully", async () => {
-    const requiredPermissions = facts.reduce((permissions, command) => {
+    const requiredPermissions = config.facts.reduce((permissions, command) => {
       return command.privileges == "none"
         ? permissions
         : [
@@ -53,7 +51,7 @@ describe("Fact gateway integration tests", () => {
     }, []);
 
     const parallelFns = [];
-    for (const fact of facts) {
+    for (const fact of config.facts) {
       const needsToken =
         fact.protection == undefined ||
         fact.protection == "strict" ||

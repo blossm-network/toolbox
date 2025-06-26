@@ -7,7 +7,6 @@ import gcpPubsub from "@blossm/gcp-pubsub";
 import request from "@blossm/request";
 import config from "./../../config.json" with { type: "json" };
 
-const { commands, testing } = config;
 const { expect } = chai;
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
@@ -15,17 +14,17 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 const existingTopics = [];
 describe("Command gateway integration tests", () => {
   before(async () => {
-    existingTopics.push(...testing.topics.filter((t) => gcpPubsub.exists(t)));
-    await Promise.all(testing.topics.map((t) => gcpPubsub.create(t)));
+    existingTopics.push(...config.testing.topics.filter((t) => gcpPubsub.exists(t)));
+    await Promise.all(config.testing.topics.map((t) => gcpPubsub.create(t)));
   });
   after(
     async () =>
       await Promise.all(
-        [...testing.topics].map((t) => !existingTopics.includes(t) && gcpPubsub.del(t))
+        [...config.testing.topics].map((t) => !existingTopics.includes(t) && gcpPubsub.del(t))
       )
   );
   it("should return successfully", async () => {
-    const requiredPermissions = commands.reduce((permissions, command) => {
+    const requiredPermissions = config.commands.reduce((permissions, command) => {
       return command.privileges == "none"
         ? permissions
         : [
@@ -45,7 +44,7 @@ describe("Command gateway integration tests", () => {
     }, []);
 
     const parallelFns = [];
-    for (const command of commands) {
+    for (const command of config.commands) {
       parallelFns.push(async () => {
         const needsToken =
           command.protection == undefined ||

@@ -8,8 +8,6 @@ import uuid from "@blossm/uuid";
 
 import config from "../../config.json" with { type: "json" };
 
-const { schema, key, testing, one, group, indexes } = config;
-
 const { expect } = chai;
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
@@ -32,10 +30,10 @@ const groupNetwork = "some-group-network";
 describe("View store base integration tests", () => {
   const testParamQueries = async () => {
     const id = "some-id";
-    const examples = testing.examples;
+    const examples = config.testing.examples;
     expect(examples.length).to.be.greaterThan(1);
 
-    if (testing.empty) {
+    if (config.testing.empty) {
       const emptyResponse = await request.get(url, {
         query: {
           context: {
@@ -46,7 +44,7 @@ describe("View store base integration tests", () => {
                 network: contextNetwork,
               },
             }),
-            ...(group && {
+            ...(config.group && {
               principal: {
                 root: principalRoot,
                 service: principalService,
@@ -68,8 +66,8 @@ describe("View store base integration tests", () => {
       expect(emptyCount).to.equal(0);
       expect(emptyUpdates).to.exist;
 
-      for (const key in testing.empty) {
-        expect(emptyContent[key]).to.deep.equal(testing.empty[key]);
+      for (const key in config.testing.empty) {
+        expect(emptyContent[key]).to.deep.equal(config.testing.empty[key]);
       }
     }
 
@@ -84,7 +82,7 @@ describe("View store base integration tests", () => {
               network: contextNetwork,
             },
           }),
-          ...(group && {
+          ...(config.group && {
             groups: [
               {
                 root: groupRoot,
@@ -94,7 +92,7 @@ describe("View store base integration tests", () => {
             ],
           }),
         },
-        ...(group && {
+        ...(config.group && {
           groups: [
             {
               root: groupRoot,
@@ -107,11 +105,11 @@ describe("View store base integration tests", () => {
     });
 
     expect(response0.statusCode).to.equal(200);
-    if (key) {
+    if (config.key) {
       expect(JSON.parse(response0.body).keys).to.exist;
     }
 
-    if (group) {
+    if (config.group) {
       const forbiddenResponse = await request.get(url, {
         query: {
           context: {},
@@ -131,7 +129,7 @@ describe("View store base integration tests", () => {
               network: contextNetwork,
             },
           }),
-          ...(group && {
+          ...(config.group && {
             principal: {
               root: principalRoot,
               service: principalService,
@@ -147,10 +145,10 @@ describe("View store base integration tests", () => {
       response1.body
     );
 
-    const parsedBody0 = one ? content0 : content0[0];
+    const parsedBody0 = config.one ? content0 : content0[0];
 
     expect(updates0).to.exist;
-    !one ? expect(count0).to.equal(1) : expect(count0).to.be.undefined;
+    !config.one ? expect(count0).to.equal(1) : expect(count0).to.be.undefined;
 
     expect(response1.statusCode).to.equal(200);
 
@@ -158,8 +156,8 @@ describe("View store base integration tests", () => {
       expect(parsedBody0[key]).to.deep.equal(examples[0].get[key]);
     }
 
-    for (const example of testing.examples.length > 2
-      ? testing.examples.slice(2)
+    for (const example of config.testing.examples.length > 2
+      ? config.testing.examples.slice(2)
       : []) {
       const moreId = uuid();
       const moreResponse0 = await request.put(`${url}/${moreId}`, {
@@ -174,7 +172,7 @@ describe("View store base integration tests", () => {
               },
             }),
           },
-          ...(group && {
+          ...(config.group && {
             groups: [
               {
                 root: groupRoot,
@@ -199,7 +197,7 @@ describe("View store base integration tests", () => {
                 network: contextNetwork,
               },
             }),
-            ...(group && {
+            ...(config.group && {
               principal: {
                 root: principalRoot,
                 service: principalService,
@@ -216,10 +214,10 @@ describe("View store base integration tests", () => {
         content: moreContent,
       } = JSON.parse(response1.body);
 
-      const moreParsedBody = one ? moreContent : moreContent[0];
+      const moreParsedBody = config.one ? moreContent : moreContent[0];
 
       expect(moreUpdate).to.exist;
-      !one ? expect(moreCount).to.equal(1) : expect(moreCount).to.be.undefined;
+      !config.one ? expect(moreCount).to.equal(1) : expect(moreCount).to.be.undefined;
 
       expect(moreResponse1.statusCode).to.equal(200);
       for (const key in example.get) {
@@ -239,7 +237,7 @@ describe("View store base integration tests", () => {
             },
           }),
         },
-        ...(group && {
+        ...(config.group && {
           groups: [
             {
               root: groupRoot,
@@ -263,7 +261,7 @@ describe("View store base integration tests", () => {
               network: contextNetwork,
             },
           }),
-          ...(group && {
+          ...(config.group && {
             principal: {
               root: principalRoot,
               service: principalService,
@@ -279,18 +277,18 @@ describe("View store base integration tests", () => {
       response3.body
     );
 
-    const parsedBody1 = one ? content1 : content1[0];
+    const parsedBody1 = config.one ? content1 : content1[0];
 
     expect(updates1).to.exist;
-    !one ? expect(count1).to.equal(1) : expect(count1).to.be.undefined;
+    !config.one ? expect(count1).to.equal(1) : expect(count1).to.be.undefined;
 
     for (const key in examples[1].get) {
       expect(parsedBody1[key]).to.deep.equal(examples[1].get[key]);
     }
 
-    if (testing.sorts) {
-      for (const sort of testing.sorts) {
-        const index = indexes[sort.index][0];
+    if (config.testing.sorts) {
+      for (const sort of config.testing.sorts) {
+        const index = config.indexes[sort.index][0];
         let reverseIndex = {};
         for (const key in index) reverseIndex[key] = -index[key];
 
@@ -308,7 +306,7 @@ describe("View store base integration tests", () => {
                   },
                 }),
               },
-              ...(group && {
+              ...(config.group && {
                 groups: [
                   {
                     root: groupRoot,
@@ -330,7 +328,7 @@ describe("View store base integration tests", () => {
                   network: contextNetwork,
                 },
               }),
-              ...(group && {
+              ...(config.group && {
                 principal: {
                   root: principalRoot,
                   service: principalService,
@@ -348,11 +346,11 @@ describe("View store base integration tests", () => {
           content: content2,
         } = JSON.parse(response5.body);
 
-        const firstSortFirst = one ? content2 : content2[0];
-        const firstSortLast = one ? null : content2[content2.length - 1];
+        const firstSortFirst = config.one ? content2 : content2[0];
+        const firstSortLast = config.one ? null : content2[content2.length - 1];
 
         expect(updates2).to.exist;
-        !one ? expect(count2).to.equal(2) : expect(count2).to.be.undefined;
+        !config.one ? expect(count2).to.equal(2) : expect(count2).to.be.undefined;
 
         const response6 = await request.get(url, {
           query: {
@@ -364,7 +362,7 @@ describe("View store base integration tests", () => {
                   network: contextNetwork,
                 },
               }),
-              ...(group && {
+              ...(config.group && {
                 principal: {
                   root: principalRoot,
                   service: principalService,
@@ -382,12 +380,12 @@ describe("View store base integration tests", () => {
           content: content3,
         } = JSON.parse(response6.body);
 
-        const secondSortFirst = one ? content3 : content3[0];
-        const secondSortLast = one ? null : content3[content3.length - 1];
+        const secondSortFirst = config.one ? content3 : content3[0];
+        const secondSortLast = config.one ? null : content3[content3.length - 1];
         expect(updates3).to.exist;
-        !one ? expect(count3).to.equal(2) : expect(count3).to.be.undefined;
+        !config.one ? expect(count3).to.equal(2) : expect(count3).to.be.undefined;
 
-        if (one) {
+        if (config.one) {
           expect(firstSortFirst).to.deep.equal(secondSortFirst);
         } else {
           expect(firstSortFirst).to.deep.equal(secondSortLast);
@@ -408,7 +406,7 @@ describe("View store base integration tests", () => {
                   },
                 }),
               },
-              ...(group && {
+              ...(config.group && {
                 groups: [
                   {
                     root: groupRoot,
@@ -420,7 +418,7 @@ describe("View store base integration tests", () => {
             },
           });
         }
-        if (!one) {
+        if (!config.one) {
           const response7 = await request.get(url, {
             query: {
               context: {
@@ -431,7 +429,7 @@ describe("View store base integration tests", () => {
                     network: contextNetwork,
                   },
                 }),
-                ...(group && {
+                ...(config.group && {
                   principal: {
                     root: principalRoot,
                     service: principalService,
@@ -465,7 +463,7 @@ describe("View store base integration tests", () => {
                   },
                 }),
               },
-              ...(group && {
+              ...(config.group && {
                 groups: [
                   {
                     root: groupRoot,
@@ -488,7 +486,7 @@ describe("View store base integration tests", () => {
                   network: contextNetwork,
                 },
               }),
-              ...(group && {
+              ...(config.group && {
                 principal: {
                   root: principalRoot,
                   service: principalService,
@@ -508,15 +506,15 @@ describe("View store base integration tests", () => {
           count: count4,
         } = JSON.parse(response8.body);
 
-        !one && expect(content4).to.have.length(1);
+        !config.one && expect(content4).to.have.length(1);
         expect(updates4).to.exist;
-        !one
+        !config.one
           ? expect(count4).to.equal(examples.length * 2)
           : expect(count4).to.be.undefined;
 
         const formattedExample2Get = examples[sort.order[0]];
         for (const key in formattedExample2Get.get) {
-          expect((!one ? content4[0] : content4)[key]).to.deep.equal(
+          expect((!config.one ? content4[0] : content4)[key]).to.deep.equal(
             formattedExample2Get.get[key]
           );
         }
@@ -643,11 +641,11 @@ describe("View store base integration tests", () => {
 
   it("should return an error if incorrect params", async () => {
     //Grab a property from the schema and pass a wrong value to it.
-    for (const property in schema) {
+    for (const property in config.schema) {
       const badValue =
-        schema[property] == "String" ||
-        (typeof schema[property] == "object" &&
-          schema[property]["type"] == "String")
+        config.schema[property] == "String" ||
+        (typeof config.schema[property] == "object" &&
+          config.schema[property]["type"] == "String")
           ? { a: 1 } //pass an object to a String property
           : "some-string"; // or, pass a string to a non-String property
       const id = "some-id";
@@ -663,7 +661,7 @@ describe("View store base integration tests", () => {
               },
             }),
           },
-          ...(group && {
+          ...(config.group && {
             groups: [
               {
                 root: groupRoot,

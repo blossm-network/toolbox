@@ -1,22 +1,20 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 
-// import validate from "../../validate.js";
+import validate from "../../validate.js";
 import config from "../../config.json" with { type: "json" };
 
-// chai.use(sinonChai);
-// const { expect } = chai;
-
-// const { testing } = config;
+chai.use(sinonChai);
+const { expect } = chai;
 
 // describe("Command handler store validator tests", () => {
 //   it("should handle correct payload correctly", async () => {
-//     if (!testing.validate || !testing.validate.ok) return;
+//     if (!config.testing.validate || !config.testing.validate.ok) return;
 //     try {
-//       for (const payload of testing.validate.ok)
+//       for (const payload of config.testing.validate.ok)
 //         await validate(payload, {
-//           ...(testing.validate.context && {
-//             context: testing.validate.context,
+//           ...(config.testing.validate.context && {
+//             context: config.testing.validate.context,
 //           }),
 //         });
 //     } catch (e) {
@@ -26,17 +24,17 @@ import config from "../../config.json" with { type: "json" };
 //   });
 
 //   it("should throw if invalid param is passed", async () => {
-//     if (!testing.validate || !testing.validate.bad) return;
-//     for (const value of testing.validate.bad) {
+//     if (!config.testing.validate || !config.testing.validate.bad) return;
+//     for (const value of config.testing.validate.bad) {
 //       try {
 //         await validate(
 //           createBadPayload({
 //             bad: value,
-//             ok: testing.validate.ok[0] || {},
+//             ok: config.testing.validate.ok[0] || {},
 //           }),
 //           {
-//             ...(testing.validate.context && {
-//               context: testing.validate.context,
+//             ...(config.testing.validate.context && {
+//               context: config.testing.validate.context,
 //             }),
 //           }
 //         );

@@ -5,8 +5,6 @@ import request from "@blossm/request";
 
 import config from "../../config.json" with { type: "json" };
 
-const { testing } = config;
-
 const { expect } = chai;
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
@@ -82,7 +80,7 @@ describe("Composite integration tests", () => {
   // after(
   //   async () =>
   //     await Promise.all(
-  //       [...testing.topics, ...stateTopics].map(
+  //       [...config.testing.topics, ...stateTopics].map(
   //         (t) => !existingTopics.includes(t) && del(t)
   //       )
   //     )
@@ -90,7 +88,7 @@ describe("Composite integration tests", () => {
 
   it("should return successfully", async () => {
     let i = 0;
-    for (const step of testing.steps) {
+    for (const step of config.testing.steps) {
       //eslint-disable-next-line no-console
       console.log("Executing step ", i++);
       await executeStep(step);

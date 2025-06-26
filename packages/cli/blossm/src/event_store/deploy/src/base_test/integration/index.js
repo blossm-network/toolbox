@@ -14,19 +14,16 @@ chai.use(sinonChai);
 chai.use(chaiDatetime);
 const { expect } = chai;
 
-const { domain, service, testing, schema, indexes } = config;
-
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
-
 
 const topic = `some-topic.${process.env.DOMAIN}.${process.env.SERVICE}`;
 // const sub = `a${uuid()}`; //needs to start with a letter
 const version = 0;
 
 describe("Event store integration tests", () => {
-  expect(testing.examples.length).to.be.greaterThan(1);
-  const example0 = testing.examples[0];
-  const example1 = testing.examples[1];
+  expect(config.testing.examples.length).to.be.greaterThan(1);
+  const example0 = config.testing.examples[0];
+  const example1 = config.testing.examples[1];
 
   before(async () => await gcpPubsub.create(topic));
   after(async () => await gcpPubsub.del(topic));
@@ -64,8 +61,8 @@ describe("Event store integration tests", () => {
                 topic,
                 created: now,
                 action: example0.action,
-                domain,
-                service,
+                domain: config.domain,
+                service: config.service,
                 network: process.env.NETWORK,
                 version,
               },
@@ -105,8 +102,8 @@ describe("Event store integration tests", () => {
                 created: dateString(),
                 version,
                 action: example1.action,
-                domain,
-                service,
+                domain: config.domain,
+                service: config.service,
                 network: process.env.NETWORK,
               },
               payload: example1.payload,
@@ -163,8 +160,8 @@ describe("Event store integration tests", () => {
                 created: dateString(),
                 version,
                 action: example1.action,
-                domain,
-                service,
+                domain: config.domain,
+                service: config.service,
                 network: process.env.NETWORK,
               },
               payload: example1.payload,
@@ -188,8 +185,8 @@ describe("Event store integration tests", () => {
                 created: now,
                 version,
                 action: example1.action,
-                domain,
-                service,
+                domain: config.domain,
+                service: config.service,
                 network: process.env.NETWORK,
               },
               payload: example1.payload,
@@ -244,7 +241,7 @@ describe("Event store integration tests", () => {
     ).to.be.true;
 
     ///Test indexes
-    for (const index of indexes || []) {
+    for (const index of config.indexes || []) {
       const indexParts = index.split(".");
       //order matters since example1 was the last to be added.
       const example = [example1, example0].find((e) => {
@@ -286,8 +283,8 @@ describe("Event store integration tests", () => {
     //         created: beforeDate,
     //         version,
     //         action: example1.action,
-    //         domain,
-    //         service,
+    //         domain: config.domain,
+    //         service: config.service,
     //         network: process.env.NETWORK,
     //       },
     //       payload: example1.payload,
@@ -304,8 +301,8 @@ describe("Event store integration tests", () => {
     //         created: beforeDate,
     //         version,
     //         action: example1.action,
-    //         domain,
-    //         service,
+    //         domain: config.domain,
+    //         service: config.service,
     //         network: process.env.NETWORK,
     //       },
     //       payload: example1.payload,
@@ -345,8 +342,8 @@ describe("Event store integration tests", () => {
                 created: dateString(),
                 version,
                 action: example0.action,
-                domain,
-                service,
+                domain: config.domain,
+                service: config.service,
                 network: process.env.NETWORK,
               },
               payload: example0.payload,
@@ -361,8 +358,8 @@ describe("Event store integration tests", () => {
                 created: dateString(),
                 version,
                 action: example1.action,
-                domain,
-                service,
+                domain: config.domain,
+                service: config.service,
                 network: process.env.NETWORK,
               },
               payload: example1.payload,
@@ -399,8 +396,8 @@ describe("Event store integration tests", () => {
   //                   created: dateString(),
   //                   version,
   //                   action: example0.action,
-  //                   domain,
-  //                   service,
+  //                   domain: config.domain,
+  //                   service: config.service,
   //                   network: process.env.NETWORK,
   //                 },
   //                 payload: example0.payload,
@@ -427,8 +424,8 @@ describe("Event store integration tests", () => {
                 created: dateString(),
                 version,
                 action,
-                domain,
-                service,
+                domain: config.domain,
+                service: config.service,
                 network: process.env.NETWORK,
               },
               payload,
@@ -455,8 +452,8 @@ describe("Event store integration tests", () => {
                   created: dateString(),
                   version,
                   action: example0.action,
-                  domain,
-                  service,
+                  domain: config.domain,
+                  service: config.service,
                   network: process.env.NETWORK,
                 },
                 payload: example0.payload,
@@ -478,8 +475,8 @@ describe("Event store integration tests", () => {
                   created: dateString(),
                   version,
                   action: example1.action,
-                  domain,
-                  service,
+                  domain: config.domain,
+                  service: config.service,
                   network: process.env.NETWORK,
                 },
                 payload: example1.payload,
@@ -545,7 +542,7 @@ describe("Event store integration tests", () => {
 
   const badArrayValue = async (property, schema) => {
     const element = schema[0];
-    const [exampleToUse] = testing.examples.filter(
+    const [exampleToUse] = config.testing.examples.filter(
       (example) => example.payload[property] != undefined
     );
 
@@ -585,22 +582,22 @@ describe("Event store integration tests", () => {
 
   it("should return an error if incorrect params", async () => {
     //Grab a property from the schema and pass a wrong value to it.
-    for (const property in schema) {
-      if (schema[property] == "Object") continue;
+    for (const property in config.schema) {
+      if (config.schema[property] == "Object") continue;
       let badValue;
       if (
-        typeof schema[property] == "object" &&
-        !(schema[property] instanceof Array) &&
-        schema[property]["type"] == undefined
+        typeof config.schema[property] == "object" &&
+        !(config.schema[property] instanceof Array) &&
+        config.schema[property]["type"] == undefined
       ) {
-        badValue = await badObjectValue(property, schema[property]);
-      } else if (schema[property] instanceof Array) {
-        badValue = await badArrayValue(property, schema[property]);
+        badValue = await badObjectValue(property, config.schema[property]);
+      } else if (config.schema[property] instanceof Array) {
+        badValue = await badArrayValue(property, config.schema[property]);
       } else {
-        badValue = findBadValue(schema, property);
+        badValue = findBadValue(config.schema, property);
       }
 
-      const [exampleToUse] = testing.examples.filter(
+      const [exampleToUse] = config.testing.examples.filter(
         (example) => example.payload[property] != undefined
       );
 
@@ -628,8 +625,8 @@ describe("Event store integration tests", () => {
                 created: dateString(),
                 version,
                 action: example0.action,
-                domain,
-                service,
+                domain: config.domain,
+                service: config.service,
                 network: process.env.NETWORK,
               },
               payload: example0.payload,
@@ -657,8 +654,8 @@ describe("Event store integration tests", () => {
                 created: dateString(),
                 version,
                 action: example0.action,
-                domain,
-                service,
+                domain: config.domain,
+                service: config.service,
                 network: process.env.NETWORK,
               },
               payload: { ...example0.payload, b: 2 },
@@ -673,8 +670,8 @@ describe("Event store integration tests", () => {
                 created: dateString(),
                 version,
                 action: example0.action,
-                domain,
-                service,
+                domain: config.domain,
+                service: config.service,
                 network: process.env.NETWORK,
               },
               payload: { ...example0.payload, a: 1 },
@@ -696,8 +693,8 @@ describe("Event store integration tests", () => {
                 created: dateString(),
                 version,
                 action: example0.action,
-                domain,
-                service,
+                domain: config.domain,
+                service: config.service,
                 network: process.env.NETWORK,
               },
               payload: example0.payload,
@@ -712,8 +709,8 @@ describe("Event store integration tests", () => {
                 created: dateString(),
                 version,
                 action: example0.action,
-                domain,
-                service,
+                domain: config.domain,
+                service: config.service,
                 network: process.env.NETWORK,
               },
               payload: example0.payload,
@@ -743,8 +740,8 @@ describe("Event store integration tests", () => {
                 created: dateString(),
                 version,
                 action: "bogus",
-                domain,
-                service,
+                domain: config.domain,
+                service: config.service,
               },
               payload: example0.payload,
             },

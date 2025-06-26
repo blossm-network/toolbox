@@ -7,8 +7,6 @@ import gcpPubsub from "@blossm/gcp-pubsub";
 import request from "@blossm/request";
 import config from "./../../config.json" with { type: "json" };
 
-const { views, testing } = config;
-
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const root = "some-root";
@@ -17,27 +15,27 @@ const existingTopics = [];
 describe("View gateway integration tests", () => {
   before(async () => {
     existingTopics.push(
-      ...testing.topics.filter(async (t) => {
+      ...config.testing.topics.filter(async (t) => {
         return await gcpPubsub.exists(t);
       })
     );
-    await Promise.all(testing.topics.map((t) => gcpPubsub.create(t)));
+    await Promise.all(config.testing.topics.map((t) => gcpPubsub.create(t)));
   });
   after(
     async () =>
       await Promise.all(
-        [...testing.topics].map((t) => !existingTopics.includes(t) && gcpPubsub.del(t))
+        [...config.testing.topics].map((t) => !existingTopics.includes(t) && gcpPubsub.del(t))
       )
   );
   it("should return successfully", async () => {
-    const requiredPermissions = views.reduce((permissions, view) => {
+    const requiredPermissions = config.views.reduce((permissions, view) => {
       return !view.permissions || view.permissions == "none"
         ? permissions
         : [...new Set([...permissions, ...view.permissions])];
     }, []);
 
     const parallelFns = [];
-    for (const view of views) {
+    for (const view of config.views) {
       const needsToken =
         view.protection == undefined ||
         view.protection == "strict" ||

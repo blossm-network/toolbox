@@ -8,7 +8,6 @@ import config from "./../../config.json" with { type: "json" };
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
-const { testing, contexts } = config; 
 const { expect } = chai;
 
 const checkResponse = ({ data, expected }) => {
@@ -90,8 +89,8 @@ const executeStep = async (step) => {
   }
 
   const necessaryContext = {};
-  if (contexts) {
-    for (const c of contexts) {
+  if (config.contexts) {
+    for (const c of config.contexts) {
       necessaryContext[c] = "something";
     }
   }
@@ -127,7 +126,7 @@ const executeStep = async (step) => {
 describe("Fact integration tests", () => {
   it("should return successfully", async () => {
     let i = 0;
-    for (const step of testing.steps) {
+    for (const step of config.testing.steps) {
       //eslint-disable-next-line no-console
       console.log("Executing step ", i++);
       await executeStep(step);

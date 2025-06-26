@@ -3,12 +3,11 @@ import * as chai from "chai";
 import config from "../../config.json" with { type: "json" };
 import handlers from "../../handlers.js";
 
-const { testing } = config;
 const { expect } = chai;
 
 describe("Event store handlers tests", () => {
   it("should return correctly", async () => {
-    for (const handler of testing.handlers) {
+    for (const handler of config.testing.handlers) {
       for (const example of handler.examples) {
         const result = handlers[handler.action](
           example.state || {},
