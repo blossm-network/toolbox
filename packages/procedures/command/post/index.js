@@ -11,7 +11,6 @@ const processEvents = async ({
   txId,
 }) => {
   const eventDataPerStore = {};
-  console.log("events", events);
   for (const {
     root,
     payload = {},
@@ -200,8 +199,6 @@ export default ({
         }),
       generateRootFn: deps.uuid,
     })) || {};
-
-  console.log("events", events);
 
   await processEvents({
     events,
