@@ -1,8 +1,8 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 
-// import validate from "../../validate.js";
-import config from "../../config.json" with { type: "json" };
+import validate from "../../validate.js";
+// import config from "../../config.json" with { type: "json" };
 
 // chai.use(sinonChai);
 // const { expect } = chai;

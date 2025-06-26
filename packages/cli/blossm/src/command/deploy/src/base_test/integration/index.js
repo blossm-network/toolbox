@@ -5,14 +5,13 @@ import uuid from "@blossm/uuid";
 import eventStore from "@blossm/event-store-rpc";
 import createEvent from "@blossm/create-event";
 import { hash } from "@blossm/crypt";
+import config from "../../config.json" with { type: "json" };
 
 import request from "@blossm/request";
 
 const { expect } = chai;
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
-
-const { testing, contexts } = (await import("../../config.json", { with: { type: "json" } })).default;
 
 const checkResponse = ({ data, expected, tokens, revokeKeys }) => {
   for (const property in {
@@ -96,8 +95,8 @@ const executeStep = async (step) => {
   }
 
   const necessaryContext = {};
-  if (contexts) {
-    for (const c of contexts) {
+  if (config.contexts) {
+    for (const c of config.contexts) {
       necessaryContext[c] = "something";
     }
   }
@@ -145,7 +144,7 @@ const executeStep = async (step) => {
 //TODO test for root: true config property
 describe("Command handler integration tests", () => {
   it("should return successfully", async () => {
-    if (contexts) {
+    if (config.contexts) {
       const response = await request.post(url, {
         body: {
           context: {},
@@ -156,7 +155,7 @@ describe("Command handler integration tests", () => {
     }
 
     let i = 0;
-    for (const step of testing.steps) {
+    for (const step of config.testing.steps) {
       //eslint-disable-next-line no-console
       console.log("Executing step ", i++);
       await executeStep(step);
@@ -164,15 +163,23 @@ describe("Command handler integration tests", () => {
   });
 
   it("should return an error if incorrect params", async () => {
-    if (!testing.validate || !testing.validate.bad || !testing.validate.bad[0])
+    if (!config.testing.validate || !config.testing.validate.bad || !config.testing.validate.bad[0])
       return;
 
     const necessaryContext = {};
-    if (contexts) {
-      for (const c of contexts) {
+    if (config.contexts) {
+      for (const c of config.contexts) {
         necessaryContext[c] = "something";
       }
     }
+
+    console.log({
+      badPayload: createBadPayload({
+        bad: config.testing.validate.bad[0],
+        ok: config.testing.validate.ok[0],
+      })
+    });
+
     const response = await request.post(url, {
       body: {
         headers: {
@@ -181,8 +188,8 @@ describe("Command handler integration tests", () => {
           id: uuid(),
         },
         payload: createBadPayload({
-          bad: testing.validate.bad[0],
-          ok: testing.validate.ok[0],
+          bad: config.testing.validate.bad[0],
+          ok: config.testing.validate.ok[0],
         }),
         context: necessaryContext,
         claims: {

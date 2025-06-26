@@ -6,6 +6,7 @@ import nodeExternalToken from "@blossm/node-external-token";
 import gcpToken from "@blossm/gcp-token";
 import gcpQueue from "@blossm/gcp-queue";
 import main from "./main.js";
+import config from "./config.json" with { type: "json" };
 
 let normalize;
 let validate;
@@ -25,8 +26,6 @@ try {
 } catch (e) {
   // fill.js does not exist, fill remains undefined
 }
-
-const config = (await import("./config.json", { with: { type: "json" } })).default;
 
 export default commandProcedure({
   mainFn: main,
