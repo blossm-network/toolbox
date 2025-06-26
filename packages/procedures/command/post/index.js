@@ -200,6 +200,8 @@ export default ({
       generateRootFn: deps.uuid,
     })) || {};
 
+  console.log("events", events);
+
   await processEvents({
     events,
     addFn,
