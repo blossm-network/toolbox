@@ -6,7 +6,7 @@ import config from "../../config.json" with { type: "json" };
 chai.use(sinonChai);
 const { expect } = chai;
 
-describe("Command handler store normalize tests", () => {
+describe("Command handler normalize tests", () => {
   it("should have at least one example", async () => {
     if (!normalize || !config.testing.normalize) return;
     expect(config.testing.normalize).to.exist;

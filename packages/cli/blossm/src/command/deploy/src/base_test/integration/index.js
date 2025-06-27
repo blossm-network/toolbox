@@ -173,13 +173,6 @@ describe("Command handler integration tests", () => {
       }
     }
 
-    console.log({
-      badPayload: createBadPayload({
-        bad: config.testing.validate.bad[0],
-        ok: config.testing.validate.ok[0],
-      })
-    });
-
     const response = await request.post(url, {
       body: {
         headers: {
