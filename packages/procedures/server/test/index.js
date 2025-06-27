@@ -183,7 +183,7 @@ describe("Server", () => {
     );
     expect(asyncHandlerFake).to.have.been.calledWith(fn);
     expect(useFake).to.have.been.calledWith(deps.errorMiddleware);
-    expect(listenFake).to.have.been.calledWith(8080); //3000;
+    expect(listenFake).to.have.been.calledWith(3000);
   });
   it("should call post with the correct params with hooks", async () => {
     const useFake = fake();
