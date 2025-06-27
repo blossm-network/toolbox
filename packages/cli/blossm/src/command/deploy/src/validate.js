@@ -3,6 +3,7 @@ import validator from "@blossm/validator";
 import config from "./config.json" with { type: "json" };
 
 const validateObject = ({ object, expectation, path, context }) => {
+  console.log("validating: ", { object, expectation, path, context });
   for (const property in expectation) {
     if (
       typeof expectation[property] == "string" ||
@@ -78,6 +79,7 @@ const validateObject = ({ object, expectation, path, context }) => {
                           return false;
                       return true;
                     } else {
+                      console.log({ k: expectation[property].type[0].in, value });
                       return expectation[property].type[0].in.includes(value);
                     }
                   }
@@ -110,6 +112,7 @@ const validateObject = ({ object, expectation, path, context }) => {
                   if (!expectation[property].in.includes(item)) return false;
                 return true;
               } else {
+                console.log({ j: expectation[property].in, value });
                 return expectation[property].in.includes(value);
               }
             }
