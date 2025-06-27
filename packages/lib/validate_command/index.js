@@ -1,17 +1,17 @@
-import { object, string, date, findError } from "@blossm/validator";
+import validator from "@blossm/validator";
 import { MILLISECONDS_IN_HOUR } from "@blossm/duration-consts";
 
 import deps from "./deps.js";
 
 export default async (params) => {
-  const error = findError([
-    object(params.headers, { title: "headers", path: "headers" }),
-    object(params.payload, {
+  const error = validator.findError([
+    validator.object(params.headers, { title: "headers", path: "headers" }),
+    validator.object(params.payload, {
       optional: true,
       title: "payload",
       path: "payload",
     }),
-    string(params.root, {
+    validator.string(params.root, {
       optional: true,
       title: "root",
       path: "root",
@@ -20,13 +20,13 @@ export default async (params) => {
 
   if (error) throw error;
 
-  const headersError = findError([
-    string(params.headers.idempotency, {
+  const headersError = validator.findError([
+    validator.string(params.headers.idempotency, {
       optional: true,
       title: "idempotency",
       path: "headers.idempotency",
     }),
-    date(params.headers.issued, {
+    validator.date(params.headers.issued, {
       title: "issued date",
       headers: "headers.issued",
     }),

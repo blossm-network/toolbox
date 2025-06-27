@@ -1,5 +1,5 @@
 import * as chai from "chai";
-import { dateComponents } from "../index.js";
+import validator from "../index.js";
 
 const { expect } = chai;
 
@@ -11,7 +11,7 @@ describe("Valid date components", () => {
       month: 1,
       year: 2019,
     };
-    const error = dateComponents(validDateComponents);
+    const error = validator.dateComponents(validDateComponents);
     expect(error).to.be.undefined;
   });
 });
@@ -23,7 +23,7 @@ describe("Invalid date components", () => {
       month: 1,
       year: 2019,
     };
-    const response = dateComponents(invalidDateComponents);
+    const response = validator.dateComponents(invalidDateComponents);
     expect(response.message).to.exist;
   });
 });

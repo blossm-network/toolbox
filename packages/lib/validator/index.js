@@ -35,7 +35,7 @@ import numeric from "./src/numeric.js";
 import imageUrl from "./src/image_url.js";
 import domain from "./src/domain.js";
 
-export {
+export default {
   string,
   number,
   boolean,

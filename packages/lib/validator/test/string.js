@@ -1,5 +1,5 @@
 import * as chai from "chai";
-import { string } from "../index.js";
+import validator from "../index.js";
 
 const { expect } = chai;
 
@@ -8,52 +8,52 @@ const validString = "Hello";
 
 describe("Valid strings", () => {
   it("should not contain errors if value is not empty", () => {
-    const response = string(validString);
+    const response = validator.string(validString);
     expect(response.errors).to.be.empty;
   });
   it("should not contain errors if value is empty", () => {
     const emptyString = "";
-    const response = string(emptyString);
+    const response = validator.string(emptyString);
     expect(response.errors).to.be.empty;
   });
 });
 
 describe("Optional strings", () => {
   it("should not contain errors if value is not empty", () => {
-    const response = string(validString, { optional: true });
+    const response = validator.string(validString, { optional: true });
     expect(response.errors).to.be.empty;
   });
   it("should not contain errors if value is null", () => {
-    const response = string(null, { optional: true });
+    const response = validator.string(null, { optional: true });
     expect(response.errors).to.be.empty;
   });
 });
 
 describe("Max length strings", () => {
   it("should contain one error if the maxLength is violated.", () => {
-    const response = string("aaa", { maxLength: 2 });
+    const response = validator.string("aaa", { maxLength: 2 });
     expect(response.errors).to.have.lengthOf(1);
   });
   it("should contain errors if maxLength is violated with optional", () => {
-    const response = string("aaa", { optional: true, maxLength: 2 });
+    const response = validator.string("aaa", { optional: true, maxLength: 2 });
     expect(response.errors).to.have.lengthOf(1);
   });
 });
 
 describe("Custom fn strings", () => {
   it("should contain one error if the fn is violated.", () => {
-    const response = string("aaa", { fn: () => false });
+    const response = validator.string("aaa", { fn: () => false });
     expect(response.errors).to.have.lengthOf(1);
   });
 });
 
 describe("Empty strings", () => {
   it("should contain one error if the empty string flag violated.", () => {
-    const response = string("", { shouldAllowEmptyString: false });
+    const response = validator.string("", { shouldAllowEmptyString: false });
     expect(response.errors).to.have.lengthOf(1);
   });
   it("should contain one error if the empty string flag violated.", () => {
-    const response = string("", {});
+    const response = validator.string("", {});
     expect(response.errors).to.be.empty;
   });
 });
@@ -61,14 +61,14 @@ describe("Empty strings", () => {
 describe("Invalid string", () => {
   it("should contain one error if something other than a string is passed in", () => {
     invalidStrings.forEach((invalidString) => {
-      let response = string(invalidString);
+      let response = validator.string(invalidString);
       expect(response.errors).to.have.lengthOf(1);
     });
   });
   it("should contain one error if something other than a string is passed in with a title", () => {
     const title = "some-title";
     invalidStrings.forEach((invalidString) => {
-      let response = string(invalidString, { title });
+      let response = validator.string(invalidString, { title });
       expect(response.errors).to.have.lengthOf(1);
       expect(response.errors[0].message).to.include(title);
     });
@@ -78,7 +78,7 @@ describe("Invalid string", () => {
 describe("Invalid optional string", () => {
   it("should contain one error if something other than a string is passed in, regardless of optional flag", () => {
     invalidStrings.forEach((invalidString) => {
-      let response = string(invalidString, { optional: true });
+      let response = validator.string(invalidString, { optional: true });
       expect(response.errors).to.have.lengthOf(1);
     });
   });

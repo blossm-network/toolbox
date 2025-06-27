@@ -1,11 +1,11 @@
 import * as chai from "chai";
-import { findError, string } from "../index.js";
+import validator from "../index.js";
 
 const { expect } = chai;
 
 describe("Errors exist", () => {
   it("should return the first error that is found", () => {
-    const error = findError([string(123), string(2)]);
+    const error = validator.findError([validator.string(123), validator.string(2)]);
     expect(error.info().errors).to.be.of.length(2);
     expect(error.message).to.equal("Some information is invalid.");
   });
@@ -15,7 +15,7 @@ describe("Errors exist", () => {
     const toJSON = () => {
       return { info: { errors: [{ message, path }] } };
     };
-    const error = findError([{ toJSON }]);
+    const error = validator.findError([{ toJSON }]);
     expect(error.info().errors).to.be.of.length(1);
     expect(error.message).to.equal("Some information is invalid.");
   });
@@ -23,7 +23,7 @@ describe("Errors exist", () => {
 
 describe("No errors", () => {
   it("should return null if no errors exits", () => {
-    const error = findError([string(""), string("")]);
+    const error = validator.findError([validator.string(""), validator.string("")]);
     expect(error).to.be.null;
   });
 });

@@ -1,5 +1,5 @@
 import * as chai from "chai";
-import { countryCode } from "../index.js";
+import validator from "../index.js";
 
 const { expect } = chai;
 
@@ -259,7 +259,7 @@ const validCountryCodes = [
 describe("Valid country code", () => {
   it("should not contain errors if value is a country code", () => {
     validCountryCodes.forEach((validCountryCode) => {
-      let response = countryCode(validCountryCode);
+      let response = validator.countryCode(validCountryCode);
       expect(response.errors).to.be.empty;
     });
   });
@@ -267,11 +267,11 @@ describe("Valid country code", () => {
 
 describe("Optional buffers", () => {
   it("should not contain errors if value is not empty", () => {
-    const response = countryCode(validCountryCodes[0], { optional: true });
+    const response = validator.countryCode(validCountryCodes[0], { optional: true });
     expect(response.errors).to.be.empty;
   });
   it("should not contain errors if value is null", () => {
-    const response = countryCode(null, { optional: true });
+    const response = validator.countryCode(null, { optional: true });
     expect(response.errors).to.be.empty;
   });
 });
@@ -279,7 +279,7 @@ describe("Optional buffers", () => {
 describe("Invalid buffer", () => {
   it("should contain one error if something other than a country code is passed in", () => {
     invalidCountryCodes.forEach((invalidCountryCode) => {
-      let response = countryCode(invalidCountryCode);
+      let response = validator.countryCode(invalidCountryCode);
       expect(response.errors).to.have.lengthOf(1);
     });
   });
@@ -288,7 +288,7 @@ describe("Invalid buffer", () => {
 describe("Invalid optional country code", () => {
   it("should contain one error if something other than a country code is passed in, regardless of optional flag", () => {
     invalidCountryCodes.forEach((invalidCountryCode) => {
-      let response = countryCode(invalidCountryCode, { optional: true });
+      let response = validator.countryCode(invalidCountryCode, { optional: true });
       expect(response.errors).to.have.lengthOf(1);
     });
   });

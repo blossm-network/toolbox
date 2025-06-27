@@ -1,5 +1,5 @@
 import * as chai from "chai";
-import { location } from "../index.js";
+import validator from "../index.js";
 
 const { expect } = chai;
 
@@ -9,7 +9,7 @@ describe("Valid location", () => {
       postalCode: "94110",
       countryCode: "US",
     };
-    const error = location(validLocation);
+    const error = validator.location(validLocation);
     expect(error).to.be.undefined;
   });
 });

@@ -7,11 +7,11 @@
  *
  */
 
-import { findError, string } from "@blossm/validator";
+import validator from "@blossm/validator";
 
 export default (payload) => {
-  const error = findError([
-    string(payload.onomonopeoa, {
+  const error = validator.findError([
+    validator.string(payload.onomonopeoa, {
       title: "onomonopeoa",
       path: "payload.onomonopeoa",
     }),

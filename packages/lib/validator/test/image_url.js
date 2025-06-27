@@ -1,5 +1,5 @@
 import * as chai from "chai";
-import { imageUrl } from "../index.js";
+import validator from "../index.js";
 
 const { expect } = chai;
 
@@ -10,7 +10,7 @@ describe("Image url", () => {
       "https://media.giphy.com/media/3o72EWdzDI0wgdAq7S/giphy.gif",
     ];
     for (const url of validImageUrls) {
-      const error = imageUrl(url);
+      const error = validator.imageUrl(url);
       expect(error).to.be.undefined;
     }
   });
@@ -20,7 +20,7 @@ describe("Invalid image url", () => {
   it("should contain one error if image url is bad", () => {
     const invalidImageUrls = ["bad", "https://some.mov"];
     for (const url of invalidImageUrls) {
-      const response = imageUrl(url);
+      const response = validator.imageUrl(url);
       expect(response.message).to.exist;
     }
   });

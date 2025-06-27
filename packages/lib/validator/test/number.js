@@ -1,5 +1,5 @@
 import * as chai from "chai";
-import { number } from "../index.js";
+import validator from "../index.js";
 
 const { expect } = chai;
 
@@ -8,18 +8,18 @@ const validNumber = 0;
 
 describe("Valid numbers", () => {
   it("should not contain errors if value is not empty", () => {
-    const response = number(validNumber);
+    const response = validator.number(validNumber);
     expect(response.errors).to.be.empty;
   });
 });
 
 describe("Optional numbers", () => {
   it("should not contain errors if value is not empty", () => {
-    const response = number(validNumber, { optional: true });
+    const response = validator.number(validNumber, { optional: true });
     expect(response.errors).to.be.empty;
   });
   it("should not contain errors if value is null", () => {
-    const response = number(null, { optional: true });
+    const response = validator.number(null, { optional: true });
     expect(response.errors).to.be.empty;
   });
 });
@@ -27,7 +27,7 @@ describe("Optional numbers", () => {
 describe("Invalid number", () => {
   it("should contain one error if something other than a number is passed in", () => {
     invalidNumbers.forEach((invalidNumber) => {
-      let response = number(invalidNumber);
+      let response = validator.number(invalidNumber);
       expect(response.errors).to.have.lengthOf(1);
     });
   });
@@ -36,7 +36,7 @@ describe("Invalid number", () => {
 describe("Invalid optional number", () => {
   it("should contain one error if something other than a number is passed in, regardless of optional flag", () => {
     invalidNumbers.forEach((invalidNumber) => {
-      let response = number(invalidNumber, { optional: true });
+      let response = validator.number(invalidNumber, { optional: true });
       expect(response.errors).to.have.lengthOf(1);
     });
   });

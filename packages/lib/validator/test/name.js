@@ -1,5 +1,5 @@
 import * as chai from "chai";
-import { name } from "../index.js";
+import validator from "../index.js";
 
 const { expect } = chai;
 
@@ -9,7 +9,7 @@ describe("Valid name", () => {
       first: "Joao",
       last: "Ritter",
     };
-    const error = name(validName);
+    const error = validator.name(validName);
     expect(error).to.be.undefined;
   });
 });
@@ -20,7 +20,7 @@ describe("Invalid name", () => {
       first: 2,
       last: "asdf",
     };
-    const response = name(invalidName, { title: "sug" });
+    const response = validator.name(invalidName, { title: "sug" });
     expect(response.message).to.exist;
   });
 });
