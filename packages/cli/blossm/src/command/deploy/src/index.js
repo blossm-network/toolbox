@@ -7,25 +7,9 @@ import gcpToken from "@blossm/gcp-token";
 import gcpQueue from "@blossm/gcp-queue";
 import main from "./main.js";
 import config from "./config.json" with { type: "json" };
-
-let normalize;
-let validate;
-let fill;
-try {
-  normalize = (await import("./normalize.js")).default;
-} catch (e) {
-  // normalize.js does not exist, normalize remains undefined
-}
-try {
-  validate = (await import("./validate.js")).default;
-} catch (e) {
-  // validate.js does not exist, validate remains undefined
-}
-try {
-  fill = (await import("./fill.js")).default;
-} catch (e) {
-  // fill.js does not exist, fill remains undefined
-}
+import validate from "./validate.js";
+import fill from "./fill.js";
+import normalize from "./normalize.js";
 
 export default commandProcedure({
   mainFn: main,
