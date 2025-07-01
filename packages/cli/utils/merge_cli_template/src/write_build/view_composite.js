@@ -111,6 +111,7 @@ export default ({
             timeout,
             memory,
             host,
+            port,
             containerRegistery,
             envUriSpecifier,
             rolesBucket,

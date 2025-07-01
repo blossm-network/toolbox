@@ -116,6 +116,7 @@ export default ({
             operationHash,
             region,
             host,
+            port,
             timeout,
             memory,
             project,

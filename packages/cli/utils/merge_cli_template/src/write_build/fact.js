@@ -114,6 +114,7 @@ export default ({
             computeUrlId,
             baseNetwork,
             host,
+            port,
             timeout,
             memory,
             network,

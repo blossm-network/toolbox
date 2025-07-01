@@ -111,6 +111,7 @@ export default ({
             containerRegistery,
             nodeEnv: env,
             host,
+            port,
             timeout,
             memory,
             redisIp,

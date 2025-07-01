@@ -137,6 +137,7 @@ export default ({
             computeUrlId,
             operationHash,
             host,
+            port,
             region,
             timeout,
             memory,

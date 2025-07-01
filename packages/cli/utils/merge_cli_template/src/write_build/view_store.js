@@ -112,6 +112,7 @@ export default ({
             procedure,
             network,
             host,
+            port,
             timeout,
             memory,
             containerRegistery,

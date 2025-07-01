@@ -116,6 +116,7 @@ export default ({
             operationHash,
             computeUrlId,
             baseNetwork,
+            port,
             timeout,
             memory,
             network,
