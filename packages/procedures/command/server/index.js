@@ -34,8 +34,4 @@ export default async ({
         ...(contexts && { contexts }),
       })
     )
-    .get(async (req, res) => {
-      console.log("get", { req, res });
-      res.send("ok");
-    })
     .listen();
