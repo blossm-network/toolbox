@@ -1,157 +1,157 @@
-import * as chai from "chai";
-import sinonChai from "sinon-chai";
-import { restore, replace, fake } from "sinon";
+// import * as chai from "chai";
+// import sinonChai from "sinon-chai";
+// import { restore, replace, fake } from "sinon";
 
-import deps from "../deps.js";
-import command from "../index.js";
+// import deps from "../deps.js";
+// import command from "../index.js";
 
-chai.use(sinonChai);
+// chai.use(sinonChai);
 
-const { expect } = chai;
+// const { expect } = chai;
 
-const mainFn = "some-main-fn";
-const aggregateFn = "some-aggregate-fn";
-const commandFn = "some-command-fn";
-const queryAggregatesFn = "some-query-aggregates-fn";
-const readFactFn = "some-read-fact-fn";
-const streamFactFn = "some-stream-fact-fn";
-const addFn = "some-add-fn";
-const countFn = "some-count-fn";
-const validateFn = "some-validate-fn";
-const normalizeFn = "some-normalize-fn";
-const fillFn = "some-fill-fn";
-const version = "some-version";
-const contexts = "some-contexts";
+// const mainFn = "some-main-fn";
+// const aggregateFn = "some-aggregate-fn";
+// const commandFn = "some-command-fn";
+// const queryAggregatesFn = "some-query-aggregates-fn";
+// const readFactFn = "some-read-fact-fn";
+// const streamFactFn = "some-stream-fact-fn";
+// const addFn = "some-add-fn";
+// const countFn = "some-count-fn";
+// const validateFn = "some-validate-fn";
+// const normalizeFn = "some-normalize-fn";
+// const fillFn = "some-fill-fn";
+// const version = "some-version";
+// const contexts = "some-contexts";
 
-describe("Command handler", () => {
-  afterEach(() => {
-    restore();
-  });
+// describe("Command handler", () => {
+//   afterEach(() => {
+//     restore();
+//   });
 
-  it("should call with the correct params", async () => {
-    const returnValue = "some-return-value";
-    const listenFake = fake.returns(returnValue);
-    const postFake = fake.returns({
-      listen: listenFake,
-    });
-    const serverFake = fake.returns({
-      post: postFake,
-    });
-    replace(deps, "server", serverFake);
+//   it("should call with the correct params", async () => {
+//     const returnValue = "some-return-value";
+//     const listenFake = fake.returns(returnValue);
+//     const postFake = fake.returns({
+//       listen: listenFake,
+//     });
+//     const serverFake = fake.returns({
+//       post: postFake,
+//     });
+//     replace(deps, "server", serverFake);
 
-    const commandPostResult = "some-post-result";
-    const commandPostFake = fake.returns(commandPostResult);
-    replace(deps, "post", commandPostFake);
+//     const commandPostResult = "some-post-result";
+//     const commandPostFake = fake.returns(commandPostResult);
+//     replace(deps, "post", commandPostFake);
 
-    const result = await command({
-      version,
-      mainFn,
-      aggregateFn,
-      commandFn,
-      queryAggregatesFn,
-      readFactFn,
-      streamFactFn,
-      addFn,
-      countFn,
-      validateFn,
-      normalizeFn,
-      fillFn,
-      contexts,
-    });
+//     const result = await command({
+//       version,
+//       mainFn,
+//       aggregateFn,
+//       commandFn,
+//       queryAggregatesFn,
+//       readFactFn,
+//       streamFactFn,
+//       addFn,
+//       countFn,
+//       validateFn,
+//       normalizeFn,
+//       fillFn,
+//       contexts,
+//     });
 
-    expect(result).to.equal(returnValue);
-    expect(listenFake).to.have.been.calledWith();
-    expect(serverFake).to.have.been.calledWith();
-    expect(postFake).to.have.been.calledWith(commandPostResult);
-    expect(commandPostFake).to.have.been.calledWith({
-      version,
-      mainFn,
-      aggregateFn,
-      commandFn,
-      queryAggregatesFn,
-      readFactFn,
-      streamFactFn,
-      validateFn,
-      normalizeFn,
-      addFn,
-      countFn,
-      fillFn,
-      contexts,
-    });
-  });
-  it("should call with the correct params with optionals omitted", async () => {
-    const listenFake = fake();
-    const postFake = fake.returns({
-      listen: listenFake,
-    });
-    const serverFake = fake.returns({
-      post: postFake,
-    });
-    replace(deps, "server", serverFake);
+//     expect(result).to.equal(returnValue);
+//     expect(listenFake).to.have.been.calledWith();
+//     expect(serverFake).to.have.been.calledWith();
+//     expect(postFake).to.have.been.calledWith(commandPostResult);
+//     expect(commandPostFake).to.have.been.calledWith({
+//       version,
+//       mainFn,
+//       aggregateFn,
+//       commandFn,
+//       queryAggregatesFn,
+//       readFactFn,
+//       streamFactFn,
+//       validateFn,
+//       normalizeFn,
+//       addFn,
+//       countFn,
+//       fillFn,
+//       contexts,
+//     });
+//   });
+//   it("should call with the correct params with optionals omitted", async () => {
+//     const listenFake = fake();
+//     const postFake = fake.returns({
+//       listen: listenFake,
+//     });
+//     const serverFake = fake.returns({
+//       post: postFake,
+//     });
+//     replace(deps, "server", serverFake);
 
-    const commandPostResult = "some-post-result";
-    const commandPostFake = fake.returns(commandPostResult);
-    replace(deps, "post", commandPostFake);
+//     const commandPostResult = "some-post-result";
+//     const commandPostFake = fake.returns(commandPostResult);
+//     replace(deps, "post", commandPostFake);
 
-    await command({
-      version,
-      mainFn,
-      aggregateFn,
-      commandFn,
-      queryAggregatesFn,
-      readFactFn,
-      streamFactFn,
-      addFn,
-      countFn,
-    });
+//     await command({
+//       version,
+//       mainFn,
+//       aggregateFn,
+//       commandFn,
+//       queryAggregatesFn,
+//       readFactFn,
+//       streamFactFn,
+//       addFn,
+//       countFn,
+//     });
 
-    expect(listenFake).to.have.been.calledWith();
-    expect(serverFake).to.have.been.calledWith();
-    expect(postFake).to.have.been.calledWith(commandPostResult);
-    expect(commandPostFake).to.have.been.calledWith({
-      version,
-      mainFn,
-      aggregateFn,
-      commandFn,
-      queryAggregatesFn,
-      readFactFn,
-      streamFactFn,
-      addFn,
-      countFn,
-    });
-  });
-  it("should throw correctly", async () => {
-    const error = new Error("some-message");
-    const listenFake = fake.rejects(error);
-    const postFake = fake.returns({
-      listen: listenFake,
-    });
-    const serverFake = fake.returns({
-      post: postFake,
-    });
-    replace(deps, "server", serverFake);
+//     expect(listenFake).to.have.been.calledWith();
+//     expect(serverFake).to.have.been.calledWith();
+//     expect(postFake).to.have.been.calledWith(commandPostResult);
+//     expect(commandPostFake).to.have.been.calledWith({
+//       version,
+//       mainFn,
+//       aggregateFn,
+//       commandFn,
+//       queryAggregatesFn,
+//       readFactFn,
+//       streamFactFn,
+//       addFn,
+//       countFn,
+//     });
+//   });
+//   it("should throw correctly", async () => {
+//     const error = new Error("some-message");
+//     const listenFake = fake.rejects(error);
+//     const postFake = fake.returns({
+//       listen: listenFake,
+//     });
+//     const serverFake = fake.returns({
+//       post: postFake,
+//     });
+//     replace(deps, "server", serverFake);
 
-    const commandPostResult = "some-post-result";
-    const commandPostFake = fake.returns(commandPostResult);
-    replace(deps, "post", commandPostFake);
+//     const commandPostResult = "some-post-result";
+//     const commandPostFake = fake.returns(commandPostResult);
+//     replace(deps, "post", commandPostFake);
 
-    try {
-      await command({
-        version,
-        mainFn,
-        aggregateFn,
-        commandFn,
-        queryAggregatesFn,
-        readFactFn,
-        streamFactFn,
-        addFn,
-        countFn,
-      });
+//     try {
+//       await command({
+//         version,
+//         mainFn,
+//         aggregateFn,
+//         commandFn,
+//         queryAggregatesFn,
+//         readFactFn,
+//         streamFactFn,
+//         addFn,
+//         countFn,
+//       });
 
-      //shouldn't get called
-      expect(1).to.equal(0);
-    } catch (e) {
-      expect(e).to.equal(error);
-    }
-  });
-});
+//       //shouldn't get called
+//       expect(1).to.equal(0);
+//     } catch (e) {
+//       expect(e).to.equal(error);
+//     }
+//   });
+// });

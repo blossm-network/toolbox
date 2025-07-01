@@ -17,21 +17,25 @@ export default async ({
 } = {}) =>
   deps
     .server()
-    // .post(
-    //   deps.post({
-    //     version,
-    //     mainFn,
-    //     aggregateFn,
-    //     commandFn,
-    //     queryAggregatesFn,
-    //     readFactFn,
-    //     streamFactFn,
-    //     addFn,
-    //     ...(fillFn && { fillFn }),
-    //     ...(validateFn && { validateFn }),
-    //     ...(normalizeFn && { normalizeFn }),
-    //     ...(countFn && { countFn }),
-    //     ...(contexts && { contexts }),
-    //   })
-    // )
+    .post(
+      deps.post({
+        version,
+        mainFn,
+        aggregateFn,
+        commandFn,
+        queryAggregatesFn,
+        readFactFn,
+        streamFactFn,
+        addFn,
+        ...(fillFn && { fillFn }),
+        ...(validateFn && { validateFn }),
+        ...(normalizeFn && { normalizeFn }),
+        ...(countFn && { countFn }),
+        ...(contexts && { contexts }),
+      })
+    )
+    .get(async (req, res) => {
+      console.log("get", { req, res });
+      res.send("ok");
+    })
     .listen();
