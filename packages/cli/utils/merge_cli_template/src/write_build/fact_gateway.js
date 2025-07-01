@@ -22,7 +22,6 @@ export default ({
   region,
   project,
   network,
-  port,
   publicKeyUrl,
   envUriSpecifier,
   containerRegistery,
@@ -69,7 +68,6 @@ export default ({
     }),
     writeEnv({
       mainContainerName,
-      port,
       project,
       region,
       procedure,
@@ -113,7 +111,6 @@ export default ({
             containerRegistery,
             nodeEnv: env,
             host,
-            port,
             timeout,
             memory,
             region,

@@ -28,7 +28,6 @@ export default ({
   mainContainerName,
   serviceName,
   dnsZone,
-  port,
   service,
   procedure,
   memory,
@@ -69,7 +68,6 @@ export default ({
     }),
     writeEnv({
       mainContainerName,
-      port,
       project,
       region,
       procedure,
@@ -115,7 +113,6 @@ export default ({
             containerRegistery,
             nodeEnv: env,
             host,
-            port,
             timeout,
             memory,
             region,

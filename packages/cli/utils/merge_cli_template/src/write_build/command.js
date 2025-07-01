@@ -33,7 +33,6 @@ export default ({
   dnsZone,
   service,
   timeout,
-  port,
   memory,
   env,
   baseNetwork,
@@ -69,7 +68,6 @@ export default ({
     }),
     writeEnv({
       mainContainerName,
-      port,
       project,
       region,
       procedure,
@@ -116,7 +114,6 @@ export default ({
             operationHash,
             region,
             host,
-            port,
             timeout,
             memory,
             project,

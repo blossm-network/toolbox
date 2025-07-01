@@ -772,7 +772,6 @@ const configure = async (workingDir, configFn, env, strict) => {
       publicKeyUrl,
       region,
       domain,
-      port: 8080,
       actions,
       events,
       context,
