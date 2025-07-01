@@ -29,6 +29,7 @@ export default ({
   region,
   project,
   network,
+  port,
   actions,
   envUriSpecifier,
   dnsZone,
@@ -77,6 +78,7 @@ export default ({
     }),
     writeEnv({
       mainContainerName,
+      port,
       project,
       procedure,
       operationHash,

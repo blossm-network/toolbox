@@ -766,12 +766,15 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const custom = configFn(config);
 
+    const port = 8080;
+
     writeBuild({
       workingDir,
       env,
       publicKeyUrl,
       region,
       domain,
+      port,
       actions,
       events,
       context,
@@ -816,7 +819,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       workingDir,
       publicKeyUrl,
       procedure,
-      port: 8080,
+      port,
       mainContainerName,
       env,
       network: localNetwork,

@@ -28,6 +28,7 @@ export default ({
   mainContainerName,
   serviceName,
   dnsZone,
+  port,
   service,
   procedure,
   memory,
@@ -68,6 +69,7 @@ export default ({
     }),
     writeEnv({
       mainContainerName,
+      port,
       project,
       region,
       procedure,

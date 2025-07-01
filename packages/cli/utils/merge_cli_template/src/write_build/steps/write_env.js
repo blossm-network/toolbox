@@ -5,6 +5,7 @@ export default ({
   procedure,
   operationHash,
   serviceName,
+  port,
   localNetwork,
   localBaseNetwork,
   project,
@@ -22,6 +23,7 @@ export default ({
       stripIndents`
     cat >> .env <<- EOM
     ${Object.entries({
+      PORT: port,
       NETWORK: localNetwork,
       HOST: localNetwork,
       NODE_ENV: "local",
