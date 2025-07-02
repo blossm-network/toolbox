@@ -2,16 +2,16 @@ import deps from "./deps.js";
 
 let client;
 
-if (process.env.REDIS_IP) {
-  client = deps.redis.createClient({
-    socket: {
-      host: process.env.REDIS_IP
-    }
-  });
+// if (process.env.REDIS_IP) {
+//   client = deps.redis.createClient({
+//     socket: {
+//       host: process.env.REDIS_IP
+//     }
+//   });
   
-  client.on("error", () => {});
-  await client.connect();
-}
+//   client.on("error", () => {});
+//   await client.connect();
+// }
 
 const fallbackObjectCache = {};
 

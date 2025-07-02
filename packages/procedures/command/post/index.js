@@ -1,15 +1,15 @@
 // import deps from "./deps.js";
 
-const processEvents = async ({
-  events,
-  addFn,
-  idempotency,
-  context,
-  claims,
-  path,
-  tx,
-  txId,
-}) => {
+// const processEvents = async ({
+//   events,
+//   addFn,
+//   idempotency,
+//   context,
+//   claims,
+//   path,
+//   tx,
+//   txId,
+// }) => {
 //   const eventDataPerStore = {};
 //   for (const {
 //     root,
@@ -77,7 +77,7 @@ const processEvents = async ({
 //   }
 
 //   await Promise.all(fns);
-};
+// };
 
 export default ({
   mainFn,
@@ -94,6 +94,7 @@ export default ({
   contexts,
   requiresRoot,
 }) => async (req, res) => {
+  res.send("ok");
   // if (
   //   contexts &&
   //   (!req.body.context ||
