@@ -4,6 +4,7 @@ import deps from "./deps.js";
 export default async ({ name, hash }) => {
   const metadataServerTokenUrl =
     "http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=";
+    // "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity?audience="
 
   const headers = { "Metadata-Flavor": "Google" };
 
