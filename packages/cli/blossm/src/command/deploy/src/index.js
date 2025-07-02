@@ -1,15 +1,15 @@
 import commandProcedure from "@blossm/command";
-// import command from "@blossm/command-rpc";
-// import fact from "@blossm/fact-rpc";
-// import eventStore from "@blossm/event-store-rpc";
-// import nodeExternalToken from "@blossm/node-external-token";
-// import gcpToken from "@blossm/gcp-token";
-// import gcpQueue from "@blossm/gcp-queue";
-// import main from "./main.js";
-// import config from "./config.json" with { type: "json" };
-// import validate from "./validate.js";
-// import fill from "./fill.js";
-// import normalize from "./normalize.js";
+import command from "@blossm/command-rpc";
+import fact from "@blossm/fact-rpc";
+import eventStore from "@blossm/event-store-rpc";
+import nodeExternalToken from "@blossm/node-external-token";
+import gcpToken from "@blossm/gcp-token";
+import gcpQueue from "@blossm/gcp-queue";
+import main from "./main.js";
+import validate from "./validate.js";
+import fill from "./fill.js";
+import normalize from "./normalize.js";
+import config from "./config.json" with { type: "json" };
 
 export default commandProcedure({
   // mainFn: main,
