@@ -37,7 +37,7 @@ describe("Gcp token", () => {
     expect(
       getFake
     ).to.have.been.calledWith(
-      `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
+      `http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
       { headers: { "Metadata-Flavor": "Google" } }
     );
     expect(result).to.deep.equal({ token: body, type: "Bearer" });
@@ -58,7 +58,7 @@ describe("Gcp token", () => {
     expect(
       getFake
     ).to.have.been.calledWith(
-      `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
+      `http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`,
       { headers: { "Metadata-Flavor": "Google" } }
     );
     expect(result).to.be.null;
