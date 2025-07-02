@@ -1,4 +1,4 @@
-// import commandProcedure from "@blossm/command";
+import commandProcedure from "@blossm/command";
 // import command from "@blossm/command-rpc";
 // import fact from "@blossm/fact-rpc";
 // import eventStore from "@blossm/event-store-rpc";
