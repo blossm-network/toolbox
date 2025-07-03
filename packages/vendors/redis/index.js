@@ -2,14 +2,14 @@ import deps from "./deps.js";
 
 let client;
 
-console.log("REDIS_IP", process.env.REDIS_IP);
-if (process.env.REDIS_IP) {
+if (process.env.REDIS_HOST && process.env.REDIS_PORT) {
   client = deps.redis.createClient({
     socket: {
-      host: process.env.REDIS_IP
-    }
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT
+    },
   });
-  
+
   client.on("error", (error) => {
     console.error("Redis error", error);
   });

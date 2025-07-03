@@ -13,9 +13,7 @@ export default ({ prehook, posthook } = {}) => {
   });
 
   const listen = ({ port } = {}) => {
-    console.log("port", { port, process: process.env.PORT });
     port = port || process.env.PORT || 3000;
-    console.log({ resultingPort: port });
     if (posthook) posthook(app);
     app.use(deps.errorMiddleware);
     app.listen(port);

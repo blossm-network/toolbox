@@ -78,17 +78,33 @@ const envProject = ({ env, config }) => {
       return "";
   }
 };
-const envRedisIp = ({ env, config }) => {
-  if (!config.vendors.cache || !config.vendors.cache.redis) return;
+const envRedisHost = ({ env, config }) => {
+  if (!config.vendors.cache || !config.vendors.cache.redis || !config.vendors.cache.redis.host) return;
   switch (env) {
     case "production":
-      return config.vendors.cache.redis.ip.production;
+      return config.vendors.cache.redis.host.production;
     case "sandbox":
-      return config.vendors.cache.redis.ip.sandbox;
+      return config.vendors.cache.redis.host.sandbox;
     case "staging":
-      return config.vendors.cache.redis.ip.staging;
+      return config.vendors.cache.redis.host.staging;
     case "development":
-      return config.vendors.cache.redis.ip.development;
+      return config.vendors.cache.redis.host.development;
+    default:
+      return "";
+  }
+};
+
+const envRedisPort = ({ env, config }) => {
+  if (!config.vendors.cache || !config.vendors.cache.redis || !config.vendors.cache.redis.port) return;
+  switch (env) {
+    case "production":
+      return config.vendors.cache.redis.port.production;
+    case "sandbox":
+      return config.vendors.cache.redis.port.sandbox;
+    case "staging":
+      return config.vendors.cache.redis.port.staging;
+    case "development":
+      return config.vendors.cache.redis.port.development;
     default:
       return "";
   }
@@ -734,7 +750,8 @@ const configure = async (workingDir, configFn, env, strict) => {
     const secretBucket = envSecretsBucket({ env, config: blossmConfig });
     const publicKeyUrl = envPublicKeyUrl({ env, config: blossmConfig });
 
-    const redisIp = envRedisIp({ env, config: blossmConfig });
+    const redisHost = envRedisHost({ env, config: blossmConfig });
+    const redisPort = envRedisPort({ env, config: blossmConfig });
 
     const secretBucketKeyLocation = "global";
     const secretBucketKeyRing = "secrets-bucket";
@@ -781,7 +798,8 @@ const configure = async (workingDir, configFn, env, strict) => {
       procedure,
       network,
       host,
-      redisIp,
+      redisHost,
+      redisPort,
       timeout: configTimeout({ config, blossmConfig }),
       memory: configMemory({ config, blossmConfig }),
       mongodbUser: envMongodbUser({ env, config: blossmConfig, procedure }),

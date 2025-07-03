@@ -3,7 +3,8 @@ import sinonChai from "sinon-chai";
 import {  stub, replace, restore } from "sinon";
 import deps from "../deps.js";
 
-process.env.REDIS_IP = "some-redis-ip";
+process.env.REDIS_HOST = "some-redis-host";
+process.env.REDIS_PORT = "some-redis-port";
 
 chai.use(sinonChai);
 const { expect } = chai;
