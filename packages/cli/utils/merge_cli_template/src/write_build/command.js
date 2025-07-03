@@ -90,10 +90,10 @@ export default ({
     }),
     dockerComposeUp,
     dockerComposeProcesses,
-    // ...(runUnitTests ? [unitTests] : []),
-    // ...(runBaseUnitTests ? [baseUnitTests] : []),
-    // ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
-    // ...(runIntegrationTests ? [integrationTests({ strict })] : []),
+    ...(runUnitTests ? [unitTests] : []),
+    ...(runBaseUnitTests ? [baseUnitTests] : []),
+    ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
+    ...(runIntegrationTests ? [integrationTests({ strict })] : []),
     ...(strict
       ? [
           dockerPush({
