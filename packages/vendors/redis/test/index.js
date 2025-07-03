@@ -16,9 +16,10 @@ describe("Cache", () => {
   beforeEach(() => {
     // Create a mock Redis client
     mockClient = {
-      hmset: stub().resolves(),
-      hgetall: stub().resolves(value),
-      expire: stub().resolves(),
+      isReady: true,
+      HMSET: stub().resolves(),
+      HGETALL: stub().resolves(value),
+      EXPIRE: stub().resolves(),
       on: stub(),
       connect: stub().resolves()
     };
@@ -40,14 +41,14 @@ describe("Cache", () => {
     const key = "some-key";
     await writeObject(key, value);
 
-    expect(mockClient.hmset).to.have.been.calledWith(key, value);
+    expect(mockClient.HMSET).to.have.been.calledWith(key, value);
 
     const result = await readObject(key);
     expect(result).to.equal(value);
-    expect(mockClient.hgetall).to.have.been.calledWith(key);
+    expect(mockClient.HGETALL).to.have.been.calledWith(key);
 
     const seconds = 2;
     await setExpiry(key, { seconds });
-    expect(mockClient.expire).to.have.been.calledWith(key, seconds);
+    expect(mockClient.EXPIRE).to.have.been.calledWith(key, seconds);
   });
 });
