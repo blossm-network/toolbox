@@ -119,8 +119,12 @@ const executeStep = async (step) => {
       tx: {
         ip: step.ip,
       },
-      payload: step.payload,
-      claims: step.claims,
+      payload: {
+        ...step.payload,
+      },
+      claims: {
+        ...step.claims,
+      },
     },
   });
 
