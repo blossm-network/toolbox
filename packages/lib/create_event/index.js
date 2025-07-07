@@ -14,9 +14,7 @@ export default ({
   groupsRemoved,
   idempotency,
   path,
-} = {}) => {
-  console.log({ payload });
-  return {
+} = {}) => ({
     headers: {
       root: root || deps.uuid(),
       topic: `${action}.${domain}.${service}`,
@@ -40,5 +38,4 @@ export default ({
     ...(groupsAdded && { groupsAdded }),
     ...(groupsRemoved && { groupsRemoved }),
     payload,
-  };
-};
+  });
