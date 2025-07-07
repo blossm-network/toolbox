@@ -15,6 +15,7 @@ export default ({
   idempotency,
   path,
 } = {}) => {
+  console.log({ payload });
   return {
     headers: {
       root: root || deps.uuid(),
