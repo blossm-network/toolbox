@@ -6,7 +6,7 @@ import gcpToken from "@blossm/gcp-token";
 // import deletedSceneCheck from "@blossm/deleted-scene-check";
 import permissionsLookup from "@blossm/permissions-lookup";
 import nodeExternalToken from "@blossm/node-external-token";
-import { download as downloadFile } from "@blossm/gcp-storage";
+import gcpStorage from "@blossm/gcp-storage";
 
 import config from "./config.json" with { type: "json" };
 
@@ -26,7 +26,7 @@ export default gateway({
   nodeExternalTokenFn: nodeExternalToken,
   permissionsLookupFn: permissionsLookup({
     downloadFileFn: ({ fileName, extension }) =>
-      downloadFile({
+      gcpStorage.download({
         bucket: process.env.GCP_ROLES_BUCKET,
         destination: fileName + extension,
       }),
