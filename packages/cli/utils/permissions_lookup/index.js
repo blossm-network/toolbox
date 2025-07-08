@@ -4,7 +4,7 @@ import { promisify } from "util";
 import fact from "@blossm/fact-rpc";
 import rolePermissions from "@blossm/role-permissions";
 import uuid from "@blossm/uuid";
-import redis from "@blossm/redis";
+import * as redis from "@blossm/redis";
 import { forbidden } from "@blossm/errors";
 import nodeExternalToken from "@blossm/node-external-token";
 
