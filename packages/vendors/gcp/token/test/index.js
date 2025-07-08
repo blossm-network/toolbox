@@ -32,7 +32,7 @@ describe("Gcp token", () => {
 
     const result = await gcpToken({ hash, name });
 
-    const url = `https://${gcpRegion}-${name}-${hash}-${gcpComputeUrlId}-uc.a.run.app`;
+    const url = `https://${gcpRegion}-${name}-${hash}-${gcpComputeUrlId}.${gcpRegion}.run.app`;
 
     expect(
       getFake
@@ -53,7 +53,7 @@ describe("Gcp token", () => {
 
     const result = await gcpToken({ hash, name });
 
-    const url = `https://${gcpRegion}-${name}-${hash}-${gcpComputeUrlId}-uc.a.run.app`;
+    const url = `https://${gcpRegion}-${name}-${hash}-${gcpComputeUrlId}.${gcpRegion}.run.app`;
 
     expect(
       getFake
