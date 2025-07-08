@@ -37,19 +37,19 @@ describe("Cache", () => {
 
   it("should read and write correctly", async () => {
     // Now import the module that will use our stubbed client
-    const { writeObject, readObject, setExpiry } = await import("../index.js");
+    const redis = (await import("../index.js")).default;
 
     const key = "some-key";
-    await writeObject(key, value);
+    await redis.writeObject(key, value);
 
     expect(mockClient.HMSET).to.have.been.calledWith(key, value);
 
-    const result = await readObject(key);
+    const result = await redis.readObject(key);
     expect(result).to.equal(value);
     expect(mockClient.HGETALL).to.have.been.calledWith(key);
 
     const seconds = 2;
-    await setExpiry(key, { seconds });
+    await redis.setExpiry(key, { seconds });
     expect(mockClient.EXPIRE).to.have.been.calledWith(key, seconds);
   });
 });

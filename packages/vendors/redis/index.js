@@ -21,7 +21,7 @@ if (process.env.REDIS_HOST && process.env.REDIS_PORT) {
 
 const fallbackObjectCache = {};
 
-export const writeObject = async (key, object) => {
+const writeObject = async (key, object) => {
   if (client && client.isReady) {
     await client.HMSET(key, object);
   } else {
@@ -29,15 +29,21 @@ export const writeObject = async (key, object) => {
   }
 };
 
-export const readObject = async (key) => {
+const readObject = async (key) => {
   if (client && client.isReady) {
     return await client.HGETALL(key);
   }
   return fallbackObjectCache[key];
 };
 
-export const setExpiry = async (key, { seconds }) => {
+const setExpiry = async (key, { seconds }) => {
   if (client && client.isReady) {
     await client.EXPIRE(key, seconds);
   }
+};
+
+export default {
+  writeObject,
+  readObject,
+  setExpiry,
 };
