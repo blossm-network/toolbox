@@ -88,7 +88,7 @@ describe("Queue", () => {
           httpMethod: "PUT",
           oidcToken: {
             serviceAccountEmail,
-            audience: `https://custom-region-${operationName}-${operationHash}-custom-compute-url-id-uc.a.run.app`,
+            audience: `https://custom-region-${operationName}-${operationHash}-custom-compute-url-id.custom-region.run.app`,
           },
           headers: {
             "content-type": "application/json",
