@@ -1,6 +1,6 @@
 {
   "name": "@blossm/gcp-queue",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "description": "Queues and task.",
   "main": "index.js",
   "type": "module",
