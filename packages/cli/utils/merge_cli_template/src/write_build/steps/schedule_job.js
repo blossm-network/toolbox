@@ -21,7 +21,7 @@ export default ({
       --uri=https://${uri}
       --http-method=${method}
       --oidc-service-account-email=executer@${project}.iam.gserviceaccount.com
-      --oidc-token-audience=https://${serviceName}-${computeUrlId}.${region}.a.run.app
+      --oidc-token-audience=https://${serviceName}-${computeUrlId}.${region}.run.app
       --project=${project} 
       --quiet || exit 0
       `,

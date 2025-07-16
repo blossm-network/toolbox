@@ -589,7 +589,7 @@ You're now ready to deploy your first procedures. You'll do so while filling out
 3. Deploy your event store, `blossm deploy`. This should take about 5 minutes as it runs all of your unit and integration tests, wires up the store with everything it needs to do its job, and deploys it to the network where it immediately becomes available.
 
 4. In **Cloud Run**, there should be one row in the table, which represents the event store you just deployed. Click it.
-Somewhere at the top, you should see the service’s URL, which ends in **XXXXXXXXX--uc.a.run.app**. Copy the **XXXXXXXXX** part of the address and paste it in your **config.yaml** for the **computeUrlIds** property.
+Somewhere at the top, you should see the service’s URL, which ends in **XXXXXXXXX.<region>.run.app**. Copy the **XXXXXXXXX** part of the address and paste it in your **config.yaml** for the **computeUrlIds** property.
 
 5. Now let's go to your command, `cd ../commands/chirp`.
 
