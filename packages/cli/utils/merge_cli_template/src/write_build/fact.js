@@ -150,6 +150,7 @@ export default ({
               domain ? `-${domain}` : ""
             }-${name}-check-in`,
             schedule: checkInSchedule,
+            region,
             serviceName,
             computeUrlId,
             uri: `${uri}/${checkInPath}`,

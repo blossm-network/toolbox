@@ -4,6 +4,7 @@ export default ({
   name,
   schedule,
   uri,
+  region,
   serviceName,
   computeUrlId,
   project,
@@ -20,7 +21,7 @@ export default ({
       --uri=https://${uri}
       --http-method=${method}
       --oidc-service-account-email=executer@${project}.iam.gserviceaccount.com
-      --oidc-token-audience=https://${serviceName}-${computeUrlId}-uc.a.run.app
+      --oidc-token-audience=https://${serviceName}-${computeUrlId}.${region}.a.run.app
       --project=${project} 
       --quiet || exit 0
       `,

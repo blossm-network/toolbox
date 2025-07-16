@@ -162,6 +162,7 @@ export default ({
             name: `view-store-${context ? `-${context}` : ""}-${name}-check-in`,
             schedule: checkInSchedule,
             serviceName,
+            region,
             computeUrlId,
             uri: `${uri}/${checkInPath}`,
             method: "get",

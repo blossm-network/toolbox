@@ -6,7 +6,7 @@ export default ({
   domain,
   service,
   operationHash,
-  operationName,
+  serviceName,
   storeDomain,
   storeService,
   storeAction,
@@ -25,8 +25,8 @@ export default ({
         context ? `-${context}` : ""
       }-${procedure}-${operationHash}-${storeAction}.${storeDomain}.${storeService}
     --topic=${storeAction}.${storeDomain}.${storeService}
-    --push-endpoint=https://${region}-${operationName}-${operationHash}-${computeUrlId}-uc.a.run.app 
-    --push-auth-token-audience=https://${region}-${operationName}-${operationHash}-${computeUrlId}-uc.a.run.app 
+    --push-endpoint=https://${serviceName}-${computeUrlId}.${region}.a.run.app 
+    --push-auth-token-audience=https://${serviceName}-${computeUrlId}.${region}.a.run.app 
     --push-auth-service-account=cloud-run-pubsub-invoker@${project}.iam.gserviceaccount.com
     --topic-project=${project}
     --expiration-period=never

@@ -189,6 +189,7 @@ export default ({
           scheduleJob({
             name: `event-store-${service}-${domain}-create-block`,
             schedule: blockSchedule,
+            region,
             serviceName,
             computeUrlId,
             uri: `${uri}/create-block`,
@@ -203,6 +204,7 @@ export default ({
           scheduleJob({
             name: `event-store-${service}-${domain}-check-in`,
             schedule: checkInSchedule,
+            region,
             serviceName,
             computeUrlId,
             uri: `${uri}/${checkInPath}`,

@@ -145,6 +145,7 @@ export default ({
             name: `command-gateway-${service}-${domain}-check-in`,
             schedule: checkInSchedule,
             serviceName,
+            region,
             computeUrlId,
             uri: `${authUri}/${checkInPath}`,
             method: "get",

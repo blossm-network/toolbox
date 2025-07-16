@@ -156,6 +156,7 @@ export default ({
           scheduleJob({
             name: `command-${service}-${domain}-${name}-check-in`,
             schedule: checkInSchedule,
+            region,
             serviceName,
             computeUrlId,
             uri: `${uri}/${checkInPath}`,

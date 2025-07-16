@@ -40,7 +40,7 @@ const enqueue = ({
             `executer@${project}.iam.gserviceaccount.com`,
           ...(hash &&
             name && {
-              audience: `https://${location}-${name}-${hash}-${computeUrlId}-uc.a.run.app`,
+              audience: `https://${location}-${name}-${hash}-${computeUrlId}.${location}.run.app`,
             }),
         },
       }),

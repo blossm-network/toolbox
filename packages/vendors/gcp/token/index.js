@@ -7,7 +7,6 @@ export default async ({ name, hash }) => {
 
   const headers = { "Metadata-Flavor": "Google" };
 
-  // const url = `https://${process.env.GCP_REGION}-${name}-${hash}-${process.env.GCP_COMPUTE_URL_ID}-uc.a.run.app`;
   const url = `https://${process.env.GCP_REGION}-${name}-${hash}-${process.env.GCP_COMPUTE_URL_ID}.${process.env.GCP_REGION}.run.app`;
 
   const response = await deps.get(metadataServerTokenUrl + url, { headers });

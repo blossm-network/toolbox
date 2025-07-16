@@ -141,6 +141,7 @@ export default ({
             name: `view-gateway${context ? `-${context}` : ""}-check-in`,
             schedule: checkInSchedule,
             serviceName,
+            region,
             computeUrlId,
             uri: `${authUri}/${checkInPath}`,
             method: "get",
