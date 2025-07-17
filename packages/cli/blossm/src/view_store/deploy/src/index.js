@@ -69,7 +69,7 @@ export default viewStore({
       name: "groups",
       domain: "principal",
       service: "core",
-      network: process.env.BASE_NETWORK,
+      network: process.env.CORE_NETWORK,
     })
       .set({
         token: {

@@ -15,7 +15,7 @@ export default gateway({
     ...view,
     ...(view.network && {
       network:
-        view.network == "$base" ? process.env.BASE_NETWORK : view.network,
+        view.network == "$core" ? process.env.CORE_NETWORK : view.network,
     }),
   })),
   allow: config.allow,

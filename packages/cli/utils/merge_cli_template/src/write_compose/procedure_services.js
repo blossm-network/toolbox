@@ -33,7 +33,7 @@ export default ({
   databaseServiceKey,
   project,
   port,
-  localBaseNetwork,
+  localCoreNetwork,
   network,
   host,
   region,
@@ -58,7 +58,7 @@ export default ({
     PORT: `${port}`,
     NODE_ENV: "local",
     NETWORK: network,
-    BASE_NETWORK: localBaseNetwork,
+    CORE_NETWORK: localCoreNetwork,
     HOST: host,
     GCP_PROJECT: project,
     GCP_REGION: region,
@@ -81,7 +81,7 @@ export default ({
     const customEnv = findEnvForDependency(env, dependency, rootDir.path());
 
     const commonServiceImagePrefix = `${
-      localBaseNetwork && dependency.network == localBaseNetwork
+      localCoreNetwork && dependency.network == localCoreNetwork
         ? baseContainerRegistery
         : containerRegistery
     }/${dependency.procedure}`;

@@ -23,7 +23,7 @@ export default gateway({
     ...command,
     ...(command.network && {
       network:
-        command.network == "$base" ? process.env.BASE_NETWORK : command.network,
+        command.network == "$core" ? process.env.CORE_NETWORK : command.network,
     }),
   })),
   allow: config.allow,

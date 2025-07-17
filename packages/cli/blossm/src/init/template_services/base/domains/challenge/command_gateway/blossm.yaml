@@ -6,19 +6,19 @@ commands:
   - name: start
     protection: none
     service: core
-    network: $base
+    network: $core
   - name: save
     protection: none
     service: core
-    network: $base
+    network: $core
   - name: change-scene
     protection: none
     service: core
-    network: $base
+    network: $core
   - name: terminate
     protection: none
     service: core
-    network: $base
+    network: $core
 
 #don't change
 procedure: command-gateway

@@ -27,7 +27,7 @@ const envContextNetwork = "some-env-context-network";
 
 const envName = "some-env-name";
 const envNetwork = "some-env-network";
-const baseNetwork = "some-base-network";
+const coreNetwork = "some-base-network";
 
 const nextUrl = "some-next-url";
 
@@ -41,7 +41,7 @@ const context = {
 
 process.env.NAME = envName;
 process.env.NETWORK = envNetwork;
-process.env.BASE_NETWORK = baseNetwork;
+process.env.CORE_NETWORK = coreNetwork;
 
 describe("View store get", () => {
   beforeEach(() => {

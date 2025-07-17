@@ -75,8 +75,8 @@ export default ({ downloadFileFn }) => async ({
         name: "permissions",
         domain: "role",
         service: "core",
-        ...(process.env.BASE_NETWORK && {
-          network: process.env.BASE_NETWORK,
+        ...(process.env.CORE_NETWORK && {
+          network: process.env.CORE_NETWORK,
         }),
       })
         .set({

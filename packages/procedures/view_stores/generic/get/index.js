@@ -166,7 +166,7 @@ export default ({
     req.query.query &&
     Object.keys(req.query.query).find((key) => updateKeys.includes(key));
 
-  const updates = `https://updates.${process.env.BASE_NETWORK}/channel?name=${
+  const updates = `https://updates.${process.env.CORE_NETWORK}/channel?name=${
     process.env.NAME
   }${process.env.CONTEXT ? `&context=${process.env.CONTEXT}` : ""}&network=${
     process.env.NETWORK

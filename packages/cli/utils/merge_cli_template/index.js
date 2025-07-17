@@ -362,51 +362,51 @@ const eventStoreDependencies = ({ dependencies }) => {
   return result;
 };
 
-const addDefaultDependencies = ({ config, localBaseNetwork }) => {
+const addDefaultDependencies = ({ config, localCoreNetwork }) => {
   const tokenDependencies = [
     {
       name: "upgrade",
       domain: "session",
       service: "core",
-      network: localBaseNetwork,
+      network: localCoreNetwork,
       procedure: "command",
     },
     {
       domain: "session",
       service: "core",
-      network: localBaseNetwork,
+      network: localCoreNetwork,
       procedure: "event-store",
     },
     {
       domain: "role",
       service: "core",
-      network: localBaseNetwork,
+      network: localCoreNetwork,
       procedure: "event-store",
     },
     {
       domain: "principal",
       service: "core",
-      network: localBaseNetwork,
+      network: localCoreNetwork,
       procedure: "event-store",
     },
     {
       domain: "account",
       service: "core",
-      network: localBaseNetwork,
+      network: localCoreNetwork,
       procedure: "event-store",
     },
     {
       name: "terminated",
       domain: "session",
       service: "core",
-      network: localBaseNetwork,
+      network: localCoreNetwork,
       procedure: "fact",
     },
     {
       name: "permissions",
       domain: "role",
       service: "core",
-      network: localBaseNetwork,
+      network: localCoreNetwork,
       procedure: "fact",
     },
   ];
@@ -415,7 +415,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
     procedure: "fact-gateway",
     domain: "principal",
     service: "core",
-    network: localBaseNetwork,
+    network: localCoreNetwork,
     mocks: [
       {
         fact: "groups",
@@ -466,7 +466,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
         {
           domain: "connection",
           service: "core",
-          network: localBaseNetwork,
+          network: localCoreNetwork,
           procedure: "command-gateway",
           mocks: [
             {
@@ -478,7 +478,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
         {
           domain: "updates",
           service: "core",
-          network: localBaseNetwork,
+          network: localCoreNetwork,
           procedure: "command-gateway",
           mocks: [
             {
@@ -492,7 +492,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
           procedure: "fact-gateway",
           domain: "group",
           service: "core",
-          network: localBaseNetwork,
+          network: localCoreNetwork,
           mocks: [
             {
               fact: "principals",
@@ -568,7 +568,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
 const writeConfig = ({
   config,
   localNetwork,
-  localBaseNetwork,
+  localCoreNetwork,
   workingDir,
 }) => {
   const newConfigPath = path.resolve(workingDir, "config.json");
@@ -576,7 +576,7 @@ const writeConfig = ({
   if (!config.testing.dependencies) config.testing.dependencies = [];
 
   const { dependencies, events } = resolveTransientInfo(
-    addDefaultDependencies({ config, localBaseNetwork })
+    addDefaultDependencies({ config, localCoreNetwork })
   );
 
   const adjustedDependencies = [];
@@ -585,7 +585,7 @@ const writeConfig = ({
       case "command-gateway":
         adjustedDependencies.push({
           procedure: "http",
-          host: `c.${dependency.domain}.${dependency.service}.${localBaseNetwork}`,
+          host: `c.${dependency.domain}.${dependency.service}.${localCoreNetwork}`,
           mocks: dependency.mocks.map((mock) => {
             return {
               method: "post",
@@ -600,7 +600,7 @@ const writeConfig = ({
       case "view-gateway":
         adjustedDependencies.push({
           procedure: "http",
-          host: `v.${dependency.context}.${localBaseNetwork}`,
+          host: `v.${dependency.context}.${localCoreNetwork}`,
           mocks: dependency.mocks.map((mock) => {
             return {
               method: "get",
@@ -622,7 +622,7 @@ const writeConfig = ({
           procedure: "http",
           host: `f${dependency.domain ? `.${dependency.domain}` : ""}${
             dependency.service ? `.${dependency.service}` : ""
-          }.${dependency.network || localBaseNetwork}`,
+          }.${dependency.network || localCoreNetwork}`,
           mocks: dependency.mocks.map((mock) => {
             return {
               method: "get",
@@ -719,15 +719,15 @@ const configure = async (workingDir, configFn, env, strict) => {
     const region =
       config.region || blossmConfig.vendors.cloud.gcp.defaults.region;
     const network = blossmConfig.network;
-    const baseNetworkSuffix = blossmConfig.core
+    const coreNetworkSuffix = blossmConfig.core
       ? blossmConfig.core.network
       : network;
-    const baseNetwork =
-      baseNetworkSuffix == network
-        ? `${envUriSpecifier(env)}${baseNetworkSuffix}`
+    const coreNetwork =
+      coreNetworkSuffix == network
+        ? `${envUriSpecifier(env)}${coreNetworkSuffix}`
         : env == "production"
-        ? baseNetworkSuffix
-        : `snd.${baseNetworkSuffix}`;
+        ? coreNetworkSuffix
+        : `snd.${coreNetworkSuffix}`;
 
     const dnsZone = config.dnsZone || blossmConfig.vendors.cloud.gcp.dnsZone;
 
@@ -767,15 +767,15 @@ const configure = async (workingDir, configFn, env, strict) => {
     const mainContainerName = "main";
 
     const localNetwork = "local.network";
-    const localBaseNetwork =
-      baseNetworkSuffix == network ? localNetwork : "local.core.network";
+    const localCoreNetwork =
+      coreNetworkSuffix == network ? localNetwork : "local.core.network";
 
     const host = `${region}.${envUriSpecifier(env)}${network}`;
 
     writeConfig({
       config,
       localNetwork,
-      localBaseNetwork,
+      localCoreNetwork,
       workingDir,
     });
 
@@ -822,8 +822,8 @@ const configure = async (workingDir, configFn, env, strict) => {
       secretBucket,
       secretBucketKeyLocation,
       secretBucketKeyRing,
-      baseNetwork,
-      localBaseNetwork,
+      coreNetwork,
+      localCoreNetwork,
       strict,
       dependencyKeyEnvironmentVariables,
       ...custom,
@@ -845,8 +845,8 @@ const configure = async (workingDir, configFn, env, strict) => {
       region,
       containerRegistery,
       baseContainerRegistery,
-      baseNetwork,
-      localBaseNetwork,
+      coreNetwork,
+      localCoreNetwork,
       domain,
       name,
       secretBucket,

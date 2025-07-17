@@ -6,7 +6,7 @@ export default ({
   procedure,
   memory,
   timeout,
-  baseNetwork,
+  coreNetwork,
   operationHash,
   containerRegistery,
   envUriSpecifier,
@@ -45,7 +45,7 @@ export default ({
       `--set-env-vars=${Object.entries({
         NODE_ENV: nodeEnv,
         NETWORK: `${envUriSpecifier}${network}`,
-        BASE_NETWORK: baseNetwork,
+        CORE_NETWORK: coreNetwork,
         HOST: host,
         PROCEDURE: procedure,
         OPERATION_HASH: operationHash,
