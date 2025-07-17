@@ -23,7 +23,7 @@ const pushToChannel = async ({ channel, view, id, trace, type }) => {
     await command({
       name: "push",
       domain: "updates",
-      service: "base",
+      service: "core",
       network: process.env.BASE_NETWORK,
     })
       .set({
@@ -78,7 +78,7 @@ const pushToChannels = async ({
       fact({
         name: "principals",
         domain: "group",
-        service: "base",
+        service: "core",
         network: process.env.BASE_NETWORK,
       })
         .set({

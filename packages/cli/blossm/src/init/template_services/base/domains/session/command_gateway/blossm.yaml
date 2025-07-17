@@ -1,16 +1,16 @@
 domain: challenge
-service: base
+service: core
 
-# Specifies commands that get forwarded to the base layer network to fulfill.
+# Specifies commands that get forwarded to the core layer network to fulfill.
 commands:
   - name: issue
     protection: none
-    service: base
+    service: core
     network: $base
   - name: answer
     protection: none
     key: challenge
-    service: base
+    service: core
     network: $base
 
 #don't change

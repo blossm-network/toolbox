@@ -53,13 +53,13 @@ const envDependencyKeyEnvironmentVariables = ({ env, config }) => {
 const envBaseContainerRegistry = ({ env, config }) => {
   switch (env) {
     case "production":
-      return config.base.registries.production;
+      return config.core.registries.production;
     case "sandbox":
-      return config.base.registries.sandbox;
+      return config.core.registries.sandbox;
     case "staging":
-      return config.base.registries.staging;
+      return config.core.registries.staging;
     case "development":
-      return config.base.registries.development;
+      return config.core.registries.development;
     default:
       return "";
   }
@@ -111,9 +111,9 @@ const envRedisPort = ({ env, config }) => {
 };
 
 const envPublicKeyUrl = ({ env, config }) =>
-  config.base && config.base.network != config.network
+  config.core && config.core.network != config.network
     ? `https://f.${env == "production" ? "" : "snd."}${
-        config.base.network
+        config.core.network
       }/public-key`
     : `https://f.${envUriSpecifier(env)}${config.network}/public-key`;
 
@@ -367,45 +367,45 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
     {
       name: "upgrade",
       domain: "session",
-      service: "base",
+      service: "core",
       network: localBaseNetwork,
       procedure: "command",
     },
     {
       domain: "session",
-      service: "base",
+      service: "core",
       network: localBaseNetwork,
       procedure: "event-store",
     },
     {
       domain: "role",
-      service: "base",
+      service: "core",
       network: localBaseNetwork,
       procedure: "event-store",
     },
     {
       domain: "principal",
-      service: "base",
+      service: "core",
       network: localBaseNetwork,
       procedure: "event-store",
     },
     {
       domain: "account",
-      service: "base",
+      service: "core",
       network: localBaseNetwork,
       procedure: "event-store",
     },
     {
       name: "terminated",
       domain: "session",
-      service: "base",
+      service: "core",
       network: localBaseNetwork,
       procedure: "fact",
     },
     {
       name: "permissions",
       domain: "role",
-      service: "base",
+      service: "core",
       network: localBaseNetwork,
       procedure: "fact",
     },
@@ -414,7 +414,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
   const groupsFactProcedure = {
     procedure: "fact-gateway",
     domain: "principal",
-    service: "base",
+    service: "core",
     network: localBaseNetwork,
     mocks: [
       {
@@ -465,7 +465,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
         },
         {
           domain: "connection",
-          service: "base",
+          service: "core",
           network: localBaseNetwork,
           procedure: "command-gateway",
           mocks: [
@@ -477,7 +477,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
         },
         {
           domain: "updates",
-          service: "base",
+          service: "core",
           network: localBaseNetwork,
           procedure: "command-gateway",
           mocks: [
@@ -491,7 +491,7 @@ const addDefaultDependencies = ({ config, localBaseNetwork }) => {
         {
           procedure: "fact-gateway",
           domain: "group",
-          service: "base",
+          service: "core",
           network: localBaseNetwork,
           mocks: [
             {
@@ -719,8 +719,8 @@ const configure = async (workingDir, configFn, env, strict) => {
     const region =
       config.region || blossmConfig.vendors.cloud.gcp.defaults.region;
     const network = blossmConfig.network;
-    const baseNetworkSuffix = blossmConfig.base
-      ? blossmConfig.base.network
+    const baseNetworkSuffix = blossmConfig.core
+      ? blossmConfig.core.network
       : network;
     const baseNetwork =
       baseNetworkSuffix == network
@@ -768,7 +768,7 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const localNetwork = "local.network";
     const localBaseNetwork =
-      baseNetworkSuffix == network ? localNetwork : "local.base.network";
+      baseNetworkSuffix == network ? localNetwork : "local.core.network";
 
     const host = `${region}.${envUriSpecifier(env)}${network}`;
 

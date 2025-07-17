@@ -8,7 +8,7 @@ service: some-service
 # Specify the facts that this gateway should accept requests for.
 #
 # The 'name' property correlates to the fact name.
-# Each fact can be accessed by adding the URL path /<name> to the base URL.
+# Each fact can be accessed by adding the URL path /<name> to the core URL.
 #
 # The 'privileges' property describes the privileges needed by the requester
 # to access this fact. Set this to 'none' if no specific privileges are needed,

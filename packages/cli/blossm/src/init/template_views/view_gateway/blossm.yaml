@@ -1,5 +1,5 @@
 #
-# The base URL of this gateway will be v(.context)?.[network].
+# The core URL of this gateway will be v(.context)?.[network].
 #
 # context: some-context
 
@@ -7,7 +7,7 @@
 # Specify the views that this gateway should accept requests for.
 #
 # The 'name' property correlates to the view name.
-# Each view can be accessed by adding the URL path /<name> to the base URL.
+# Each view can be accessed by adding the URL path /<name> to the core URL.
 #
 # The 'procedure' property should be either 'view-store' or 'view-composite', depending on
 # if the procedure being accessed is a view-store or a view-composite.

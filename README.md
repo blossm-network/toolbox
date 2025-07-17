@@ -1,9 +1,9 @@
 ### 🌸  Blossm   
 ###### Written for NodeJS
 
-### Blossm is an Event Sourcing CQRS orchestrator, that includes an interace for setting up multi-project interoperability through a shared base layer that handles core components like sessions, accounts, permissions, roles, delivering updated data to subscribers, and more.
+### Blossm is an Event Sourcing CQRS orchestrator, that includes an interace for setting up multi-project interoperability through a shared core layer that handles core components like sessions, accounts, permissions, roles, delivering updated data to subscribers, and more.
 
-#### With Blossm you can architect, fully-test, and deploy just about any peice of software functionality using small javascript functions and YAML configs, in a way that keeps each historical state of your app entirely queriable and auditable, and with the opportunity to interoperate with independently developed networks through a shared base layer. It's also cheap to run, scales reliably and automatically, and is easy to test, maintain, and iterate from.
+#### With Blossm you can architect, fully-test, and deploy just about any peice of software functionality using small javascript functions and YAML configs, in a way that keeps each historical state of your app entirely queriable and auditable, and with the opportunity to interoperate with independently developed networks through a shared core layer. It's also cheap to run, scales reliably and automatically, and is easy to test, maintain, and iterate from.
 
 #### The project aspires to make sure the data produced in Blossm systems can be owned and delegated entirely by the users and groups that produced it, giving Blossm network operators no data aggregation and manipulation advantages over its constituent projects, or even the public.
 
@@ -12,7 +12,7 @@
 ### Contents:
 1. [Install](#install)
 2. [Overview](#overview)
-3. [Base layer](#base-layer)
+3. [Core layer](#core-layer)
 4. [Setup CLI](#setup-cli)
 5. [Setup deployment infrastructure](#setup-deployment-infrastructure)
 6. [New developer onboarding](#new-developer-onboarding)
@@ -230,21 +230,21 @@ Again, non-`production` gateways are addressed with a network prefix of `.dev | 
 
 ---
 
-# Base layer 
+# Core layer 
 
-Blossm applications must be built around an implementation of the Blossm base layer, which manages all of the basic stuff that applications need such as accounts, sessions, token issuance, permissions, roles, authentication, and publishing updated views to connected clients. Any application built around the same Blossm base layer can seamlessly interoperate.
+Blossm applications must be built around an implementation of the Blossm core layer, which manages all of the basic stuff that applications need such as accounts, sessions, token issuance, permissions, roles, authentication, and publishing updated views to connected clients. Any application built around the same Blossm core layer can seamlessly interoperate.
 
-There are a few non-required traits of a Blossm base layer that are strongly encouraged:
+There are a few non-required traits of a Blossm core layer that are strongly encouraged:
 
-* A Blossm base layer is encouraged to not collect any personal information to associate with accounts. It is encouraged that accounts be created, verified, and managed through email addresses or Ethereum addresses (or ENS) only.
+* A Blossm core layer is encouraged to not collect any personal information to associate with accounts. It is encouraged that accounts be created, verified, and managed through email addresses or Ethereum addresses (or ENS) only.
 
-* A Blossm base layer is encouraged to keep regular snapshots of it's data on an open file system, like FileCoin, for public auditability.
+* A Blossm core layer is encouraged to keep regular snapshots of it's data on an open file system, like FileCoin, for public auditability.
 
-* A Blossm base layer is encouraged to associate wallets to accounts that can be used by any application built around it for sending / receiving payments on Ethereum. Fiat is encouraged, but often requires KYC which is at odds the first bullet. Find a balance and push for progress when it comes to open value transfer.
+* A Blossm core layer is encouraged to associate wallets to accounts that can be used by any application built around it for sending / receiving payments on Ethereum. Fiat is encouraged, but often requires KYC which is at odds the first bullet. Find a balance and push for progress when it comes to open value transfer.
 
-There aren't yet documented guidelines on how to implement your own Blossm base layer, but there is one implementation currently in Beta done by the Blossm team over at `sustainers.network`. It can be found here: <https://github.com/sustainers-network/blossm>. Reach out if you want to implement a base layer, or help out with the one at sustainers.network. 
+There aren't yet documented guidelines on how to implement your own Blossm core layer, but there is one implementation currently in Beta done by the Blossm team over at `sustainers.network`. It can be found here: <https://github.com/sustainers-network/blossm>. Reach out if you want to implement a core layer, or help out with the one at sustainers.network. 
 
-It's worth nothing that Blossm base layers are set up just like any other Blossm network, and it's also possible to implement a base layer that's private to your network if interoperability isn't important to you and or you want to implement custom core componentry. 
+It's worth nothing that Blossm core layers are set up just like any other Blossm network, and it's also possible to implement a core layer that's private to your network if interoperability isn't important to you and or you want to implement custom core componentry. 
 
 ---
 
@@ -379,7 +379,7 @@ Within each GCP project, you'll be using:
 
 1. Get a domain where your network and websites can be accessed.
     * Update the **config.yaml** file `network` property to your domain name.
-    * If you're planning on building on top of a Blossm base layer network, set core to the domain of the network running the base layer that your network will rely on, such as `sustainers.network`.
+    * If you're planning on building on top of a Blossm core layer network, set core to the domain of the network running the core layer that your network will rely on, such as `sustainers.network`.
 
 2. Setup a [Google Workspace](https://workspace.google.com/) account for your domain and create an email address for yourself under this domain. 
     * Go through the steps to setup and verify your domain and setup a gMail account. Sometimes the verification process takes some time to work properly, the MX and TXT records take up to 12 hours to take effect.

@@ -74,7 +74,7 @@ export default ({ downloadFileFn }) => async ({
       const { body: permissions } = await fact({
         name: "permissions",
         domain: "role",
-        service: "base",
+        service: "core",
         ...(process.env.BASE_NETWORK && {
           network: process.env.BASE_NETWORK,
         }),

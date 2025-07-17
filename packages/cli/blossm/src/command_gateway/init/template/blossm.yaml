@@ -1,5 +1,5 @@
 #
-# The base URL of this gateway will be c.[domain].[service].[network]
+# The core URL of this gateway will be c.[domain].[service].[network]
 #
 domain: bird
 service: animals
@@ -8,7 +8,7 @@ service: animals
 # Specify the commands that this gateway should accept requests for.
 #
 # The 'name' property correlates to the command name.
-# Each command can be accessed by adding the URL path /<name> to the base URL.
+# Each command can be accessed by adding the URL path /<name> to the core URL.
 #
 # The 'privileges' property describes the privileges needed by the requester
 # to access this command. Set this to 'none' if no specific privileges are needed,

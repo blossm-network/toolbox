@@ -19,7 +19,7 @@ export default async ({
   // Create the account for the token.
   await eventStore({
     domain: "account",
-    service: "base",
+    service: "core",
   }).add({
     eventData: [
       {
@@ -36,7 +36,7 @@ export default async ({
           },
           action: "register",
           domain: "account",
-          service: "base",
+          service: "core",
           network: process.env.NETWORK,
         }),
       },
@@ -48,7 +48,7 @@ export default async ({
   await Promise.all([
     eventStore({
       domain: "role",
-      service: "base",
+      service: "core",
     }).add({
       eventData: [
         {
@@ -60,7 +60,7 @@ export default async ({
             },
             action: "create",
             domain: "role",
-            service: "base",
+            service: "core",
             network: process.env.NETWORK,
           }),
         },
@@ -68,7 +68,7 @@ export default async ({
     }),
     eventStore({
       domain: "principal",
-      service: "base",
+      service: "core",
     }).add({
       eventData: [
         {
@@ -85,7 +85,7 @@ export default async ({
             },
             action: "add-roles",
             domain: "principal",
-            service: "base",
+            service: "core",
             network: process.env.NETWORK,
           }),
         },
@@ -96,7 +96,7 @@ export default async ({
   // Add a session.
   await eventStore({
     domain: "session",
-    service: "base",
+    service: "core",
   }).add({
     eventData: [
       {
@@ -105,7 +105,7 @@ export default async ({
           payload: {},
           action: "start",
           domain: "session",
-          service: "base",
+          service: "core",
           network: process.env.NETWORK,
         }),
       },
@@ -117,7 +117,7 @@ export default async ({
   } = await command({
     name: "upgrade",
     domain: "session",
-    service: "base",
+    service: "core",
   })
     .set({
       context: {
@@ -130,7 +130,7 @@ export default async ({
         },
       },
       claims: {
-        iss: `session.base.${process.env.NETWORK}/upgrade`,
+        iss: `session.core.${process.env.NETWORK}/upgrade`,
         aud: `${process.env.NETWORK}`,
         exp: "9999-12-31T00:00:00.000Z",
       },
@@ -139,7 +139,7 @@ export default async ({
       {
         principal: {
           root: principalRoot,
-          service: "base",
+          service: "core",
           network: process.env.NETWORK,
         },
       },

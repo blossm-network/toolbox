@@ -1,1 +1,1 @@
-This service is an interface for the base layer's `base` service. Once the `command-gateways` in this directory are deployed, your network will be able to manage sessions, authorization, accounts, groups, and roles via the base layer.
+This service is an interface for the core layer's `core` service. Once the `command-gateways` in this directory are deployed, your network will be able to manage sessions, authorization, accounts, groups, and roles via the core layer.

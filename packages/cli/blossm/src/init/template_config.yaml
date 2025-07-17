@@ -1,11 +1,11 @@
 network: # your.network
 
 # Specify which implementation of the Blossm Core network your application will be built around.
-# If instead you're deploying an implementation of a Blossm base layer network,
-# omit the `base` and `dependencies` properties that follow.
-base:
+# If instead you're deploying an implementation of a Blossm core layer network,
+# omit the `core` and `dependencies` properties that follow.
+core:
   network: sustainers.network
-  # The base layer network should have public container registeries for pull procedures from
+  # The core layer network should have public container registeries for pull procedures from
   # to use for running integration tests within the bounds of your network.
   registries:
     production: us.gcr.io/production-271815
@@ -13,7 +13,7 @@ base:
     staging: us.gcr.io/staging-271815
     development: us.gcr.io/development-271815
 
-# You should get keys from your base layer network for connecting to it and to any other network that shares the base layer.
+# You should get keys from your core layer network for connecting to it and to any other network that shares the core layer.
 # Save the secrets with `blossm secret create <secretName> -m <secret> -e <production | sandbox | staging | development>`
 dependencies:
   sustainers.network:

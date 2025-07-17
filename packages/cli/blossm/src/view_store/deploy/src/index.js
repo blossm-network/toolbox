@@ -68,7 +68,7 @@ export default viewStore({
     const { body } = await fact({
       name: "groups",
       domain: "principal",
-      service: "base",
+      service: "core",
       network: process.env.BASE_NETWORK,
     })
       .set({

@@ -1,5 +1,5 @@
 #
-# The base URL of this gateway will be v.[domain].[network].
+# The core URL of this gateway will be v.[domain].[network].
 #
 context: some-context
 

@@ -23,7 +23,7 @@ export default ({ token }) => async ({ root, secret }) => {
       network: key.network,
       key: {
         root: key.root,
-        service: "base",
+        service: "core",
         network: process.env.NETWORK,
       },
       principal: key.principal,

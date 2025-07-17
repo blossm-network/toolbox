@@ -44,7 +44,7 @@ export default gateway({
   ...(services && { services }),
   verifyFn: ({ key }) =>
     // The public key is an access key.
-    // The local dev uses the images from the base network that uses gcp keys.
+    // The local dev uses the images from the core network that uses gcp keys.
     key == "access" && process.env.NODE_ENV != "local"
       ? verify({
           url: process.env.PUBLIC_KEY_URL,
