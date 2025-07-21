@@ -1,7 +1,7 @@
 {
   "name": "@blossm/stream-rpc",
   "description": "Calls one or many remote stream procedure within the network.",
-  "version": "0.0.59",
+  "version": "0.0.60",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -19,8 +19,8 @@
     "@blossm/logger": "^0.0.13",
     "@blossm/network-token": "^0.0.10",
     "@blossm/network-url": "^0.0.7",
-    "@blossm/operation-token": "^0.0.19",
-    "@blossm/operation-url": "^0.0.20",
+    "@blossm/operation-token": "^0.0.20",
+    "@blossm/operation-url": "^0.0.21",
     "@blossm/request": "^0.0.68"
   },
   "devDependencies": {
