@@ -1,13 +1,13 @@
 import deps from "./deps.js";
 
-export default ({ name, context = process.env.CONTEXT }) => {
+export default ({ name, context = process.env.CONTEXT, region = process.env.REGION }) => {
   const read = ({
     contexts,
     currentToken,
     token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => ({ query, sort, root }) =>
     deps
-      .rpc(name, context, "view-composite")
+      .rpc({region, operationNameComponents: [name, context, "view-composite"] })
       .get({ query, ...(sort && { sort }), ...(root && { id: root }) })
       .in({
         ...(contexts && { context: contexts }),

@@ -18,6 +18,7 @@ const now = new Date();
 const name = "some-name!";
 const domain = "some-domain!";
 const service = "some-service";
+const region = "some-region";
 
 const payload = { a: 1 };
 const internalTokenFn = "some-internal-token-fn";
@@ -26,6 +27,10 @@ const currentToken = "some-current-token";
 
 const context = { c: 2 };
 const claims = "some-claims";
+
+const envRegion = "some-env-region";
+
+process.env.REGION = envRegion;
 
 describe("Job", () => {
   beforeEach(() => {
@@ -53,7 +58,7 @@ describe("Job", () => {
     const enqueueFnResult = "some-enqueue-fn-result";
     const enqueueFnFake = fake.returns(enqueueFnResult);
     const enqueueWait = "some-enqueue-wait";
-    const { body: result } = await job({ name, domain, service })
+    const { body: result } = await job({ name, domain, service, region })
       .set({
         context,
         claims,
@@ -70,7 +75,10 @@ describe("Job", () => {
       .trigger(payload);
 
     expect(result).to.deep.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, domain, service, "job");
+    expect(rpcFake).to.have.been.calledWith({
+      region,
+      operationNameComponents: [name, domain, service, "job"]
+    });
     expect(postFake).to.have.been.calledWith({
       payload,
     });
@@ -106,7 +114,10 @@ describe("Job", () => {
     const result = await job({ name }).trigger(payload);
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, "job");
+    expect(rpcFake).to.have.been.calledWith({
+      region: envRegion,
+      operationNameComponents: [name, "job"]
+    });
     expect(postFake).to.have.been.calledWith({
       payload,
     });
@@ -134,7 +145,10 @@ describe("Job", () => {
       .trigger(payload);
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, "job");
+    expect(rpcFake).to.have.been.calledWith({
+      region: envRegion,
+      operationNameComponents: [name, "job"]
+    });
     expect(postFake).to.have.been.calledWith({
       payload,
     });

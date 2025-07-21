@@ -1,6 +1,6 @@
 import deps from "./deps.js";
 
-export default ({ domain, service = process.env.SERVICE } = {}) => {
+export default ({ domain, service = process.env.SERVICE, region = process.env.REGION } = {}) => {
   const add = ({
     context,
     claims,
@@ -8,7 +8,7 @@ export default ({ domain, service = process.env.SERVICE } = {}) => {
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
   } = {}) => ({ eventData, tx: { id: txId, path: txPath, ip: txIp } = {} }) => {
     return deps
-      .rpc(domain, service, "event-store")
+      .rpc({ region, operationNameComponents: [domain, service, "event-store"]})
       .post({
         eventData,
         ...((claims || txId || txPath) && {
@@ -42,7 +42,7 @@ export default ({ domain, service = process.env.SERVICE } = {}) => {
     token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => (root, { notFoundThrows } = {}) =>
     deps
-      .rpc(domain, service, "event-store")
+      .rpc({ region, operationNameComponents: [domain, service, "event-store"]})
       .get({ id: root, ...(notFoundThrows != undefined && { notFoundThrows }) })
       .in({
         ...(context && { context }),
@@ -59,7 +59,7 @@ export default ({ domain, service = process.env.SERVICE } = {}) => {
     token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => ({ key, value }) =>
     deps
-      .rpc(domain, service, "event-store")
+      .rpc({ region, operationNameComponents: [domain, service, "event-store"]})
       .get({ key, value })
       .in({
         ...(context && { context }),
@@ -75,7 +75,7 @@ export default ({ domain, service = process.env.SERVICE } = {}) => {
     token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => (fn, { timestamp, updatedOnOrAfter, parallel, root }) =>
     deps
-      .rpc(domain, service, "event-store")
+      .rpc({ region, operationNameComponents: [domain, service, "event-store"] })
       .stream(fn, {
         ...(timestamp && { timestamp }),
         ...(updatedOnOrAfter && { updatedOnOrAfter }),
@@ -98,7 +98,7 @@ export default ({ domain, service = process.env.SERVICE } = {}) => {
     token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => (fn, { parallel } = {}) =>
     deps
-      .rpc(domain, service, "event-store")
+      .rpc({ region, operationNameComponents: [domain, service, "event-store"]})
       .stream(fn, { ...(parallel && { parallel }) })
       .in({
         ...(context && { context }),
@@ -116,7 +116,7 @@ export default ({ domain, service = process.env.SERVICE } = {}) => {
     token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => (root) =>
     deps
-      .rpc(domain, service, "event-store")
+      .rpc({ region, operationNameComponents: [domain, service, "event-store"]})
       .get({ id: root })
       .in({
         ...(context && { context }),
@@ -135,7 +135,7 @@ export default ({ domain, service = process.env.SERVICE } = {}) => {
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
   } = {}) => () =>
     deps
-      .rpc(domain, service, "event-store")
+      .rpc({ region, operationNameComponents: [domain, service, "event-store"]})
       .post()
       .in({
         ...(context && { context }),

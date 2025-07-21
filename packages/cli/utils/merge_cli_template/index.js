@@ -567,6 +567,7 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
 
 const writeConfig = ({
   config,
+  computeUrlId,
   localNetwork,
   localCoreNetwork,
   workingDir,
@@ -648,6 +649,13 @@ const writeConfig = ({
               ...(dependency.context ? [dependency.context] : []),
               dependency.procedure
             )}.${localNetwork}`,
+            // https: `${dependency.region}-${hash(
+            //   ...(dependency.name ? [dependency.name] : []),
+            //   ...(dependency.domain ? [dependency.domain] : []),
+            //   ...(dependency.service ? [dependency.service] : []),
+            //   ...(dependency.context ? [dependency.context] : []),
+            //   dependency.procedure
+            // )}-${computeUrlId}.${dependency.region}.run.app`,
             mocks: dependency.mocks,
           });
         } else {
@@ -772,14 +780,15 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const host = `${region}.${envUriSpecifier(env)}${network}`;
 
+    const computeUrlId = envComputeUrlId({ env, config: blossmConfig });
+
     writeConfig({
       config,
+      computeUrlId,
       localNetwork,
       localCoreNetwork,
       workingDir,
     });
-
-    const computeUrlId = envComputeUrlId({ env, config: blossmConfig });
 
     const custom = configFn(config);
 

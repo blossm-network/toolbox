@@ -11,6 +11,7 @@ const { expect } = chai;
 
 const name = "some-name";
 const context = "some-context";
+const region = "some-region";
 
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
@@ -22,7 +23,10 @@ const root = "some-root";
 const contexts = { c: 2 };
 
 const envContext = "some-env-context";
+const envRegion = "some-env-region";
+
 process.env.CONTEXT = envContext;
+process.env.REGION = envRegion;
 
 describe("Get composite views", () => {
   afterEach(() => {
@@ -46,6 +50,7 @@ describe("Get composite views", () => {
     const { body: result } = await viewComposite({
       name,
       context,
+      region,
     })
       .set({
         context: contexts,
@@ -57,7 +62,10 @@ describe("Get composite views", () => {
       })
       .read({ query, sort, root });
 
-    expect(rpcFake).to.have.been.calledWith(name, context, "view-composite");
+    expect(rpcFake).to.have.been.calledWith({
+      region,
+      operationNameComponents: [name, context, "view-composite"]
+    });
     expect(getFake).to.have.been.calledWith({ query, sort, id: root });
     expect(inFake).to.have.been.calledWith({ context: contexts });
     expect(withFake).to.have.been.calledWith({
@@ -83,7 +91,10 @@ describe("Get composite views", () => {
 
     const result = await viewComposite({ name }).read({ query });
 
-    expect(rpcFake).to.have.been.calledWith(name, envContext, "view-composite");
+    expect(rpcFake).to.have.been.calledWith({
+      region: envRegion,
+      operationNameComponents: [name, envContext, "view-composite"]
+    });
     expect(getFake).to.have.been.calledWith({ query });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});

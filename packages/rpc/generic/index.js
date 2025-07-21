@@ -38,7 +38,7 @@ const jsonString = (string) => {
   };
 };
 
-const common = ({ method, dataParam, operation, id, data, raw, onDataFn }) => {
+const common = ({ method, dataParam, region, operationNameComponents, id, data, raw, onDataFn }) => {
   return {
     in: ({ context, network, host = process.env.HOST }) => {
       return {
@@ -56,7 +56,7 @@ const common = ({ method, dataParam, operation, id, data, raw, onDataFn }) => {
             (internal
               ? await deps.operationToken({
                   tokenFn: internalTokenFn,
-                  operation,
+                  operationNameComponents,
                 })
               : await deps.networkToken({
                   tokenFn: externalTokenFn,
@@ -65,8 +65,9 @@ const common = ({ method, dataParam, operation, id, data, raw, onDataFn }) => {
 
           const url = internal
             ? deps.operationUrl({
-                operation,
-                host,
+                region, 
+                operationNameComponents,
+                computeUrlId: process.env.GCP_COMPUTE_URL_ID, 
                 ...(path && { path }),
                 ...(id && { id }),
               })
@@ -94,7 +95,6 @@ const common = ({ method, dataParam, operation, id, data, raw, onDataFn }) => {
                   enqueueFn,
                   url,
                   data: requestData,
-                  operation,
                   method:
                     method == deps.post
                       ? "post"
@@ -162,21 +162,23 @@ const common = ({ method, dataParam, operation, id, data, raw, onDataFn }) => {
   };
 };
 
-export default (...operation) => ({
+export default ({region, operationNameComponents}) => ({
   post: (data) =>
     common({
       method: deps.post,
       dataParam: "body",
-      operation,
+      region,
+      operationNameComponents,
       data,
     }),
   put: (id, data) =>
-    common({ method: deps.put, dataParam: "body", operation, id, data }),
+    common({ method: deps.put, dataParam: "body", region, operationNameComponents, id, data }),
   del: (id, data) =>
     common({
       method: deps.del,
       dataParam: "query",
-      operation,
+      region,
+      operationNameComponents,
       id,
       data,
     }),
@@ -186,7 +188,8 @@ export default (...operation) => ({
     return common({
       method: deps.get,
       dataParam: "query",
-      operation,
+      region,
+      operationNameComponents,
       id,
       data: query,
       raw,
@@ -211,7 +214,8 @@ export default (...operation) => ({
         );
       },
       dataParam: "query",
-      operation,
+      region,
+      operationNameComponents,
       id,
       data: query,
     });

@@ -19,6 +19,7 @@ const name = "some-name";
 const domain = "some-domain";
 const service = "some-service";
 const network = "some-network";
+const region = "some-region";
 
 const payload = { a: 1 };
 const options = "some-options";
@@ -38,7 +39,9 @@ const envHost = "some-env-host";
 const envProcedure = "some-env-procedure";
 const envDomain = "some-env-domain";
 const envHash = "some-env-hash";
+const envRegion = "some-env-region";
 
+process.env.REGION = envRegion;
 process.env.SERVICE = envService;
 process.env.NETWORK = network;
 process.env.NAME = envName;
@@ -76,7 +79,7 @@ describe("Issue command", () => {
     const enqueueFnResult = "some-enqueue-fn-result";
     const enqueueFnFake = fake.returns(enqueueFnResult);
     const enqueueWait = "some-enqueue-wait";
-    const { body: result } = await command({ name, domain, service, network })
+    const { body: result } = await command({ name, domain, service, region, network })
       .set({
         context,
         claims,
@@ -104,7 +107,10 @@ describe("Issue command", () => {
       });
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, domain, service, "command");
+    expect(rpcFake).to.have.been.calledWith({
+      region,
+      operationNameComponents: [name, domain, service, "command"]
+    });
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {
@@ -151,7 +157,10 @@ describe("Issue command", () => {
     const { body: result } = await command({ name, domain }).issue(payload);
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, domain, envService);
+    expect(rpcFake).to.have.been.calledWith({
+      region: envRegion,
+      operationNameComponents: [name, domain, envService, "command"]
+    });
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {
@@ -183,7 +192,10 @@ describe("Issue command", () => {
       .issue(payload);
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, domain, envService);
+    expect(rpcFake).to.have.been.calledWith({
+      region: envRegion,
+      operationNameComponents: [name, domain, envService, "command"]
+    });
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {
@@ -199,7 +211,7 @@ describe("Issue command", () => {
       queue: `command-${envService}-${domain}-${name}`,
     });
   });
-  it("should call with the correct params onto a different network", async () => {
+  it("should call with the correct params onto a different network and region", async () => {
     const response = "some-response";
     const withFake = fake.returns({ body: response });
     const inFake = fake.returns({
@@ -214,18 +226,23 @@ describe("Issue command", () => {
     replace(deps, "rpc", rpcFake);
 
     const otherNetwork = "some-other-network";
+    const otherRegion = "some-other-region";
 
     const { body: result } = await command({
       name,
       domain,
       service,
+      region: otherRegion,
       network: otherNetwork,
     })
       .set({ context, claims, token: { externalFn: externalTokenFn } })
       .issue(payload, { root, options });
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, domain, service, "command");
+    expect(rpcFake).to.have.been.calledWith({
+      region: otherRegion,
+      operationNameComponents: [name, domain, service, "command"]
+    });
     expect(postFake).to.have.been.calledWith({
       payload,
       headers: {

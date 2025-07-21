@@ -1,6 +1,6 @@
 import deps from "./deps.js";
 
-export default ({ name, context = process.env.CONTEXT, network }) => {
+export default ({ name, context = process.env.CONTEXT, region = process.env.REGION, network }) => {
   const internal = !network || network == process.env.NETWORK;
   const read = ({
     contexts,
@@ -17,7 +17,7 @@ export default ({ name, context = process.env.CONTEXT, network }) => {
     bootstrap,
   } = {}) =>
     deps
-      .rpc(name, ...(context ? [context] : []), "view-store")
+      .rpc({region, operationNameComponents: [name, ...(context ? [context] : []), "view-store"]})
       .get({
         ...(query && { query }),
         ...(text && { text }),
@@ -47,7 +47,7 @@ export default ({ name, context = process.env.CONTEXT, network }) => {
     token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => (fn, { query, sort, parallel } = {}) =>
     deps
-      .rpc(name, ...(context ? [context] : []), "view-store")
+      .rpc({region, operationNameComponents: [name, ...(context ? [context] : []), "view-store"]})
       .stream(fn, {
         ...(query && { query }),
         ...(sort && { sort }),
@@ -72,7 +72,7 @@ export default ({ name, context = process.env.CONTEXT, network }) => {
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
   } = {}) => ({ id, query, update, groups, trace, arrayFilters }) =>
     deps
-      .rpc(name, ...(context ? [context] : []), "view-store")
+      .rpc({region, operationNameComponents: [name, ...(context ? [context] : []), "view-store"]})
       .put(id, {
         ...(trace && { trace }),
         ...(query && { query }),
@@ -97,7 +97,7 @@ export default ({ name, context = process.env.CONTEXT, network }) => {
     token: { internalFn: internalTokenFn } = {},
   } = {}) => (id, { query } = {}) =>
     deps
-      .rpc(name, ...(context ? [context] : []), "view-store")
+      .rpc({region, operationNameComponents: [name, ...(context ? [context] : []), "view-store"]})
       .delete(id, {
         ...(query && { query }),
       })

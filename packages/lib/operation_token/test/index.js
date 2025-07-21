@@ -13,7 +13,7 @@ const hash = 12345;
 const operation0 = "some-operation0";
 const operation1 = "some-operation1";
 const operation2 = "some-operation2";
-const operation = [operation0, operation1, operation2];
+const operationNameComponents = [operation0, operation1, operation2];
 const trimmed = "some-trimmed";
 const token = "some-token";
 
@@ -30,15 +30,15 @@ describe("Service token", () => {
 
     const result = await operationToken({
       tokenFn: tokenFnFake,
-      operation,
+      operationNameComponents,
     });
-    expect(hashFake).to.have.been.calledWith(...operation);
+    expect(hashFake).to.have.been.calledWith(...operationNameComponents);
     expect(trimFake).to.have.been.calledWith(
       "some-operation2-some-operation1-some-operation0",
       25
     );
     //doesn't mutate the origianl operation.
-    expect(operation).to.deep.equal([
+    expect(operationNameComponents).to.deep.equal([
       "some-operation0",
       "some-operation1",
       "some-operation2",

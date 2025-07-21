@@ -6,14 +6,7 @@ import { restore, replace, fake } from "sinon";
 chai.use(sinonChai);
 
 import operationEnqueue from "../index.js";
-import deps from "../deps.js";
 
-const hash = 12345;
-const operation0 = "some-operation0";
-const operation1 = "some-operation1";
-const operation2 = "some-operation2";
-const operation = [operation0, operation1, operation2];
-const trimmed = "some-trimmed";
 const url = "some-url";
 const data = "some-data";
 const token = "some-token";
@@ -22,11 +15,6 @@ const method = "some-method";
 describe("Service token", () => {
   afterEach(restore);
   it("should return the correct output", async () => {
-    const hashFake = fake.returns(hash);
-    replace(deps, "hash", hashFake);
-
-    const trimFake = fake.returns(trimmed);
-    replace(deps, "trim", trimFake);
 
     const enqueueFnFake = fake.returns(token);
 
@@ -34,60 +22,26 @@ describe("Service token", () => {
       url,
       data,
       enqueueFn: enqueueFnFake,
-      operation,
       method,
     });
-    expect(hashFake).to.have.been.calledWith(...operation);
-    expect(trimFake).to.have.been.calledWith(
-      "some-operation2-some-operation1-some-operation0",
-      25
-    );
-    //doesn't mutate the origianl operation.
-    expect(operation).to.deep.equal([
-      "some-operation0",
-      "some-operation1",
-      "some-operation2",
-    ]);
     expect(enqueueFnFake).to.have.been.calledWith({
       url,
       data,
-      hash,
-      name: trimmed,
       method,
     });
     expect(result).to.equal(token);
   });
   it("should return the correct output with optionals missing", async () => {
-    const hashFake = fake.returns(hash);
-    replace(deps, "hash", hashFake);
-
-    const trimFake = fake.returns(trimmed);
-    replace(deps, "trim", trimFake);
-
     const enqueueFnFake = fake.returns(token);
 
     const result = await operationEnqueue({
       url,
       data,
       enqueueFn: enqueueFnFake,
-      operation,
     });
-    expect(hashFake).to.have.been.calledWith(...operation);
-    expect(trimFake).to.have.been.calledWith(
-      "some-operation2-some-operation1-some-operation0",
-      25
-    );
-    //doesn't mutate the origianl operation.
-    expect(operation).to.deep.equal([
-      "some-operation0",
-      "some-operation1",
-      "some-operation2",
-    ]);
     expect(enqueueFnFake).to.have.been.calledWith({
       url,
       data,
-      hash,
-      name: trimmed,
     });
     expect(result).to.equal(token);
   });

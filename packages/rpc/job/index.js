@@ -1,6 +1,6 @@
 import deps from "./deps.js";
 
-export default ({ name, domain, service }) => {
+export default ({ name, domain, service, region = process.env.REGION }) => {
   const trigger = ({
     context,
     claims,
@@ -10,12 +10,10 @@ export default ({ name, domain, service }) => {
   } = {}) => (payload) => {
     const data = { payload };
     return deps
-      .rpc(
-        name,
-        ...(domain ? [domain] : []),
-        ...(service ? [service] : []),
-        "job"
-      )
+      .rpc({
+        region,
+        operationNameComponents: [name, ...(domain ? [domain] : []), ...(service ? [service] : []), "job"]
+      })
       .post(data)
       .in({
         ...(context && { context }),

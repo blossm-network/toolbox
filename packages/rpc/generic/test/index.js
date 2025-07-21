@@ -13,8 +13,10 @@ import deps from "../deps.js";
 const data = { a: 1, context: 3 };
 const context = { b: 4 };
 const claims = "some-claims";
+const region = "some-region";
 const operarationPart1 = "some-operaration1";
 const operarationPart2 = "some-operaration2";
+const operationNameComponents = [operarationPart1, operarationPart2];
 const token = "some-token";
 const type = "some-type";
 const id = "some-id";
@@ -22,6 +24,9 @@ const tokenFn = "some-token-fn";
 const currentToken = "some-current-token";
 const url = "some-url";
 const query = "some-query";
+const envComputeUrlId = "some-compute-url-id";
+
+process.env.GCP_COMPUTE_URL_ID = envComputeUrlId;
 
 const host = "some-host";
 const statusCode = 204;
@@ -57,7 +62,7 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .post(data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims });
@@ -74,11 +79,12 @@ describe("Operation", () => {
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      region,
+      operationNameComponents,
+      computeUrlId: envComputeUrlId,
     });
     expect(result).to.deep.equal({ statusCode });
   });
@@ -93,7 +99,7 @@ describe("Operation", () => {
     replace(deps, "enqueueOperation", enqueueOperationFake);
 
     const enqueueFn = "some-enqueue-fn";
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .post(data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims, enqueueFn });
@@ -106,16 +112,16 @@ describe("Operation", () => {
         context,
         claims,
       },
-      operation: [operarationPart1, operarationPart2],
       method: "post",
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      region,
+      operationNameComponents,
+      computeUrlId: envComputeUrlId,
     });
     expect(result).to.deep.equal({ statusCode });
   });
@@ -130,7 +136,7 @@ describe("Operation", () => {
     replace(deps, "enqueueOperation", enqueueOperationFake);
 
     const enqueueFn = "some-enqueue-fn";
-    await operation(operarationPart1, operarationPart2)
+    await operation({region, operationNameComponents})
       .put(id, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims, enqueueFn });
@@ -143,7 +149,6 @@ describe("Operation", () => {
         context,
         claims,
       },
-      operation: [operarationPart1, operarationPart2],
       method: "put",
     });
   });
@@ -158,7 +163,7 @@ describe("Operation", () => {
     replace(deps, "enqueueOperation", enqueueOperationFake);
 
     const enqueueFn = "some-enqueue-fn";
-    await operation(operarationPart1, operarationPart2)
+    await operation({region, operationNameComponents})
       .del(id, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims, enqueueFn });
@@ -171,7 +176,6 @@ describe("Operation", () => {
         context,
         claims,
       },
-      operation: [operarationPart1, operarationPart2],
       method: "del",
     });
   });
@@ -190,7 +194,7 @@ describe("Operation", () => {
 
     const enqueueFn = "some-enqueue-fn";
     process.env.NODE_ENV = "local";
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .post(data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims, enqueueFn });
@@ -208,11 +212,12 @@ describe("Operation", () => {
     expect(enqueueOperationFake).to.not.have.been.called;
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      region,
+      operationNameComponents,
+      computeUrlId: envComputeUrlId
     });
     expect(result).to.deep.equal({});
   });
@@ -230,18 +235,19 @@ describe("Operation", () => {
     const envHost = "some-env-host";
     process.env.HOST = envHost;
 
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .post(data)
       .in({ context })
       .with({ internalTokenFn: tokenFn, claims });
 
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host: envHost,
+      region,
+      operationNameComponents,
+      computeUrlId: envComputeUrlId,
     });
     expect(result).to.deep.equal({ statusCode });
   });
@@ -258,7 +264,7 @@ describe("Operation", () => {
     const otherHost = "some-other-host";
     const otherNetwork = "some-other-network";
 
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .post(data)
       .in({ context, network: otherNetwork, host: otherHost })
       .with({ externalTokenFn: tokenFn, claims });
@@ -288,7 +294,7 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .post(data)
       .in({ context, host })
       .with({ claims });
@@ -314,7 +320,7 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const path = "/some/path";
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .post(data)
       .in({ context, host })
       .with({ path, internalTokenFn: tokenFn, currentToken, claims });
@@ -332,11 +338,12 @@ describe("Operation", () => {
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      region,
+      operationNameComponents,
+      computeUrlId: envComputeUrlId,
       path,
     });
     expect(result).to.deep.equal({ statusCode });
@@ -352,7 +359,7 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .get(data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -370,11 +377,12 @@ describe("Operation", () => {
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      region,
+      operationNameComponents,
+      computeUrlId: envComputeUrlId,
     });
     expect(result).to.deep.equal({ statusCode: bodyStatusCode, body });
   });
@@ -389,7 +397,7 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const enqueueFnFake = fake.returns("whatever");
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .get(data)
       .in({ context, host })
       .with({
@@ -412,11 +420,12 @@ describe("Operation", () => {
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      region,
+      operationNameComponents,
+      computeUrlId: envComputeUrlId
     });
     expect(result).to.deep.equal({ statusCode: bodyStatusCode, body });
   });
@@ -434,7 +443,7 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .get(data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -452,11 +461,12 @@ describe("Operation", () => {
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      region,
+      operationNameComponents,
+      computeUrlId: envComputeUrlId
     });
     expect(result).to.deep.equal({
       statusCode: bodyStatusCode,
@@ -473,7 +483,7 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .get({ ...data, id })
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -491,11 +501,12 @@ describe("Operation", () => {
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      region,
+      operationNameComponents,
+      computeUrlId: envComputeUrlId,
       id,
     });
     expect(result).to.deep.equal({
@@ -514,7 +525,7 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const fnFake = fake();
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .stream(fnFake, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -542,11 +553,12 @@ describe("Operation", () => {
     );
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      region,
+      operationNameComponents,
+      computeUrlId: envComputeUrlId
     });
     expect(result).to.equal();
   });
@@ -561,7 +573,7 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const fnFake = fake();
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .stream(fnFake, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -586,11 +598,12 @@ describe("Operation", () => {
     );
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      region,
+      operationNameComponents,
+      computeUrlId: envComputeUrlId,
     });
     expect(result).to.equal();
 
@@ -622,7 +635,7 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const fnFake = fake();
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .stream(fnFake, { ...data, id })
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -650,11 +663,12 @@ describe("Operation", () => {
     );
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      region,
+      operationNameComponents,
+      computeUrlId: envComputeUrlId,
       id,
     });
     expect(result).to.equal();
@@ -669,7 +683,7 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .put(id, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -688,11 +702,12 @@ describe("Operation", () => {
 
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      region,
+      operationNameComponents,
+      computeUrlId: envComputeUrlId,
       id,
     });
     expect(result).to.deep.equal({ statusCode });
@@ -708,7 +723,7 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     const path = "/some/path";
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .put(id, data)
       .in({ context, host })
       .with({ path, internalTokenFn: tokenFn, currentToken, claims });
@@ -726,11 +741,12 @@ describe("Operation", () => {
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      region,
+      operationNameComponents,
+      computeUrlId: envComputeUrlId,
       id,
       path,
     });
@@ -746,7 +762,7 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
-    const result = await operation(operarationPart1, operarationPart2)
+    const result = await operation({region, operationNameComponents})
       .del(id, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -764,11 +780,12 @@ describe("Operation", () => {
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      region,
+      operationNameComponents,
+      computeUrlId: envComputeUrlId,
       id,
     });
     expect(result).to.deep.equal({ statusCode });
@@ -799,7 +816,7 @@ describe("Operation", () => {
 
     const network = "some-network";
     try {
-      await operation(operarationPart1, operarationPart2)
+      await operation({region, operationNameComponents})
         .del(id)
         .in({ context, host, network })
         .with({ tokenFn, claims });
@@ -848,7 +865,7 @@ describe("Operation", () => {
 
     const network = "some-network";
     try {
-      await operation(operarationPart1, operarationPart2)
+      await operation({region, operationNameComponents})
         .del(id)
         .in({ context, host, network })
         .with({ tokenFn, claims });
@@ -887,7 +904,7 @@ describe("Operation", () => {
     replace(deps, "operationUrl", operationUrlFake);
 
     try {
-      await operation(operarationPart1, operarationPart2)
+      await operation({region, operationNameComponents})
         .del(query)
         .in({ context, host })
         .with({ tokenFn, claims });

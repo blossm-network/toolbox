@@ -1,6 +1,6 @@
 import deps from "./deps.js";
 
- export default ({ name, domain, service = process.env.SERVICE, network }) => {
+ export default ({ name, domain, service = process.env.SERVICE, region = process.env.REGION, network }) => {
   const internal = !network || network == process.env.NETWORK;
   const issue = ({
     context,
@@ -35,9 +35,8 @@ import deps from "./deps.js";
       ...(root && { root }),
       ...(options && { options }),
     };
-
     return deps
-      .rpc(name, domain, service, "command")
+      .rpc({region, operationNameComponents: [name, domain, service, "command"]})
       .post(data)
       .in({
         ...(context && { context }),

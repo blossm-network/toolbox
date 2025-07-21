@@ -22,7 +22,7 @@ const enqueue = ({
   computeUrlId = process.env.GCP_COMPUTE_URL_ID,
   queue,
   wait = 0,
-}) => async ({ url, data = {}, token, hash, name, method = "post" }) => {
+}) => async ({ url, data = {}, token, method = "post" }) => {
   const parent = __client.queuePath(project, location, queue);
 
   const string = JSON.stringify(data);
@@ -38,10 +38,18 @@ const enqueue = ({
           serviceAccountEmail:
             serviceAccountEmail ||
             `executer@${project}.iam.gserviceaccount.com`,
-          ...(hash &&
-            name && {
-              audience: `https://${location}-${name}-${hash}-${computeUrlId}.${location}.run.app`,
-            }),
+            audience: (() => {
+              try {
+                const u = new URL(url);
+                return `${u.protocol}//${u.host}`;
+              } catch {
+                return url;
+              }
+            })(),
+          // ...(hash &&
+          //   name && {
+          //     audience: `https://${location}-${name}-${hash}-${computeUrlId}.${location}.run.app`,
+          //   }),
         },
       }),
       headers: {

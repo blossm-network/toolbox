@@ -18,6 +18,7 @@ const now = new Date();
 const name = "some-name";
 const domain = "some-domain";
 const service = "some-service";
+const region = "some-region";
 
 const fn = "some-fn";
 const query = { a: 1 };
@@ -29,8 +30,10 @@ const context = { c: 2 };
 const claims = "some-claims";
 
 const envService = "some-env-service";
+const envRegion = "some-env-region";
 
 process.env.SERVICE = envService;
+process.env.REGION = envRegion;
 
 describe("Fact", () => {
   beforeEach(() => {
@@ -55,7 +58,7 @@ describe("Fact", () => {
     });
     replace(deps, "rpc", rpcFake);
 
-    const { body: result } = await fact({ name, domain, service })
+    const { body: result } = await fact({ name, domain, service, region })
       .set({
         context,
         claims,
@@ -68,7 +71,10 @@ describe("Fact", () => {
       .read({ query });
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
+    expect(rpcFake).to.have.been.calledWith({
+      region,
+      operationNameComponents: [name, domain, service, "fact"]
+    });
     expect(getFake).to.have.been.calledWith({ query });
     expect(inFake).to.have.been.calledWith({
       context,
@@ -97,7 +103,10 @@ describe("Fact", () => {
     const result = await fact({ name }).read();
 
     expect(result).to.deep.equal({ body: response });
-    expect(rpcFake).to.have.been.calledWith(name, envService, "fact");
+    expect(rpcFake).to.have.been.calledWith({
+      region: envRegion,
+      operationNameComponents: [name, envService, "fact"]
+    });
     expect(getFake).to.have.been.calledWith({});
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
@@ -120,7 +129,10 @@ describe("Fact", () => {
     const result = await fact({ name }).read({ root });
 
     expect(result).to.deep.equal({ body: response });
-    expect(rpcFake).to.have.been.calledWith(name, envService, "fact");
+    expect(rpcFake).to.have.been.calledWith({
+      region: envRegion,
+      operationNameComponents: [name, envService, "fact"]
+    });
     expect(getFake).to.have.been.calledWith({ id: root });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
@@ -139,10 +151,12 @@ describe("Fact", () => {
     });
     replace(deps, "rpc", rpcFake);
     const otherNetwork = "some-other-network";
+    const otherRegion = "some-other-region";
     const { body: result } = await fact({
       name,
       domain,
       service,
+      region: otherRegion,
       network: otherNetwork,
     })
       .set({
@@ -153,7 +167,10 @@ describe("Fact", () => {
       .read({ query });
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
+    expect(rpcFake).to.have.been.calledWith({
+      region: otherRegion,
+      operationNameComponents: [name, domain, service, "fact"]
+    });
     expect(getFake).to.have.been.calledWith({ query });
     expect(inFake).to.have.been.calledWith({
       context,
@@ -196,7 +213,10 @@ describe("Fact", () => {
       .stream(fn, { query, root, onResponseFn });
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
+    expect(rpcFake).to.have.been.calledWith({
+      region: envRegion,
+      operationNameComponents: [name, domain, service, "fact"]
+    });
     expect(streamFake).to.have.been.calledWith(
       fn,
       { query, id: root },
@@ -230,7 +250,10 @@ describe("Fact", () => {
     const result = await fact({ name }).stream(fn);
 
     expect(result).to.deep.equal({ body: response });
-    expect(rpcFake).to.have.been.calledWith(name, envService, "fact");
+    expect(rpcFake).to.have.been.calledWith({
+      region: envRegion,
+      operationNameComponents: [name, envService, "fact"]
+    });
     expect(streamFake).to.have.been.calledWith(fn);
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({ path: "/stream" });
@@ -262,7 +285,10 @@ describe("Fact", () => {
       .stream(fn, { root });
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
+    expect(rpcFake).to.have.been.calledWith({
+      region: envRegion,
+      operationNameComponents: [name, domain, service, "fact"]
+    });
     expect(streamFake).to.have.been.calledWith(fn, { id: root });
     expect(inFake).to.have.been.calledWith({
       context,
@@ -303,7 +329,10 @@ describe("Fact", () => {
       .stream(fn, { query });
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, domain, service, "fact");
+    expect(rpcFake).to.have.been.calledWith({
+      region: envRegion,
+      operationNameComponents: [name, domain, service, "fact"]
+    });
     expect(streamFake).to.have.been.calledWith(fn, { query });
     expect(inFake).to.have.been.calledWith({
       context,

@@ -1,6 +1,6 @@
 import deps from "./deps.js";
 
-export default ({ name, domain, service = process.env.SERVICE, network }) => {
+export default ({ name, domain, service = process.env.SERVICE, region = process.env.REGION, network }) => {
   const internal = !network || network == process.env.NETWORK;
   const read = ({
     context,
@@ -9,12 +9,10 @@ export default ({ name, domain, service = process.env.SERVICE, network }) => {
     token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => ({ query, root, raw = false } = {}) =>
     deps
-      .rpc(
-        name,
-        ...(domain ? [domain] : []),
-        ...(service ? [service] : []),
-        "fact"
-      )
+      .rpc({
+        region,
+        operationNameComponents: [name, ...(domain ? [domain] : []), ...(service ? [service] : []), "fact"]
+      })
       .get({ ...(query && { query }), ...(root && { id: root }) }, { raw })
       .in({
         ...(context && { context }),
@@ -37,12 +35,10 @@ export default ({ name, domain, service = process.env.SERVICE, network }) => {
     token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => (fn, { query, root, raw = false } = {}) =>
     deps
-      .rpc(
-        name,
-        ...(domain ? [domain] : []),
-        ...(service ? [service] : []),
-        "fact"
-      )
+      .rpc({
+        region,
+        operationNameComponents: [name, ...(domain ? [domain] : []), ...(service ? [service] : []), "fact"]
+      })
       .stream(
         fn,
         {

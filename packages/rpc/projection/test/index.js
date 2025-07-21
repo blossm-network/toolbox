@@ -12,6 +12,11 @@ const { expect } = chai;
 const name = "some-name";
 const domain = "some-domain";
 const service = "some-service";
+const region = "some-region";
+
+const envRegion = "some-env-region";
+
+process.env.REGION = envRegion;
 
 const internalTokenFn = "some-internal-token-fn";
 
@@ -42,6 +47,7 @@ describe("Replay projection", () => {
     const { body: result } = await projection({
       name,
       context,
+      region,
     })
       .set({
         token: { internalFn: internalTokenFn },
@@ -53,7 +59,10 @@ describe("Replay projection", () => {
       .play({ root, domain, service });
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, context, "projection");
+    expect(rpcFake).to.have.been.calledWith({
+      region,
+      operationNameComponents: [name, context, "projection"]
+    });
 
     expect(postFake).to.have.been.calledWith({
       root,
@@ -89,7 +98,10 @@ describe("Replay projection", () => {
     }).play({ root, domain, service });
 
     expect(result).to.equal(response);
-    expect(rpcFake).to.have.been.calledWith(name, "projection");
+    expect(rpcFake).to.have.been.calledWith({
+      region: envRegion,
+      operationNameComponents: [name, "projection"]
+    });
     expect(postFake).to.have.been.calledWith({
       root,
       domain,

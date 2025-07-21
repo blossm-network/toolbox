@@ -14,13 +14,11 @@ const queueParent = "some-queue-parent";
 const locationParent = "some-location-parent";
 const taskResponse = "some-task-response";
 const queueResponse = "some-queue-response";
-const url = "some-url";
+const url = "https://some-url.co";
 const data = { a: 1 };
 const project = "some-project";
 const location = "some-location";
 const name = "some-name";
-const operationName = "some-operation-name";
-const operationHash = "some-operation-hash";
 const serviceAccountEmail = "some-service-account-email";
 
 const region = "some-region";
@@ -75,8 +73,6 @@ describe("Queue", () => {
     })({
       url,
       data,
-      name: operationName,
-      hash: operationHash,
       method: "put",
     });
     expect(queuePathFake).to.have.been.calledWith(project, "custom-region", name);
@@ -88,7 +84,47 @@ describe("Queue", () => {
           httpMethod: "PUT",
           oidcToken: {
             serviceAccountEmail,
-            audience: `https://custom-region-${operationName}-${operationHash}-custom-compute-url-id.custom-region.run.app`,
+            audience: url 
+          },
+          headers: {
+            "content-type": "application/json",
+          },
+          body: Buffer.from(JSON.stringify(data)).toString("base64"),
+        },
+        scheduleTime: {
+          seconds: Date.now() / 1000,
+        },
+      },
+    });
+    expect(result).to.equal(taskResponse);
+  });
+  it("should call enqueue with the correct params and clean URL correctly for audience", async () => {
+    const queuePathFake = fake.returns(queueParent);
+    const createTaskFake = fake.returns([taskResponse]);
+    replace(queue.__client, "queuePath", queuePathFake);
+    replace(queue.__client, "createTask", createTaskFake);
+    const narrowUrl = url + "/asdf?a=1&b=2";
+    const result = await queue.enqueue({
+      serviceAccountEmail,
+      project,
+      queue: name,
+      computeUrlId: "custom-compute-url-id",
+      location: "custom-region",
+    })({
+      url: narrowUrl,
+      data,
+      method: "put",
+    });
+    expect(queuePathFake).to.have.been.calledWith(project, "custom-region", name);
+    expect(createTaskFake).to.have.been.calledWith({
+      parent: queueParent,
+      task: {
+        httpRequest: {
+          url: narrowUrl,
+          httpMethod: "PUT",
+          oidcToken: {
+            serviceAccountEmail,
+            audience: url 
           },
           headers: {
             "content-type": "application/json",
@@ -123,6 +159,7 @@ describe("Queue", () => {
           oidcToken: {
             serviceAccountEmail:
               "executer@some-project.iam.gserviceaccount.com",
+            audience: url,
           },
           headers: {
             "content-type": "application/json",
