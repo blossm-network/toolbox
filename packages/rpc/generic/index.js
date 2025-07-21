@@ -67,6 +67,7 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
             ? deps.operationUrl({
                 region, 
                 operationNameComponents,
+                host,
                 computeUrlId: process.env.GCP_COMPUTE_URL_ID, 
                 ...(path && { path }),
                 ...(id && { id }),

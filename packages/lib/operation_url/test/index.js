@@ -10,7 +10,7 @@ chai.use(sinonChai);
 const { expect } = chai;
 
 const hash = 12345;
-const operation = "some-operation";
+const host = "some-host";
 const path = "/some-path";
 const id = "some-id";
 const region = "some-region";
@@ -32,7 +32,7 @@ describe("Service url", () => {
     const hashFake = fake.returns(hash);
     replace(deps, "hash", hashFake);
 
-    const result = operationUrl({ region, operationNameComponents, computeUrlId, path, id });
+    const result = operationUrl({ region, operationNameComponents, computeUrlId, host, path, id });
     expect(trimFake).to.have.been.calledWith(
       `${operationName2}-${operationName1}`,
       25
@@ -48,13 +48,13 @@ describe("Service url", () => {
     replace(deps, "hash", hashFake);
 
     process.env.NODE_ENV = "local";
-    const result = operationUrl({ region, operationNameComponents, computeUrlId, path, id });
+    const result = operationUrl({ region, operationNameComponents, computeUrlId, host, path, id });
     expect(trimFake).to.have.been.calledWith(
       `${operationName2}-${operationName1}`,
       25
     );
     expect(hashFake).to.have.been.calledWith(...operationNameComponents);
-    expect(result).to.equal(`http://${region}-${trimmed}-${hash}-${computeUrlId}.${region}.run.app/some-path/some-id`);
+    expect(result).to.equal(`http://${hash}.${host}/some-path/some-id`);
   });
   it("should return the correct output with no path", () => {
     const trimFake = fake.returns(trimmed);
@@ -63,7 +63,7 @@ describe("Service url", () => {
     const hashFake = fake.returns(hash);
     replace(deps, "hash", hashFake);
 
-    const result = operationUrl({ region, operationNameComponents, computeUrlId, id });
+    const result = operationUrl({ region, operationNameComponents, computeUrlId, host, id });
     expect(trimFake).to.have.been.calledWith(
       `${operationName2}-${operationName1}`,
       25
@@ -78,7 +78,7 @@ describe("Service url", () => {
     const hashFake = fake.returns(hash);
     replace(deps, "hash", hashFake);
 
-    const result = operationUrl({ region, operationNameComponents, computeUrlId });
+    const result = operationUrl({ region, operationNameComponents, computeUrlId, host });
     expect(trimFake).to.have.been.calledWith(
       `${operationName2}-${operationName1}`,
       25

@@ -83,6 +83,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       region,
+      host,
       operationNameComponents,
       computeUrlId: envComputeUrlId,
     });
@@ -120,6 +121,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       region,
+      host,
       operationNameComponents,
       computeUrlId: envComputeUrlId,
     });
@@ -216,6 +218,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       region,
+      host,
       operationNameComponents,
       computeUrlId: envComputeUrlId
     });
@@ -246,6 +249,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       region,
+      host: envHost,
       operationNameComponents,
       computeUrlId: envComputeUrlId,
     });
@@ -342,6 +346,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       region,
+      host,
       operationNameComponents,
       computeUrlId: envComputeUrlId,
       path,
@@ -381,6 +386,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       region,
+      host,
       operationNameComponents,
       computeUrlId: envComputeUrlId,
     });
@@ -424,6 +430,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       region,
+      host,
       operationNameComponents,
       computeUrlId: envComputeUrlId
     });
@@ -465,6 +472,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       region,
+      host,
       operationNameComponents,
       computeUrlId: envComputeUrlId
     });
@@ -505,6 +513,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       region,
+      host,
       operationNameComponents,
       computeUrlId: envComputeUrlId,
       id,
@@ -557,6 +566,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       region,
+      host,
       operationNameComponents,
       computeUrlId: envComputeUrlId
     });
@@ -602,6 +612,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       region,
+      host,
       operationNameComponents,
       computeUrlId: envComputeUrlId,
     });
@@ -667,6 +678,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       region,
+      host,
       operationNameComponents,
       computeUrlId: envComputeUrlId,
       id,
@@ -706,6 +718,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       region,
+      host,
       operationNameComponents,
       computeUrlId: envComputeUrlId,
       id,
@@ -745,6 +758,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       region,
+      host,
       operationNameComponents,
       computeUrlId: envComputeUrlId,
       id,
@@ -784,6 +798,7 @@ describe("Operation", () => {
     });
     expect(operationUrlFake).to.have.been.calledWith({
       region,
+      host,
       operationNameComponents,
       computeUrlId: envComputeUrlId,
       id,
