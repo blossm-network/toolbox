@@ -19,7 +19,6 @@ const enqueue = ({
   serviceAccountEmail,
   project = process.env.GCP_PROJECT,
   location = process.env.GCP_REGION,
-  computeUrlId = process.env.GCP_COMPUTE_URL_ID,
   queue,
   wait = 0,
 }) => async ({ url, data = {}, token, method = "post" }) => {
@@ -28,7 +27,8 @@ const enqueue = ({
   const string = JSON.stringify(data);
 
   const body = Buffer.from(string).toString("base64");
-
+  
+  console.log("das url again: ", url);
   const task = {
     httpRequest: {
       httpMethod: method.toUpperCase(),
@@ -41,6 +41,7 @@ const enqueue = ({
             audience: (() => {
               try {
                 const u = new URL(url);
+                console.log("das audience: ", `${u.protocol}//${u.host}`);
                 return `${u.protocol}//${u.host}`;
               } catch {
                 return url;
