@@ -40,6 +40,7 @@ export default ({
       `--vpc-connector=${region}-network`,
       `--vpc-egress=all`,
       ...(allowUnauthenticated ? ["--allow-unauthenticated"] : []),
+      `--ingress=${allowUnauthenticated ? "all" : "internal"}`,
       `--project=${project}`,
       `--region=${region}`,
       `--set-env-vars=${Object.entries({

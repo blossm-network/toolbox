@@ -21,12 +21,12 @@ const roles = [
   },
 ];
 
-const permissionPriviledge = "some-permission-privildge";
+const permissionPrivilege = "some-permission-privildge";
 const permissionDomain = "some-permission-domain";
 const permissionService = "some-permission-service";
 
 const permissions = [
-  `${permissionService}:${permissionDomain}:${permissionPriviledge}`,
+  `${permissionService}:${permissionDomain}:${permissionPrivilege}`,
 ];
 
 const defaultRole = {
@@ -50,7 +50,7 @@ describe("Role permissions", () => {
       {
         service: permissionService,
         domain: permissionDomain,
-        privilege: permissionPriviledge,
+        privilege: permissionPrivilege,
       },
     ]);
   });
@@ -101,7 +101,7 @@ describe("Role permissions", () => {
       {
         service: permissionService,
         domain: permissionDomain,
-        privilege: permissionPriviledge,
+        privilege: permissionPrivilege,
       },
     ]);
   });
@@ -129,7 +129,7 @@ describe("Role permissions", () => {
       {
         service: permissionService,
         domain: permissionDomain,
-        privilege: permissionPriviledge,
+        privilege: permissionPrivilege,
       },
       ...customRolePermissions,
     ]);
@@ -156,17 +156,17 @@ describe("Role permissions", () => {
       {
         service: permissionService,
         domain: permissionDomain,
-        privilege: permissionPriviledge,
+        privilege: permissionPrivilege,
       },
     ]);
   });
   it("should return the correct roles with multiple defaultRoles", async () => {
-    const otherPermissionPriviledge = "some-other-permission-privildge";
+    const otherPermissionPrivilege = "some-other-permission-privildge";
     const otherPermissionDomain = "some-other-permission-domain";
     const otherPermissionService = "some-other-permission-service";
 
     const otherPermissions = [
-      `${otherPermissionService}:${otherPermissionDomain}:${otherPermissionPriviledge}`,
+      `${otherPermissionService}:${otherPermissionDomain}:${otherPermissionPrivilege}`,
     ];
 
     const result = await rolePermissions({
@@ -182,12 +182,12 @@ describe("Role permissions", () => {
       {
         service: permissionService,
         domain: permissionDomain,
-        privilege: permissionPriviledge,
+        privilege: permissionPrivilege,
       },
       {
         service: otherPermissionService,
         domain: otherPermissionDomain,
-        privilege: otherPermissionPriviledge,
+        privilege: otherPermissionPrivilege,
       },
     ]);
   });
