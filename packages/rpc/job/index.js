@@ -1,6 +1,6 @@
 import deps from "./deps.js";
 
-export default ({ name, domain, service, region = process.env.REGION }) => {
+export default ({ name, domain, service, region = process.env.GCP_REGION }) => {
   const trigger = ({
     context,
     claims,

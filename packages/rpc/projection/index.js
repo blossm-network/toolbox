@@ -1,6 +1,6 @@
 import deps from "./deps.js";
 
-export default ({ name, context, region = process.env.REGION }) => {
+export default ({ name, context, region = process.env.GCP_REGION }) => {
   const play = ({
     token: { internalFn: internalTokenFn } = {},
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},

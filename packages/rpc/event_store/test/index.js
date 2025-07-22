@@ -25,7 +25,7 @@ const envService = "some-env-service";
 const envRegion = "some-env-region";
 
 process.env.SERVICE = envService;
-process.env.REGION = envRegion;
+process.env.GCP_REGION = envRegion;
 
 const context = { a: "some-context" };
 const claims = "some-claims";

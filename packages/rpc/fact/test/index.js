@@ -33,7 +33,7 @@ const envService = "some-env-service";
 const envRegion = "some-env-region";
 
 process.env.SERVICE = envService;
-process.env.REGION = envRegion;
+process.env.GCP_REGION = envRegion;
 
 describe("Fact", () => {
   beforeEach(() => {

@@ -1,6 +1,6 @@
 import deps from "./deps.js";
 
-export default ({ name, context = process.env.CONTEXT, region = process.env.REGION, network }) => {
+export default ({ name, context = process.env.CONTEXT, region = process.env.GCP_REGION, network }) => {
   const internal = !network || network == process.env.NETWORK;
   const read = ({
     contexts,

@@ -31,7 +31,7 @@ const contexts = { c: 2 };
 const envContext = "some-env-context";
 const envRegion = "some-env-region";
 
-process.env.REGION = envRegion;
+process.env.GCP_REGION = envRegion;
 process.env.NETWORK = network;
 
 describe("Get views", () => {

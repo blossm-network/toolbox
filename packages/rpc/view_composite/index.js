@@ -1,6 +1,6 @@
 import deps from "./deps.js";
 
-export default ({ name, context = process.env.CONTEXT, region = process.env.REGION }) => {
+export default ({ name, context = process.env.CONTEXT, region = process.env.GCP_REGION }) => {
   const read = ({
     contexts,
     currentToken,

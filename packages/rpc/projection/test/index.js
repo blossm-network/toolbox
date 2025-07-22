@@ -16,7 +16,7 @@ const region = "some-region";
 
 const envRegion = "some-env-region";
 
-process.env.REGION = envRegion;
+process.env.GCP_REGION = envRegion;
 
 const internalTokenFn = "some-internal-token-fn";
 

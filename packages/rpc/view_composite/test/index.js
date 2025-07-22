@@ -26,7 +26,7 @@ const envContext = "some-env-context";
 const envRegion = "some-env-region";
 
 process.env.CONTEXT = envContext;
-process.env.REGION = envRegion;
+process.env.GCP_REGION = envRegion;
 
 describe("Get composite views", () => {
   afterEach(() => {

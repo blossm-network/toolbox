@@ -1,6 +1,6 @@
 import deps from "./deps.js";
 
-export default ({ domain, service = process.env.SERVICE, region = process.env.REGION } = {}) => {
+export default ({ domain, service = process.env.SERVICE, region = process.env.GCP_REGION } = {}) => {
   const add = ({
     context,
     claims,
