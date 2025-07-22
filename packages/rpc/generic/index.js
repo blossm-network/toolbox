@@ -98,10 +98,6 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
 
           const shouldEnqueue = enqueueFn && method != deps.get;
 
-          console.log("requestData", requestData);
-          console.log("url", url);
-          console.log("token", token);
-          console.log("type", type);
           const response =
             shouldEnqueue && process.env.NODE_ENV != "local"
               ? await deps.enqueueOperation({
