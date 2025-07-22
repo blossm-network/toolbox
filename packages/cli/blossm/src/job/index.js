@@ -16,7 +16,7 @@ const configFn = (config) => {
       config.procedure
     ),
     operationName: operationShortName(
-      [config.procedure, config.service, config.domain, config.name]
+      [config.name, config.domain, config.service, config.procedure]
     ),
   };
 };

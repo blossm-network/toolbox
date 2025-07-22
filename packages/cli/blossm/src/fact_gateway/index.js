@@ -7,7 +7,7 @@ import init from "./init/index.js";
 
 const configFn = (config) => {
   return {
-    operationName: operationShortName([config.procedure, config.service, config.domain]),
+    operationName: operationShortName([config.domain, config.service, config.procedure]),
     operationHash: hash(
       ...(config.domain ? [config.domain] : []),
       ...(config.service ? [config.service] : []),
