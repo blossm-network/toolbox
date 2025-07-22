@@ -28,7 +28,6 @@ const enqueue = ({
 
   const body = Buffer.from(string).toString("base64");
   
-  console.log("das url again: ", url);
   const task = {
     httpRequest: {
       httpMethod: method.toUpperCase(),
@@ -41,16 +40,11 @@ const enqueue = ({
             audience: (() => {
               try {
                 const u = new URL(url);
-                console.log("das audience: ", `${u.protocol}//${u.host}`);
                 return `${u.protocol}//${u.host}`;
               } catch {
                 return url;
               }
             })(),
-          // ...(hash &&
-          //   name && {
-          //     audience: `https://${location}-${name}-${hash}-${computeUrlId}.${location}.run.app`,
-          //   }),
         },
       }),
       headers: {

@@ -63,9 +63,6 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
                   network,
                 })) || {};
 
-          console.log("das token: ", token);
-          console.log("das type: ", type);
-  
           const url = internal
             ? deps.operationUrl({
                 region, 
@@ -81,7 +78,6 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
                 ...(id && { id }),
               });
             
-          console.log("das url: ", url);
           const requestData = {
             ...(data && { ...data }),
             ...(internal && {
