@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-store-rpc",
   "description": "Interact with a view store.",
-  "version": "0.0.313",
+  "version": "0.0.314",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
