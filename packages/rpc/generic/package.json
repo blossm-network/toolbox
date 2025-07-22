@@ -1,7 +1,7 @@
 {
   "name": "@blossm/rpc",
   "description": "Calls a remote procedure within the network.",
-  "version": "0.0.263",
+  "version": "0.0.264",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -20,11 +20,11 @@
     "@blossm/logger": "^0.0.13",
     "@blossm/network-token": "^0.0.10",
     "@blossm/network-url": "^0.0.7",
-    "@blossm/operation-token": "^0.0.20",
-    "@blossm/operation-url": "^0.0.22",
-    "@blossm/request": "^0.0.68",
-    "@blossm/operation-short-name": "^0.0.0",
-    "@blossm/operation-hash": "^0.0.17"
+    "@blossm/operation-hash": "^0.0.17",
+    "@blossm/operation-short-name": "^0.0.1",
+    "@blossm/operation-token": "^0.0.21",
+    "@blossm/operation-url": "^0.0.23",
+    "@blossm/request": "^0.0.68"
   },
   "devDependencies": {
     "mocha": "^11.6.0",
