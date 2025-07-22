@@ -16,6 +16,7 @@ export default ({ prehook, posthook } = {}) => {
     port = port || process.env.PORT || 3000;
     if (posthook) posthook(app);
     app.use(deps.errorMiddleware);
+    logger.info("Starting server.", { port });
     app.listen(port);
     logger.info("Thank you server.", { port });
     return app;
