@@ -64,7 +64,7 @@ const steps = ({
   dependencyKeyEnvironmentVariables,
 }) => {
   const serviceName = `${region}-${operationName}-${operationHash}`;
-  const uri = `${serviceName}-${computeUrlId}.${region}.run.app `; //`${operationHash}.${region}.${envUriSpecifier}${network}`;
+  const uri = `${serviceName}-${computeUrlId}.${region}.run.app `; 
   switch (procedure) {
     case "view-store":
       return viewStore({

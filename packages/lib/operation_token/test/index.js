@@ -14,17 +14,17 @@ const operation0 = "some-operation0";
 const operation1 = "some-operation1";
 const operation2 = "some-operation2";
 const operationNameComponents = [operation0, operation1, operation2];
-const trimmed = "some-trimmed";
+const shortName = "some-short-name";
 const token = "some-token";
 
-describe("Service token", () => {
+describe("Operation token", () => {
   afterEach(restore);
   it("should return the correct output", async () => {
     const hashFake = fake.returns(hash);
     replace(deps, "hash", hashFake);
 
-    const trimFake = fake.returns(trimmed);
-    replace(deps, "trim", trimFake);
+    const shortNameFake = fake.returns(shortName);
+    replace(deps, "operationShortName", shortNameFake);
 
     const tokenFnFake = fake.returns(token);
 
@@ -33,17 +33,14 @@ describe("Service token", () => {
       operationNameComponents,
     });
     expect(hashFake).to.have.been.calledWith(...operationNameComponents);
-    expect(trimFake).to.have.been.calledWith(
-      "some-operation2-some-operation1-some-operation0",
-      25
-    );
+    expect(shortNameFake).to.have.been.calledWith(operationNameComponents);
     //doesn't mutate the origianl operation.
     expect(operationNameComponents).to.deep.equal([
       "some-operation0",
       "some-operation1",
       "some-operation2",
     ]);
-    expect(tokenFnFake).to.have.been.calledWith({ hash, name: trimmed });
+    expect(tokenFnFake).to.have.been.calledWith({ hash, name: shortName });
     expect(result).to.equal(token);
   });
   it("should return the correct output with no tokenFn", async () => {

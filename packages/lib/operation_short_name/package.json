@@ -1,7 +1,7 @@
 {
-  "name": "@blossm/operation-token",
-  "version": "0.0.20",
-  "description": "Creates a token to access an operation.",
+  "name": "@blossm/operation-short-name",
+  "version": "0.0.0",
+  "description": "Creates a short name for an operation.",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -15,7 +15,8 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/operation-short-name": "^0.0.0"
+    "@blossm/service-name-consts": "^0.0.5",
+    "@blossm/trim-string": "^0.0.6"
   },
   "devDependencies": {
     "mocha": "^11.6.0",

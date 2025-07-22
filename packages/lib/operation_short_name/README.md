@@ -1,0 +1,1 @@
+Creates a short name for an operation.

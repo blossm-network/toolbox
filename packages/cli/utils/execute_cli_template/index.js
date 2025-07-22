@@ -97,9 +97,7 @@ const execute = async (input, configFn) => {
       computeUrlId,
       project,
     })({
-      url: `https://${operationHash}.${input.region}.${envUriSpecifier(
-        input.env
-      )}${rootConfig.network}/${urlPath({
+      url: `https://${input.region}-${operationName}-${operationHash}-${computeUrlId}.${input.region}.run.app/${urlPath({
         config: blossmConfig,
         data: input.data,
       })}`,

@@ -62,13 +62,13 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
                   tokenFn: externalTokenFn,
                   network,
                 })) || {};
+            
+          const hash = deps.hash(...operationNameComponents);
 
           const url = internal
             ? deps.operationUrl({
-                region, 
-                operationNameComponents,
-                host,
-                computeUrlId: process.env.GCP_COMPUTE_URL_ID, 
+                protocol: process.env.NODE_ENV == "local" ? "http" : "https",
+                host: process.env.NODE_ENV == "local" ? `${hash}.${host}` : `${region}-${deps.operationShortName(operationNameComponents)}-${hash}-${process.env.GCP_COMPUTE_URL_ID}.${region}.run.app`,
                 ...(path && { path }),
                 ...(id && { id }),
               })
@@ -90,7 +90,6 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
           const shouldEnqueue = enqueueFn && method != deps.get;
 
           const response =
-            //don't enqueue if on local
             shouldEnqueue && process.env.NODE_ENV != "local"
               ? await deps.enqueueOperation({
                   enqueueFn,

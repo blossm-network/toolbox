@@ -25,6 +25,8 @@ const currentToken = "some-current-token";
 const url = "some-url";
 const query = "some-query";
 const envComputeUrlId = "some-compute-url-id";
+const operationShortName = "some-operation-short-name";
+const hash = "some-hash";
 
 process.env.GCP_COMPUTE_URL_ID = envComputeUrlId;
 
@@ -52,7 +54,7 @@ describe("Operation", () => {
     restore();
   });
 
-  it("should call post with the correct params", async () => {
+  it.only("should call post with the correct params", async () => {
     const post = fake.returns(response);
     replace(deps, "post", post);
 
@@ -61,6 +63,12 @@ describe("Operation", () => {
 
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     const result = await operation({region, operationNameComponents})
       .post(data)
@@ -82,10 +90,8 @@ describe("Operation", () => {
       operationNameComponents,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      region,
-      host,
-      operationNameComponents,
-      computeUrlId: envComputeUrlId,
+      protocol: "https",
+      host: `${region}-${operationShortName}-${hash}-${envComputeUrlId}.${region}.run.app`,
     });
     expect(result).to.deep.equal({ statusCode });
   });

@@ -649,13 +649,6 @@ const writeConfig = ({
               ...(dependency.context ? [dependency.context] : []),
               dependency.procedure
             )}.${localNetwork}`,
-            // https: `${dependency.region}-${hash(
-            //   ...(dependency.name ? [dependency.name] : []),
-            //   ...(dependency.domain ? [dependency.domain] : []),
-            //   ...(dependency.service ? [dependency.service] : []),
-            //   ...(dependency.context ? [dependency.context] : []),
-            //   dependency.procedure
-            // )}-${computeUrlId}.${dependency.region}.run.app`,
             mocks: dependency.mocks,
           });
         } else {

@@ -1,7 +1,5 @@
-import hash from "@blossm/operation-hash";
-import trim from "@blossm/trim-string";
+import operationShortName from "@blossm/operation-short-name";
 
 export default {
-  hash,
-  trim,
+  operationShortName
 };

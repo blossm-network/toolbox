@@ -5,6 +5,9 @@ import enqueueOperation from "@blossm/enqueue-operation";
 import operationUrl from "@blossm/operation-url";
 import networkToken from "@blossm/network-token";
 import networkUrl from "@blossm/network-url";
+import hash from "@blossm/operation-hash";
+import trim from "@blossm/trim-string";
+import { MAX_LENGTH } from "@blossm/service-name-consts";
 
 export default {
   post: request.post,
@@ -18,4 +21,7 @@ export default {
   enqueueOperation,
   networkUrl,
   networkToken,
+  hash, 
+  trim, 
+  MAX_LENGTH
 }
