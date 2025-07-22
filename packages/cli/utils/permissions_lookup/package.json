@@ -1,6 +1,6 @@
 {
   "name": "@blossm/permissions-lookup",
-  "version": "0.0.172",
+  "version": "0.0.173",
   "description": "Looks up permissions for a role.",
   "main": "index.js",
   "type": "module",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@blossm/errors": "^0.0.40",
-    "@blossm/fact-rpc": "^0.0.203",
+    "@blossm/fact-rpc": "^0.0.204",
     "@blossm/redis": "^0.0.16",
     "@blossm/role-permissions": "^0.0.30",
     "@blossm/uuid": "^0.0.9",
