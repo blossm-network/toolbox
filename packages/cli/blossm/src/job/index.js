@@ -1,6 +1,5 @@
 import hash from "@blossm/operation-hash";
-import trim from "@blossm/trim-string";
-import { MAX_LENGTH } from "@blossm/service-name-consts";
+import operationShortName from "@blossm/operation-short-name";
 import normalize from "@blossm/normalize-cli";
 
 import deploy from "./deploy/index.js";
@@ -16,11 +15,8 @@ const configFn = (config) => {
       ...(config.service ? [config.service] : []),
       config.procedure
     ),
-    operationName: trim(
-      `${config.procedure}${config.service ? `-${config.service}` : ""}${
-        config.domain ? `-${config.domain}` : ""
-      }-${config.name}`,
-      MAX_LENGTH
+    operationName: operationShortName(
+      [config.procedure, config.service, config.domain, config.name]
     ),
   };
 };

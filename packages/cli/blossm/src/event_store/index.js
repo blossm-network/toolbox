@@ -1,17 +1,13 @@
 import normalize from "@blossm/normalize-cli";
 import hash from "@blossm/operation-hash";
-import trim from "@blossm/trim-string";
-import { MAX_LENGTH } from "@blossm/service-name-consts";
+import operationShortName from "@blossm/operation-short-name";
 
 import deploy from "./deploy/index.js";
 import init from "./init/index.js";
 
 const configFn = (config) => {
   return {
-    operationName: trim(
-      `${config.procedure}-${config.service}-${config.domain}`,
-      MAX_LENGTH
-    ),
+    operationName: operationShortName([config.domain, config.service, config.procedure]),
     operationHash: hash(config.domain, config.service, config.procedure),
   };
 };

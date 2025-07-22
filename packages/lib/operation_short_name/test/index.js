@@ -34,4 +34,15 @@ describe("Operation short name", () => {
     ]);
     expect(result).to.equal(trimmed);
   });
+  it("should return the correct output with null components removed", async () => {
+    const trimFake = fake.returns(trimmed);
+    replace(deps, "trim", trimFake);
+
+    const result = operationShortName([null, operation0, null, operation1, null, operation2]);
+    expect(trimFake).to.have.been.calledWith(
+      "some-operation2-some-operation1-some-operation0",
+      25
+    );
+    expect(result).to.equal(trimmed);
+  });
 });
