@@ -64,7 +64,7 @@ const steps = ({
   dependencyKeyEnvironmentVariables,
 }) => {
   const serviceName = `${region}-${operationName}-${operationHash}`;
-  const uri = `${operationHash}.${region}.${envUriSpecifier}${network}`;
+  const uri = `${serviceName}-${computeUrlId}.${region}.run.app `; //`${operationHash}.${region}.${envUriSpecifier}${network}`;
   switch (procedure) {
     case "view-store":
       return viewStore({
@@ -84,7 +84,7 @@ const steps = ({
         dependencyKeyEnvironmentVariables,
         containerRegistery,
         mainContainerName,
-        dnsZone,
+        // dnsZone,
         timeout,
         procedure,
         operationHash,
@@ -130,7 +130,7 @@ const steps = ({
         dependencyKeyEnvironmentVariables,
         containerRegistery,
         mainContainerName,
-        dnsZone,
+        // dnsZone,
         procedure,
         operationHash,
         serviceName,
@@ -157,7 +157,7 @@ const steps = ({
         actions,
         region,
         project,
-        dnsZone,
+        // dnsZone,
         service,
         procedure,
         network,
@@ -214,7 +214,7 @@ const steps = ({
         mainContainerName,
         coreNetwork,
         timeout,
-        dnsZone,
+        // dnsZone,
         context,
         memory,
         procedure,
@@ -257,7 +257,7 @@ const steps = ({
         envUriSpecifier,
         containerRegistery,
         operationHash,
-        dnsZone,
+        // dnsZone,
         service,
         procedure,
         timeout,
@@ -294,7 +294,7 @@ const steps = ({
         mainContainerName,
         dependencyKeyEnvironmentVariables,
         coreNetwork,
-        dnsZone,
+        // dnsZone,
         service,
         procedure,
         timeout,
@@ -336,7 +336,7 @@ const steps = ({
         mainContainerName,
         dependencyKeyEnvironmentVariables,
         coreNetwork,
-        dnsZone,
+        // dnsZone,
         service,
         procedure,
         timeout,

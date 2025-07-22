@@ -14,12 +14,12 @@ import createSymmetricEncryptKey from "./steps/create_symmetric_encrypt_key.js";
 import createAsymmetricSignKey from "./steps/create_asymmetric_sign_key.js";
 import scheduleJob from "./steps/schedule_job.js";
 import updateScheduledJob from "./steps/update_scheduled_job.js";
-import startDnsTransaction from "./steps/start_dns_transaction.js";
-import addDnsTransaction from "./steps/add_dns_transaction.js";
-import executeDnsTransaction from "./steps/execute_dns_transaction.js";
-import abortDnsTransaction from "./steps/abort_dns_transaction.js";
+// import startDnsTransaction from "./steps/start_dns_transaction.js";
+// import addDnsTransaction from "./steps/add_dns_transaction.js";
+// import executeDnsTransaction from "./steps/execute_dns_transaction.js";
+// import abortDnsTransaction from "./steps/abort_dns_transaction.js";
 import createPubsubTopic from "./steps/create_pubsub_topic.js";
-import mapDomain from "./steps/map_domain.js";
+// import mapDomain from "./steps/map_domain.js";
 import writeEnv from "./steps/write_env.js";
 import createQueue from "./steps/create_queue.js";
 import updateQueue from "./steps/update_queue.js";
@@ -31,7 +31,7 @@ export default ({
   network,
   actions,
   envUriSpecifier,
-  dnsZone,
+  // dnsZone,
   service,
   coreNetwork,
   procedure,
@@ -168,16 +168,16 @@ export default ({
             maxDispatchPerSecond: 10,
             maxConcurrentDispatches: 100,
           }),
-          startDnsTransaction({ dnsZone, project }),
-          addDnsTransaction({ uri, dnsZone, project }),
-          executeDnsTransaction({ dnsZone, project }),
-          abortDnsTransaction({ dnsZone, project }),
-          mapDomain({
-            serviceName,
-            uri,
-            project,
-            region,
-          }),
+          // startDnsTransaction({ dnsZone, project }),
+          // addDnsTransaction({ uri, dnsZone, project }),
+          // executeDnsTransaction({ dnsZone, project }),
+          // abortDnsTransaction({ dnsZone, project }),
+          // mapDomain({
+          //   serviceName,
+          //   uri,
+          //   project,
+          //   region,
+          // }),
           ...actions.map((action) =>
             createPubsubTopic({
               action,

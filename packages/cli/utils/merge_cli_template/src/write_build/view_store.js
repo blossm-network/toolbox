@@ -10,11 +10,11 @@ import scheduleJob from "./steps/schedule_job.js";
 import dockerComposeLogs from "./steps/docker_compose_logs.js";
 import dockerPush from "./steps/docker_push.js";
 import deployRun from "./steps/deploy_run.js";
-import startDnsTransaction from "./steps/start_dns_transaction.js";
-import addDnsTransaction from "./steps/add_dns_transaction.js";
-import executeDnsTransaction from "./steps/execute_dns_transaction.js";
-import abortDnsTransaction from "./steps/abort_dns_transaction.js";
-import mapDomain from "./steps/map_domain.js";
+// import startDnsTransaction from "./steps/start_dns_transaction.js";
+// import addDnsTransaction from "./steps/add_dns_transaction.js";
+// import executeDnsTransaction from "./steps/execute_dns_transaction.js";
+// import abortDnsTransaction from "./steps/abort_dns_transaction.js";
+// import mapDomain from "./steps/map_domain.js";
 import writeEnv from "./steps/write_env.js";
 import createQueue from "./steps/create_queue.js";
 import updateQueue from "./steps/update_queue.js";
@@ -34,7 +34,7 @@ export default ({
   coreNetwork,
   localCoreNetwork,
   localNetwork,
-  dnsZone,
+  // dnsZone,
   procedure,
   computeUrlId,
   operationHash,
@@ -148,16 +148,16 @@ export default ({
             maxDispatchPerSecond: 50,
             maxConcurrentDispatches: 100,
           }),
-          startDnsTransaction({ dnsZone, project }),
-          addDnsTransaction({ uri, dnsZone, project }),
-          executeDnsTransaction({ dnsZone, project }),
-          abortDnsTransaction({ dnsZone, project }),
-          mapDomain({
-            serviceName,
-            uri,
-            project,
-            region,
-          }),
+          // startDnsTransaction({ dnsZone, project }),
+          // addDnsTransaction({ uri, dnsZone, project }),
+          // executeDnsTransaction({ dnsZone, project }),
+          // abortDnsTransaction({ dnsZone, project }),
+          // mapDomain({
+          //   serviceName,
+          //   uri,
+          //   project,
+          //   region,
+          // }),
           scheduleJob({
             name: `view-store-${context ? `-${context}` : ""}-${name}-check-in`,
             schedule: checkInSchedule,
