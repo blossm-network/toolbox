@@ -21,7 +21,9 @@
     "@blossm/network-url": "^0.0.7",
     "@blossm/operation-token": "^0.0.20",
     "@blossm/operation-url": "^0.0.22",
-    "@blossm/request": "^0.0.68"
+    "@blossm/request": "^0.0.68",
+    "@blossm/hash": "^0.0.13",
+    "@blossm/operation-short-name": "^0.0.0"
   },
   "devDependencies": {
     "mocha": "^11.6.0",

@@ -11,6 +11,7 @@ const { expect } = chai;
 
 const context = { b: 4 };
 const claims = "some-claims";
+const region = "some-region";
 const operarationPart1 = "some-operaration1";
 const operarationPart2 = "some-operaration2";
 const otherOperarationPart1 = "some-other-operaration1";
@@ -27,8 +28,16 @@ const tokenFn = "some-token-fn";
 const currentToken = "some-current-token";
 const url = "some-url";
 const otherUrl = "some-other-url";
-
+const hash1 = "some-hash1";
+const hash2 = "some-hash2";
+const operationShortName1 = "some-operation-short-name1";
+const operationShortName2 = "some-operation-short-name2";
 const host = "some-host";
+const envRegion = "some-env-region";
+const gcpComputeUrlId = "some-env-gcp-compute-url-id";
+
+process.env.GCP_REGION = envRegion;
+process.env.GCP_COMPUTE_URL_ID = gcpComputeUrlId;
 
 describe("Operation", () => {
   beforeEach(() => {
@@ -57,6 +66,20 @@ describe("Operation", () => {
       .returns(otherUrl);
     replace(deps, "operationUrl", operationUrlFake);
 
+    const hashFake = stub()
+      .onFirstCall()
+      .returns(hash1)
+      .onSecondCall()
+      .returns(hash2);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = stub()
+      .onFirstCall()
+      .returns(operationShortName1)
+      .onSecondCall()
+      .returns(operationShortName2);
+    replace(deps, "operationShortName", operationShortNameFake);
+
     const fnFake = fake();
     const sortFn = "some-sort-fn";
     const query = {
@@ -64,16 +87,18 @@ describe("Operation", () => {
       a: 1,
     };
     const result = await stream(
-      [
-        { operation: [operarationPart1, operarationPart2], query },
+      { 
+        region,
+        operationNameComponentQueries: [
+        { operationNameComponents: [operarationPart1, operarationPart2], query },
         {
-          operation: [otherOperarationPart1, otherOperarationPart2],
+          operationNameComponents: [otherOperarationPart1, otherOperarationPart2],
           query: otherQuery,
         },
       ],
-      fnFake,
+      fn: fnFake,
       sortFn
-    )
+    })
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
 
@@ -115,20 +140,22 @@ describe("Operation", () => {
     );
     expect(operationTokenFake.getCall(0)).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents: [operarationPart1, operarationPart2],
+      hash: hash1,
     });
     expect(operationTokenFake.getCall(1)).to.have.been.calledWith({
       tokenFn,
-      operation: [otherOperarationPart1, otherOperarationPart2],
+      operationNameComponents: [otherOperarationPart1, otherOperarationPart2],
+      hash: hash2,
     });
     expect(operationUrlFake.getCall(0)).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      protocol: "https",
+      host: `${region}-${operationShortName1}-${hash1}-${gcpComputeUrlId}.${region}.run.app`,
       id,
     });
     expect(operationUrlFake.getCall(1)).to.have.been.calledWith({
-      operation: [otherOperarationPart1, otherOperarationPart2],
-      host,
+      protocol: "https",
+      host: `${region}-${operationShortName2}-${hash2}-${gcpComputeUrlId}.${region}.run.app`
     });
     expect(result).to.equal();
   });
@@ -142,17 +169,26 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
+    const hashFake = fake.returns(hash1);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName1);
+    replace(deps, "operationShortName", operationShortNameFake);
+
     const fnFake = fake();
     const sortFn = "some-sort-fn";
     const query = {
       id,
       a: 1,
     };
-    const result = await stream(
-      [{ operation: [operarationPart1, operarationPart2], query }],
-      fnFake,
-      sortFn
-    )
+    const result = await stream({ 
+        region,
+        operationNameComponentQueries: [
+        { operationNameComponents: [operarationPart1, operarationPart2], query },
+        ],
+        fn: fnFake,
+        sortFn
+      })
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
 
@@ -179,11 +215,12 @@ describe("Operation", () => {
     );
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
-      operation: [operarationPart1, operarationPart2],
+      operationNameComponents: [operarationPart1, operarationPart2],
+      hash: hash1,
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      operation: [operarationPart1, operarationPart2],
-      host,
+      protocol: "https",
+      host: `${region}-${operationShortName1}-${hash1}-${gcpComputeUrlId}.${region}.run.app`,
       id,
     });
     expect(result).to.equal();
@@ -224,6 +261,12 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
+    const hashFake = fake.returns(hash1);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName1);
+    replace(deps, "operationShortName", operationShortNameFake);
+
     const fnFake = fake();
     const sortFn = "some-sort-fn";
     const query = {
@@ -236,10 +279,14 @@ describe("Operation", () => {
 
     try {
       await stream(
-        [{ operation: [operarationPart1, operarationPart2], query }],
-        fnFake,
-        sortFn
-      )
+        { 
+          region,
+          operationNameComponentQueries: [
+            { operationNameComponents: [operarationPart1, operarationPart2], query }
+          ],
+          fn: fnFake,
+          sortFn
+        })
         .in({ context, host })
         .with({ internalTokenFn: tokenFn, currentToken, claims });
 

@@ -52,31 +52,40 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
         } = {}) => {
           const internal = host == process.env.HOST;
 
-          const { token, type } =
-            (internal
-              ? await deps.operationToken({
-                  tokenFn: internalTokenFn,
-                  operationNameComponents,
-                })
-              : await deps.networkToken({
-                  tokenFn: externalTokenFn,
-                  network,
-                })) || {};
-            
-          const hash = deps.hash(...operationNameComponents);
+          let token, type, url;
 
-          const url = internal
-            ? deps.operationUrl({
+          if (internal) {
+            const hash = deps.hash(...operationNameComponents);
+
+            const { token: _token, type: _type } = await deps.operationToken({
+              tokenFn: internalTokenFn,
+              operationNameComponents,
+              hash
+            }) || {};
+            token = _token;
+            type = _type;
+
+            url = deps.operationUrl({
                 protocol: process.env.NODE_ENV == "local" ? "http" : "https",
                 host: process.env.NODE_ENV == "local" ? `${hash}.${host}` : `${region}-${deps.operationShortName(operationNameComponents)}-${hash}-${process.env.GCP_COMPUTE_URL_ID}.${region}.run.app`,
                 ...(path && { path }),
                 ...(id && { id }),
-              })
-            : deps.networkUrl({
+              });
+          } else {
+            const { token: _token, type: _type } = await deps.networkToken({
+                  tokenFn: externalTokenFn,
+                  network,
+                });
+
+            token = _token;
+            type = _type;
+            
+            url = deps.networkUrl({
                 host,
                 ...(path && { path }),
                 ...(id && { id }),
               });
+          }
             
           const requestData = {
             ...(data && { ...data }),
@@ -89,6 +98,10 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
 
           const shouldEnqueue = enqueueFn && method != deps.get;
 
+          console.log("requestData", requestData);
+          console.log("url", url);
+          console.log("token", token);
+          console.log("type", type);
           const response =
             shouldEnqueue && process.env.NODE_ENV != "local"
               ? await deps.enqueueOperation({

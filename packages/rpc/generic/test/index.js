@@ -54,7 +54,7 @@ describe("Operation", () => {
     restore();
   });
 
-  it.only("should call post with the correct params", async () => {
+  it("should call post with the correct params", async () => {
     const post = fake.returns(response);
     replace(deps, "post", post);
 
@@ -88,6 +88,7 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
+      hash
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "https",
@@ -104,6 +105,12 @@ describe("Operation", () => {
 
     const enqueueOperationFake = fake.returns(response);
     replace(deps, "enqueueOperation", enqueueOperationFake);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     const enqueueFn = "some-enqueue-fn";
     const result = await operation({region, operationNameComponents})
@@ -124,12 +131,11 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
+      hash
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      region,
-      host,
-      operationNameComponents,
-      computeUrlId: envComputeUrlId,
+      protocol: "https",
+      host: `${region}-${operationShortName}-${hash}-${envComputeUrlId}.${region}.run.app`,
     });
     expect(result).to.deep.equal({ statusCode });
   });
@@ -142,6 +148,12 @@ describe("Operation", () => {
 
     const enqueueOperationFake = fake.returns(response);
     replace(deps, "enqueueOperation", enqueueOperationFake);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     const enqueueFn = "some-enqueue-fn";
     await operation({region, operationNameComponents})
@@ -169,6 +181,12 @@ describe("Operation", () => {
 
     const enqueueOperationFake = fake.returns(response);
     replace(deps, "enqueueOperation", enqueueOperationFake);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     const enqueueFn = "some-enqueue-fn";
     await operation({region, operationNameComponents})
@@ -200,6 +218,9 @@ describe("Operation", () => {
     const enqueueOperationFake = fake.returns(response);
     replace(deps, "enqueueOperation", enqueueOperationFake);
 
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
     const enqueueFn = "some-enqueue-fn";
     process.env.NODE_ENV = "local";
     const result = await operation({region, operationNameComponents})
@@ -221,12 +242,11 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
+      hash
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      region,
-      host,
-      operationNameComponents,
-      computeUrlId: envComputeUrlId
+      protocol: "http",
+      host: `${hash}.${host}`,
     });
     expect(result).to.deep.equal({});
   });
@@ -241,6 +261,12 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
+
     const envHost = "some-env-host";
     process.env.HOST = envHost;
 
@@ -252,12 +278,11 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
+      hash
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      region,
-      host: envHost,
-      operationNameComponents,
-      computeUrlId: envComputeUrlId,
+      protocol: "https",
+      host: `${region}-${operationShortName}-${hash}-${envComputeUrlId}.${region}.run.app`,
     });
     expect(result).to.deep.equal({ statusCode });
   });
@@ -329,6 +354,12 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
+
     const path = "/some/path";
     const result = await operation({region, operationNameComponents})
       .post(data)
@@ -349,12 +380,11 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
+      hash
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      region,
-      host,
-      operationNameComponents,
-      computeUrlId: envComputeUrlId,
+      protocol: "https",
+      host: `${region}-${operationShortName}-${hash}-${envComputeUrlId}.${region}.run.app`,
       path,
     });
     expect(result).to.deep.equal({ statusCode });
@@ -369,6 +399,12 @@ describe("Operation", () => {
 
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
+
+    const hashFake = fake.returns(hash);  
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     const result = await operation({region, operationNameComponents})
       .get(data)
@@ -389,12 +425,11 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
+      hash
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      region,
-      host,
-      operationNameComponents,
-      computeUrlId: envComputeUrlId,
+      protocol: "https",
+      host: `${region}-${operationShortName}-${hash}-${envComputeUrlId}.${region}.run.app`,
     });
     expect(result).to.deep.equal({ statusCode: bodyStatusCode, body });
   });
@@ -407,6 +442,12 @@ describe("Operation", () => {
 
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     const enqueueFnFake = fake.returns("whatever");
     const result = await operation({region, operationNameComponents})
@@ -433,12 +474,11 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
+      hash
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      region,
-      host,
-      operationNameComponents,
-      computeUrlId: envComputeUrlId
+      protocol: "https",
+      host: `${region}-${operationShortName}-${hash}-${envComputeUrlId}.${region}.run.app`,
     });
     expect(result).to.deep.equal({ statusCode: bodyStatusCode, body });
   });
@@ -455,6 +495,12 @@ describe("Operation", () => {
 
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     const result = await operation({region, operationNameComponents})
       .get(data)
@@ -475,12 +521,12 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
+      hash
+
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      region,
-      host,
-      operationNameComponents,
-      computeUrlId: envComputeUrlId
+      protocol: "https",
+      host: `${region}-${operationShortName}-${hash}-${envComputeUrlId}.${region}.run.app`,
     });
     expect(result).to.deep.equal({
       statusCode: bodyStatusCode,
@@ -496,6 +542,12 @@ describe("Operation", () => {
 
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     const result = await operation({region, operationNameComponents})
       .get({ ...data, id })
@@ -516,12 +568,11 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
+      hash
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      region,
-      host,
-      operationNameComponents,
-      computeUrlId: envComputeUrlId,
+      protocol: "https",
+      host: `${region}-${operationShortName}-${hash}-${envComputeUrlId}.${region}.run.app`,
       id,
     });
     expect(result).to.deep.equal({
@@ -538,6 +589,12 @@ describe("Operation", () => {
 
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     const fnFake = fake();
     const result = await operation({region, operationNameComponents})
@@ -569,12 +626,11 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
+      hash
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      region,
-      host,
-      operationNameComponents,
-      computeUrlId: envComputeUrlId
+      protocol: "https",
+      host: `${region}-${operationShortName}-${hash}-${envComputeUrlId}.${region}.run.app`,
     });
     expect(result).to.equal();
   });
@@ -587,6 +643,12 @@ describe("Operation", () => {
 
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     const fnFake = fake();
     const result = await operation({region, operationNameComponents})
@@ -615,12 +677,11 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
+      hash
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      region,
-      host,
-      operationNameComponents,
-      computeUrlId: envComputeUrlId,
+      protocol: "https",
+      host: `${region}-${operationShortName}-${hash}-${envComputeUrlId}.${region}.run.app`,
     });
     expect(result).to.equal();
 
@@ -650,6 +711,12 @@ describe("Operation", () => {
 
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     const fnFake = fake();
     const result = await operation({region, operationNameComponents})
@@ -681,12 +748,11 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
+      hash
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      region,
-      host,
-      operationNameComponents,
-      computeUrlId: envComputeUrlId,
+      protocol: "https",
+      host: `${region}-${operationShortName}-${hash}-${envComputeUrlId}.${region}.run.app`,
       id,
     });
     expect(result).to.equal();
@@ -700,6 +766,12 @@ describe("Operation", () => {
 
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     const result = await operation({region, operationNameComponents})
       .put(id, data)
@@ -721,12 +793,11 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
+      hash
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      region,
-      host,
-      operationNameComponents,
-      computeUrlId: envComputeUrlId,
+      protocol: "https",
+      host: `${region}-${operationShortName}-${hash}-${envComputeUrlId}.${region}.run.app`,
       id,
     });
     expect(result).to.deep.equal({ statusCode });
@@ -740,6 +811,12 @@ describe("Operation", () => {
 
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     const path = "/some/path";
     const result = await operation({region, operationNameComponents})
@@ -761,12 +838,11 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
+      hash
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      region,
-      host,
-      operationNameComponents,
-      computeUrlId: envComputeUrlId,
+      protocol: "https",
+      host: `${region}-${operationShortName}-${hash}-${envComputeUrlId}.${region}.run.app`,
       id,
       path,
     });
@@ -781,6 +857,12 @@ describe("Operation", () => {
 
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+    
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     const result = await operation({region, operationNameComponents})
       .del(id, data)
@@ -801,12 +883,11 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
+      hash
     });
     expect(operationUrlFake).to.have.been.calledWith({
-      region,
-      host,
-      operationNameComponents,
-      computeUrlId: envComputeUrlId,
+      protocol: "https",
+      host: `${region}-${operationShortName}-${hash}-${envComputeUrlId}.${region}.run.app`,
       id,
     });
     expect(result).to.deep.equal({ statusCode });
@@ -830,6 +911,12 @@ describe("Operation", () => {
 
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     const error = "some-error";
     const constructErrorFake = fake.returns(error);
@@ -880,6 +967,12 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
+
     const error = "some-error";
     const constructErrorFake = fake.returns(error);
     replace(deps, "constructError", constructErrorFake);
@@ -923,6 +1016,12 @@ describe("Operation", () => {
 
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
+
+    const hashFake = fake.returns(hash);
+    replace(deps, "hash", hashFake);
+
+    const operationShortNameFake = fake.returns(operationShortName);
+    replace(deps, "operationShortName", operationShortNameFake);
 
     try {
       await operation({region, operationNameComponents})

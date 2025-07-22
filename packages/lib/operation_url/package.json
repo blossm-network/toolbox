@@ -14,9 +14,6 @@
   "scripts": {
     "test": "mocha --recursive"
   },
-  "dependencies": {
-    "@blossm/operation-short-name": "^0.0.0"
-  },
   "devDependencies": {
     "mocha": "^11.6.0",
     "sinon": "^21.0.0",

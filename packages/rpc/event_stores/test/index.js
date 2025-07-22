@@ -15,11 +15,14 @@ let clock;
 const now = new Date();
 
 const envService = "some-env-service";
+const envRegion = "some-env-region";
 
 process.env.SERVICE = envService;
+process.env.GCP_REGION = envRegion;
 
 const context = { a: "some-context" };
 const claims = "some-claims";
+const region = "some-region";
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
 
@@ -49,7 +52,7 @@ describe("Event store", () => {
     const sortFn = "some-sort-fn";
 
     const storeQueries = "some-store-queries";
-    const result = await eventStores(storeQueries)
+    const result = await eventStores({storeQueries, region})
       .set({
         context,
         claims,
@@ -60,7 +63,7 @@ describe("Event store", () => {
       })
       .stream(fn, sortFn);
 
-    expect(streamFake).to.have.been.calledWith(storeQueries, fn, sortFn);
+    expect(streamFake).to.have.been.calledWith({ region, storeQueries, fn, sortFn });
     expect(inFake).to.have.been.calledWith({
       context,
     });
@@ -88,9 +91,9 @@ describe("Event store", () => {
     const sortFn = "some-sort-fn";
 
     const storeQueries = "some-store-queries";
-    const result = await eventStores(storeQueries).stream(fn, sortFn);
+    const result = await eventStores({storeQueries}).stream(fn, sortFn);
 
-    expect(streamFake).to.have.been.calledWith(storeQueries, fn, sortFn);
+    expect(streamFake).to.have.been.calledWith({ region: envRegion, storeQueries, fn, sortFn });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
       path: "/stream",

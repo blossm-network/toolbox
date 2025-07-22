@@ -6,8 +6,7 @@ import operationUrl from "@blossm/operation-url";
 import networkToken from "@blossm/network-token";
 import networkUrl from "@blossm/network-url";
 import hash from "@blossm/operation-hash";
-import trim from "@blossm/trim-string";
-import { MAX_LENGTH } from "@blossm/service-name-consts";
+import operationShortName from "@blossm/operation-short-name";
 
 export default {
   post: request.post,
@@ -22,6 +21,5 @@ export default {
   networkUrl,
   networkToken,
   hash, 
-  trim, 
-  MAX_LENGTH
+  operationShortName
 }

@@ -1,9 +1,9 @@
 import deps from "./deps.js";
 
-export default async ({ tokenFn, operationNameComponents }) =>
+export default async ({ tokenFn, operationNameComponents, hash }) =>
   tokenFn
     ? await tokenFn({
-        hash: deps.hash(...operationNameComponents),
+        hash,
         name: deps.operationShortName(operationNameComponents)
       })
     : null;

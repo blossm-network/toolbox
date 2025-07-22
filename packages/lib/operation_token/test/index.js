@@ -20,9 +20,6 @@ const token = "some-token";
 describe("Operation token", () => {
   afterEach(restore);
   it("should return the correct output", async () => {
-    const hashFake = fake.returns(hash);
-    replace(deps, "hash", hashFake);
-
     const shortNameFake = fake.returns(shortName);
     replace(deps, "operationShortName", shortNameFake);
 
@@ -31,8 +28,8 @@ describe("Operation token", () => {
     const result = await operationToken({
       tokenFn: tokenFnFake,
       operationNameComponents,
+      hash
     });
-    expect(hashFake).to.have.been.calledWith(...operationNameComponents);
     expect(shortNameFake).to.have.been.calledWith(operationNameComponents);
     //doesn't mutate the origianl operation.
     expect(operationNameComponents).to.deep.equal([

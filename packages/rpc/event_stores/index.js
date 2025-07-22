@@ -1,13 +1,13 @@
 import deps from "./deps.js";
 
-export default (storeQueries) => {
+export default ({storeQueries, region = process.env.GCP_REGION }) => {
   const stream = ({
     context,
     claims,
     token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
   } = {}) => (fn, sortFn) =>
     deps
-      .stream(storeQueries, fn, sortFn)
+      .stream({ region, storeQueries, fn, sortFn })
       .in({
         ...(context && { context }),
       })

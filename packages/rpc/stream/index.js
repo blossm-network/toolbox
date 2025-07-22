@@ -26,7 +26,7 @@ const jsonString = (string) => {
   return { parsedData, leftover: string.substr(objectCloseIndex) };
 };
 
-export default (operationQueries, fn, sortFn) => {
+export default ({region = process.env.GCP_REGION, operationNameComponentQueries, fn, sortFn}) => {
   return {
     in: ({ context, network, host = process.env.HOST }) => {
       return {
@@ -40,32 +40,47 @@ export default (operationQueries, fn, sortFn) => {
           const internal = host == process.env.HOST;
 
           const formattedRequests = [];
-          for (const { operation, query } of operationQueries) {
+          for (const { operationNameComponents, query } of operationNameComponentQueries) {
             const id = query.id;
             delete query.id;
-            const { token, type } =
-              (internal
-                ? await deps.operationToken({
-                    tokenFn: internalTokenFn,
-                    operation,
-                  })
-                : await deps.networkToken({
-                    tokenFn: externalTokenFn,
-                    network,
-                  })) || {};
 
-            const url = internal
-              ? deps.operationUrl({
-                  operation,
-                  host,
-                  ...(path && { path }),
-                  ...(id && { id }),
-                })
-              : deps.networkUrl({
-                  host,
-                  ...(path && { path }),
-                  ...(id && { id }),
-                });
+            let token, type, url;
+
+            if (internal) {
+
+              const hash = deps.hash(...operationNameComponents);
+
+              const { token: _token, type: _type } = await deps.operationToken({
+                      tokenFn: internalTokenFn,
+                      operationNameComponents: operationNameComponents,
+                      hash
+                    });
+              token = _token;
+              type = _type;
+
+              url = deps.operationUrl({
+                protocol: process.env.NODE_ENV == "local" ? "http" : "https",
+                host: process.env.NODE_ENV == "local" ? `${hash}.${host}` : `${region}-${deps.operationShortName(operationNameComponents)}-${hash}-${process.env.GCP_COMPUTE_URL_ID}.${region}.run.app`,
+                ...(path && { path }),
+                ...(id && { id }),
+              });
+
+            } else {
+
+              const { token: _token, type: _type } = await deps.networkToken({
+                      tokenFn: externalTokenFn,
+                      network,
+                    }) || {};
+
+              token = _token;
+              type = _type;
+
+              url = deps.networkUrl({
+                host,
+                ...(path && { path }),
+                ...(id && { id }),
+              });
+          }
 
             const requestQuery = {
               ...(query && { ...query }),
@@ -103,7 +118,7 @@ export default (operationQueries, fn, sortFn) => {
 
           logger.info("stream errored: ", {
             response,
-            operationQueries,
+            operationNameComponentQueries,
             context,
             network,
           });
