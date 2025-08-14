@@ -13,6 +13,14 @@ describe("Difference", () => {
     expect(difference[1]).to.equal(1);
     expect(difference[2]).to.equal("pizza");
   });
+  it("should return an empty array if all elements in the first array are in the second array", () => {
+    const common = "common";
+    const array1 = [common, 23, 1, "pizza"];
+    const array2 = [common, 23, 1, "pizza", "mhm"];
+
+    const difference = arrayDifference(array1, array2);
+    expect(difference).to.be.of.length(0);
+  });
   it("should return an empty array if no different elements exist", () => {
     const array1 = ["pizza"];
     const array2 = ["pizza"];
