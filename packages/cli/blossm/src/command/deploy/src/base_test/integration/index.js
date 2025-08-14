@@ -60,8 +60,7 @@ const formattedPayload = async (payload) => {
     ) {
       const s = payload[property].substring(payload[property].indexOf("#") + 1);
       const h = await hash(s);
-      console.log({ h, s });
-      result[property] = hash;
+      result[property] = h;
     } else {
       result[property] = payload[property];
     }
