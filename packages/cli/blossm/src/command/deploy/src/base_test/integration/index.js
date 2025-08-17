@@ -67,7 +67,7 @@ const formattedPayload = async (payload) => {
           message: payload[property].message,
           key: payload[property].key,
           ring: payload[property].ring,
-          location: process.env.GCP_REGION,
+          location: "global",
           project: process.env.GCP_PROJECT,
           format: payload[property].format
       });
