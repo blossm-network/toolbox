@@ -53,7 +53,26 @@ const formattedPayload = async (payload) => {
       typeof payload[property] == "object" &&
       !(payload[property] instanceof Array)
     ) {
-      result[property] = await formattedPayload(payload[property]);
+      if (payload[property].type == "encrypt") {
+        console.log("encrypting: ", {
+          message: payload[property].message,
+          key: payload[property].key,
+          ring: payload[property].ring,
+          location: process.env.GCP_REGION,
+          project: process.env.GCP_PROJECT,
+          format: payload[property].format
+        })
+        result[property] = await encrypt({
+          message: payload[property].message,
+          key: payload[property].key,
+          ring: payload[property].ring,
+          location: process.env.GCP_REGION,
+          project: process.env.GCP_PROJECT,
+          format: payload[property].format
+      });
+      } else {
+        result[property] = await formattedPayload(payload[property]);
+      }
     } else if (
       typeof payload[property] == "string" &&
       payload[property].startsWith("#")
