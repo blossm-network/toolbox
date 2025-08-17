@@ -108,6 +108,8 @@ const executeStep = async (step) => {
         groupsAdded,
       });
 
+      console.log("stateEvent: ", stateEvent);
+
       await eventStore({ domain, service }).add({
         eventData: [{ event: stateEvent }],
       });
