@@ -1,6 +1,6 @@
 {
   "name": "@blossm/cli",
-  "version": "0.0.1929",
+  "version": "0.0.1930",
   "description": "A command line tool for interacting with blossm.",
   "main": "index.js",
   "type": "module",
