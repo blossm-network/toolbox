@@ -70,7 +70,7 @@ const formattedPayload = async (payload) => {
           location: "global",
           project: process.env.GCP_PROJECT,
           format: payload[property].format
-      });
+        });
       } else {
         result[property] = await formattedPayload(payload[property]);
       }
