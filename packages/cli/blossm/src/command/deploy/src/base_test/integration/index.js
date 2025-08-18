@@ -6,6 +6,8 @@ import eventStore from "@blossm/event-store-rpc";
 import createEvent from "@blossm/create-event";
 import { hash } from "@blossm/crypt";
 import gcpKms from "@blossm/gcp-kms";
+import gcpSecret from "@blossm/gcp-secret";
+import hmac from "@blossm/hmac";
 import config from "../../config.json" with { type: "json" };
 
 import request from "@blossm/request";
@@ -55,14 +57,6 @@ const formattedPayload = async (payload) => {
       !(payload[property] instanceof Array)
     ) {
       if (payload[property].type == "encrypt") {
-        console.log("encrypting: ", {
-          message: payload[property].message,
-          key: payload[property].key,
-          ring: payload[property].ring,
-          location: "global",
-          project: process.env.GCP_PROJECT,
-          format: payload[property].format
-        })
         result[property] = await gcpKms.encrypt({
           message: payload[property].message,
           key: payload[property].key,
@@ -70,6 +64,11 @@ const formattedPayload = async (payload) => {
           location: "global",
           project: process.env.GCP_PROJECT,
           format: payload[property].format
+        });
+      } else if (payload[property].type == "hmac") {
+        result[property] = await hmac.create({
+          secret: await gcpSecret.get(payload[property].secretKey),
+          message: payload[property].message
         });
       } else {
         result[property] = await formattedPayload(payload[property]);

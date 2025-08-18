@@ -21,6 +21,7 @@
     "@blossm/gcp-queue": "^0.0.37",
     "@blossm/gcp-secret": "^0.0.64",
     "@blossm/gcp-storage": "^0.0.16",
+    "@blossm/hmac": "^0.0.1",
     "@blossm/init-cli-template": "^0.0.40",
     "@blossm/normalize-cli": "^0.0.22",
     "@blossm/operation-hash": "^0.0.17",
