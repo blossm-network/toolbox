@@ -5,6 +5,7 @@
     "@blossm/fact-rpc": "*",
     "@blossm/validator": "*",
     "@blossm/crypt": "*",
+    "@blossm/hmac": "*",
     "@blossm/errors": "*",
     "@blossm/gcp-queue": "*",
     "@blossm/event-store-rpc": "*",

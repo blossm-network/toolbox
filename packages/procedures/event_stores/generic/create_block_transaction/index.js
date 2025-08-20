@@ -136,11 +136,7 @@ export default ({
 
       const encodedEvents = Buffer.from(deps.encode(stringifiedEventPairs));
 
-      //TODO this is a crutch so i dont have to delete all dbs rn.
-      // in the future get rid of the first case.
-      const nextSnapshotNumber = aggregate.headers.nonce
-        ? aggregate.headers.nonce.split("_")[1] + 1
-        : aggregate.headers.number == undefined
+      const nextSnapshotNumber = aggregate.headers.number == undefined
         ? 0
         : aggregate.headers.number + 1;
 

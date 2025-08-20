@@ -65,7 +65,7 @@ export default viewStore({
   ...(config.one && { one: config.one }),
   ...(config.group && { group: config.group }),
   groupsLookupFn: async ({ token }) => {
-    // TODO consider inverting this. looking in domain `groups` associated with the context principal.
+
     const { body } = await fact({
       name: "groups",
       domain: "principal",
