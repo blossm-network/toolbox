@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-create-block",
   "description": "An event store POST handler for creating a block.",
-  "version": "0.0.99",
+  "version": "0.0.100",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -15,7 +15,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/event-store-create-block-transaction": "^0.0.96"
+    "@blossm/event-store-create-block-transaction": "^0.0.97"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",
