@@ -248,6 +248,9 @@ describe("Event store integration tests", () => {
         let obj = e.payload;
         for (const part of indexParts) {
           obj = obj[part];
+          if (obj instanceof Array) {
+            obj = obj[0];
+          }
           if (obj == undefined) return false;
         }
         return true;
