@@ -71,9 +71,13 @@ export default ({
     candidateRoots.map((root) => aggregateFn(root))
   );
 
+  console.log("aggregates: ", aggregates);
+
   const filteredAggregates = aggregates.filter((aggregate) =>
     doesMatchQuery({ state: aggregate.state, queryPairs })
   );
+
+  console.log("filteredAggregates: ", filteredAggregates);
 
   return filteredAggregates;
 };
