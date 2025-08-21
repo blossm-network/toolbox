@@ -262,8 +262,7 @@ describe("Event store integration tests", () => {
           value = value[0];
         }
       }
-      console.log("index: ", index);
-      console.log("value: ", value);
+
       const response4 = await request.get(url, {
         query: {
           pairs:[{
@@ -273,13 +272,9 @@ describe("Event store integration tests", () => {
         },
       });
 
-      console.log("response4: ", response4);
-      console.log("response4.body: ", response4.body);
       expect(response4.statusCode).to.equal(200);
 
       const parsedBody4 = JSON.parse(response4.body);
-
-      console.log("parsedBody4: ", parsedBody4);
 
       for (const key in example1.result || example1) {
         expect(parsedBody4[0].state[key]).to.deep.equal(example1.payload[key]);

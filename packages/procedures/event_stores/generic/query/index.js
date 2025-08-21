@@ -4,18 +4,14 @@ const doesMatchQuery = ({ state, queryPairs }) => {
   try {
     for (const { key, value: expectedValue } of queryPairs) {
       const propertyParts = key.split(".");
-      console.log("propertyParts: ", propertyParts);
       let value = state;
-      console.log("value: ", value);
       for (const part of propertyParts) {
-        console.log("part: ", part);
         if (value instanceof Array) {
           value = value.find((item) => item[part] == expectedValue);
           value = value[part];
         } else {
           value = value[part];
         }
-        console.log("value: ", value);
         if (!value) return false;
       }
       if (value != expectedValue) return false;
@@ -46,13 +42,9 @@ export default ({
       });
   }
 
-  console.log("queryPairs: ", queryPairs);
-
   const query = Object.fromEntries(
     queryPairs.map(({ key, value }) => [`state.${key}`, value])
   );
-
-  console.log("formatted query: ", query);
 
   const snapshots = await findSnapshotsFn({
     query: Object.fromEntries(
@@ -60,18 +52,10 @@ export default ({
     ),
   });
 
-  console.log("snapshots: ", snapshots);
-
   const events = await findEventsFn({
     query: Object.fromEntries(
       queryPairs.map(({ key, value }) => [`payload.${key}`, value])
     ),
-  });
-
-  console.log("events: ", events);
-
-  events.forEach((event) => {
-    console.log("event payload: ", event.payload);
   });
 
   if (snapshots.length == 0 && events.length == 0) return [];
@@ -83,8 +67,6 @@ export default ({
     ]),
   ];
 
-  console.log("candidateRoots: ", candidateRoots);
-
   const aggregateFn = deps.aggregate({
     findOneSnapshotFn,
     eventStreamFn,
@@ -95,13 +77,9 @@ export default ({
     candidateRoots.map((root) => aggregateFn(root))
   );
 
-  console.log("aggregates: ", aggregates);
-
   const filteredAggregates = aggregates.filter((aggregate) =>
     doesMatchQuery({ state: aggregate.state, queryPairs })
   );
-
-  console.log("filteredAggregates: ", filteredAggregates);
 
   return filteredAggregates;
 };

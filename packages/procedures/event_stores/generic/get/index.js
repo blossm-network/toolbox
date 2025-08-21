@@ -24,7 +24,6 @@ export default ({
 
     res.send(result);
   } else {
-    console.log("req.query: ", req.query);
     const results = await deps.query({
       findSnapshotsFn,
       findEventsFn,
