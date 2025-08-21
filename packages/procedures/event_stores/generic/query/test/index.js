@@ -98,7 +98,7 @@ describe("Mongodb event store query", () => {
     const findEventsFnFake = fake.returns(findEventResult);
 
     const aggregateResult = {
-      state: { a: 1, b: 2, c: 3, d: 4 },
+      state: { a: [{ x: 11, y: 22 }], b: 2, c: 3, d: 4 },
       headers: {
         root,
         lastEventNumber: 2,
@@ -115,8 +115,8 @@ describe("Mongodb event store query", () => {
       eventStreamFn,
       handlers,
     })([{
-      key: "a",
-      value: 1,
+      key: "a.x",
+      value: 11,
     }, {
       key: "b",
       value: 2,
@@ -130,14 +130,14 @@ describe("Mongodb event store query", () => {
     expect(aggregateFnFake).to.have.been.calledTwice;
     expect(findEventsFnFake).to.have.been.calledOnceWith({
       query: {
-        "payload.a": 1,
+        "payload.a.x": 11,
         "payload.b": 2,
         "payload.c": 3,
       },
     });
     expect(findSnapshotsFnFake).to.have.been.calledOnceWith({
       query: {
-        "state.a": 1,
+        "state.a.x": 11,
         "state.b": 2,
         "state.c": 3,
       },
@@ -145,7 +145,7 @@ describe("Mongodb event store query", () => {
 
     expect(queryFnResult).to.deep.equal([
       {
-        state: { a: 1, b: 2, c: 3, d: 4 },
+        state: { a: [{ x: 11, y: 22 }], b: 2, c: 3, d: 4 },
         headers: {
           root,
           lastEventNumber: 2,
@@ -156,7 +156,7 @@ describe("Mongodb event store query", () => {
           root,
           lastEventNumber: 2,
         },
-        state: { a: 1, b: 2, c: 3, d: 4 },
+        state: { a: [{ x: 11, y: 22 }], b: 2, c: 3, d: 4 },
       },
     ]);
   });
