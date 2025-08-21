@@ -261,10 +261,12 @@ describe("Event store integration tests", () => {
         if (value instanceof Array) {
           value = value[0];
         }
-      } 
+      }
+      console.log("index: ", index);
+      console.log("value: ", value);
       const response4 = await request.get(url, {
         query: [{
-          key: [index],
+          key: index,
           value,
         }],
       });
