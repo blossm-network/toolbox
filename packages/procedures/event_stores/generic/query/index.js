@@ -8,6 +8,7 @@ const doesMatchQuery = ({ state, queryPairs }) => {
       let value = state;
       console.log("value: ", value);
       for (const part of propertyParts) {
+        console.log("part: ", part);
         if (value instanceof Array) {
           value = value.find((item) => item[part] == expectedValue);
         } else {
@@ -67,6 +68,10 @@ export default ({
   });
 
   console.log("events: ", events);
+
+  for (const event of events) {
+    console.log("event payload: ", event.payload);
+  }
 
   if (snapshots.length == 0 && events.length == 0) return [];
 
