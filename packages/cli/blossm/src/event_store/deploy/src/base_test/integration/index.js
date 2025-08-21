@@ -265,10 +265,12 @@ describe("Event store integration tests", () => {
       console.log("index: ", index);
       console.log("value: ", value);
       const response4 = await request.get(url, {
-        query: [{
-          key: index,
-          value,
-        }],
+        query: {
+          pairs:[{
+            key: index,
+            value,
+          }]
+        },
       });
 
       console.log("response4: ", response4);
