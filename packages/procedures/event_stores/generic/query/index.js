@@ -69,9 +69,9 @@ export default ({
 
   console.log("events: ", events);
 
-  for (const event of events) {
+  events.forEach((event) => {
     console.log("event payload: ", event.payload);
-  }
+  });
 
   if (snapshots.length == 0 && events.length == 0) return [];
 
