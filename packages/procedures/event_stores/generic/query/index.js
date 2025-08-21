@@ -11,6 +11,7 @@ const doesMatchQuery = ({ state, queryPairs }) => {
         console.log("part: ", part);
         if (value instanceof Array) {
           value = value.find((item) => item[part] == expectedValue);
+          value = value[part];
         } else {
           value = value[part];
         }
