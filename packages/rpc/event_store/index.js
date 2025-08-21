@@ -57,10 +57,10 @@ export default ({ domain, service = process.env.SERVICE, region = process.env.GC
     context,
     claims,
     token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
-  } = {}) => ({ key, value }) =>
+  } = {}) => (queryPairs) =>
     deps
       .rpc({ region, operationNameComponents: [domain, service, "event-store"]})
-      .get({ key, value })
+      .get(queryPairs)
       .in({
         ...(context && { context }),
       })

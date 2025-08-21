@@ -30,10 +30,7 @@ export default ({
       findOneSnapshotFn,
       eventStreamFn,
       handlers,
-    })({
-      key: req.query.key,
-      value: req.query.value,
-    });
+    })(req.query);
     res.send(results);
   }
 };

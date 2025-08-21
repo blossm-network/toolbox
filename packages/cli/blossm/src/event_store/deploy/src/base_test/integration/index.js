@@ -263,10 +263,10 @@ describe("Event store integration tests", () => {
         }
       } 
       const response4 = await request.get(url, {
-        query: {
+        query: [{
           key: [index],
           value,
-        },
+        }],
       });
       expect(response4.statusCode).to.equal(200);
 

@@ -14,8 +14,7 @@ export default fact({
     domain,
     service,
     network,
-    key,
-    value,
+    queryPairs,
     context: contextOverride = context,
     claims: claimsOverride = claims,
     principal = "user",
@@ -37,7 +36,7 @@ export default fact({
               : nodeExternalToken({ network }),
         },
       })
-      .query({ key, value });
+      .query(queryPairs);
 
     return aggregates.map((aggregate) => ({
       root: aggregate.headers.root,

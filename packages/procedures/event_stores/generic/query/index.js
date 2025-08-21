@@ -1,14 +1,19 @@
 import deps from "./deps.js";
 
-const doesMatchQuery = ({ state, query }) => {
+const doesMatchQuery = ({ state, queryPairs }) => {
   try {
-    for (const property in query) {
-      const propertyParts = property.split(".");
-      let value = {
-        ...state,
-      };
-      for (const part of propertyParts) value = value[part];
-      if (value != query[property]) return false;
+    for (const { key, value: expectedValue } of queryPairs) {
+      const propertyParts = key.split(".");
+      let value = state;
+      for (const part of propertyParts) {
+        if (value instanceof Array) {
+          value = value.find((item) => item[part] == expectedValue);
+        } else {
+          value = value[part];
+        }
+        if (!value) return false;
+      }
+      if (value != expectedValue) return false;
     }
     return true;
   } catch (e) {
@@ -22,19 +27,29 @@ export default ({
   findOneSnapshotFn,
   eventStreamFn,
   handlers,
-}) => async ({ key, value }) => {
-  if (!key || !value)
-    throw deps.badRequestError.message("The query is missing a key or value.", {
-      info: { key, value },
+}) => async (queryPairs) => {
+  if (!(queryPairs instanceof Array)) {
+    throw deps.badRequestError.message("The query is not an array.", {
+      info: { queryPairs },
     });
+  }
+  for (const queryPair of queryPairs) {
+    const { key, value } = queryPair;
+    if (!key || !value)
+      throw deps.badRequestError.message("A query pair is missing a key or value.", {
+        info: { key, value },
+      });
+  }
 
   const snapshots = await findSnapshotsFn({
-    query: { [`state.${key}`]: value },
+    query: Object.fromEntries(
+      queryPairs.map(({ key, value }) => [`state.${key}`, value])
+    ),
   });
   const events = await findEventsFn({
-    query: {
-      [`payload.${key}`]: value,
-    },
+    query: Object.fromEntries(
+      queryPairs.map(({ key, value }) => [`payload.${key}`, value])
+    ),
   });
 
   if (snapshots.length == 0 && events.length == 0) return [];
@@ -57,7 +72,7 @@ export default ({
   );
 
   const filteredAggregates = aggregates.filter((aggregate) =>
-    doesMatchQuery({ state: aggregate.state, query: { [key]: value } })
+    doesMatchQuery({ state: aggregate.state, queryPairs })
   );
 
   return filteredAggregates;

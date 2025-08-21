@@ -32,10 +32,10 @@ const claims = "some-claims";
 const internalTokenFn = "some-internal-token-fn";
 const externalTokenFn = "some-external-token-fn";
 
-const query = {
+const query = [{
   key: "some-key",
   value: "some-value",
-};
+}];
 
 const path = "some-path";
 const id = "some-id";

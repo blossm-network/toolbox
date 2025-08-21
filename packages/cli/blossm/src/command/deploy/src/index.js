@@ -94,8 +94,7 @@ export default commandProcedure({
     domain,
     service,
     network,
-    key,
-    value,
+    queryPairs,
     context: contextOverride = context,
     claims: claimsOverride = claims,
     principal = "issuer",
@@ -117,7 +116,7 @@ export default commandProcedure({
               : nodeExternalToken({ network }),
         },
       })
-      .query({ key, value });
+      .query(queryPairs);
     return aggregates.map((aggregate) => ({
       root: aggregate.headers.root,
       state: aggregate.state,

@@ -58,10 +58,10 @@ describe("Event store get", () => {
     const params = {};
     const key = "some-key";
     const value = "some-value";
-    const query = {
+    const query = [{
       key,
       value,
-    };
+    }];
     const req = {
       params,
       query,
