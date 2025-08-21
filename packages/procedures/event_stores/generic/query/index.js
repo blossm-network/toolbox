@@ -41,6 +41,14 @@ export default ({
       });
   }
 
+  console.log("queryPairs: ", queryPairs);
+
+  const query = Object.fromEntries(
+    queryPairs.map(({ key, value }) => [`state.${key}`, value])
+  );
+
+  console.log("formatted query: ", query);
+
   const snapshots = await findSnapshotsFn({
     query: Object.fromEntries(
       queryPairs.map(({ key, value }) => [`state.${key}`, value])
