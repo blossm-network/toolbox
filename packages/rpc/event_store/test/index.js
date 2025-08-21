@@ -271,7 +271,7 @@ describe("Event store", () => {
       region,
       operationNameComponents: [domain, service, "event-store"]
     });
-    expect(getFake).to.have.been.calledWith(query);
+    expect(getFake).to.have.been.calledWith({ pairs: query });
     expect(inFake).to.have.been.calledWith({
       context,
     });
@@ -302,7 +302,7 @@ describe("Event store", () => {
       region: envRegion,
       operationNameComponents: [domain, envService, "event-store"]
     });
-    expect(getFake).to.have.been.calledWith(query);
+    expect(getFake).to.have.been.calledWith({ pairs: query });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
     expect(result).to.equal(queryResult);

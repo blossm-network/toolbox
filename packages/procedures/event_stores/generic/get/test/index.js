@@ -64,7 +64,9 @@ describe("Event store get", () => {
     }];
     const req = {
       params,
-      query,
+      query: {
+        pairs: query,
+      },
     };
     const sendFake = fake();
     const res = {
@@ -96,7 +98,9 @@ describe("Event store get", () => {
     };
     const req = {
       params,
-      query: {},
+      query: {
+        pairs: [],
+      },
     };
     const res = {};
 
