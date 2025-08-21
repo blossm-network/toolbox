@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-rpc",
   "description": "Access to an event store.",
-  "version": "0.0.309",
+  "version": "0.0.310",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@blossm/request": "^0.0.69",
-    "@blossm/rpc": "^0.0.267"
+    "@blossm/rpc": "^0.0.268"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",
