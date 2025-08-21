@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-reserve-root-counts",
   "description": "A mongodb event store server function that allocated event numbers.",
-  "version": "0.0.117",
+  "version": "0.0.118",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@blossm/datetime": "^0.0.18",
-    "@blossm/mongodb-database": "^0.0.133"
+    "@blossm/mongodb-database": "^0.0.134"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",

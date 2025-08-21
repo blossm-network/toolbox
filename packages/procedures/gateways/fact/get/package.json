@@ -1,7 +1,7 @@
 {
   "name": "@blossm/fact-gateway-get",
   "description": "A fact gateway server GET handler.",
-  "version": "0.0.222",
+  "version": "0.0.223",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@blossm/errors": "^0.0.40",
-    "@blossm/fact-rpc": "^0.0.206"
+    "@blossm/fact-rpc": "^0.0.207"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",

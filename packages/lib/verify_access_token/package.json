@@ -1,6 +1,6 @@
 {
   "name": "@blossm/verify-access-token",
-  "version": "0.0.68",
+  "version": "0.0.69",
   "description": "Verifies that the signature is correct given a message and a public key.",
   "main": "index.js",
   "type": "module",
@@ -15,7 +15,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/request": "^0.0.68"
+    "@blossm/request": "^0.0.69"
   },
   "devDependencies": {
     "mocha": "^11.6.0",
