@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-get",
   "description": "An event store GET handler.",
-  "version": "0.0.81",
+  "version": "0.0.82",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -17,7 +17,7 @@
   "dependencies": {
     "@blossm/errors": "^0.0.40",
     "@blossm/event-store-aggregate": "^0.0.18",
-    "@blossm/event-store-query": "^0.0.24"
+    "@blossm/event-store-query": "^0.0.25"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",
