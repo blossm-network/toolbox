@@ -1,6 +1,6 @@
 {
   "name": "@blossm/connection-token",
-  "version": "0.0.236",
+  "version": "0.0.237",
   "description": "Opens a connection to get a token to another node.",
   "main": "index.js",
   "type": "module",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@blossm/basic-token": "^0.0.11",
-    "@blossm/command-rpc": "^0.0.306",
+    "@blossm/command-rpc": "^0.0.307",
     "@blossm/jwt": "^0.0.71",
     "@blossm/redis": "^0.0.16"
   },

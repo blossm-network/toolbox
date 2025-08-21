@@ -1,6 +1,6 @@
 {
   "name": "@blossm/deleted-scene-check",
-  "version": "0.0.74",
+  "version": "0.0.75",
   "description": "Checks to see if the scene has been deleted.",
   "main": "index.js",
   "type": "module",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@blossm/errors": "^0.0.40",
-    "@blossm/fact-rpc": "^0.0.207"
+    "@blossm/fact-rpc": "^0.0.208"
   },
   "devDependencies": {
     "mocha": "^11.7.0"
