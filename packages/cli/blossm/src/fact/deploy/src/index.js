@@ -40,6 +40,8 @@ export default fact({
 
     return aggregates.map((aggregate) => ({
       root: aggregate.headers.root,
+      service: aggregate.headers.service,
+      network: aggregate.headers.network,
       state: aggregate.state,
     }));
   },
