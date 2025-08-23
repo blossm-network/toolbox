@@ -41,6 +41,8 @@ export default commandProcedure({
         lastEventNumber: aggregate.headers.lastEventNumber,
         state: aggregate.state,
         root: aggregate.headers.root,
+        service: aggregate.headers.service,
+        network: aggregate.headers.network,
         groups: aggregate.groups,
       }
     );
