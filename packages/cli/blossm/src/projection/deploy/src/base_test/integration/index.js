@@ -7,6 +7,8 @@ import { string as dateString } from "@blossm/datetime";
 
 import request from "@blossm/request";
 
+const { expect } = chai;
+
 import config from "../../config.json" with { type: "json" };
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
