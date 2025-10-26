@@ -55,7 +55,7 @@ export default async ({
         }
       )
     )
-    .del(
+    .delete(
       deps.del(
         { removeFn, groupsLookupFn, ...(group && { group }) },
         {

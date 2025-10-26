@@ -23,7 +23,7 @@ describe("View store", () => {
       listen: listenFake,
     });
     const putFake = fake.returns({
-      del: deleteFake,
+      delete: deleteFake,
     });
     const getFake = fake.returns({
       put: putFake,
@@ -134,7 +134,7 @@ describe("View store", () => {
       listen: listenFake,
     });
     const putFake = fake.returns({
-      del: deleteFake,
+      delete: deleteFake,
     });
     const getFake = fake.returns({
       put: putFake,

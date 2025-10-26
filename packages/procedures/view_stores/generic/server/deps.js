@@ -9,5 +9,5 @@ export default {
   get,
   idStream,
   put,
-  del: del,
+  del
 };
