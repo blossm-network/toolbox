@@ -1,5 +1,6 @@
 import normalize from "@blossm/normalize-cli";
 import hash from "@blossm/operation-hash";
+import operationShortName from "@blossm/operation-short-name";
 
 import deploy from "./deploy/index.js";
 import init from "./init/index.js";
