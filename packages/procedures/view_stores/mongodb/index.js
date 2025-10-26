@@ -11,6 +11,19 @@ export function __resetStoresForTest() {
 }
 
 const viewStore = async ({ schema, indexes, secretFn }) => {
+  console.log({
+      protocol: process.env.MONGODB_PROTOCOL,
+      user: process.env.MONGODB_USER,
+      password:
+        process.env.NODE_ENV == "local"
+          ? process.env.MONGODB_USER_PASSWORD
+          : await secretFn("mongodb-view-store"),
+      host: process.env.MONGODB_HOST,
+      database: process.env.MONGODB_DATABASE,
+      parameters: { authSource: "admin", retryWrites: true, w: "majority" },
+      autoIndex: true,
+  });
+
   if (_viewStore != undefined) {
     logger.info("Thank you existing database.");
     return _viewStore;
