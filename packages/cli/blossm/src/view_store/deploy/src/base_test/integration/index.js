@@ -104,9 +104,6 @@ describe("View store base integration tests", () => {
       },
     });
     
-    console.log("examples[0].update: ", examples[0].update);
-    console.log("response0: ", response0);
-
     expect(response0.statusCode).to.equal(200);
     if (config.key) {
       expect(JSON.parse(response0.body).keys).to.exist;
