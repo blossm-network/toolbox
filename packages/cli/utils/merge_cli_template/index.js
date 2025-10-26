@@ -488,6 +488,19 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
           ],
         },
         groupsFactProcedure,
+        // added below to debug projection deploy
+        {
+          procedure: "fact",
+          domain: "group",
+          service: "core",
+          network: localCoreNetwork,
+          mocks: [
+            {
+              fact: "principals",
+              code: 200,
+            },
+          ],
+        },
         {
           procedure: "fact-gateway",
           domain: "group",
