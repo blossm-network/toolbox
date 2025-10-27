@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-store-get",
   "description": "A view store GET handler.",
-  "version": "0.0.191",
+  "version": "0.0.192",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
