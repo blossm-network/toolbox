@@ -195,17 +195,19 @@ describe("View store", () => {
       countFn,
       groupsLookupFn,
       formatFn: match((fn) => {
-        const input = "some-input";
+        const inputBody = "some-input-body";
+        const input = { body: inputBody };
         const output = fn(input);
-        return input == output;
+        return inputBody == output;
       }),
     });
     expect(viewStorePutFake).to.have.been.calledWith({
       writeFn,
       formatFn: match((fn) => {
-        const input = "some-input";
+        const inputBody = "some-input-body";
+        const input = { body: inputBody };
         const output = fn(input);
-        return input == output;
+        return inputBody == output;
       }),
     });
     expect(viewStoreDeleteFake).to.have.been.calledWith({

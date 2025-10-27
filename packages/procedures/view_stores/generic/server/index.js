@@ -1,6 +1,6 @@
 import deps from "./deps.js";
 
-const defaultFormatFn = (content) => content;
+const defaultFormatFn = (content) => content.body;
 
 export default async ({
   streamFn,
