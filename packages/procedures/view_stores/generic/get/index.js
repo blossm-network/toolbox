@@ -195,7 +195,7 @@ export default ({
     }
 
     return {
-      ...formatFn({
+      body: formatFn({
         body: r.body,
         id: r.headers.id,
         created: r.headers.created,

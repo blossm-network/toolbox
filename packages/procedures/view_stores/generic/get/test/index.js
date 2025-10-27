@@ -154,7 +154,7 @@ describe("View store get", () => {
     }
     expect(sendFake).to.have.been.calledWith({
       content: formattedResults.map((r) => ({
-        ...r,
+        body: r,
         headers: {
           id,
           context: foundContext,
@@ -407,7 +407,7 @@ describe("View store get", () => {
     }
     expect(sendFake).to.have.been.calledWith({
       content: formattedResults.map((r) => ({
-        ...r,
+        body: r,
         headers: {
           id,
           context: foundContext,
@@ -577,7 +577,7 @@ describe("View store get", () => {
     expect(sendFake).to.have.been.calledWith({
       content: [
         {
-          ...formattedResult,
+          body: formattedResult,
           headers: {
             id,
             context: foundContext,
@@ -670,7 +670,7 @@ describe("View store get", () => {
     expect(sendFake).to.have.been.calledWith({
       content: [
         {
-          ...formattedResult,
+          body: formattedResult,
           headers: {
             id,
             context: foundContext,
@@ -755,7 +755,7 @@ describe("View store get", () => {
     expect(sendFake).to.have.been.calledWith({
       content: [
         {
-          ...formattedResult,
+          body: formattedResult,
           headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
         },
       ],
@@ -837,7 +837,7 @@ describe("View store get", () => {
     });
     expect(sendFake).to.have.been.calledWith({
       content: {
-        ...formattedResult,
+        body: formattedResult,
         headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
       },
       updates:
@@ -920,7 +920,7 @@ describe("View store get", () => {
     });
     expect(sendFake).to.have.been.calledWith({
       content: {
-        ...formattedResult,
+        body: formattedResult,
         headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
       },
       updates:
@@ -1007,7 +1007,7 @@ describe("View store get", () => {
     });
     expect(sendFake).to.have.been.calledWith({
       content: {
-        ...formattedResult,
+        body: formattedResult,
         headers: { trace: [txId0, txId1, txId2], id, context: foundContext },
       },
       updates:

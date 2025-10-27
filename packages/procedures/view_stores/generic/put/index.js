@@ -102,7 +102,7 @@ export default ({
 
   res.status(200).send({
     view: {
-      ...formatFn({
+      body: formatFn({
         body: newView.body,
         id: newView.headers.id,
         created: newView.headers.created,

@@ -140,7 +140,7 @@ describe("View store put", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({
       view: {
-        ...formattedWriteResult,
+        body: formattedWriteResult,
         headers: {
           id: writeResultId,
           context: writeResultContext,
@@ -229,7 +229,7 @@ describe("View store put", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({
       view: {
-        ...formattedWriteResult,
+        body: formattedWriteResult,
         headers: {
           id: writeResultId,
           context: writeResultContext,
@@ -325,7 +325,7 @@ describe("View store put", () => {
     expect(statusFake).to.have.been.calledWith(200);
     expect(sendFake).to.have.been.calledWith({
       view: {
-        ...formattedWriteResult,
+        body: formattedWriteResult,
         headers: {
           id: writeResultId,
           context: writeResultContext,
