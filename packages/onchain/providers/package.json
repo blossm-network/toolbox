@@ -1,0 +1,27 @@
+{
+  "name": "@blossm/providers",
+  "version": "0.0.1",
+  "description": "Read-only viem public clients from explicit HTTP RPC URLs",
+  "main": "index.js",
+  "type": "module",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 20.19.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "dependencies": {
+    "viem": "^2.38.0",
+    "@blossm/errors": "*"
+  },
+  "devDependencies": {
+    "mocha": "^11.7.0",
+    "chai": "^5.2.0",
+    "sinon": "^21.0.0",
+    "sinon-chai": "^4.0.0"
+  }
+}
