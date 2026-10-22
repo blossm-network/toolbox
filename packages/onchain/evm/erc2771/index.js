@@ -1,5 +1,6 @@
 /* global BigInt */
 import deps from "./deps.js";
+import signingDomain from "./src/signing_domain.js";
 
 const uint = (value, bits, name) => {
   const valid =
@@ -117,38 +118,15 @@ const signErc2771ForwardRequest = async ({
     abi: deps.trustedForwarderContractABI,
     client: publicClient,
   });
-  const [
-    fields,
-    name,
-    domainVersion,
-    domainChainId,
-    verifyingContract,
-    ,
-    extensions,
-  ] = await forwarder.read.eip712Domain([], { blockNumber: block.number });
-
-  if (
-    fields !== "0x0f" ||
-    !Array.isArray(extensions) ||
-    extensions.length !== 0 ||
-    typeof name !== "string" ||
-    !name ||
-    typeof domainVersion !== "string" ||
-    !domainVersion ||
-    domainChainId !== BigInt(chainId) ||
-    typeof verifyingContract !== "string" ||
-    verifyingContract.toLowerCase() !== forwarderAddress.toLowerCase()
-  ) {
-    throw deps.internalServer.message("Unexpected forwarder signing domain");
-  }
-  if (
-    (domainName !== undefined && domainName !== name) ||
-    (version !== undefined && version !== domainVersion)
-  ) {
-    throw deps.invalidArgument.message(
-      "Requested domain does not match the forwarder"
-    );
-  }
+  const domain = signingDomain({
+    reportedDomain: await forwarder.read.eip712Domain([], {
+      blockNumber: block.number,
+    }),
+    chainId,
+    forwarderAddress,
+    domainName,
+    version,
+  });
 
   const nonce = uint(
     await forwarder.read.nonces([account.address], {
@@ -157,12 +135,6 @@ const signErc2771ForwardRequest = async ({
     256,
     "nonce"
   );
-  const domain = {
-    name,
-    version: domainVersion,
-    chainId: domainChainId,
-    verifyingContract,
-  };
   const types = {
     ForwardRequest: [
       { name: "from", type: "address" },
