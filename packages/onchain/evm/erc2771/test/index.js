@@ -60,9 +60,6 @@ describe("V6 ERC-2771 signing", () => {
 
   beforeEach(() => {
     state = {
-      chainId: 1,
-      number: "0x1234",
-      timestamp: "0x77359400", // 2000000000, independent of local wall clock.
       domain: [
         "0x0f",
         "Juicebox",
@@ -76,15 +73,6 @@ describe("V6 ERC-2771 signing", () => {
       reads: [],
     };
     rpc = fake(async ({ method, params }) => {
-      if (state.fail === method) throw new Error("Mock RPC unavailable");
-      if (method === "eth_chainId") return `0x${state.chainId.toString(16)}`;
-      if (method === "eth_getBlockByNumber") {
-        return {
-          number: state.number,
-          timestamp: state.timestamp,
-          transactions: [],
-        };
-      }
       if (method === "eth_call") {
         expect(params[0].to.toLowerCase()).to.equal(forwarder);
         const call = decodeFunctionData({ abi, data: params[0].data });
@@ -110,9 +98,7 @@ describe("V6 ERC-2771 signing", () => {
     try {
       for (const call of rpc.getCalls()) {
         expect(JSON.stringify(call.args)).to.not.include(privateKey);
-        expect(["eth_chainId", "eth_getBlockByNumber", "eth_call"]).to.include(
-          call.args[0].method
-        );
+        expect(call.args[0].method).to.equal("eth_call");
       }
     } finally {
       restore();
@@ -122,7 +108,6 @@ describe("V6 ERC-2771 signing", () => {
   it("should sign locally, encode execute and recover the sender on each requested chain", async () => {
     const signatures = [];
     for (const chainId of [1, 8453]) {
-      state.chainId = chainId;
       state.domain[3] = BigInt(chainId);
       const encoded = await erc2771.signErc2771ForwardRequest({
         ...baseOptions,
@@ -169,9 +154,7 @@ describe("V6 ERC-2771 signing", () => {
     }
 
     expect(signatures[0]).to.not.equal(signatures[1]);
-    expect(state.reads.every((read) => read.block === state.number)).to.equal(
-      true
-    );
+    expect(state.reads.every((read) => read.block === "latest")).to.equal(true);
     expect(
       state.reads
         .filter((read) => read.functionName === "nonces")
@@ -180,12 +163,15 @@ describe("V6 ERC-2771 signing", () => {
     expect(getProvider.getCall(0).args).to.deep.equal([baseOptions.rpcUrl]);
   });
 
-  it("should accept matching optional domain expectations and ignore caller nonce/signature overrides", async () => {
+  it("should use the reported domain and nonce and ignore caller overrides", async () => {
     state.nonce = BigInt("9007199254740993");
+    state.domain[1] = "Reported forwarder";
+    state.domain[2] = "2";
+    state.domain[4] = request.to;
     const encoded = await erc2771.signErc2771ForwardRequest({
       ...baseOptions,
-      domainName: "Juicebox",
-      version: "1",
+      domainName: "Ignored legacy expectation",
+      version: "Ignored legacy expectation",
       forwardRequestData: {
         ...request,
         nonce: "0",
@@ -201,10 +187,10 @@ describe("V6 ERC-2771 signing", () => {
     expect(
       await recoverTypedDataAddress({
         domain: {
-          name: "Juicebox",
-          version: "1",
+          name: state.domain[1],
+          version: state.domain[2],
           chainId: BigInt(1),
-          verifyingContract: forwarder,
+          verifyingContract: state.domain[4],
         },
         types,
         primaryType: "ForwardRequest",
@@ -228,14 +214,6 @@ describe("V6 ERC-2771 signing", () => {
     expect(decoded.deadline).to.equal(Number(deadline));
   });
 
-  it("should reject a sender that does not match the key before any RPC", async () => {
-    await rejection(
-      { ...baseOptions, forwardRequestData: { ...request, from: request.to } },
-      "Request sender must match the signing account"
-    );
-    expect(rpc.callCount).to.equal(0);
-  });
-
   it("should redact key-parser failures without leaking the secret", async () => {
     replace(deps, "privateKeyToAccount", fake.throws(new Error(privateKey)));
     await assert.rejects(
@@ -252,73 +230,20 @@ describe("V6 ERC-2771 signing", () => {
     expect(rpc.callCount).to.equal(0);
   });
 
-  it("should reject unsupported chains before any RPC", async () => {
-    for (const chainId of ["1", 137, 0]) {
-      await assert.rejects(
-        erc2771.signErc2771ForwardRequest({ ...baseOptions, chainId }),
-        (error) => error.statusCode === 500
-      );
-    }
-    expect(rpc.callCount).to.equal(0);
-  });
-
-  it("should reject an RPC chain mismatch before reading the forwarder", async () => {
-    state.chainId = 10;
-    await rejection(
-      baseOptions,
-      "RPC endpoint does not match the requested chain",
-      500
-    );
-    expect(state.reads).to.deep.equal([]);
-  });
-
-  it("should reject expired deadlines using block time instead of wall-clock time", async () => {
-    for (const deadline of [1999999999, 2000000000]) {
-      await rejection(
-        { ...baseOptions, deadline },
-        "deadline must be later than the latest block timestamp"
-      );
-    }
-    expect(state.reads).to.deep.equal([]);
-  });
-
-  it("should refuse an unnumbered block so domain and nonce stay pinned", async () => {
-    state.number = null;
-    await rejection(
-      baseOptions,
-      "Latest block must have a number for pinned reads",
-      500
-    );
-    expect(state.reads).to.deep.equal([]);
-  });
-
-  it("should enforce the domain rule before reading a nonce", async () => {
+  it("should reject a reported domain chain mismatch before reading the nonce", async () => {
     state.domain[3] = BigInt(10);
-    await rejection(baseOptions, "Unexpected forwarder signing domain", 500);
-    expect(state.reads.some((read) => read.functionName === "nonces")).to.equal(
-      false
+    await rejection(
+      baseOptions,
+      "Forwarder domain does not match the requested chain",
+      500
     );
-  });
-
-  it("should reject caller expectations that disagree with the actual domain", async () => {
-    for (const options of [{ domainName: "Blossm" }, { version: "2" }]) {
-      await rejection(
-        { ...baseOptions, ...options },
-        "Requested domain does not match the forwarder"
-      );
-    }
-    expect(state.reads.some((read) => read.functionName === "nonces")).to.equal(
-      false
-    );
+    expect(state.reads.map((read) => read.functionName)).to.deep.equal([
+      "eip712Domain",
+    ]);
   });
 
   it("should propagate failed public reads without signing or submitting", async () => {
-    for (const fail of [
-      "eth_chainId",
-      "eth_getBlockByNumber",
-      "eip712Domain",
-      "nonces",
-    ]) {
+    for (const fail of ["eip712Domain", "nonces"]) {
       state.fail = fail;
       await assert.rejects(
         erc2771.signErc2771ForwardRequest(baseOptions),

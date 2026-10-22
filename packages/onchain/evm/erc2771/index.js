@@ -1,14 +1,11 @@
 /* global BigInt */
 import deps from "./deps.js";
-import signingDomain from "./src/signing_domain.js";
 
 const signErc2771ForwardRequest = async ({
   forwardRequestData,
   chainId,
   privateKey,
   rpcUrl,
-  domainName,
-  version,
   deadline,
 }) => {
   const forwarderAddress = deps.erc2771ForwarderContract(chainId);
@@ -31,49 +28,21 @@ const signErc2771ForwardRequest = async ({
       "privateKey must be a valid secp256k1 key"
     );
   }
-  if (from.toLowerCase() !== account.address.toLowerCase()) {
-    throw deps.invalidArgument.message(
-      "Request sender must match the signing account"
-    );
-  }
-
   const publicClient = deps.getProvider(rpcUrl);
-  if ((await publicClient.getChainId()) !== chainId) {
-    throw deps.internalServer.message(
-      "RPC endpoint does not match the requested chain"
-    );
-  }
-
-  const block = await publicClient.getBlock({ blockTag: "latest" });
-  if (block.number === null) {
-    throw deps.internalServer.message(
-      "Latest block must have a number for pinned reads"
-    );
-  }
-  if (request.deadline <= block.timestamp) {
-    throw deps.invalidArgument.message(
-      "deadline must be later than the latest block timestamp"
-    );
-  }
-
   const forwarder = deps.getContract({
     address: forwarderAddress,
     abi: deps.trustedForwarderContractABI,
     client: publicClient,
   });
-  const domain = signingDomain({
-    reportedDomain: await forwarder.read.eip712Domain([], {
-      blockNumber: block.number,
-    }),
-    chainId,
-    forwarderAddress,
-    domainName,
-    version,
-  });
-
-  const nonce = await forwarder.read.nonces([account.address], {
-    blockNumber: block.number,
-  });
+  const [, name, version, domainChainId, verifyingContract] =
+    await forwarder.read.eip712Domain();
+  if (domainChainId !== BigInt(chainId)) {
+    throw deps.internalServer.message(
+      "Forwarder domain does not match the requested chain"
+    );
+  }
+  const domain = { name, version, chainId: domainChainId, verifyingContract };
+  const nonce = await forwarder.read.nonces([account.address]);
   const types = {
     ForwardRequest: [
       { name: "from", type: "address" },

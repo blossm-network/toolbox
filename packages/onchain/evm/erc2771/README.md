@@ -1,8 +1,8 @@
 # @blossm/erc2771
 
-Prepare locally signed `execute` calldata for the pinned Juicebox V6
-ERC2771Forwarder. This package performs public chain reads and local signing;
-it does not submit a transaction or make RPC signing requests.
+Prepare locally signed `execute` calldata for the pinned Juicebox V6 forwarder.
+This internal library reads the forwarder's domain and nonce, binds the reported
+domain chain to the requested chain, signs locally and encodes the call.
 
 ```js
 import erc2771 from "@blossm/erc2771";
@@ -19,103 +19,78 @@ const calldata = await erc2771.signErc2771ForwardRequest({
     gas: "200000",
     data: targetCalldata,
   },
-  // Optional assertions against the contract's reported domain:
-  domainName: "Juicebox",
-  version: "1",
 });
 ```
 
 ## Contract
 
 `signErc2771ForwardRequest(options)` returns `Promise<hex>` containing an
-encoded forwarder `execute(request)` call. The relay or execution layer owns
-submission to the [V6 forwarder address](../contractAddresses/trustedForwarder/README.md),
-including any native value required by the request.
+encoded forwarder `execute(request)` call. Callers supply clean inputs:
 
-This is an internal library. Callers supply validated request fields; procedure
-`validateFn` and the shared validation libraries own user-input validation.
-The signer does not repeat object/address/hex/key-format or integer-range checks.
-Viem owns account construction, RPC/ABI decoding and typed-data/ABI encoding.
-
-- `chainId`: supported numeric chain ID, resolved by the address package.
+- `chainId`: supported numeric chain ID from the V6 address package.
 - `rpcUrl`: explicit HTTP(S) endpoint, handled by `@blossm/providers`.
 - `privateKey`: hexadecimal secp256k1 key from the custody/caller layer.
-- `forwardRequestData`: validated `from`, `to`, `value`, `gas` and `data` fields.
-- `value`, `gas`: clean unsigned uint256 values, converted with native `BigInt`.
-  Callers own safe-integer handling, accepted input formats and positive gas policy.
-- `deadline`: clean uint48 Unix seconds, converted with `BigInt`; it must be later
-  than the observed block timestamp.
-- `domainName`, `version`: optional expectations for the reported signing domain.
-  They never override it.
+- `forwardRequestData`: validated `from`, `to`, `value`, `gas` and `data`.
+  The caller ensures `from` corresponds to the signing key.
+- `value`, `gas`: clean uint256 values converted with native `BigInt`.
+- `deadline`: clean uint48 Unix seconds converted with `BigInt`. The caller
+  owns deadline selection and freshness, including whether to sign at all.
 
-The private key becomes a local viem account and must match `from`. Its value
-is never passed to an RPC. Invalid-key errors are sanitized without retaining
-the key-parser cause. No logging is performed by this package.
+Procedure `validateFn` and the shared validation libraries own caller-input
+validation. Viem owns account construction, RPC/ABI decoding and signing/encoding.
+The signer does not revalidate input shapes or formats, sender consistency,
+deadline freshness or execution readiness.
 
-## Chain and signing-domain checks
+## Signing
 
-The endpoint's `eth_chainId` must match the requested chain. The signer reads
-the latest block, requires a block number for pinning, checks the deadline against
-chain time, and pins both `eip712Domain()` and `nonces(signer)` reads to that block
-number. Viem supplies decoded block values; the signer does not revalidate their
-primitive types.
+The [V6 address owner](../contractAddresses/trustedForwarder/README.md) selects the
+contract, and the [ABI owner](../contractAbis/trustedForwarder/README.md) defines
+its interface. The signer assumes the pinned V6 contract's standard four-field
+EIP-712 domain: name, version, chain ID and verifying contract. It uses those
+reported values, refusing a domain chain that differs from the requested chain.
+It does not negotiate arbitrary EIP-712 layouts or assert caller-supplied names.
+The former `domainName` and `version` options are no longer part of the API;
+extra JavaScript properties are ignored and cannot override the reported domain.
 
-The scoped [signing-domain module](src/signing_domain.js) owns the protocol rule.
-The V6 domain must report name/version/chain/contract fields (`0x0f`), no
-extensions, the requested chain ID and the pinned forwarder address. The actual
-reported name and version are used for EIP-712 signing. The deployment records
-name the forwarder `Juicebox`; an application name such as `Blossm` is not an
-interchangeable domain. A supplied expectation that disagrees causes an error.
+Domain and `nonces(signingAccount)` are read at latest state. There is no
+additional chain/block RPC call or block pinning. A read nonce is not reserved;
+state changes or another request can make the signature stale. The caller owns
+reconciliation and any fresh preparation.
 
-The signed `ForwardRequest` includes the observed nonce. The returned ABI tuple
-contains `from`, `to`, `value`, `gas`, `deadline`, `data`, and `signature`, with
-no nonce field. Caller-provided nonce, signature or nested deadline fields do
-not override the observed nonce or the top-level deadline.
-
-The type schema corresponds to `_FORWARD_REQUEST_TYPEHASH` in the
+The signed ForwardRequest type follows the
 [OpenZeppelin reference source](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v5.4.0/contracts/metatx/ERC2771Forwarder.sol).
-The [retained ABI](../contractAbis/trustedForwarder/README.md) matches the pinned
-V6 deployment artifacts.
+Its nonce comes from the contract. The encoded execute tuple contains `from`,
+`to`, `value`, `gas`, `deadline`, `data` and the local signature, without nonce.
+Caller nonce/signature/nested-deadline fields are not used.
 
-## Errors and limits
+Key-parser failures are redacted using `@blossm/errors.invalidArgument` without
+retaining a secret-bearing cause. A reported chain mismatch uses the shared
+internal-server error; other read/conversion/signing/encoding errors propagate.
+Private keys are never passed to RPC, and no signing/submission RPC is made.
 
-Sender mismatch, expired deadlines, key-parser failures and mismatching domain
-expectations use `@blossm/errors.invalidArgument`. Unsupported chain configuration
-is reported by the address package; wrong RPC chain, an unnumbered block or an
-unsupported signing domain use the shared internal-server error. These checks
-establish signing correctness, rather than validating caller representation.
-Key-parser errors are sanitized without retaining a secret-bearing cause. Other
-public-read, conversion, signing and encoding failures propagate from their owning
-library; the signer does not promise normalized errors or rejection before RPC
-for malformed caller inputs. There is no fallback domain, nonce, chain or retry
-of an external mutation.
+## Caller responsibilities
 
-A prepared signature does not reserve a nonce. Another request or a chain
-change can make it stale before submission. Block-number-pinned reads do not
-prevent later reorgs. The caller owns reconciliation and any new preparation.
-Signing does not prove target trust, simulation success, sufficient balance,
-relay acceptance or eventual execution. This module does not allocate a
-nonce, manage custody or enforce a product spending policy.
+Custody, authorization, sender consistency, numeric/input validation, deadline
+policy, target trust, simulation, funding, submission and receipts belong to
+callers and their existing owners. Returning signed calldata proves preparation,
+not contract acceptance or completed execution.
 
-Dia's current caller still supplies `domainName: "Blossm"` and has independent
-wallet WIP defects. That expectation must be removed or corrected when Dia is
-repaired; this package intentionally rejects it.
+Dia still has independent custody, validation and transaction workflow defects.
+Its legacy domain-name/version properties are ignored by this helper; this does
+not establish that the complete Dia flow is ready.
 
 ## Tests
 
 Uses Toolbox's ESM `index.js` / injectable `deps.js` and package-local
-Mocha/Chai/Sinon conventions. Tests retain real viem accounts, signing, ABI
-encoding/decoding and signature recovery, with only public RPC reads mocked
-through an in-memory transport. All test keys are synthetic.
-
-From this directory with workspace dependencies installed:
+Mocha/Chai/Sinon conventions. Tests retain real local viem cryptography and ABI
+codecs over simulated contract reads with a synthetic key. From this directory:
 
 ```sh
 node ../../../../node_modules/mocha/bin/mocha.js --recursive
 ```
 
-Checks include cross-chain signature binding, exact integer boundaries,
-block-pinned reads, optional expectations, key-error redaction and failed reads.
-The signing-domain rule has focused tests in `test/signing_domain.js`.
-Every test asserts that RPC sees only public read methods and never the key.
-No network requests or transaction submissions are made by the tests.
+Checks cover two-chain signature recovery and replay rejection, actual domain
+metadata, large nonce and integer boundaries, caller override filtering,
+chain binding, key-error redaction and read failures. All recorded RPC methods
+are `eth_call`; no network, chain/block lookup, signing RPC or transaction
+submission is performed by the tests.
