@@ -2,7 +2,7 @@
 import deps from "./deps.js";
 
 const signErc2771ForwardRequest = async ({
-  forwardRequestData,
+  forwardRequestData: { from, to, value, gas, data },
   chainId,
   privateKey,
   rpcUrl,
@@ -10,12 +10,11 @@ const signErc2771ForwardRequest = async ({
 }) => {
   const forwarderAddress = deps.erc2771ForwarderContract(chainId);
 
-  const { from, to, data } = forwardRequestData;
   const request = {
     from,
     to,
-    value: BigInt(forwardRequestData.value),
-    gas: BigInt(forwardRequestData.gas),
+    value: BigInt(value),
+    gas: BigInt(gas),
     deadline: BigInt(deadline),
     data,
   };
