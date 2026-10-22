@@ -76,7 +76,7 @@ no mocks or additional runtime dependencies are required.
 From this directory with workspace dependencies installed:
 
 ```sh
-node ../../../../node_modules/mocha/bin/mocha.js --recursive
+node ../../../../../node_modules/mocha/bin/mocha.js --recursive
 ```
 
 Tests pin all eight returned V6 addresses to the source-derived checksum and

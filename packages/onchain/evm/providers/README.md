@@ -34,7 +34,7 @@ package-local Mocha, Chai and Sinon tests. From this directory, using installed
 workspace dependencies:
 
 ```sh
-node ../../../node_modules/mocha/bin/mocha.js --recursive
+node ../../../../node_modules/mocha/bin/mocha.js --recursive
 ```
 
 Tests cover dependency forwarding, real offline viem client construction,

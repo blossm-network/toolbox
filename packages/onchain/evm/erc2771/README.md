@@ -96,7 +96,7 @@ through an in-memory transport. All test keys are synthetic.
 From this directory with workspace dependencies installed:
 
 ```sh
-node ../../../node_modules/mocha/bin/mocha.js --recursive
+node ../../../../node_modules/mocha/bin/mocha.js --recursive
 ```
 
 Checks include cross-chain signature binding, exact integer boundaries,

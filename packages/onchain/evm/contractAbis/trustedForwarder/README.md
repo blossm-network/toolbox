@@ -72,5 +72,5 @@ events and revert payloads. No mocking libraries are needed.
 From this directory with workspace dependencies installed:
 
 ```sh
-node ../../../../node_modules/mocha/bin/mocha.js --recursive
+node ../../../../../node_modules/mocha/bin/mocha.js --recursive
 ```
