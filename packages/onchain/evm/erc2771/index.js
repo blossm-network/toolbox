@@ -2,23 +2,6 @@
 import deps from "./deps.js";
 import signingDomain from "./src/signing_domain.js";
 
-const uint = (value, bits, name) => {
-  const valid =
-    typeof value === "bigint" ||
-    (typeof value === "number" && Number.isSafeInteger(value)) ||
-    (typeof value === "string" && /^(0|[1-9][0-9]*)$/.test(value));
-
-  if (valid) {
-    const number = BigInt(value);
-    if (number >= BigInt(0) && number < BigInt(1) << BigInt(bits))
-      return number;
-  }
-
-  throw deps.invalidArgument.message(
-    `${name} must be an unsigned ${bits}-bit integer`
-  );
-};
-
 const signErc2771ForwardRequest = async ({
   forwardRequestData,
   chainId,
@@ -27,56 +10,20 @@ const signErc2771ForwardRequest = async ({
   domainName,
   version,
   deadline,
-} = {}) => {
+}) => {
   const forwarderAddress = deps.erc2771ForwarderContract(chainId);
 
-  if (
-    !forwardRequestData ||
-    typeof forwardRequestData !== "object" ||
-    Array.isArray(forwardRequestData)
-  ) {
-    throw deps.invalidArgument.message("forwardRequestData must be an object");
-  }
-
   const { from, to, data } = forwardRequestData;
-  if (
-    typeof from !== "string" ||
-    !deps.isAddress(from) ||
-    typeof to !== "string" ||
-    !deps.isAddress(to)
-  ) {
-    throw deps.invalidArgument.message(
-      "Request addresses must be valid EVM addresses"
-    );
-  }
-  if (!deps.isHex(data) || data.length % 2 !== 0) {
-    throw deps.invalidArgument.message(
-      "Request data must be even-length hex bytes"
-    );
-  }
-
   const request = {
     from,
     to,
-    value: uint(forwardRequestData.value, 256, "value"),
-    gas: uint(forwardRequestData.gas, 256, "gas"),
-    deadline: uint(deadline, 48, "deadline"),
+    value: BigInt(forwardRequestData.value),
+    gas: BigInt(forwardRequestData.gas),
+    deadline: BigInt(deadline),
     data,
   };
-  if (request.gas === BigInt(0) || request.deadline === BigInt(0)) {
-    throw deps.invalidArgument.message(
-      "gas and deadline must be greater than zero"
-    );
-  }
-
   let account;
   try {
-    if (
-      typeof privateKey !== "string" ||
-      !/^0x[0-9a-fA-F]{64}$/.test(privateKey)
-    ) {
-      throw new Error("Invalid key format");
-    }
     account = deps.privateKeyToAccount(privateKey);
   } catch {
     // Do not attach a key-parser cause that could include the secret input.
@@ -98,14 +45,10 @@ const signErc2771ForwardRequest = async ({
   }
 
   const block = await publicClient.getBlock({ blockTag: "latest" });
-  if (
-    !block ||
-    typeof block.number !== "bigint" ||
-    typeof block.timestamp !== "bigint" ||
-    block.number < BigInt(0) ||
-    block.timestamp < BigInt(0)
-  ) {
-    throw deps.internalServer.message("Invalid chain block response");
+  if (block.number === null) {
+    throw deps.internalServer.message(
+      "Latest block must have a number for pinned reads"
+    );
   }
   if (request.deadline <= block.timestamp) {
     throw deps.invalidArgument.message(
@@ -128,13 +71,9 @@ const signErc2771ForwardRequest = async ({
     version,
   });
 
-  const nonce = uint(
-    await forwarder.read.nonces([account.address], {
-      blockNumber: block.number,
-    }),
-    256,
-    "nonce"
-  );
+  const nonce = await forwarder.read.nonces([account.address], {
+    blockNumber: block.number,
+  });
   const types = {
     ForwardRequest: [
       { name: "from", type: "address" },

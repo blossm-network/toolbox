@@ -33,8 +33,6 @@ describe("ERC-2771 signing domain", () => {
     for (const [index, value] of [
       [0, "0x07"],
       [0, "0x1f"],
-      [1, ""],
-      [2, ""],
       [3, BigInt(1)],
       [4, `0x${"33".repeat(20)}`],
       [6, [BigInt(1)]],

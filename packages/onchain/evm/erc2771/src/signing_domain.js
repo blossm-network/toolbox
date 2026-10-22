@@ -20,14 +20,8 @@ export default ({
 
   if (
     fields !== "0x0f" ||
-    !Array.isArray(extensions) ||
     extensions.length !== 0 ||
-    typeof name !== "string" ||
-    !name ||
-    typeof domainVersion !== "string" ||
-    !domainVersion ||
     domainChainId !== BigInt(chainId) ||
-    typeof verifyingContract !== "string" ||
     verifyingContract.toLowerCase() !== forwarderAddress.toLowerCase()
   ) {
     throw deps.internalServer.message("Unexpected forwarder signing domain");

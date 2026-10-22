@@ -1,4 +1,4 @@
-import { encodeFunctionData, getContract, isAddress, isHex } from "viem";
+import { encodeFunctionData, getContract } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import contracts from "@blossm/contract-addresses-trusted-forwarder";
 import abis from "@blossm/contract-abis-trusted-forwarder";
@@ -9,8 +9,6 @@ export default {
   privateKeyToAccount,
   encodeFunctionData,
   getContract,
-  isAddress,
-  isHex,
   erc2771ForwarderContract: contracts.erc2771ForwarderContract,
   trustedForwarderContractABI: abis.trustedForwarderContractABI,
   getProvider: providers.getProvider,

@@ -32,13 +32,21 @@ encoded forwarder `execute(request)` call. The relay or execution layer owns
 submission to the [V6 forwarder address](../contractAddresses/trustedForwarder/README.md),
 including any native value required by the request.
 
-- `chainId`: supported positive safe-integer number, resolved by the address package.
-- `rpcUrl`: explicit HTTP(S) endpoint, validated by `@blossm/providers`.
-- `privateKey`: hexadecimal secp256k1 private key, supplied by the custody/caller layer.
-- `forwardRequestData`: object containing valid `from` and `to` addresses, `value`, `gas`, and even-length hex `data` (`0x` is allowed).
-- `value`, `gas`: unsigned 256-bit integers. Accept bigint, safe-integer numbers, or canonical unsigned decimal strings. Gas must be positive; value may be zero.
-- `deadline`: positive unsigned 48-bit Unix timestamp in seconds, with the same input forms. It must be later than the observed block timestamp.
-- `domainName`, `version`: optional exact expectations for the reported signing domain. They never override it.
+This is an internal library. Callers supply validated request fields; procedure
+`validateFn` and the shared validation libraries own user-input validation.
+The signer does not repeat object/address/hex/key-format or integer-range checks.
+Viem owns account construction, RPC/ABI decoding and typed-data/ABI encoding.
+
+- `chainId`: supported numeric chain ID, resolved by the address package.
+- `rpcUrl`: explicit HTTP(S) endpoint, handled by `@blossm/providers`.
+- `privateKey`: hexadecimal secp256k1 key from the custody/caller layer.
+- `forwardRequestData`: validated `from`, `to`, `value`, `gas` and `data` fields.
+- `value`, `gas`: clean unsigned uint256 values, converted with native `BigInt`.
+  Callers own safe-integer handling, accepted input formats and positive gas policy.
+- `deadline`: clean uint48 Unix seconds, converted with `BigInt`; it must be later
+  than the observed block timestamp.
+- `domainName`, `version`: optional expectations for the reported signing domain.
+  They never override it.
 
 The private key becomes a local viem account and must match `from`. Its value
 is never passed to an RPC. Invalid-key errors are sanitized without retaining
@@ -47,9 +55,12 @@ the key-parser cause. No logging is performed by this package.
 ## Chain and signing-domain checks
 
 The endpoint's `eth_chainId` must match the requested chain. The signer reads
-the latest block, validates the deadline against chain time, and pins both
-`eip712Domain()` and `nonces(signer)` reads to that block number.
+the latest block, requires a block number for pinning, checks the deadline against
+chain time, and pins both `eip712Domain()` and `nonces(signer)` reads to that block
+number. Viem supplies decoded block values; the signer does not revalidate their
+primitive types.
 
+The scoped [signing-domain module](src/signing_domain.js) owns the protocol rule.
 The V6 domain must report name/version/chain/contract fields (`0x0f`), no
 extensions, the requested chain ID and the pinned forwarder address. The actual
 reported name and version are used for EIP-712 signing. The deployment records
@@ -68,12 +79,16 @@ V6 deployment artifacts.
 
 ## Errors and limits
 
-Malformed request/key fields, sender mismatch, expired deadlines and domain
-expectation mismatches use `@blossm/errors.invalidArgument`. Unsupported chain
-configuration is reported by the address package; wrong RPC chain, malformed
-block evidence and incompatible reported domain use the shared internal-server
-error. Public read and local signing/encoding failures propagate; there is no
-fallback domain, nonce, chain or retry of an external mutation.
+Sender mismatch, expired deadlines, key-parser failures and mismatching domain
+expectations use `@blossm/errors.invalidArgument`. Unsupported chain configuration
+is reported by the address package; wrong RPC chain, an unnumbered block or an
+unsupported signing domain use the shared internal-server error. These checks
+establish signing correctness, rather than validating caller representation.
+Key-parser errors are sanitized without retaining a secret-bearing cause. Other
+public-read, conversion, signing and encoding failures propagate from their owning
+library; the signer does not promise normalized errors or rejection before RPC
+for malformed caller inputs. There is no fallback domain, nonce, chain or retry
+of an external mutation.
 
 A prepared signature does not reserve a nonce. Another request or a chain
 change can make it stale before submission. Block-number-pinned reads do not
@@ -100,6 +115,7 @@ node ../../../../node_modules/mocha/bin/mocha.js --recursive
 ```
 
 Checks include cross-chain signature binding, exact integer boundaries,
-block-pinned reads, optional expectations, malformed inputs and failed reads.
+block-pinned reads, optional expectations, key-error redaction and failed reads.
+The signing-domain rule has focused tests in `test/signing_domain.js`.
 Every test asserts that RPC sees only public read methods and never the key.
 No network requests or transaction submissions are made by the tests.
