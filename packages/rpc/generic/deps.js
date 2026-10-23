@@ -1,3 +1,4 @@
+import { COMPLETED, QUEUED } from "@blossm/rpc-delivery-consts";
 import request from "@blossm/request";
 import { construct } from "@blossm/errors";
 import operationToken from "@blossm/operation-token";
@@ -9,6 +10,9 @@ import hash from "@blossm/operation-hash";
 import operationShortName from "@blossm/operation-short-name";
 
 export default {
+  COMPLETED,
+  QUEUED,
+
   post: request.post,
   put: request.put,
   get: request.get,
