@@ -1,7 +1,8 @@
 
 import { CloudTasksClient } from "@google-cloud/tasks";
+import lazyClient from "@blossm/lazy-client";
 
-const __client = new CloudTasksClient();
+const __client = lazyClient(CloudTasksClient);
 
 const create = async ({ project, location, name }) => {
   const parent = __client.locationPath(project, location);
