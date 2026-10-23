@@ -33,7 +33,7 @@ export default ({ name, domain, service = process.env.SERVICE, region = process.
     claims,
     currentToken,
     token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
-  } = {}) => (fn, { query, root, raw = false } = {}) =>
+  } = {}) => (fn, { query, root, raw = false, onResponseFn, signal, timeout } = {}) =>
     deps
       .rpc({
         region,
@@ -47,6 +47,9 @@ export default ({ name, domain, service = process.env.SERVICE, region = process.
         },
         {
           raw,
+          ...(onResponseFn && { onResponseFn }),
+          ...(signal && { signal }),
+          ...(timeout !== undefined && { timeout }),
         }
       )
       .in({
