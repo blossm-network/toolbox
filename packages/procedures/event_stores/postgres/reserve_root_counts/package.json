@@ -1,0 +1,26 @@
+{
+  "name": "@blossm/postgres-event-store-reserve-root-counts",
+  "description": "A postgres event store reserve root counts function.",
+  "version": "0.0.1",
+  "main": "index.js",
+  "type": "module",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 20.19.0"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@blossm/postgres-database": "^0.0.1",
+    "@blossm/datetime": "^0.0.18"
+  },
+  "devDependencies": {
+    "chai": "^5.2.0",
+    "mocha": "^11.6.0",
+    "sinon": "^21.0.0"
+  }
+}
