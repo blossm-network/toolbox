@@ -31,8 +31,8 @@ describe("Optional strings", () => {
 
 describe("Refinement functions", () => {
   it("should not contain errors if value is not empty and passes refinement function", () => {
-    const fn = (value) => value == validString;
-    const response = string({ value: validString, fn });
+    const refinementFn = (value) => value == validString;
+    const response = string({ value: validString, refinementFn });
     expect(response.errors).to.be.empty;
   });
 });
@@ -149,5 +149,24 @@ describe("Error message", () => {
     });
 
     expect(response.errors[0].message).to.equal(message);
+  });
+});
+
+describe("Refinement fallbacks", () => {
+  it("uses the base message for a predicate that returns false", () => {
+    const result = string({
+      value: "input",
+      refinementFn: () => false,
+      baseMessageFn: () => "Rejected by policy.",
+    });
+    expect(result.errors[0].message).to.equal("Rejected by policy.");
+  });
+  it("does not swallow a caller-supplied refinement message", () => {
+    const result = string({
+      value: "input",
+      refinementFn: () => false,
+      refinementMessageFn: () => "Specific rejection.",
+    });
+    expect(result.errors[0].message).to.equal("Specific rejection.");
   });
 });
