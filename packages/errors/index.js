@@ -12,43 +12,40 @@ const {
   PreconditionFailedError,
 } = restifyErrors;
 
-import toJSON from "./src/to_json.js";
+import createError from "./src/create_error.js";
 
 const badRequest = {
-  message: (message, { cause, info } = {}) =>
-    new BadRequestError({ cause, info, toJSON }, message),
+  message: (message, options) => createError(BadRequestError, message, options),
 };
 const internalServer = {
-  message: (message, { cause, info } = {}) =>
-    new InternalServerError({ cause, info, toJSON }, message),
+  message: (message, options) =>
+    createError(InternalServerError, message, options),
 };
 const unauthorized = {
-  message: (message, { cause, info } = {}) =>
-    new UnauthorizedError({ cause, info, toJSON }, message),
+  message: (message, options) =>
+    createError(UnauthorizedError, message, options),
 };
 const resourceNotFound = {
-  message: (message, { cause, info } = {}) =>
-    new ResourceNotFoundError({ cause, info, toJSON }, message),
+  message: (message, options) =>
+    createError(ResourceNotFoundError, message, options),
 };
 const invalidCredentials = {
-  message: (message, { cause, info } = {}) =>
-    new InvalidCredentialsError({ cause, info, toJSON }, message),
+  message: (message, options) =>
+    createError(InvalidCredentialsError, message, options),
 };
 const forbidden = {
-  message: (message, { cause, info } = {}) =>
-    new ForbiddenError({ cause, info, toJSON }, message),
+  message: (message, options) => createError(ForbiddenError, message, options),
 };
 const invalidArgument = {
-  message: (message, { cause, info } = {}) =>
-    new InvalidArgumentError({ cause, info, toJSON }, message),
+  message: (message, options) =>
+    createError(InvalidArgumentError, message, options),
 };
 const conflict = {
-  message: (message, { cause, info } = {}) =>
-    new ConflictError({ cause, info, toJSON }, message),
+  message: (message, options) => createError(ConflictError, message, options),
 };
 const preconditionFailed = {
-  message: (message, { cause, info } = {}) =>
-    new PreconditionFailedError({ cause, info, toJSON }, message),
+  message: (message, options) =>
+    createError(PreconditionFailedError, message, options),
 };
 
 const construct = ({ statusCode, code, message, info }) => {

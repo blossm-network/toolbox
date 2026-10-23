@@ -23,7 +23,7 @@ describe("Bad request", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 404,
       code: "ResourceNotFound",
-      info: {},
+      info,
       message,
     });
   });

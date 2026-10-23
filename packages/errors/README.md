@@ -1,12 +1,21 @@
 A library of errors that can be thrown by the network.
 
-`error.info()` and `error.cause()` retain internal diagnostics. `error.toJSON()`
-uses the same public contract as the error middleware: status, code, message,
-and allowlisted `info.errors` entries (`message` and `path`) or an authentication
-`info.redirect`. Other info fields and causes are never serialized. Server errors
-use a generic message and omit all info. New public error metadata needs an
-explicit contract change here, rather than attaching diagnostic request objects.
+The info passed to this package's error constructors is application-defined
+public metadata. `error.toJSON()` and the
+error middleware preserve its object or array unchanged, together with the
+explicit error message, code and status. This includes trace/resource IDs,
+conflict arrays, validation errors and authentication redirects. The middleware
+also logs status, code and this declared public metadata for audit correlation.
 
-Error messages and validation messages must describe the problem without echoing
-credentials or submitted secrets. Request bodies, queries, parameters and raw
-error objects are not included in middleware logs.
+Authors must keep public messages and info free of credentials and submitted
+secrets. RPC must not attach bearer tokens, forwarded request context or raw
+request payloads to public error metadata. Public info is an explicit contract,
+not a container for private diagnostics.
+
+`error.cause()` remains available internally but is never serialized. SDK info() still exposes internal diagnostics, including inherited cause info;
+those inherited fields are not implicitly published. Errors constructed outside
+this package are undeclared. Native error stacks, causes, arbitrary toJSON
+methods and diagnostic info
+properties are not public response fields. Undeclared native server errors use
+a generic message. Middleware does not log raw errors or request bodies, queries
+or parameters.

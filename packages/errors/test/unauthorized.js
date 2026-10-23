@@ -23,7 +23,7 @@ describe("Unauthorized", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 401,
       code: "Unauthorized",
-      info: {},
+      info,
       message,
     });
   });
