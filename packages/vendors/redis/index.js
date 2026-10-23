@@ -54,7 +54,14 @@ const setExpiry = async (key, { seconds }) => {
     await client.EXPIRE(key, seconds);
   } else {
     const entry = fallbackObjectCache.get(key);
-    if (entry) entry.expiresAt = Date.now() + seconds * 1000;
+    if (
+      entry &&
+      (entry.expiresAt === undefined || entry.expiresAt > Date.now())
+    ) {
+      entry.expiresAt = Date.now() + seconds * 1000;
+    } else {
+      fallbackObjectCache.delete(key);
+    }
   }
 };
 
