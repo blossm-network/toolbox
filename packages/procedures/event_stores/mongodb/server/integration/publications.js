@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import mongoose from "mongoose";
+import createEvent from "../../../../../lib/create_event/index.js";
 import post from "../../../generic/post/index.js";
 import postTransaction from "../../../generic/post_transaction/index.js";
 import createBlock from "../../../generic/create_block/index.js";
@@ -54,20 +55,19 @@ try {
   const eventStore = mongoose.model("events");
   const publicationsStore = mongoose.model("publications");
   const countsStore = mongoose.model("counts");
-  const event = (id) => ({
-    headers: {
+  const event = (id) =>
+    createEvent({
       root: id,
       action: "set",
       domain: "audit",
       service: "events",
       network: "local",
-      topic: "events",
       version: 1,
-      created: new Date().toISOString(),
+      canonicalFormat: 2,
       idempotency: id,
-    },
-    payload: { amount: 1 },
-  });
+      payload: { amount: 1 },
+    });
+
   const append = (id, transaction) =>
     postTransaction({
       eventData: [{ event: event(id) }],
