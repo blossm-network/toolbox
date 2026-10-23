@@ -6,7 +6,7 @@ if (process.env.REDIS_HOST && process.env.REDIS_PORT) {
   client = deps.redis.createClient({
     socket: {
       host: process.env.REDIS_HOST,
-      port: process.env.REDIS_PORT
+      port: process.env.REDIS_PORT,
     },
   });
 
@@ -23,7 +23,7 @@ const fallbackObjectCache = {};
 
 const writeObject = async (key, object) => {
   if (client && client.isReady) {
-    await client.HMSET(key, object);
+    await client.HSET(key, object);
   } else {
     fallbackObjectCache[key] = object;
   }

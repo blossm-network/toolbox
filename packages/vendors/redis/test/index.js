@@ -1,55 +1,44 @@
-import * as chai from "chai";
-import sinonChai from "sinon-chai";
-import {  stub, replace, restore } from "sinon";
+import assert from "node:assert/strict";
+import { stub, replace, restore } from "sinon";
 import deps from "../deps.js";
 
-process.env.REDIS_HOST = "some-redis-host";
-process.env.REDIS_PORT = "some-redis-port";
-
-chai.use(sinonChai);
-const { expect } = chai;
-
 const value = { some: "value" };
+let sequence = 0;
+const load = async () =>
+  (await import(`../index.js?test=${sequence++}`)).default;
 
-describe("Cache", () => {
-  let mockClient;
-
+describe("Redis cache", () => {
+  let previous;
+  let client;
   beforeEach(() => {
-    // Create a mock Redis client
-    mockClient = {
+    previous = [process.env.REDIS_HOST, process.env.REDIS_PORT];
+    process.env.REDIS_HOST = "unused.invalid";
+    process.env.REDIS_PORT = "6379";
+    const actualClient = deps.redis.createClient();
+    assert.equal(typeof actualClient.HSET, "function");
+    client = {
       isReady: true,
-      HMSET: stub().resolves(),
+      HSET: stub().resolves(),
       HGETALL: stub().resolves(value),
       EXPIRE: stub().resolves(),
       on: stub(),
-      connect: stub().resolves()
+      connect: stub().resolves(),
     };
-
-    // Stub the createClient function to return our mock
-    replace(deps, "redis", {
-        createClient: stub().returns(mockClient)
-    });
+    replace(deps, "redis", { createClient: () => client });
   });
-
   afterEach(() => {
     restore();
+    for (const [index, key] of ["REDIS_HOST", "REDIS_PORT"].entries()) {
+      if (previous[index] === undefined) delete process.env[key];
+      else process.env[key] = previous[index];
+    }
   });
-
-  it("should read and write correctly", async () => {
-    // Now import the module that will use our stubbed client
-    const redis = (await import("../index.js")).default;
-
-    const key = "some-key";
-    await redis.writeObject(key, value);
-
-    expect(mockClient.HMSET).to.have.been.calledWith(key, value);
-
-    const result = await redis.readObject(key);
-    expect(result).to.equal(value);
-    expect(mockClient.HGETALL).to.have.been.calledWith(key);
-
-    const seconds = 2;
-    await redis.setExpiry(key, { seconds });
-    expect(mockClient.EXPIRE).to.have.been.calledWith(key, seconds);
+  it("uses the Redis5 hash methods", async () => {
+    const cache = await load();
+    await cache.writeObject("key", value);
+    assert.deepEqual(client.HSET.firstCall.args, ["key", value]);
+    assert.equal(await cache.readObject("key"), value);
+    await cache.setExpiry("key", { seconds: 2 });
+    assert.deepEqual(client.EXPIRE.firstCall.args, ["key", 2]);
   });
 });
