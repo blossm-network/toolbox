@@ -14,7 +14,10 @@ const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 const existingTopics = [];
 describe("Command gateway integration tests", () => {
   before(async () => {
-    existingTopics.push(...config.testing.topics.filter((t) => gcpPubsub.exists(t)));
+    const existence = await Promise.all(
+      config.testing.topics.map((topic) => gcpPubsub.exists(topic))
+    );
+    existingTopics.push(...config.testing.topics.filter((_, i) => existence[i]));
     await Promise.all(config.testing.topics.map((t) => gcpPubsub.create(t)));
   });
   after(
@@ -63,7 +66,7 @@ describe("Command gateway integration tests", () => {
             })
           : {};
 
-        const response0 = await request.post(`${url}/${command.action}`, {
+        const response0 = await request.post(`${url}/${command.name}`, {
           body: {
             headers: {
               issued: dateString(),
@@ -71,22 +74,21 @@ describe("Command gateway integration tests", () => {
             },
             payload: {},
           },
-          ...(command.protection === undefined ||
-            (command.protection === "strict" && {
+          ...(needsToken && {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
-            })),
+            }),
         });
 
         expect(response0.statusCode).to.not.equal(401);
         expect(response0.statusCode).to.be.lessThan(500);
       });
 
-      if (command.permissions == "none") continue;
+      if (!(command.protection == undefined || command.protection == "strict" || typeof command.protection == "object")) continue;
 
       parallelFns.push(async () => {
-        const response1 = await request.post(`${url}/${command.action}`, {
+        const response1 = await request.post(`${url}/${command.name}`, {
           body: {
             headers: {
               issued: dateString(),
@@ -100,7 +102,7 @@ describe("Command gateway integration tests", () => {
       });
 
       parallelFns.push(async () => {
-        const response2 = await request.post(`${url}/${command.action}`, {
+        const response2 = await request.post(`${url}/${command.name}`, {
           body: {
             headers: {
               issued: dateString(),
@@ -117,6 +119,6 @@ describe("Command gateway integration tests", () => {
       });
     }
 
-    await Promise.all(parallelFns);
+    await Promise.all(parallelFns.map((fn) => fn()));
   });
 });
