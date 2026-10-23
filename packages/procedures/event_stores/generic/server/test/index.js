@@ -122,6 +122,7 @@ describe("Event store", () => {
     );
     expect(postFake).to.have.been.calledWith(eventStorePostResult);
     expect(eventStoreGetFake).to.have.been.calledWith({
+      rootStreamFn,
       findSnapshotsFn,
       findEventsFn,
       findOneSnapshotFn,
