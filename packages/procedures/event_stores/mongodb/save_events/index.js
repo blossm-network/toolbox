@@ -1,12 +1,17 @@
 import deps from "./deps.js";
 
-export default ({ eventStore, publicationsStore, handlers }) => async ({
+export default ({ eventStore, publicationsStore, actionsStore, actionsFn, handlers }) => async ({
   events,
   transaction,
 }) => {
-  if (publicationsStore && !transaction)
+  if ((actionsStore && !actionsFn) || (actionsFn && !actionsStore))
     throw deps.internalServerError.message(
-      "Durable publications require an event transaction."
+      "Durable actions require an actions store and preparation function."
+    );
+
+  if ((publicationsStore || actionsStore) && !transaction)
+    throw deps.internalServerError.message(
+      "Durable deliveries require an event transaction."
     );
 
   for (const event of events) {
@@ -44,6 +49,28 @@ export default ({ eventStore, publicationsStore, handlers }) => async ({
         })),
         options: { session: transaction },
       });
+    if (actionsStore && events.length) {
+      const actions = [];
+      for (const event of events) {
+        const intents = await actionsFn(event);
+        for (const [position, intent] of intents.entries()) {
+          const data = JSON.stringify(intent);
+          actions.push({
+            id: `${event.hash}:${position}`,
+            eventHash: event.hash,
+            intentHash: deps.hash(data).create(),
+            intent: data,
+            created: event.headers.committed,
+          });
+        }
+      }
+      if (actions.length)
+        await deps.db.create({
+          store: actionsStore,
+          data: actions,
+          options: { session: transaction },
+        });
+    }
   } catch (err) {
     if (err.code == 11000) {
       const duplicateKeyObjects = [];

@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@blossm/datetime": "^0.0.18",
+    "@blossm/errors": "^0.0.40",
     "@blossm/event-store": "^0.0.322",
     "@blossm/format-mongodb-schema": "^0.0.17",
     "@blossm/logger": "^0.0.13",
@@ -37,8 +38,11 @@
     "@blossm/uuid": "^0.0.9"
   },
   "devDependencies": {
+    "@blossm/event-outcome-consts": "^0.0.1",
+    "@blossm/rpc-delivery-consts": "^0.0.1",
     "chai-datetime": "^1.8.1",
     "mocha": "^11.6.0",
+    "mongoose": "^8.15.2",
     "sinon": "^21.0.0",
     "sinon-chai": "^4.0.0"
   }

@@ -18,8 +18,12 @@ import latestBlock from "@blossm/mongodb-event-store-latest-block";
 import formatSchema from "@blossm/format-mongodb-schema";
 import idempotencyConflictCheck from "@blossm/mongodb-event-store-idempotency-conflict-check";
 import uuid from "@blossm/uuid";
+import { internalServer } from "@blossm/errors";
+import deliverActions from "./src/deliver_actions.js";
 
 export default {
+  deliverActions,
+  internalServerError: internalServer,
   dateString,
   publishPending,
   eventStore,
