@@ -12,7 +12,7 @@
     "access": "public"
   },
   "dependencies": {
-    "redis": "^5.12.1"
+    "redis": "^6.3.0"
   },
   "scripts": {
     "test": "mocha --recursive"
