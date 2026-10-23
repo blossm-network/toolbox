@@ -4,6 +4,20 @@ export const metadata = (response) => {
   const headers = Object.fromEntries(response.headers);
   const cookies = response.headers.getSetCookie();
   if (cookies.length) headers["set-cookie"] = cookies;
+  const codings = headers["content-encoding"]
+    ?.toLowerCase()
+    .split(",")
+    .map((coding) => coding.trim());
+  // Native fetch decodes these codings, including supported coding chains.
+  if (
+    response.body &&
+    codings?.every((coding) =>
+      ["gzip", "x-gzip", "deflate", "br"].includes(coding)
+    )
+  ) {
+    delete headers["content-encoding"];
+    delete headers["content-length"];
+  }
   return {
     headers,
     statusCode: response.status,

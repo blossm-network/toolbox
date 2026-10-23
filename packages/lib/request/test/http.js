@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { once } from "node:events";
 import { createReadStream } from "node:fs";
+import { gzipSync } from "node:zlib";
 import request from "../index.js";
 
 const sockets = new Set();
@@ -22,6 +23,15 @@ const handle = async (req, res) => {
     res.writeHead(200);
     res.write("first");
     return setTimeout(() => res.end("late"), 100);
+  }
+  if (req.url === "/gzip") {
+    const body = gzipSync(Buffer.from("decoded representation"));
+    res.writeHead(200, {
+      "content-type": "text/plain",
+      "content-encoding": "gzip",
+      "content-length": body.length,
+    });
+    return res.end(body);
   }
   if (req.url === "/forbidden") {
     res.writeHead(403, { "content-type": "application/json" });
@@ -192,6 +202,24 @@ describe("Native HTTP transport boundaries", () => {
     assert.match(echoed.body, /name="title"\r\n\r\nexample/);
     assert.match(echoed.body, /filename="guide.txt"/);
     assert.match(echoed.body, /Http access|HTTP access/);
+  });
+
+  it("reports decoded bytes without stale compressed length or encoding", async () => {
+    const reply = await request.get(`${base}/gzip`);
+    assert.equal(reply.body, "decoded representation");
+    assert.equal(reply.headers["content-encoding"], undefined);
+    assert.equal(reply.headers["content-length"], undefined);
+    let metadata;
+    const chunks = [];
+    await request.stream(`${base}/gzip`, (chunk) => chunks.push(chunk), {
+      onResponseFn: (value) => {
+        metadata = value;
+      },
+    });
+    assert.equal(Buffer.concat(chunks).toString(), "decoded representation");
+    assert.equal(metadata.headers["content-encoding"], undefined);
+    assert.equal(metadata.headers["content-length"], undefined);
+    assert.equal(metadata.headers["content-type"], "text/plain");
   });
 
   it("completes an empty stream list", async () => {
