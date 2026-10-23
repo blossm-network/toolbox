@@ -12,7 +12,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "test": "mocha --recursive test"
   },
   "dependencies": {
     "@blossm/cli-root-dir": "^0.0.15",
