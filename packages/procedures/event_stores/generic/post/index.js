@@ -17,13 +17,14 @@ export default ({
       )
     );
     const seen = new Set();
+    const outcomes = [];
     const uniqueEventData = req.body.eventData.filter(({ event }, index) => {
-      if (conflicts[index]) return false;
       const { idempotency } = event.headers;
-      if (idempotency == undefined) return true;
-      if (seen.has(idempotency)) return false;
+      const duplicate =
+        idempotency != undefined && (conflicts[index] || seen.has(idempotency));
       seen.add(idempotency);
-      return true;
+      outcomes.push(duplicate ? "duplicate" : "committed");
+      return !duplicate;
     });
 
     const { receipt } = await createTransactionFn(
@@ -52,5 +53,6 @@ export default ({
         )
       );
 
-    res.sendStatus(204);
+    if (req.body.returnOutcomes) res.send({ outcomes });
+    else res.sendStatus(204);
   };

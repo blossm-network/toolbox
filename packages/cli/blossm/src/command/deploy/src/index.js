@@ -187,7 +187,9 @@ export default commandProcedure({
         },
       })
       .stream(fn, { query, root }),
-  addFn: ({ domain, service, context, claims, eventData, tx, async }) =>
+  addFn: ({
+    domain, service, context, claims, eventData, tx, async, returnOutcomes,
+  }) =>
     eventStore({ domain, service })
       .set({
         ...(context && { context }),
@@ -197,7 +199,7 @@ export default commandProcedure({
         },
         ...(async && { enqueue: { fn: gcpQueue.enqueue } }),
       })
-      .add({ eventData, tx }),
+      .add({ eventData, tx, ...(returnOutcomes && { returnOutcomes }) }),
   countFn: ({ context, claims, token }) => ({ domain, service, root }) => {
     const {
       body: { count },

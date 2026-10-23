@@ -49,6 +49,7 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
           currentToken,
           claims,
           enqueueFn,
+          includeDelivery = false,
         } = {}) => {
           const internal = host == process.env.HOST;
 
@@ -97,9 +98,10 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
           };
 
           const shouldEnqueue = enqueueFn && method != deps.get;
+          const enqueued = shouldEnqueue && process.env.NODE_ENV != "local";
 
           const response =
-            shouldEnqueue && process.env.NODE_ENV != "local"
+            enqueued
               ? await deps.enqueueOperation({
                   enqueueFn,
                   url,
@@ -123,10 +125,7 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
                   ...(onDataFn && { onDataFn }),
                 });
 
-          //Stream doesn't have a reponse.
-          if (!response) return;
-
-          if (response.statusCode >= 300) {
+          if (response?.statusCode >= 300) {
             logger.info("response errored: ", {
               response,
               url,
@@ -153,8 +152,13 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
             });
           }
 
+          if (includeDelivery && enqueued) return { delivery: "queued" };
+
+          //Stream doesn't have a reponse.
+          if (!response) return;
+
           //If the enqueuing was skipped because of local env, dont return.
-          return shouldEnqueue && process.env.NODE_ENV == "local"
+          return !includeDelivery && shouldEnqueue && process.env.NODE_ENV == "local"
             ? {}
             : {
                 ...(response.body && {
@@ -164,6 +168,7 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
                   headers: formatResponse(response.headers),
                 }),
                 statusCode: response.statusCode,
+                ...(includeDelivery && { delivery: "completed" }),
               };
         },
       };

@@ -6,11 +6,12 @@ export default ({ domain, service = process.env.SERVICE, region = process.env.GC
     claims,
     token: { internalFn: internalTokenFn, externalFn: externalTokenFn } = {},
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
-  } = {}) => ({ eventData, tx: { id: txId, path: txPath, ip: txIp } = {} }) => {
+  } = {}) => ({ eventData, returnOutcomes, tx: { id: txId, path: txPath, ip: txIp } = {} }) => {
     return deps
       .rpc({ region, operationNameComponents: [domain, service, "event-store"]})
       .post({
         eventData,
+        ...(returnOutcomes && { returnOutcomes: true }),
         ...((claims || txId || txPath) && {
           tx: {
             ...(claims && { claims }),
@@ -24,6 +25,7 @@ export default ({ domain, service = process.env.SERVICE, region = process.env.GC
         ...(context && { context }),
       })
       .with({
+        ...(returnOutcomes && { includeDelivery: true }),
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
         ...(claims && { claims }),
