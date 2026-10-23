@@ -13,8 +13,15 @@ const camelCased = (str) =>
   });
 
 const flagValue = async (flag, args) => {
-  const value = args[`--${flag.name}`] || flag.default;
-  if (value) return value;
+  const value = args[`--${flag.name}`] ?? flag.default;
+  if (value != null) {
+    if (flag.choices && !flag.choices.includes(value)) {
+      throw new Error(
+        `${flag.name} must be one of [${flag.choices.join(", ")}].`
+      );
+    }
+    return value;
+  }
 
   if (flag.choices) {
     const { flagValue } = await prompt({
@@ -85,7 +92,7 @@ const parseArgs = async (
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        `I couldn't read the command. Flags should be set like \`--flag=flagValue\`, \`--flag flagValue\`, or \`-f flagValue\``
+        e.message || `I couldn't read the command. Flags should be set like \`--flag=flagValue\`, \`--flag flagValue\`, or \`-f flagValue\``
       ),
       red.bold("error")
     );
