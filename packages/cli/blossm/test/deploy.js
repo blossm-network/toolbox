@@ -57,6 +57,13 @@ describe("CLI deployment result", () => {
       assert(fixture.removed.includes("/fixture/build"));
     }
   });
+  it("preserves the caller's dependencies and lockfile even during dry-run", async () => {
+    for (const dryRun of [false, true]) {
+      const fixture = await deployment({ input: { dryRun, path: "nested" } });
+      await fixture.run();
+      assert.deepStrictEqual(fixture.removed, ["/fixture/build"]);
+    }
+  });
   it("reports success only when build completes successfully", async () => {
     const calls = [];
     const fixture = await deployment({

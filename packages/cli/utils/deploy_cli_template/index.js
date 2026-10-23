@@ -103,15 +103,6 @@ export default ({ domain, dir }) => async (args, configFn) => {
           //eslint-disable-next-line no-console
           console.log(roboSay(), green.bold("done"));
         } else {
-          const modules = "node_modules";
-          const lock = "yarn.lock";
-
-          const modulesPath = path.resolve(process.cwd(), modules);
-          const lockPath = path.resolve(process.cwd(), lock);
-
-          fs.removeSync(modulesPath);
-          fs.removeSync(lockPath);
-
           //eslint-disable-next-line no-console
           console.log(
             roboSay(
