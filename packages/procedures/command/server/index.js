@@ -15,6 +15,7 @@ export default async ({
   fillFn,
   countFn,
   contexts,
+  requiresRoot,
 } = {}) =>
   deps
     .server()
@@ -34,6 +35,7 @@ export default async ({
         ...(normalizeFn && { normalizeFn }),
         ...(countFn && { countFn }),
         ...(contexts && { contexts }),
+        ...(requiresRoot && { requiresRoot }),
       })
     )
     .listen();
