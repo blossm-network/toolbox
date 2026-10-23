@@ -12,6 +12,7 @@ import normalize from "./normalize.js";
 import config from "./config.json" with { type: "json" };
 
 export default commandProcedure({
+  ...(config.canonicalFormat != undefined && { canonicalFormat: config.canonicalFormat }),
   mainFn: main,
   ...(config.contexts && { contexts: config.contexts }),
   ...(config.root && { requiresRoot: config.root }),

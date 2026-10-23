@@ -21,6 +21,7 @@ export default async ({
   eventStreamFn,
   handlers,
   isPublic,
+  canonicalFormat = 2,
 } = {}) => {
   deps
     .server()
@@ -65,12 +66,14 @@ export default async ({
         findOneSnapshotFn,
         eventStreamFn,
         handlers,
+        ...(canonicalFormat != undefined && { canonicalFormat }),
         isPublic,
       }),
       { path: "/create-block" }
     )
     .post(
       deps.post({
+        ...(canonicalFormat != undefined && { canonicalFormat }),
         saveEventsFn,
         reserveRootCountsFn,
         publishFn,

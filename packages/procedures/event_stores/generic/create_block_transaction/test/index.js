@@ -251,6 +251,7 @@ describe("Event store create block transaction", () => {
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
     const response = await create({
+      canonicalFormat: 1,
       saveSnapshotFn: saveSnapshotFnFake,
       aggregateFn: aggregateFnFake,
       rootStreamFn: rootStreamFnFake,
@@ -543,6 +544,7 @@ describe("Event store create block transaction", () => {
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
     await create({
+      canonicalFormat: 1,
       saveSnapshotFn: saveSnapshotFnFake,
       aggregateFn: aggregateFnFake,
       rootStreamFn: rootStreamFnFake,
@@ -780,6 +782,7 @@ describe("Event store create block transaction", () => {
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
     await create({
+      canonicalFormat: 1,
       saveSnapshotFn: saveSnapshotFnFake,
       aggregateFn: aggregateFnFake,
       rootStreamFn: rootStreamFnFake,
@@ -976,6 +979,7 @@ describe("Event store create block transaction", () => {
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
     await create({
+      canonicalFormat: 1,
       saveSnapshotFn: saveSnapshotFnFake,
       aggregateFn: aggregateFnFake,
       rootStreamFn: rootStreamFnFake,
@@ -1169,6 +1173,7 @@ describe("Event store create block transaction", () => {
 
     const blockPublisherPublicKeyFnFake = fake.returns(publicKey);
     const result = await create({
+      canonicalFormat: 1,
       rootStreamFn: rootStreamFnFake,
       latestBlockFn: latestBlockFnFake,
       saveBlockFn: saveBlockFnFake,
