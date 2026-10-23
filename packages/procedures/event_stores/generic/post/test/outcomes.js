@@ -1,3 +1,4 @@
+import { COMMITTED, DUPLICATE } from "@blossm/event-outcome-consts";
 import assert from "node:assert/strict";
 import post from "../index.js";
 
@@ -85,8 +86,8 @@ describe("Committed event outcomes", () => {
   it("distinguishes a numbered commit from its successful duplicate retry", async () => {
     const f = fixture();
     const entry = { event: event("same"), number: 0 };
-    assert.deepEqual(await f.run([entry]), { outcomes: ["committed"] });
-    assert.deepEqual(await f.run([entry]), { outcomes: ["duplicate"] });
+    assert.deepEqual(await f.run([entry]), { outcomes: [COMMITTED] });
+    assert.deepEqual(await f.run([entry]), { outcomes: [DUPLICATE] });
     assert.equal(f.saved.length, 1);
   });
 
@@ -100,10 +101,10 @@ describe("Committed event outcomes", () => {
       { event: event("fresh", "another-root") },
     ]);
     assert.deepEqual(result.outcomes, [
-      "committed",
-      "duplicate",
-      "committed",
-      "duplicate",
+      COMMITTED,
+      DUPLICATE,
+      COMMITTED,
+      DUPLICATE,
     ]);
     assert.equal(f.saved.length, 3);
   });

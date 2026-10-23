@@ -1,3 +1,5 @@
+import { QUEUED as DELIVERY_QUEUED } from "@blossm/rpc-delivery-consts";
+import { QUEUED, UNKNOWN } from "@blossm/event-outcome-consts";
 import deps from "./deps.js";
 
 const processEvents = async ({
@@ -11,7 +13,7 @@ const processEvents = async ({
   txId,
 }) => {
   const eventDataPerStore = {};
-  const outcomes = events.map((event) => ({ event, status: "unknown" }));
+  const outcomes = events.map((event) => ({ event, status: UNKNOWN }));
   const indexes = new Map();
   for (const {
     root,
@@ -81,9 +83,9 @@ const processEvents = async ({
           const { body, delivery } = result || {};
           eventDataPerStore[service][domain].forEach((entry, index) => {
             outcomes[indexes.get(entry)].status =
-              delivery == "queued"
-                ? "queued"
-                : body?.outcomes?.[index] || "unknown";
+              delivery == DELIVERY_QUEUED
+                ? QUEUED
+                : body?.outcomes?.[index] || UNKNOWN;
           });
         })
       );

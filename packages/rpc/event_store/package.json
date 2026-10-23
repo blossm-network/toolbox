@@ -18,6 +18,8 @@
     "@blossm/rpc": "^0.0.268"
   },
   "devDependencies": {
+    "@blossm/event-outcome-consts": "^0.0.1",
+    "@blossm/rpc-delivery-consts": "^0.0.1",
     "chai-datetime": "^1.8.1",
     "mocha": "^11.6.0",
     "sinon": "^21.0.0",

@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@blossm/datetime": "^0.0.18",
+    "@blossm/event-outcome-consts": "^0.0.1",
     "@blossm/event-store-post-transaction": "^0.0.47"
   },
   "devDependencies": {

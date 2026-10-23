@@ -71,10 +71,12 @@ the framework is not added to it. `logEventsFn(events)` returns the same outcome
 list for that explicit submission.
 
 ```js
+import { COMMITTED } from "@blossm/event-outcome-consts";
+
 return {
   events: [answerEvent],
   thenFn: async ({ outcomes }) => {
-    if (outcomes[0].status !== "committed") return;
+    if (outcomes[0].status !== COMMITTED) return;
     return upgradeSession();
   },
 };
@@ -110,12 +112,17 @@ a retrying worker and receiver-side idempotency. The existing
 is the owner to reuse for that separate design; it does not currently persist
 arbitrary `thenFn` callbacks or recover their HTTP/token response.
 
+Consumers import status constants from `@blossm/event-outcome-consts`; RPC delivery
+constants live in `@blossm/rpc-delivery-consts`, both under `packages/consts/`.
+
 ### Outcome rollout
 
-Release the generic POST handler and rebuild the event-store servers with that
+Publish the new `@blossm/event-outcome-consts` and
+`@blossm/rpc-delivery-consts` packages first. Release the generic POST handler and rebuild the event-store servers with that
 version. Release generic RPC and event-store RPC with updated dependency ranges,
 and release command POST plus its command-server dependency range. Release and
 rebuild the CLI-generated adapter with those clients/runtimes before adopting
-outcome-sensitive callbacks. Package versions are unchanged in this proposal.
+outcome-sensitive callbacks. Existing package versions are unchanged in this proposal. The new constants
+packages start at `0.0.1` and are not yet published.
 Older stores/adapters remain usable but produce `unknown`. Keep Dia's `answerId`
 until the complete path is released, deployed and its callback checks commitment.

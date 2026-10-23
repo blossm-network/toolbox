@@ -1,3 +1,5 @@
+import { COMMITTED } from "@blossm/event-outcome-consts";
+import { COMPLETED } from "@blossm/rpc-delivery-consts";
 import { expect } from "chai";
 import { fake, replace, restore } from "sinon";
 
@@ -11,8 +13,8 @@ describe("Event store write outcomes", () => {
     it(`opts into request and delivery metadata only for ${returnOutcomes}`, async () => {
       const response = {
         statusCode: 200,
-        body: { outcomes: ["committed"] },
-        delivery: "completed",
+        body: { outcomes: [COMMITTED] },
+        delivery: COMPLETED,
       };
       const withFn = fake.resolves(response);
       const postFn = fake.returns({ in: () => ({ with: withFn }) });
