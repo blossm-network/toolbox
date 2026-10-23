@@ -28,7 +28,7 @@
     "patch": "lerna version patch",
     "minor": "lerna version minor",
     "major": "lerna version major",
-    "check-packages": "yarn runtime:check && yarn lint && yarn test",
+    "check-packages": "yarn runtime:check && yarn workspace:check && yarn lint && yarn test",
     "lerna-publish": "lerna publish -y from-package",
     "format": "prettier --write .",
     "runtime:check": "node tools/runtime.js",
@@ -37,7 +37,9 @@
     "lint": "eslint .",
     "test:lint": "node --test tools/test/lint.js",
     "prepare": "husky",
-    "test:tooling": "node --test tools/test/*.js"
+    "test:tooling": "node --test tools/test/*.js",
+    "workspace:check": "node tools/workspaces.js",
+    "test:consumer": "node tools/consumer.js"
   },
   "devDependencies": {
     "auto-changelog": "^2.7.0",
@@ -51,7 +53,8 @@
     "sinon": "^22.1.0",
     "@eslint/js": "^10.0.1",
     "globals": "^17.13.0",
-    "eslint-plugin-import-x": "^4.17.1"
+    "eslint-plugin-import-x": "^4.17.1",
+    "semver": "^7.8.5"
   },
   "lint-staged": {
     "*.js": [

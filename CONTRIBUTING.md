@@ -14,7 +14,9 @@ yarn lint
 yarn test
 ```
 
-`yarn check-packages` runs all three. Tests include root tooling regressions and
+`yarn workspace:check` also verifies every internal range selects its local source;
+registry fallback cannot silently replace a reviewed workspace package.
+`yarn check-packages` runs runtime, workspace, lint and test checks. Tests include root tooling regressions and
 package scripts through Lerna, with two packages running concurrently. Test
 results are not cached. A successful placeholder script is not test coverage.
 Root tooling checks prove that Lerna propagates a package failure even when
@@ -48,7 +50,10 @@ Update the owning manifest deliberately, run `yarn install` to resolve and
 review `yarn.lock`, then verify a frozen install and the affected tests. A
 patched direct dependency does not guarantee that nested older copies are gone;
 inspect the final graph. Test consumers outside workspace hoisting when imports
-or published package contracts change.
+or published package contracts change. `yarn test:consumer` explicitly packs and
+installs the Dwolla/errors adapters outside workspace hoisting, with isolated
+public-registry configuration and lifecycle scripts disabled. It uses networking
+and is separate from ordinary offline tests.
 
 Runtime images and Node versions have one owner at
 `packages/cli/utils/merge_cli_template/runtime.js`. After reviewing official image
