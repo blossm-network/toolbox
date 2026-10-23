@@ -54,7 +54,10 @@ exit "$WRITE_STATUS"
           [0, 7, filename === "schedule_job" ? 7 : 0],
         ]) {
           fs.writeFileSync(callsPath, "");
-          assert(!/(^|[^$])\$\{/.test(step.args[1]), "Cloud Build dollars must be escaped");
+          assert(
+            !/(^|[^$])\$\{/.test(step.args[1]),
+            "Cloud Build dollars must be escaped"
+          );
           const args = step.args.map((arg) => arg.replace(/\$\$/g, "\u0024"));
           const result = spawnSync("bash", args, {
             encoding: "utf8",

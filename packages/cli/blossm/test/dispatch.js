@@ -24,7 +24,7 @@ const fixture = async (domain, operation) => {
     "blossm/src/index.js",
     {
       ...deps,
-      chalk: {red:{bold:(value)=>value}},
+      chalk: { red: { bold: (value) => value } },
       normalize: async () => ({ domain, args: [], positionalArgs: [] }),
       fs: { readFileSync: () => "fixture config" },
       yaml: { parse: () => ({ procedure: "command" }) },
