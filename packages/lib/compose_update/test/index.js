@@ -2,6 +2,26 @@ import { expect } from "chai";
 import formatUpdate from "../index.js";
 
 describe("Format update", () => {
+  it("should honor dotted object selectors within array elements", () => {
+    const result = formatUpdate(
+      {
+        things: [
+          { profile: { id: "selected" } },
+          { profile: { id: "other" } },
+          { other: true },
+        ],
+        "things.$.name": "updated",
+      },
+      { "things.profile.id": "selected" },
+      ".$."
+    );
+    expect(result.things).to.deep.equal([
+      { profile: { id: "selected" }, name: "updated" },
+      { profile: { id: "other" } },
+      { other: true },
+    ]);
+  });
+
   it("should leave unmatched parents and unidentified array elements unchanged", () => {
     const result = formatUpdate(
       {
