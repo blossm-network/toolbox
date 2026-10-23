@@ -50,6 +50,7 @@ describe("Create event", () => {
     replace(deps, "cononicalString", cononicalStringFake);
 
     const value = createEvent({
+      canonicalFormat: 1,
       action,
       domain,
       service,
@@ -113,6 +114,7 @@ describe("Create event", () => {
     replace(deps, "cononicalString", cononicalStringFake);
 
     const value = createEvent({
+      canonicalFormat: 1,
       action,
       domain,
       service,
@@ -144,6 +146,7 @@ describe("Create event", () => {
     replace(deps, "cononicalString", cononicalStringFake);
 
     const value = createEvent({
+      canonicalFormat: 1,
       action,
       domain,
       service,
@@ -192,6 +195,7 @@ describe("Create event", () => {
     replace(deps, "cononicalString", cononicalStringFake);
 
     const value = createEvent({
+      canonicalFormat: 1,
       action,
       domain,
       service,

@@ -15,6 +15,7 @@ const blockchainKeyRing = `${process.env.SERVICE_NAME}-blockchain`;
 let blockPublisherPublicKey;
 
 export default eventStore({
+  ...(config.canonicalFormat != undefined && { canonicalFormat: config.canonicalFormat }),
   schema: config.schema,
   indexes: config.indexes,
   handlers,

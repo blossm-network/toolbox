@@ -140,6 +140,7 @@ describe("Mongodb event store", () => {
       createBlockFn,
       signFn,
       blockPublisherPublicKeyFn,
+      canonicalFormat: 2,
       isPublic,
     });
 
@@ -169,6 +170,7 @@ describe("Mongodb event store", () => {
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
+          canonicalFormat: { $type: Number },
           nonce: {
             $type: String,
             required: true,
@@ -287,6 +289,7 @@ describe("Mongodb event store", () => {
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
+          canonicalFormat: { $type: Number },
           nonce: {
             $type: String,
             required: true,
@@ -352,6 +355,7 @@ describe("Mongodb event store", () => {
         hash: { $type: String, required: true, unique: true },
         signature: { $type: String, required: true },
         headers: {
+          canonicalFormat: { $type: Number },
           pHash: { $type: String, required: true },
           created: { $type: Date, required: true },
           number: { $type: Number, required: true, unique: true },
@@ -443,6 +447,7 @@ describe("Mongodb event store", () => {
       encryptFn,
       createBlockFn,
       blockPublisherPublicKeyFn,
+      canonicalFormat: 2,
       isPublic,
       idempotencyConflictCheckFn: idempotencyConflictCheckResult,
     });
@@ -540,6 +545,7 @@ describe("Mongodb event store", () => {
       createBlockFn,
       signFn,
       blockPublisherPublicKeyFn,
+      canonicalFormat: 2,
       isPublic,
       handlers,
     });
@@ -570,6 +576,7 @@ describe("Mongodb event store", () => {
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
+          canonicalFormat: { $type: Number },
           nonce: {
             $type: String,
             required: true,
@@ -689,6 +696,7 @@ describe("Mongodb event store", () => {
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
+          canonicalFormat: { $type: Number },
           nonce: {
             $type: String,
             required: true,
@@ -755,6 +763,7 @@ describe("Mongodb event store", () => {
         hash: { $type: String, required: true, unique: true },
         signature: { $type: String, required: true },
         headers: {
+          canonicalFormat: { $type: Number },
           pHash: { $type: String, required: true },
           created: { $type: Date, required: true },
           number: { $type: Number, required: true, unique: true },
@@ -802,6 +811,7 @@ describe("Mongodb event store", () => {
       encryptFn,
       createBlockFn,
       blockPublisherPublicKeyFn,
+      canonicalFormat: 2,
       isPublic,
       createTransactionFn: deps.createTransaction,
     });
@@ -884,6 +894,7 @@ describe("Mongodb event store", () => {
       createBlockFn,
       signFn,
       blockPublisherPublicKeyFn,
+      canonicalFormat: 2,
       isPublic,
     });
 
@@ -913,6 +924,7 @@ describe("Mongodb event store", () => {
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
+          canonicalFormat: { $type: Number },
           nonce: {
             $type: String,
             required: true,
@@ -1031,6 +1043,7 @@ describe("Mongodb event store", () => {
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
+          canonicalFormat: { $type: Number },
           nonce: {
             $type: String,
             required: true,
@@ -1096,6 +1109,7 @@ describe("Mongodb event store", () => {
         hash: { $type: String, required: true, unique: true },
         signature: { $type: String, required: true },
         headers: {
+          canonicalFormat: { $type: Number },
           pHash: { $type: String, required: true },
           created: { $type: Date, required: true },
           number: { $type: Number, required: true, unique: true },
