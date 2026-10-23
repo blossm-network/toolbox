@@ -246,7 +246,7 @@ const countsStore = async () => {
 const blockchainStore = async () => {
   if (_blockchainStore != undefined) {
     logger.info("Thank you existing blockchain store database.");
-    return _countsStore;
+    return _blockchainStore;
   }
 
   _blockchainStore = await deps.db.store({

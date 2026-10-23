@@ -49,6 +49,28 @@ describe("Mongodb event store", () => {
     clock.restore();
     restore();
   });
+  it("keeps each cached collection bound to its own operations on repeated startup", async () => {
+    const server = (await import("../index.js")).default;
+    const stores = Object.fromEntries(["events", "snapshots", "counts", "blockchain"].map((name) => [name, { name }]));
+    const store = fake(async ({ name }) => stores[name]);
+    replace(deps, "db", { store });
+    replace(deps, "eventStore", fake());
+    const bindings = {
+      findSnapshots: "snapshotStore", findEvents: "eventStore", findOneSnapshot: "snapshotStore",
+      eventStream: "eventStore", saveEvents: "eventStore", query: "eventStore",
+      reserveRootCounts: "countsStore", rootStream: "countsStore", count: "countsStore",
+      idempotencyConflictCheck: "eventStore", saveSnapshot: "snapshotStore",
+      saveBlock: "blockchainStore", latestBlock: "blockchainStore",
+    };
+    for (const name of Object.keys(bindings)) replace(deps, name, fake());
+    await server({ schema: {}, secretFn: fake.resolves("secret") });
+    await server({ schema: {}, secretFn: fake.resolves("secret") });
+    expect(store.callCount).to.equal(4);
+    const names = { eventStore: "events", snapshotStore: "snapshots", countsStore: "counts", blockchainStore: "blockchain" };
+    for (const [operation, key] of Object.entries(bindings)) {
+      expect(deps[operation].secondCall.args[0][key]).to.equal(stores[names[key]]);
+    }
+  });
   it("should call with the correct params", async () => {
     const mongodbEventStore = (await import("../index.js")).default; 
     const eStore = "some-event-store";
