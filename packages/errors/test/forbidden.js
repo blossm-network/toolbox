@@ -24,7 +24,6 @@ describe("Forbidden", () => {
       statusCode: 403,
       code: "Forbidden",
       info,
-      cause,
       message,
     });
   });

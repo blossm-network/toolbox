@@ -23,7 +23,6 @@ describe("Bad request", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 409,
       code: "InvalidArgument",
-      cause,
       info,
       message,
     });

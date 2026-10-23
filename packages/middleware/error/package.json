@@ -15,7 +15,8 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/logger": "^0.0.13"
+    "@blossm/logger": "^0.0.13",
+    "@blossm/errors": "^0.0.40"
   },
   "devDependencies": {
     "mocha": "^11.7.0"

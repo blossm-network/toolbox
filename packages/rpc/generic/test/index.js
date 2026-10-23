@@ -935,17 +935,7 @@ describe("Operation", () => {
         statusCode: errorStatusCode,
         message: errorMessage,
         code,
-        info: {
-          ...info,
-          context: { b: 4 },
-          data: {
-            claims: "some-claims",
-            context: { b: 4 },
-          },
-          network,
-          token: "some-token",
-          url: "some-url",
-        },
+        info,
       });
       expect(e).to.equal(error);
     }
@@ -989,13 +979,6 @@ describe("Operation", () => {
       expect(constructErrorFake).to.have.been.calledWith({
         statusCode: errorStatusCode,
         message: "Not specified",
-        info: {
-          context: { b: 4 },
-          data: { claims: "some-claims", context },
-          network,
-          token: "some-token",
-          url: "some-url",
-        },
       });
       expect(e).to.equal(error);
     }
