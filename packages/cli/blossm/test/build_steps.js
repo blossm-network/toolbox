@@ -6,6 +6,37 @@ import { load } from "./load.js";
 const buildDir = "utils/merge_cli_template/src/write_build";
 
 describe("Generated build steps", () => {
+  it("installs production dependencies from the build lock and excludes workspace artifacts", () => {
+    const template = new URL(
+      "../../utils/merge_cli_template/template/",
+      import.meta.url
+    );
+    const dockerfile = fs.readFileSync(new URL("Dockerfile", template), "utf8");
+    const ignored = fs
+      .readFileSync(new URL(".dockerignore", template), "utf8")
+      .trim()
+      .split("\n");
+    assert(dockerfile.includes("COPY package.json yarn.lock ./"));
+    assert(
+      dockerfile.includes("RUN yarn install --production --frozen-lockfile")
+    );
+    assert(!dockerfile.includes("npm install"));
+    for (const entry of [
+      "node_modules",
+      ".git",
+      ".env",
+      ".env.*",
+      "test",
+      "base_test",
+      "build.yaml",
+      "docker-compose.yaml",
+      ".aws",
+      ".gcloud",
+    ]) {
+      assert(ignored.includes(entry), entry);
+    }
+  });
+
   it("keeps job and fact development overrides out of the deployed environment", async () => {
     for (const procedure of ["job", "fact"]) {
       const source = fs.readFileSync(
