@@ -42,6 +42,7 @@ const publishFn = "some-publish-fn";
 describe("Mongodb event store", () => {
   beforeEach(async () => {
     __resetStoresForTest();
+    replace(deps, "publishPending", fake.returns("some-pending-publish-fn"));
     process.env.NODE_ENV = "some-env";
     clock = useFakeTimers(now.getTime());
   });
@@ -55,6 +56,7 @@ describe("Mongodb event store", () => {
     const sStore = "some-snapshot-store";
     const cStore = "some-counts-store";
     const bStore = "some-blockchain-store";
+    const pStore = "some-publications-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
@@ -63,7 +65,9 @@ describe("Mongodb event store", () => {
       .onCall(2)
       .returns(cStore)
       .onCall(3)
-      .returns(bStore);
+      .returns(bStore)
+      .onCall(4)
+      .returns(pStore);
 
     const secretFake = fake.returns(password);
 
@@ -255,9 +259,7 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
-        [{ "headers.idempotency": 1 }],
-        [{ "tx.id": 1 }],
+            [{ "tx.id": 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.number": 1 }],
         [
@@ -327,8 +329,7 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
-        [{ "headers.root": 1 }],
+          [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.created": -1 }],
       ],
     });
@@ -341,8 +342,7 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }],
-        [{ root: 1, updated: 1 }],
+          [{ root: 1, updated: 1 }],
         [{ root: 1, updated: -1 }],
       ],
     });
@@ -377,11 +377,12 @@ describe("Mongodb event store", () => {
         snapshots: { $type: Buffer, required: true },
       },
       typeKey: "$type",
-      indexes: [[{ "headers.number": 1 }]],
+      indexes: [],
     });
     expect(secretFake).to.have.been.calledWith("mongodb-event-store");
 
     expect(saveEventsFake).to.have.been.calledWith({
+      publicationsStore: pStore,
       eventStore: eStore,
       handlers,
     });
@@ -424,6 +425,7 @@ describe("Mongodb event store", () => {
       blockchainStore: bStore,
     });
     expect(eventStoreFake).to.have.been.calledWith({
+      publishPendingFn: "some-pending-publish-fn",
       findOneSnapshotFn: findOneSnapshotResult,
       findSnapshotsFn: findSnapshotsResult,
       eventStreamFn: eventStreamResult,
@@ -448,7 +450,7 @@ describe("Mongodb event store", () => {
     });
 
     await mongodbEventStore();
-    expect(storeFake).to.have.been.callCount(4);
+    expect(storeFake).to.have.been.callCount(5);
   });
   it("should call with the correct params with indexes and local env", async () => {
     const mongodbEventStore = (await import("../index.js")).default;
@@ -456,6 +458,7 @@ describe("Mongodb event store", () => {
     const sStore = "some-snapshot-store";
     const cStore = "some-counts-store";
     const bStore = "some-blockchain-store";
+    const pStore = "some-publications-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
@@ -464,7 +467,9 @@ describe("Mongodb event store", () => {
       .onCall(2)
       .returns(cStore)
       .onCall(3)
-      .returns(bStore);
+      .returns(bStore)
+      .onCall(4)
+      .returns(pStore);
 
     const secretFake = fake.returns(password);
 
@@ -656,9 +661,7 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
-        [{ "headers.idempotency": 1 }],
-        [{ "tx.id": 1 }],
+            [{ "tx.id": 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.number": 1 }],
         [
@@ -729,8 +732,7 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
-        [{ "headers.root": 1 }],
+          [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.created": -1 }],
         [{ [`state.${index}`]: 1 }],
       ],
@@ -744,8 +746,7 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }],
-        [{ root: 1, updated: 1 }],
+          [{ root: 1, updated: 1 }],
         [{ root: 1, updated: -1 }],
       ],
     });
@@ -780,7 +781,7 @@ describe("Mongodb event store", () => {
         txs: { $type: Buffer, required: true },
       },
       typeKey: "$type",
-      indexes: [[{ "headers.number": 1 }]],
+      indexes: [],
     });
     expect(eventStoreFake).to.have.been.calledWith({
       findOneSnapshotFn: findOneSnapshotResult,
@@ -812,6 +813,7 @@ describe("Mongodb event store", () => {
     const sStore = "some-snapshot-store";
     const cStore = "some-counts-store";
     const bStore = "some-blockchain-store";
+    const pStore = "some-publications-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
@@ -820,7 +822,9 @@ describe("Mongodb event store", () => {
       .onCall(2)
       .returns(cStore)
       .onCall(3)
-      .returns(bStore);
+      .returns(bStore)
+      .onCall(4)
+      .returns(pStore);
 
     const secretFake = fake.returns(password);
 
@@ -999,9 +1003,7 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
-        [{ "headers.idempotency": 1 }],
-        [{ "tx.id": 1 }],
+            [{ "tx.id": 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.number": 1 }],
         [
@@ -1071,8 +1073,7 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
-        [{ "headers.root": 1 }],
+          [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.created": -1 }],
       ],
     });
@@ -1085,8 +1086,7 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }],
-        [{ root: 1, updated: 1 }],
+          [{ root: 1, updated: 1 }],
         [{ root: 1, updated: -1 }],
       ],
     });
@@ -1121,7 +1121,7 @@ describe("Mongodb event store", () => {
         snapshots: { $type: Buffer, required: true },
       },
       typeKey: "$type",
-      indexes: [[{ "headers.number": 1 }]],
+      indexes: [],
     });
   });
 });

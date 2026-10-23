@@ -1,3 +1,4 @@
+import publishPending from "./src/publish_pending.js";
 import { store } from "@blossm/mongodb-database";
 import { string as dateString } from "@blossm/datetime";
 import eventStore from "@blossm/event-store";
@@ -20,6 +21,7 @@ import uuid from "@blossm/uuid";
 
 export default {
   dateString,
+  publishPending,
   eventStore,
   db: { store },
   saveEvents,
