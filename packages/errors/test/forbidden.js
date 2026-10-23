@@ -23,7 +23,7 @@ describe("Forbidden", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 403,
       code: "Forbidden",
-      info: {},
+      info,
       message,
     });
   });

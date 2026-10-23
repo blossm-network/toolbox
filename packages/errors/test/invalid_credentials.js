@@ -23,7 +23,7 @@ describe("Invalid credentials", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 401,
       code: "InvalidCredentials",
-      info: {},
+      info,
       message,
     });
   });

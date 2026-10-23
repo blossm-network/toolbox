@@ -14,7 +14,11 @@ describe("RPC error disclosure boundary", () => {
     else process.env.HOST = previousHost;
   });
 
-  for (const statusCode of [404, 409, 500]) {
+  for (const [statusCode, info] of [
+    [404, { traceId: "trace-123", root: "root-456" }],
+    [409, [{ root: "root-456", number: 3 }]],
+    [500, { traceId: "trace-123", resourceId: "resource-456" }],
+  ]) {
     it(`keeps credentials and request payloads out of ${statusCode} responses and logs`, async () => {
       process.env.HOST = "internal.example";
       const logs = [];
@@ -39,17 +43,7 @@ describe("RPC error disclosure boundary", () => {
           body: JSON.stringify({
             code: "Conflict",
             message: "The operation failed.",
-            info: {
-              token: "FAKE_DOWNSTREAM_TOKEN",
-              data: { password: "FAKE_PASSWORD" },
-              errors: [
-                {
-                  message: "This field is required.",
-                  path: "name",
-                  value: "FAKE_PASSWORD",
-                },
-              ],
-            },
+            info,
           }),
         })
       );
@@ -87,11 +81,37 @@ describe("RPC error disclosure boundary", () => {
       for (const output of [serialized, payload, logs]) {
         expect(JSON.stringify(output)).not.to.match(/FAKE_/);
       }
-      if (statusCode < 500)
-        expect(payload.info.errors).to.deep.equal([
-          { message: "This field is required.", path: "name" },
-        ]);
+      expect(serialized.info).to.deep.equal(info);
+      expect(payload.info).to.deep.equal(info);
+      expect(payload.message).to.equal("The operation failed.");
+      expect(logs[1][1].info).to.deep.equal(info);
       expect(logs).to.have.lengthOf(2);
     });
   }
+  it("keeps undeclared native diagnostics out of middleware responses and logs", () => {
+    const logs = [];
+    replace(logger, "error", (...args) => logs.push(args));
+    const error = new Error("Database URL: FAKE_PASSWORD");
+    error.info = { authorization: "FAKE_SERVICE_BEARER" };
+    error.cause = new Error("FAKE_CURRENT_TOKEN");
+    error.toJSON = () => {
+      throw new Error("Must not execute arbitrary toJSON");
+    };
+    let payload;
+    errorMiddleware(
+      error,
+      { body: { password: "FAKE_PASSWORD" } },
+      {
+        status: () => ({
+          send: (body) => {
+            payload = body;
+          },
+        }),
+      },
+      () => {}
+    );
+    expect(payload.message).to.equal("An internal server error occurred.");
+    expect(payload.info).to.deep.equal({});
+    expect(JSON.stringify([payload, logs])).not.to.match(/FAKE_|stack|cause/);
+  });
 });

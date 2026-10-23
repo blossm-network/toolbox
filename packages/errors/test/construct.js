@@ -21,7 +21,7 @@ describe("Construct", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 400,
       code: "BadRequest",
-      info: {},
+      info,
       message,
     });
   });
@@ -39,7 +39,7 @@ describe("Construct", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 401,
       code: "Unauthorized",
-      info: {},
+      info,
       message,
     });
   });
@@ -57,7 +57,7 @@ describe("Construct", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 409,
       code: "InvalidArgument",
-      info: {},
+      info,
       message,
     });
   });
@@ -75,12 +75,12 @@ describe("Construct", () => {
       statusCode: 409,
       code: "Conflict",
       message,
-      info: {},
+      info,
     });
     expect(error.toJSON()).to.deep.equal({
       statusCode: 409,
       code: "Conflict",
-      info: {},
+      info,
       message,
     });
   });
@@ -98,7 +98,7 @@ describe("Construct", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 403,
       code: "Forbidden",
-      info: {},
+      info,
       message,
     });
   });
@@ -116,7 +116,7 @@ describe("Construct", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 404,
       code: "ResourceNotFound",
-      info: {},
+      info,
       message,
     });
   });
@@ -134,7 +134,7 @@ describe("Construct", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 412,
       code: "PreconditionFailed",
-      info: {},
+      info,
       message,
     });
   });
@@ -144,7 +144,7 @@ describe("Construct", () => {
       statusCode: 500,
       code: "InternalServer",
       info: {},
-      message: "An internal server error occurred.",
+      message,
     });
   });
   it("500 correct with info", () => {
@@ -152,8 +152,8 @@ describe("Construct", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 500,
       code: "InternalServer",
-      info: {},
-      message: "An internal server error occurred.",
+      info,
+      message,
     });
   });
 });

@@ -6,7 +6,11 @@ export default (err, req, res, next) => {
 
   const error = publicError(err);
   const log = error.statusCode >= 500 ? logger.error : logger.info;
-  log("A request failed.", { statusCode: error.statusCode, code: error.code });
+  log("A request failed.", {
+    statusCode: error.statusCode,
+    code: error.code,
+    info: error.info,
+  });
 
   //If unauthorized, remove cookie; TODO change to 'access'
   if (error.statusCode === 401) res.clearCookie("access");
