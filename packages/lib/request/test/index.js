@@ -385,3 +385,20 @@ describe("Merged cancellation signals", () => {
     assert.equal(outcome, failure);
   });
 });
+
+describe("Multipart inferred filenames", () => {
+  afterEach(restore);
+  it("keeps the original file name when a stream has already opened", async () => {
+    const { createReadStream } = await import("node:fs");
+    const { once } = await import("node:events");
+    const input = createReadStream(new URL("../README.md", import.meta.url));
+    await once(input, "open");
+    replace(deps, "fetch", async (_, options) => {
+      assert.equal(options.body.get("file").name, "README.md");
+      return response();
+    });
+    await request.post("https://example.invalid", {
+      formData: { file: input },
+    });
+  });
+});
