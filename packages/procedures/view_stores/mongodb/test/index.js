@@ -50,6 +50,24 @@ process.env.MONGODB_DATABASE = database;
 
 let mongodbViewStore;
 describe("View store", () => {
+  it("should disable positional upsert for both plain and operator update paths", async () => {
+    const write = fake.resolves(null);
+    replace(deps, "db", { store: fake.returns({}), write });
+    const server = fake();
+    replace(deps, "viewStore", server);
+    replace(deps, "formatSchema", fake.returns({}));
+    await mongodbViewStore({ schema: {}, secretFn: async () => "test-password" });
+    const { writeFn } = server.firstCall.args[0];
+    for (const data of [
+      { "body.things.$.name": "value" },
+      { $set: { "body.things.$.name": "value" } },
+      { $set: { "body.things.$[item].name": "value" } },
+    ]) {
+      await writeFn({ query: { "headers.id": "missing" }, data });
+      expect(write.lastCall.args[0].options.upsert).to.equal(false);
+    }
+  });
+
   it("should preserve custom index options without duplicating partial-word indexes", async () => {
     const store = fake.returns({});
     replace(deps, "db", { store });
