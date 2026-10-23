@@ -24,6 +24,9 @@
     "@blossm/node-external-token": "^0.0.203"
   },
   "devDependencies": {
-    "mocha": "^11.7.0"
+    "mocha": "^11.7.0",
+    "@blossm/rpc": "^0.0.268",
+    "@blossm/view-composite-rpc": "^0.0.165",
+    "@blossm/operation-short-name": "^0.0.1"
   }
 }

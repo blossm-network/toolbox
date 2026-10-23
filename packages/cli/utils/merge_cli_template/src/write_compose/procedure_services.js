@@ -2,7 +2,7 @@ import yaml from "yaml";
 import path from "path";
 import fs from "fs-extra";
 
-import hash from "@blossm/operation-hash";
+import hash, { environment as operationIdentityEnvironment } from "@blossm/operation-hash";
 import rootDir from "@blossm/cli-root-dir";
 
 import databaseService from "./database_service.js";
@@ -55,6 +55,7 @@ export default ({
   mongodbUserPassword,
   dependencyKeyEnvironmentVariables,
 }) => {
+  const identityEnvironment = operationIdentityEnvironment();
   const common = {
     ports: [`${port}`],
   };
@@ -70,6 +71,7 @@ export default ({
     GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
     GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing,
     ...dependencyKeyEnvironmentVariables,
+    ...identityEnvironment,
   };
   const commonStoreEnvironment = {
     MONGODB_USER: `${mongodbUser}`,
@@ -144,7 +146,7 @@ export default ({
         {
           const operationHash = hash(
             dependency.name,
-            ...(dependency.context ? [dependency.context] : []),
+            dependency.context,
             dependency.procedure
           );
 
@@ -219,6 +221,7 @@ export default ({
                 SERVICE: dependency.service,
                 NAME: dependency.name,
                 ...customEnv,
+                ...identityEnvironment,
               },
             },
           };
@@ -253,6 +256,7 @@ export default ({
                 ...(dependency.service && { SERVICE: dependency.service }),
                 NAME: dependency.name,
                 ...customEnv,
+                ...identityEnvironment,
               },
             },
           };
