@@ -34,6 +34,11 @@ export default async ({
   const [header, payload, signature] = components;
   let decodedSignature;
   try {
+    if (
+      jose &&
+      Buffer.from(signature, "base64url").toString("base64url") !== signature
+    )
+      throw new TypeError("Noncanonical signature encoding.");
     decodedSignature = jose
       ? signatureFormat.joseToDer(signature, algorithm).toString("base64")
       : base64url.toBase64(signature);
