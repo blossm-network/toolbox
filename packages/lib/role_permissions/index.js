@@ -5,7 +5,6 @@ export default async ({
   customRolePermissionsFn,
 }) => {
   const permissions = [];
-  const rolesFound = [];
   const nonDefaultRoles = [];
 
   for (const role of roles.filter(
@@ -36,7 +35,6 @@ export default async ({
         };
       })
     );
-    rolesFound.push(role);
   }
 
   if (!customRolePermissionsFn || nonDefaultRoles.length == 0)
