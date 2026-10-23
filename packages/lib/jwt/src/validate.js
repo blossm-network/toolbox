@@ -2,23 +2,9 @@ import base64url from "base64url";
 import signatureFormat from "ecdsa-sig-formatter";
 import resolveFormat from "./format.js";
 import decode from "./decode.js";
+import timeClaim from "./time_claim.js";
 
 import deps from "../deps.js";
-
-const timeClaim = (value, jose) => {
-  const timestamp = jose
-    ? typeof value == "number"
-      ? value * 1000
-      : NaN
-    : typeof value == "string"
-    ? Date.parse(value)
-    : NaN;
-  if (!Number.isFinite(timestamp))
-    throw deps.invalidCredentialsError.message(
-      "The token time claim is invalid."
-    );
-  return timestamp;
-};
 
 export default async ({
   token,
@@ -80,12 +66,12 @@ export default async ({
   //Throw if the token is expired.
   const now = Date.now();
 
-  if (timeClaim(claims.exp, jose) <= now)
+  if (timeClaim(claims.exp, { format }) <= now)
     throw deps.invalidCredentialsError.message("The token is expired.", {
       info: { reason: "expired" },
     });
 
-  if (claims.nbf !== undefined && timeClaim(claims.nbf, jose) > now)
+  if (claims.nbf !== undefined && timeClaim(claims.nbf, { format }) > now)
     throw deps.invalidCredentialsError.message("The token isn't active yet.");
 
   return claims;
