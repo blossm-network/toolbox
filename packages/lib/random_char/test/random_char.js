@@ -14,3 +14,17 @@ describe("Difference", () => {
     }
   });
 });
+
+describe("Secure random characters", () => {
+  it("does not use Math.random", () => {
+    const original = Math.random;
+    Math.random = () => {
+      throw new Error("ordinary randomness is not credential entropy");
+    };
+    try {
+      expect(characters).to.include(randomChar());
+    } finally {
+      Math.random = original;
+    }
+  });
+});
