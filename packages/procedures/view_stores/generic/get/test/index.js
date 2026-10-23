@@ -428,6 +428,7 @@ describe("View store get", () => {
           ...query,
           "some-other-query-key.a.b": "something",
         },
+        text,
         skip: 50,
         limit: 50,
       }
