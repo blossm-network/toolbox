@@ -1,3 +1,4 @@
+import childPath from "./_child_path.js";
 import dayTimeRange from "./day_time_range.js";
 import dateRange from "./date_range.js";
 import monthRange from "./month_range.js";
@@ -12,10 +13,10 @@ export default (dateComponents, { title = "date", path, optional } = {}) => {
   if (dateComponents == undefined) return;
 
   const componentsErr = findError([
-    dayTimeRange(dateComponents.time, { path: `${path}.time` }),
-    dateRange(dateComponents.day, { path: `${path}.day` }),
-    monthRange(dateComponents.month, { path: `${path}.month` }),
-    yearRange(dateComponents.year, { path: `${path}.year` }),
+    dayTimeRange(dateComponents.time, { path: childPath(path, "time") }),
+    dateRange(dateComponents.day, { path: childPath(path, "day") }),
+    monthRange(dateComponents.month, { path: childPath(path, "month") }),
+    yearRange(dateComponents.year, { path: childPath(path, "year") }),
   ]);
 
   if (componentsErr) return componentsErr;
