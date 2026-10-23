@@ -17,3 +17,5 @@
 // export default (sort) => {
 //   return { name: sort.name };
 // };
+
+export default (sort) => sort;

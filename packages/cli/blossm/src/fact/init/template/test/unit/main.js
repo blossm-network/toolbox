@@ -1,9 +1,10 @@
 import * as chai from "chai";
 import chaiDatetime from "chai-datetime";
 import sinonChai from "sinon-chai";
-import { restore, useFakeTimers } from "sinon";
+import { fake, replace, restore, useFakeTimers } from "sinon";
 
 import main from "../../main.js";
+import deps from "../../deps.js";
 
 chai.use(chaiDatetime);
 chai.use(sinonChai);
@@ -23,7 +24,19 @@ describe("Fact unit tests", () => {
   it("should return successfully", async () => {
     const query = "some-query";
 
+    const aggregate = fake.resolves({ state: {} });
+    const set = fake.returns({ aggregate });
+    const eventStore = fake.returns({ set });
+    replace(deps, "eventStore", eventStore);
     const result = await main({ query });
-    expect(result).to.deep.be.undefined;
+    expect(eventStore).to.have.been.calledOnceWithExactly({
+      domain: "some-domain",
+      service: "some-service",
+    });
+    expect(set).to.have.been.calledOnceWithExactly({
+      token: { internalFn: deps.gcpToken },
+    });
+    expect(aggregate).to.have.been.calledOnceWithExactly("some-root");
+    expect(result).to.deep.equal({ response: { some: "response " } });
   });
 });
