@@ -126,7 +126,13 @@ describe("Kms verify", () => {
     expect(getKeyFake).to.have.not.been.called;
     expect(updateFake).to.have.been.calledWith(message);
     expect(verifyFake).to.have.been.calledWith(pem, signature, "hex");
-    expect(pathFake).to.have.not.been.called;
+    expect(pathFake).to.have.been.calledWith(
+      project,
+      location,
+      ring,
+      key,
+      version
+    );
   });
 
   // it("should sign and verify correctly", async () => {
