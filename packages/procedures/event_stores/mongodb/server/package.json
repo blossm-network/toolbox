@@ -28,13 +28,11 @@
     "@blossm/mongodb-event-store-find-snapshots": "^0.0.61",
     "@blossm/mongodb-event-store-idempotency-conflict-check": "^0.0.69",
     "@blossm/mongodb-event-store-latest-block": "^0.0.62",
-    "@blossm/mongodb-event-store-query": "^0.0.84",
     "@blossm/mongodb-event-store-reserve-root-counts": "^0.0.118",
     "@blossm/mongodb-event-store-root-stream": "^0.0.95",
     "@blossm/mongodb-event-store-save-block": "^0.0.65",
     "@blossm/mongodb-event-store-save-events": "^0.0.140",
-    "@blossm/mongodb-event-store-save-snapshot": "^0.0.71",
-    "@blossm/uuid": "^0.0.9"
+    "@blossm/mongodb-event-store-save-snapshot": "^0.0.71"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",

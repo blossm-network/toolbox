@@ -74,7 +74,7 @@ describe("Mongodb event store", () => {
     replace(deps, "eventStore", fake());
     const bindings = {
       findSnapshots: "snapshotStore", findEvents: "eventStore", findOneSnapshot: "snapshotStore",
-      eventStream: "eventStore", saveEvents: "eventStore", query: "eventStore",
+      eventStream: "eventStore", saveEvents: "eventStore",
       reserveRootCounts: "countsStore", rootStream: "countsStore", count: "countsStore",
       idempotencyConflictCheck: "eventStore", saveSnapshot: "snapshotStore",
       saveBlock: "blockchainStore", latestBlock: "blockchainStore",
@@ -159,9 +159,6 @@ describe("Mongodb event store", () => {
     const eventStreamResult = "some-event-stream-result";
     const eventStreamFake = fake.returns(eventStreamResult);
     replace(deps, "eventStream", eventStreamFake);
-    const queryResult = "some-query-result";
-    const queryFake = fake.returns(queryResult);
-    replace(deps, "query", queryFake);
     const idempotencyConflictCheckResult =
       "some-idempotency-conflict-check-result";
     const idempotencyConflictCheckFake = fake.returns(
@@ -430,11 +427,6 @@ describe("Mongodb event store", () => {
     expect(findEventsFake).to.have.been.calledWith({
       eventStore: eStore,
     });
-    expect(queryFake).to.have.been.calledWith({
-      eventStore: eStore,
-      snapshotStore: sStore,
-      handlers,
-    });
     expect(saveBlockFake).to.have.been.calledWith({
       blockchainStore: bStore,
     });
@@ -454,7 +446,6 @@ describe("Mongodb event store", () => {
       findEventsFn: findEventsResult,
       handlers,
       saveEventsFn: saveEventsResult,
-      queryFn: queryResult,
       reserveRootCountsFn: reserveRootCountsResult,
       rootStreamFn: rootStreamResult,
       countFn: countResult,
@@ -524,9 +515,6 @@ describe("Mongodb event store", () => {
     const eventStreamResult = "some-event-stream-result";
     const eventStreamFake = fake.returns(eventStreamResult);
     replace(deps, "eventStream", eventStreamFake);
-    const queryResult = "some-query-result";
-    const queryFake = fake.returns(queryResult);
-    replace(deps, "query", queryFake);
     const idempotencyConflictCheckResult =
       "some-idempotency-conflict-check-result";
     const idempotencyConflictCheckFake = fake.returns(
@@ -781,7 +769,6 @@ describe("Mongodb event store", () => {
       findEventsFn: findEventsResult,
       saveEventsFn: saveEventsResult,
       handlers,
-      queryFn: queryResult,
       reserveRootCountsFn: reserveRootCountsResult,
       rootStreamFn: rootStreamResult,
       countFn: countResult,
@@ -847,9 +834,6 @@ describe("Mongodb event store", () => {
     const eventStreamResult = "some-event-stream-result";
     const eventStreamFake = fake.returns(eventStreamResult);
     replace(deps, "eventStream", eventStreamFake);
-    const queryResult = "some-query-result";
-    const queryFake = fake.returns(queryResult);
-    replace(deps, "query", queryFake);
     const idempotencyConflictCheckResult =
       "some-idempotency-conflict-check-result";
     const idempotencyConflictCheckFake = fake.returns(
