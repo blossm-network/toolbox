@@ -22,8 +22,7 @@ describe("Precondition failed", () => {
     const error = preconditionFailed.message(message, { cause, info });
     expect(error.toJSON()).to.deep.equal({
       statusCode: 412,
-      cause,
-      info,
+      info: {},
       code: "PreconditionFailed",
       message,
     });

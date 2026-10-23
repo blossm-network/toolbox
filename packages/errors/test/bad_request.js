@@ -22,8 +22,7 @@ describe("Bad request", () => {
     const error = badRequest.message(message, { cause, info });
     expect(error.toJSON()).to.deep.equal({
       statusCode: 400,
-      cause,
-      info,
+      info: {},
       code: "BadRequest",
       message,
     });

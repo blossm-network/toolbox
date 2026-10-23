@@ -1,9 +1,5 @@
+import publicError from "./public_error.js";
+
 export default function () {
-  return {
-    statusCode: this.statusCode,
-    code: this.body.code,
-    message: this.message,
-    ...(this.info() && { info: this.info() }),
-    ...(this.cause() && { cause: this.cause() }),
-  };
-};
+  return publicError(this);
+}
