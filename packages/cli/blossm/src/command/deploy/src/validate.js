@@ -61,11 +61,11 @@ const validateObject = ({ object, expectation, path, context }) => {
               path: `${path}.${property}`,
               optional: false,
               ...((expectation[property].type[0].in ||
-                expectation[property].type[0].is) && {
+                expectation[property].type[0].is != undefined) && {
                 fn: (value) => {
                   if (typeof expectation[property].type[0] != "object")
                     return true;
-                  if (expectation[property].type[0].is) {
+                  if (expectation[property].type[0].is != undefined) {
                     return expectation[property].type[0].is == "$network" &&
                       context
                       ? value == context.network
@@ -99,7 +99,7 @@ const validateObject = ({ object, expectation, path, context }) => {
         ...((expectation[property].in ||
           expectation[property].is != undefined) && {
           fn: (value) => {
-            if (expectation[property].is) {
+            if (expectation[property].is != undefined) {
               return expectation[property].is == "$network" && context
                 ? value == context.network
                 : value == expectation[property].is;
