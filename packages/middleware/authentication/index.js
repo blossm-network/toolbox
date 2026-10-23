@@ -17,7 +17,7 @@ export default ({
 
     if (jwt) req.token = jwt;
 
-    let shouldThrow = protection == "strict";
+    const shouldThrow = protection == "strict" || typeof protection == "object";
     try {
       const claims = await deps.authenticate({
         ...(jwt && { jwt }),
@@ -29,7 +29,6 @@ export default ({
       });
 
       if (typeof protection == "object") {
-        shouldThrow = true;
         for (const key in protection) {
           if (claims.context[key] == undefined)
             throw deps.unauthorizedError.message("This route is protected.");
