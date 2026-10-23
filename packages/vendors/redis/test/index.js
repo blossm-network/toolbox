@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { stub, replace, restore } from "sinon";
+import { stub, replace, restore, useFakeTimers } from "sinon";
 import deps from "../deps.js";
 
 const value = { some: "value" };
@@ -40,5 +40,45 @@ describe("Redis cache", () => {
     assert.equal(await cache.readObject("key"), value);
     await cache.setExpiry("key", { seconds: 2 });
     assert.deepEqual(client.EXPIRE.firstCall.args, ["key", 2]);
+  });
+  it("expires fallback values without Redis configuration", async () => {
+    delete process.env.REDIS_HOST;
+    const clock = useFakeTimers({ now: 1000 });
+    try {
+      const cache = await load();
+      await cache.writeObject("key", value);
+      await cache.setExpiry("key", { seconds: 2 });
+      clock.tick(1999);
+      assert.deepEqual(await cache.readObject("key"), value);
+      clock.tick(1);
+      assert.equal(await cache.readObject("key"), undefined);
+    } finally {
+      clock.restore();
+    }
+  });
+  it("expires fallback values while Redis is not ready", async () => {
+    client.isReady = false;
+    const cache = await load();
+    await cache.writeObject("key", value);
+    await cache.setExpiry("key", { seconds: 0 });
+    assert.equal(await cache.readObject("key"), undefined);
+    assert.equal(client.EXPIRE.callCount, 0);
+  });
+  it("preserves TTL on overwrite but starts fresh after expiry", async () => {
+    client.isReady = false;
+    const clock = useFakeTimers({ now: 1000 });
+    try {
+      const cache = await load();
+      await cache.writeObject("key", value);
+      await cache.setExpiry("key", { seconds: 1 });
+      await cache.writeObject("key", { changed: "value" });
+      clock.tick(1000);
+      assert.equal(await cache.readObject("key"), undefined);
+      await cache.writeObject("key", value);
+      clock.tick(1000);
+      assert.deepEqual(await cache.readObject("key"), value);
+    } finally {
+      clock.restore();
+    }
   });
 });
