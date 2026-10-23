@@ -25,6 +25,13 @@ describe("Event store aggregate stream", () => {
   afterEach(() => {
     restore();
   });
+  it("ends the response without writing when a requested root does not exist", async () => {
+    replace(deps, "aggregate", fake.returns(fake.resolves(undefined)));
+    const res = { write: fake(), end: fake() };
+    await aggregateStream({ findOneSnapshotFn, eventStreamFn, handlers })({ query: { root: "missing" } }, res);
+    expect(res.write).to.not.have.been.called;
+    expect(res.end).to.have.been.calledOnce;
+  });
   it("should call with the correct params", async () => {
     const streamResult = "stream-result";
     const rootStreamFake = stub()
