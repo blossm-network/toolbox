@@ -1,7 +1,7 @@
 import kms from "@google-cloud/kms";
 
 import deps from "./deps.js";
-import lazyClient from "./client.js";
+import lazyClient from "@blossm/lazy-client";
 
 const publicKeys = {};
 

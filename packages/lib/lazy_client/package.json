@@ -1,0 +1,21 @@
+{
+  "name": "@blossm/lazy-client",
+  "version": "0.0.1",
+  "description": "Initializes an SDK client on first use.",
+  "main": "index.js",
+  "type": "module",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 24.22.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "devDependencies": {
+    "mocha": "^12.0.3",
+    "sinon": "^22.1.0"
+  }
+}
