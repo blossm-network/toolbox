@@ -1,6 +1,8 @@
+import { nodeImage } from "../../../runtime.js";
+
 export default ({ strict = true } = {}) => {
   return {
-    name: "node:20.19.0",
+    name: nodeImage,
     entrypoint: strict ? "yarn" : "bash",
     args: strict
       ? ["test:integration"]
