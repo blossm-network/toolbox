@@ -2,8 +2,8 @@ import gateway from "@blossm/view-gateway";
 import gcpKms from "@blossm/gcp-kms";
 import verify from "@blossm/verify-access-token";
 import gcpToken from "@blossm/gcp-token";
-// import terminatedSessionCheck from "@blossm/terminated-session-check";
-// import deletedSceneCheck from "@blossm/deleted-scene-check";
+import terminatedSessionCheck from "@blossm/terminated-session-check";
+import deletedSceneCheck from "@blossm/deleted-scene-check";
 import permissionsLookup from "@blossm/permissions-lookup";
 import nodeExternalToken from "@blossm/node-external-token";
 import gcpStorage from "@blossm/gcp-storage";
@@ -31,8 +31,8 @@ export default gateway({
         destination: fileName + extension,
       }),
   }),
-  terminatedSessionCheckFn: () => {}, //terminatedSessionCheck,
-  deletedSceneCheckFn: () => {}, //deletedSceneCheck,
+  terminatedSessionCheckFn: terminatedSessionCheck,
+  deletedSceneCheckFn: deletedSceneCheck,
   verifyFn: ({ key }) =>
     key == "access" && process.env.NODE_ENV != "local"
       ? verify({
