@@ -155,3 +155,30 @@ describe("Command handler", () => {
     }
   });
 });
+
+describe("Command root policy composition", () => {
+  afterEach(restore);
+
+  it("rejects a missing required root before invoking the application", async () => {
+    const { default: post } = await import("../../post/index.js");
+    let handler;
+    replace(deps, "post", post);
+    replace(deps, "server", () => ({
+      post: (fn) => {
+        handler = fn;
+        return { listen: () => undefined };
+      },
+    }));
+    const main = fake();
+    await command({ mainFn: main, requiresRoot: true });
+    let error;
+    try {
+      await handler({ body: {} }, {});
+    } catch (err) {
+      error = err;
+    }
+    expect(error?.statusCode).to.equal(400);
+    expect(error?.message).to.equal("A root is required.");
+    expect(main).not.to.have.been.called;
+  });
+});
