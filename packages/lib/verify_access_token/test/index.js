@@ -1,11 +1,10 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
-import { restore, replace, fake } from "sinon";
+import { restore, replace, fake, useFakeTimers } from "sinon";
 import verifyAccessToken from "../index.js";
 
 import deps from "../deps.js";
 import crypto from "crypto";
-
 
 chai.use(sinonChai);
 const { expect } = chai;
@@ -90,4 +89,88 @@ describe("Verify access token", () => {
   //   const difference = arrayDifference(array1, array2, array3);
   //   expect(difference).to.be.of.length(0);
   // });
+});
+
+describe("Public key sources and refresh", () => {
+  afterEach(restore);
+  const message = "offline key rotation";
+  const keyPair = () =>
+    crypto.generateKeyPairSync("ec", { namedCurve: "prime256v1" });
+  const signed = (key) => ({
+    message,
+    signature: crypto
+      .sign("sha256", Buffer.from(message), key.privateKey)
+      .toString("base64"),
+  });
+  const response = (key) => ({
+    body: JSON.stringify({
+      key: key.publicKey.export({ type: "spki", format: "pem" }),
+    }),
+  });
+  it("keeps differently configured key sources separate", async () => {
+    const a = keyPair();
+    const b = keyPair();
+    const urlA = `https://a.test/${crypto.randomUUID()}`;
+    const urlB = `https://b.test/${crypto.randomUUID()}`;
+    const get = fake(async (url) => response(url === urlA ? a : b));
+    replace(deps, "get", get);
+    const verifyA = verifyAccessToken({ url: urlA });
+    const verifyB = verifyAccessToken({ url: urlB });
+    expect(await verifyA(signed(a))).to.equal(true);
+    expect(await verifyB(signed(a))).to.equal(false);
+    expect(await verifyB(signed(b))).to.equal(true);
+    expect(get.callCount).to.equal(2);
+  });
+  it("bounds the shared cache and supports bypassing it", async () => {
+    const key = keyPair();
+    const get = fake(async () => response(key));
+    replace(deps, "get", get);
+    const prefix = `https://bounded.test/${crypto.randomUUID()}`;
+    for (let index = 0; index < 101; index++) {
+      expect(
+        await verifyAccessToken({ url: `${prefix}/${index}` })(signed(key))
+      ).to.equal(true);
+    }
+    await verifyAccessToken({ url: `${prefix}/100` })(signed(key));
+    expect(get.callCount).to.equal(101);
+    await verifyAccessToken({ url: `${prefix}/0` })(signed(key));
+    expect(get.callCount).to.equal(102);
+    await verifyAccessToken({ url: `${prefix}/0`, cacheMilliseconds: 0 })(
+      signed(key)
+    );
+    expect(get.callCount).to.equal(103);
+  });
+  it("refreshes an expired cached key without falling back after fetch errors", async () => {
+    const clock = useFakeTimers();
+    try {
+      const a = keyPair();
+      const b = keyPair();
+      let active = a;
+      let unavailable = false;
+      const get = fake(async () => {
+        if (unavailable) throw new Error("key source unavailable");
+        return response(active);
+      });
+      replace(deps, "get", get);
+      const verify = verifyAccessToken({
+        url: `https://rotate.test/${crypto.randomUUID()}`,
+        cacheMilliseconds: 100,
+      });
+      expect(await verify(signed(a))).to.equal(true);
+      active = b;
+      clock.tick(100);
+      expect(await verify(signed(a))).to.equal(false);
+      expect(await verify(signed(b))).to.equal(true);
+      clock.tick(100);
+      unavailable = true;
+      try {
+        await verify(signed(b));
+        expect.fail("an expired key must not survive a refresh failure");
+      } catch (error) {
+        expect(error.message).to.equal("key source unavailable");
+      }
+    } finally {
+      clock.restore();
+    }
+  });
 });

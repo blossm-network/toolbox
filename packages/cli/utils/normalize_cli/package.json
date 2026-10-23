@@ -6,7 +6,7 @@
   "type": "module",
   "author": "blossm.network",
   "engines": {
-    "node": ">= 20.19.0"
+    "node": ">= 24.22.1"
   },
   "publishConfig": {
     "access": "public"
@@ -17,7 +17,7 @@
   "dependencies": {
     "@blossm/robo-say": "^0.0.11",
     "arg": "^5.0.2",
-    "chalk": "^5.4.1",
-    "inquirer": "^7.3.3"
+    "chalk": "^6.0.1",
+    "inquirer": "^14.2.4"
   }
 }

@@ -6,23 +6,24 @@
   "type": "module",
   "author": "blossm.network",
   "engines": {
-    "node": ">= 20.19.0"
+    "node": ">= 24.22.1"
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "test": "mocha --recursive"
   },
   "dependencies": {
     "@blossm/errors": "^0.0.40",
     "@blossm/fact-rpc": "^0.0.209",
+    "@blossm/node-external-token": "^0.0.203",
     "@blossm/redis": "^0.0.16",
     "@blossm/role-permissions": "^0.0.30",
     "@blossm/uuid": "^0.0.9",
-    "yaml": "^2.8.0"
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
-    "mocha": "^11.7.0"
+    "mocha": "^12.0.3"
   }
 }

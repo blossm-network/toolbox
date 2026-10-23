@@ -6,7 +6,8 @@ const WEEK_IN_SECONDS = 604800;
 export default ({ credentialsFn }) => async ({ network }) => {
   const cacheKey = `${cacheKeyPrefix}.${network}`;
   let { token, exp } = (await deps.redis.readObject(cacheKey)) || {};
-  if (!token || new Date(Date.parse(exp)) < new Date()) {
+  const expiresAt = Date.parse(exp);
+  if (!token || !Number.isFinite(expiresAt) || expiresAt <= Date.now()) {
     const credentials = await credentialsFn({ network });
     if (!credentials) return null;
     const { root, secret } = credentials;
@@ -32,9 +33,9 @@ export default ({ credentialsFn }) => async ({ network }) => {
 
     if (!newToken) return null;
 
-    const claims = await deps.decode(newToken.value);
+    const { claims } = deps.decode(newToken.value);
     token = newToken.value;
-    exp = new Date(Date.parse(claims.exp));
+    exp = new Date(deps.claimTimestamp(claims.exp)).toISOString();
 
     await deps.redis.writeObject(cacheKey, {
       token,

@@ -93,25 +93,29 @@ export default ({
         ...dependencyKeyEnvironmentVariables,
       },
     }),
-    createKeyRing({
-      name: `${serviceName}-blockchain`,
-      location: "global",
-      project,
-    }),
-    createSymmetricEncryptKey({
-      name: "private",
-      ring: `${serviceName}-blockchain`,
-      location: "global",
-      rotation: "90d",
-      next: "+p90d",
-      project,
-    }),
-    createAsymmetricSignKey({
-      name: "producer",
-      ring: `${serviceName}-blockchain`,
-      location: "global",
-      project,
-    }),
+    ...(strict
+      ? [
+          createKeyRing({
+            name: `${serviceName}-blockchain`,
+            location: "global",
+            project,
+          }),
+          createSymmetricEncryptKey({
+            name: "private",
+            ring: `${serviceName}-blockchain`,
+            location: "global",
+            rotation: "90d",
+            next: "+p90d",
+            project,
+          }),
+          createAsymmetricSignKey({
+            name: "producer",
+            ring: `${serviceName}-blockchain`,
+            location: "global",
+            project,
+          }),
+        ]
+      : []),
     dockerComposeUp,
     dockerComposeProcesses,
     ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
@@ -165,6 +169,7 @@ export default ({
           }),
           updateQueue({
             name: `event-store-${service}-${domain}`,
+            project,
             maxDispatchPerSecond: 10,
             maxConcurrentDispatches: 100,
           }),
@@ -197,6 +202,7 @@ export default ({
           }),
           //Update the schedule if it's changed.
           updateScheduledJob({
+            region,
             name: `event-store-${service}-${domain}-create-block`,
             schedule: blockSchedule,
             project,

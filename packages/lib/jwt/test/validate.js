@@ -1,4 +1,7 @@
+import assert from "node:assert/strict";
+import crypto from "crypto";
 import * as chai from "chai";
+import sinonChai from "sinon-chai";
 import chaiAsPromised from "chai-as-promised";
 import chaiDatetime from "chai-datetime";
 import { fake, replace, restore, useFakeTimers } from "sinon";
@@ -9,6 +12,7 @@ import { create, validate } from "../index.js";
 
 const { expect } = chai;
 
+chai.use(sinonChai);
 chai.use(chaiAsPromised);
 chai.use(chaiDatetime);
 
@@ -206,6 +210,70 @@ describe("Validate", () => {
         "The token isn't active yet."
       );
       expect(e).to.equal(error);
+    }
+  });
+});
+
+describe("Signed token time claims", () => {
+  const keys = crypto.generateKeyPairSync("ec", { namedCurve: "prime256v1" });
+  const tokenFor = (claims) => {
+    const message = [{ alg: algorithm }, claims]
+      .map((part) => Buffer.from(JSON.stringify(part)).toString("base64url"))
+      .join(".");
+    const signature = crypto
+      .sign("sha256", Buffer.from(message), keys.privateKey)
+      .toString("base64url");
+    return `${message}.${signature}`;
+  };
+  const verifyFn = ({ message, signature }) =>
+    crypto.verify(
+      "sha256",
+      Buffer.from(message),
+      keys.publicKey,
+      Buffer.from(signature, "base64")
+    );
+  for (const exp of [undefined, null, "invalid", 1700000000]) {
+    it(`rejects invalid legacy expiry ${exp}`, async () => {
+      await assert.rejects(
+        validate({
+          token: tokenFor({ aud: audience, exp }),
+          verifyFn,
+          audience,
+          algorithm,
+        }),
+        { message: "The token time claim is invalid." }
+      );
+    });
+  }
+  it("rejects malformed nbf instead of ignoring it", async () => {
+    await assert.rejects(
+      validate({
+        token: tokenFor({
+          aud: audience,
+          exp: "9999-01-01T00:00:00.000Z",
+          nbf: "invalid",
+        }),
+        verifyFn,
+        audience,
+        algorithm,
+      }),
+      { message: "The token time claim is invalid." }
+    );
+  });
+  it("rejects a token at its exact expiration instant", async () => {
+    const clock = useFakeTimers();
+    try {
+      await assert.rejects(
+        validate({
+          token: tokenFor({ aud: audience, exp: new Date().toISOString() }),
+          verifyFn,
+          audience,
+          algorithm,
+        }),
+        { message: "The token is expired." }
+      );
+    } finally {
+      clock.restore();
     }
   });
 });

@@ -64,7 +64,7 @@ const steps = ({
   dependencyKeyEnvironmentVariables,
 }) => {
   const serviceName = `${region}-${operationName}-${operationHash}`;
-  const uri = `${serviceName}-${computeUrlId}.${region}.run.app `; 
+  const uri = `${serviceName}-${computeUrlId}.${region}.run.app`;
   switch (procedure) {
     case "view-store":
       return viewStore({
@@ -624,7 +624,7 @@ export default ({
       runIntegrationTests,
       runBaseIntegrationTests,
       strict,
-    }),
+    }).flat(),
   };
 
   fs.writeFileSync(buildPath, yaml.stringify(build));

@@ -26,8 +26,8 @@ describe("Optional booleans", () => {
 
 describe("Refinement functions", () => {
   it("should not contain errors if value is not empty and passes refinement function", () => {
-    const fn = (value) => value == false;
-    const response = boolean({ value: validBoolean, fn });
+    const refinementFn = (value) => value == false;
+    const response = boolean({ value: validBoolean, refinementFn });
     expect(response.errors).to.be.empty;
   });
 });

@@ -1,1 +1,2 @@
-Creates a random in that has the specified number of characters.
+Returns an ASCII alphanumeric string with the requested length, using
+`@blossm/random-char` for cryptographically random, unbiased characters.

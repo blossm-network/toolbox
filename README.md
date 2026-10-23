@@ -719,3 +719,15 @@ Only a GCP adapter is currently implemented.
 
 - [ ] Implement a landing page website for Blossm.
 - [ ] Implement a documentation website to accommodate rich implementation guidelines.
+## Runtime policy
+
+Toolbox development and generated services use the supported Node LTS runtime
+pinned in [the runtime owner](packages/cli/utils/merge_cli_template/runtime.js).
+The same module owns immutable Node, MongoDB and Docker CLI image references;
+generated builds use the Docker Compose plugin instead of retired Compose v1.
+After reviewing a runtime/image update, run `yarn runtime:sync` to update the
+checked copies, then `yarn runtime:check` and `yarn test:runtime`. Update image
+digests deliberately after verifying their official registry manifests.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the Lerna test and explicit release
+workflow, frozen installs, scoped checks and npm publication verification.

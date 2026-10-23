@@ -16,6 +16,8 @@
     "@blossm/request": "*",
     "@blossm/gcp-pubsub": "*",
     "@blossm/create-event": "*",
-    "@blossm/crypt": "*"
+    "@blossm/crypt": "*",
+    "localenv": "^0.2.2",
+    "chai-datetime": "^1.8.1"
   }
 }

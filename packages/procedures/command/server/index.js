@@ -2,6 +2,7 @@ import deps from "./deps.js";
 
 export default async ({
   version,
+  canonicalFormat,
   mainFn,
   validateFn,
   normalizeFn,
@@ -14,12 +15,14 @@ export default async ({
   fillFn,
   countFn,
   contexts,
+  requiresRoot,
 } = {}) =>
   deps
     .server()
     .post(
       deps.post({
         version,
+        ...(canonicalFormat != undefined && { canonicalFormat }),
         mainFn,
         aggregateFn,
         commandFn,
@@ -32,6 +35,7 @@ export default async ({
         ...(normalizeFn && { normalizeFn }),
         ...(countFn && { countFn }),
         ...(contexts && { contexts }),
+        ...(requiresRoot && { requiresRoot }),
       })
     )
     .listen();

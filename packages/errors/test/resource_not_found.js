@@ -24,7 +24,6 @@ describe("Bad request", () => {
       statusCode: 404,
       code: "ResourceNotFound",
       info,
-      cause,
       message,
     });
   });

@@ -125,6 +125,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.root": root,
       },
       sort: {
+        "headers.number": -1,
         "headers.created": -1,
       },
       select: {
@@ -212,6 +213,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.root": root,
       },
       sort: {
+        "headers.number": -1,
         "headers.created": -1,
       },
       select: {
@@ -329,6 +331,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.root": root,
       },
       sort: {
+        "headers.number": -1,
         "headers.created": -1,
       },
       select: {
@@ -418,6 +421,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.created": { $lte: timestamp },
       },
       sort: {
+        "headers.number": -1,
         "headers.created": -1,
       },
       select: {
@@ -500,6 +504,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.root": root,
       },
       sort: {
+        "headers.number": -1,
         "headers.created": -1,
       },
       select: {
@@ -533,7 +538,7 @@ describe("Mongodb event store aggregate", () => {
   });
   it("should call with the correct params with no snapshot found", async () => {
     const eventStreamFnFake = stub().yieldsTo("fn", event);
-    const findOneSnapshotFnFake = fake.returns();
+    const findOneSnapshotFnFake = fake();
 
     const result = await aggregate({
       handlers,
@@ -555,6 +560,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.root": root,
       },
       sort: {
+        "headers.number": -1,
         "headers.created": -1,
       },
       select: {
@@ -612,6 +618,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.root": root,
       },
       sort: {
+        "headers.number": -1,
         "headers.created": -1,
       },
       select: {
@@ -669,4 +676,30 @@ describe("Mongodb event store aggregate", () => {
       expect(e).to.equal(error);
     }
   });
+  const identity = { root: "a", service: "s", network: "n" };
+  for (const [values, expected] of [
+    [[null, identity], false],
+    [[identity, null], false],
+    [[null, null], null],
+    [["scalar", null], false],
+    [[null, "scalar"], false],
+    [["scalar", "scalar"], "scalar"],
+    [[identity, { ...identity }], identity],
+    [[identity, { ...identity, root: "b" }, identity], false],
+  ]) {
+    it(`replays context values ${JSON.stringify(values)} without losing conflict semantics`, async () => {
+      const result = await aggregate({
+        findOneSnapshotFn: async () => undefined,
+        eventStreamFn: async ({ fn }) => {
+          for (const [number, value] of values.entries()) fn({
+            headers: { action: "set", number, created: "2026-10-22" },
+            payload: {}, context: { value }, tx: {},
+          });
+        },
+        handlers: { set: () => ({}) },
+      })("root");
+      expect(result.context.value).to.deep.equal(expected);
+    });
+  }
+
 });

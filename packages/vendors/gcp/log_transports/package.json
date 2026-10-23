@@ -6,14 +6,13 @@
   "type": "module",
   "author": "blossm.network",
   "engines": {
-    "node": ">= 20.19.0"
+    "node": ">= 24.22.1"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@google-cloud/logging-winston": "^6.0.1",
-    "dotenv": "^16.5.0",
-    "winston": "^3.17.0"
+    "@google-cloud/logging-winston": "^7.3.0",
+    "winston": "^3.19.0"
   }
 }

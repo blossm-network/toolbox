@@ -6,7 +6,7 @@
   "type": "module",
   "author": "blossm.network",
   "engines": {
-    "node": ">= 20.19.0"
+    "node": ">= 24.22.1"
   },
   "publishConfig": {
     "access": "public"
@@ -16,13 +16,12 @@
   },
   "dependencies": {
     "@blossm/url-encode-query-data": "^0.0.10",
-    "request": "^2.88.2",
-    "sorted-union-stream": "^3.2.3"
+    "@blossm/errors": "^0.0.40"
   },
   "devDependencies": {
-    "mocha": "^11.6.0",
-    "sinon": "^21.0.0",
-    "sinon-chai": "^4.0.0",
-    "streamx": "^2.22.1"
+    "mocha": "^12.0.3",
+    "sinon": "^22.1.0",
+    "sinon-chai": "^4.0.1",
+    "streamx": "^2.28.1"
   }
 }

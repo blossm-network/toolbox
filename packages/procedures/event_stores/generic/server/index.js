@@ -4,6 +4,7 @@ export default async ({
   saveEventsFn,
   reserveRootCountsFn,
   publishFn,
+  publishPendingFn,
   rootStreamFn,
   createTransactionFn,
   idempotencyConflictCheckFn,
@@ -21,6 +22,7 @@ export default async ({
   eventStreamFn,
   handlers,
   isPublic,
+  canonicalFormat = 2,
 } = {}) => {
   deps
     .server()
@@ -43,6 +45,7 @@ export default async ({
     })
     .get(
       deps.get({
+        rootStreamFn,
         findSnapshotsFn,
         findEventsFn,
         findOneSnapshotFn,
@@ -65,15 +68,19 @@ export default async ({
         findOneSnapshotFn,
         eventStreamFn,
         handlers,
+        ...(canonicalFormat != undefined && { canonicalFormat }),
         isPublic,
+        ...(publishPendingFn && { publishPendingFn }),
       }),
       { path: "/create-block" }
     )
     .post(
       deps.post({
+        ...(canonicalFormat != undefined && { canonicalFormat }),
         saveEventsFn,
         reserveRootCountsFn,
         publishFn,
+        ...(publishPendingFn && { publishPendingFn }),
         createTransactionFn,
         idempotencyConflictCheckFn,
         findOneSnapshotFn,

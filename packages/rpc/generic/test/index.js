@@ -659,7 +659,7 @@ describe("Operation", () => {
     expect(streamFake).to.have.been.calledWith(
       url,
       match((func) => {
-        const response = func("some-data");
+        const response = func("");
         return Promise.resolve(response) == response;
       }),
       {
@@ -935,17 +935,7 @@ describe("Operation", () => {
         statusCode: errorStatusCode,
         message: errorMessage,
         code,
-        info: {
-          ...info,
-          context: { b: 4 },
-          data: {
-            claims: "some-claims",
-            context: { b: 4 },
-          },
-          network,
-          token: "some-token",
-          url: "some-url",
-        },
+        info,
       });
       expect(e).to.equal(error);
     }
@@ -989,13 +979,6 @@ describe("Operation", () => {
       expect(constructErrorFake).to.have.been.calledWith({
         statusCode: errorStatusCode,
         message: "Not specified",
-        info: {
-          context: { b: 4 },
-          data: { claims: "some-claims", context },
-          network,
-          token: "some-token",
-          url: "some-url",
-        },
       });
       expect(e).to.equal(error);
     }
@@ -1034,5 +1017,76 @@ describe("Operation", () => {
     } catch (e) {
       expect(e).to.exist;
     }
+  });
+});
+
+describe("RPC upstream error composition", () => {
+  afterEach(restore);
+
+  for (const parsed of [true, false]) {
+    it(`preserves a ${parsed ? "parsed" : "text"} JSON conflict response`, async () => {
+      const body = { code: "Conflict", message: "Expected revision does not match." };
+      replace(deps, "post", fake.resolves({ statusCode: 409, body: parsed ? body : JSON.stringify(body) }));
+      replace(deps, "operationToken", fake.resolves(null));
+      const { construct } = await import("../../../errors/index.js");
+      replace(deps, "constructError", construct);
+      let error;
+      try {
+        await operation({ region, operationNameComponents }).post({}).in({}).with();
+      } catch (err) {
+        error = err;
+      }
+      expect(error?.statusCode).to.equal(409);
+      expect(error?.body.code).to.equal("Conflict");
+      expect(error?.message).to.equal(body.message);
+    });
+  }
+});
+
+describe("RPC stream framing", () => {
+  afterEach(restore);
+
+  for (const value of [{ a: 1 }, { text: 'quotes " and braces } {, slash \\ and Unicode 🦋' }, { nested: [{ enabled: true }, { n: 2 }] }]) {
+    it(`preserves every possible byte split of ${JSON.stringify(value)}`, async () => {
+      const bytes = Buffer.from(JSON.stringify(value));
+      replace(deps, "operationToken", fake.resolves(null));
+      for (let split = 1; split < bytes.length; split++) {
+        const original = deps.stream;
+        deps.stream = async (_, fn) => {
+          await fn(bytes.subarray(0, split));
+          await fn(bytes.subarray(split));
+        };
+        try {
+          const output = [];
+          await operation({ region, operationNameComponents }).stream((record) => output.push(record), {}).in({}).with();
+          expect(output).to.deep.equal([value]);
+        } finally {
+          deps.stream = original;
+        }
+      }
+    });
+  }
+
+  it("rejects a stream that ends within a JSON record", async () => {
+    replace(deps, "operationToken", fake.resolves(null));
+    replace(deps, "stream", async (_, fn) => { await fn(Buffer.from('{"partial":')); });
+    let error;
+    try {
+      await operation({ region, operationNameComponents }).stream(() => undefined, {}).in({}).with();
+    } catch (err) { error = err; }
+    expect(error).to.be.instanceOf(SyntaxError);
+  });
+});
+
+describe("RPC query ownership", () => {
+  afterEach(restore);
+  it("retains a reusable frozen query for reads and streams", async () => {
+    replace(deps, "operationToken", fake.resolves(null));
+    replace(deps, "get", fake.resolves({ statusCode: 204 }));
+    replace(deps, "stream", fake.resolves());
+    const query = Object.freeze({ id: "root", active: true });
+    await operation({ region, operationNameComponents }).get(query).in({}).with();
+    await operation({ region, operationNameComponents }).stream(() => undefined, query).in({}).with();
+    expect(query).to.deep.equal({ id: "root", active: true });
   });
 });

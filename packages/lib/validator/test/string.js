@@ -83,3 +83,37 @@ describe("Invalid optional string", () => {
     });
   });
 });
+
+describe("Rejected predicate messages", () => {
+  it("provides a useful message without echoing the value", () => {
+    const value = "private-input";
+    const error = validator.string(value, { fn: () => false }).errors[0];
+    expect(error.message).to.be.a("string").and.not.be.empty;
+    expect(error.message).not.to.include(value);
+  });
+});
+
+describe("Inclusive length messages", () => {
+  it("describes the allowed maximum accurately", () => {
+    expect(validator.string("ab", { maxLength: 2 }).isValid()).to.equal(true);
+    expect(
+      validator.string("abc", { maxLength: 2 }).errors[0].message
+    ).to.include("at most 2 characters");
+  });
+});
+
+describe("Throw-only string predicates", () => {
+  it("still enforces length and nonempty rules after a successful predicate", () => {
+    for (const fn of [() => undefined, () => null]) {
+      expect(validator.string("abc", { fn, maxLength: 2 }).isValid()).to.equal(
+        false
+      );
+      expect(
+        validator.string("", { fn, shouldAllowEmptyString: false }).isValid()
+      ).to.equal(false);
+      expect(validator.string("ab", { fn, maxLength: 2 }).isValid()).to.equal(
+        true
+      );
+    }
+  });
+});

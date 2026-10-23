@@ -127,7 +127,6 @@ export default ({
               ...(service && { SERVICE: service }),
               ...dependencyKeyEnvironmentVariables,
               ...envVars,
-              ...devEnvVars,
             },
             labels: {
               name,

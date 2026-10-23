@@ -26,8 +26,8 @@ describe("Optional objects", () => {
 
 describe("Refinement functions", () => {
   it("should not contain errors if value is not empty and passes refinement function", () => {
-    const fn = (value) => value.key == "value";
-    const response = object({ value: validObject, fn });
+    const refinementFn = (value) => value.key == "value";
+    const response = object({ value: validObject, refinementFn });
     expect(response.errors).to.be.empty;
   });
 });

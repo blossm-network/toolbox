@@ -6,18 +6,18 @@
   "type": "module",
   "author": "blossm.network",
   "engines": {
-    "node": ">= 20.19.0"
+    "node": ">= 24.22.1"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "validator": "^13.15.15"
+    "validator": "^13.15.35"
   },
   "scripts": {
     "test": "mocha --recursive"
   },
   "devDependencies": {
-    "mocha": "^11.7.0"
+    "mocha": "^12.0.3"
   }
 }

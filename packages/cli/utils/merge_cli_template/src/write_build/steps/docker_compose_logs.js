@@ -1,4 +1,7 @@
+import { dockerImage } from "../../../runtime.js";
+
 export default {
-  name: "docker/compose:1.29.2",
-  args: ["logs"],
+  name: dockerImage,
+  entrypoint: "docker",
+  args: ["compose", "logs"],
 };

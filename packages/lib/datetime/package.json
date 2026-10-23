@@ -6,23 +6,22 @@
   "type": "module",
   "author": "blossm.network",
   "engines": {
-    "node": ">= 20.19.0"
+    "node": ">= 24.22.1"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "moment": "^2.30.1",
-    "moment-timezone": "^0.6.0"
+    "moment": "^2.31.0"
   },
   "scripts": {
     "test": "mocha --recursive"
   },
   "devDependencies": {
-    "chai-as-promised": "^7.1.1",
+    "chai-as-promised": "^8.0.2",
     "chai-datetime": "^1.8.1",
-    "mocha": "^11.6.0",
-    "sinon": "^21.0.0",
-    "sinon-chai": "^4.0.0"
+    "mocha": "^12.0.3",
+    "sinon": "^22.1.0",
+    "sinon-chai": "^4.0.1"
   }
 }

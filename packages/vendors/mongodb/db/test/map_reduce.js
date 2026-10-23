@@ -1,71 +1,22 @@
 import * as chai from "chai";
-import { restore, fake } from "sinon";
+import mongoose from "mongoose";
 import { mapReduce } from "../index.js";
 
 const { expect } = chai;
 
-const query = "some-query";
-const map = "some-map-fn";
-const reduce = "some-reduce-fn";
-const limit = "some-limit";
-const sort = "some-sort";
-const finalize = "some-finalize-fn";
-const out = "some-out";
-
-describe("Map reduce", () => {
-  afterEach(() => {
-    restore();
-  });
-  it("it should return correctly", async () => {
-    const execResult = 4;
-    const mapReduceFake = fake.returns(execResult);
-    const store = {
-      mapReduce: mapReduceFake,
-    };
-
-    const result = await mapReduce({
-      store,
-      map,
-      reduce,
-      out,
-    });
-
-    expect(result).to.equal(execResult);
-    expect(mapReduceFake).to.have.been.calledWith({
-      map,
-      reduce,
-      out,
-      resolveToObject: true,
-    });
-  });
-  it("it should return correctly with added optional params", async () => {
-    const execResult = 4;
-    const mapReduceFake = fake.returns(execResult);
-    const store = {
-      mapReduce: mapReduceFake,
-    };
-
-    const result = await mapReduce({
-      store,
-      query,
-      sort,
-      map,
-      reduce,
-      limit,
-      finalize,
-      out,
-    });
-
-    expect(result).to.equal(execResult);
-    expect(mapReduceFake).to.have.been.calledWith({
-      map,
-      reduce,
-      sort,
-      resolveToObject: true,
-      query,
-      limit,
-      out,
-      finalize,
-    });
+describe("Deprecated map reduce", () => {
+  it("keeps imports compatible and directs actual Mongoose callers to aggregation", async () => {
+    const connection = mongoose.createConnection();
+    const Model = connection.model("map-reduce-test", new mongoose.Schema({}, { autoCreate: false }));
+    expect(Model.mapReduce).to.equal(undefined);
+    expect(Model.aggregate).to.be.a("function");
+    let actual;
+    try {
+      await mapReduce({ store: Model, map: () => {}, reduce: () => {} });
+    } catch (err) {
+      actual = err;
+    }
+    expect(actual).to.be.instanceOf(Error);
+    expect(actual.message).to.equal("MongoDB mapReduce is no longer supported. Use aggregate instead.");
   });
 });

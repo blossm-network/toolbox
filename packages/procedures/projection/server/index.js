@@ -8,6 +8,7 @@ export default async ({
   aggregateFn,
   readFactFn,
   mutedEvents,
+  sessionFn,
 } = {}) => {
   deps
     .server()
@@ -16,6 +17,7 @@ export default async ({
         replayStores,
         playFn,
         rootStreamFn,
+        ...(sessionFn && { requireReplayId: true }),
       }),
       { path: "/replay" }
     )
@@ -25,6 +27,7 @@ export default async ({
         aggregateFn,
         readFactFn,
         mutedEvents,
+        ...(sessionFn && { sessionFn }),
       })
     )
     .listen();

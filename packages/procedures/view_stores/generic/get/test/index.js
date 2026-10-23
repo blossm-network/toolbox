@@ -44,6 +44,67 @@ process.env.NETWORK = envNetwork;
 process.env.CORE_NETWORK = coreNetwork;
 
 describe("View store get", () => {
+  it("should reject unsafe pagination before querying persistence", async () => {
+    const findFn = fake.resolves([]);
+    const countFn = fake.resolves(0);
+    for (const pagination of [
+      { limit: "101" },
+      { limit: "-1" },
+      { limit: "1.5" },
+      { limit: "not-a-number" },
+      { skip: "-1" },
+      { skip: "9007199254740992" },
+    ]) {
+      let error;
+      try {
+        await get({ findFn, countFn })(
+          { query: { context, ...pagination }, params: {} },
+          { send: () => {} }
+        );
+      } catch (caught) {
+        error = caught;
+      }
+      expect(error && error.statusCode).to.equal(400);
+    }
+    expect(findFn).not.to.have.been.called;
+    expect(countFn).not.to.have.been.called;
+  });
+
+  it("should preserve null and empty objects and parse markers recursively in query arrays", async () => {
+    let received;
+    const handler = get({
+      findFn: async ({ query }) => {
+        received = query;
+        return [];
+      },
+      countFn: async () => 0,
+    });
+    await handler(
+      {
+        query: {
+          context,
+          query: {
+            number: { $in: ["#2", "#3"] },
+            nested: { $in: { 0: { created: "@2020-12-09T02:50:59.076Z" } } },
+            nullable: null,
+            object: {},
+            array: [],
+          },
+        },
+        params: {},
+      },
+      { send: () => {} }
+    );
+    expect(received).to.include.keys("body.nullable");
+    expect(received["body.number"]).to.deep.equal({ $in: [2, 3] });
+    expect(received["body.nested"]).to.deep.equal({
+      $in: [{ created: new Date("2020-12-09T02:50:59.076Z") }],
+    });
+    expect(received["body.nullable"]).to.equal(null);
+    expect(received["body.object"]).to.deep.equal({});
+    expect(received["body.array"]).to.deep.equal([]);
+  });
+
   beforeEach(() => {
     process.env.CONTEXT = envContext;
   });
@@ -262,6 +323,7 @@ describe("View store get", () => {
       },
     });
     expect(jsonToCsvFake).to.have.been.calledWith({
+      spreadsheetSafe: true,
       data: results.map((result) => ({
         id: result.headers.id,
         some: "csv-data",
@@ -393,6 +455,7 @@ describe("View store get", () => {
           ...query,
           "some-other-query-key.a.b": "something",
         },
+        text,
         skip: 50,
         limit: 50,
       }

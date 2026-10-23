@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import * as chai from "chai";
 import encode from "../index.js";
 
@@ -24,13 +25,43 @@ describe("Url encode", () => {
     const params = ["are", "you"];
     const url = "http://google.com";
     const response = await encode(url, params);
-    expect(response).to.equal(
-      `${url}?0=are&1=you`
-    );
+    expect(response).to.equal(`${url}?0=are&1=you`);
   });
   it("should call get with no params", async () => {
     const url = "http://google.com";
     const reseponse = await encode(url);
     expect(reseponse).to.deep.equal(url);
+  });
+});
+
+describe("Package dependencies", () => {
+  it("declares the runtime encoder for standalone consumers", () => {
+    const manifest = JSON.parse(
+      readFileSync(new URL("../package.json", import.meta.url), "utf8")
+    );
+    expect(manifest.dependencies).to.have.property("qs").that.is.a("string");
+  });
+});
+
+describe("Existing URL components", () => {
+  it("appends parameters to an existing query", () => {
+    expect(encode("https://example.test/?old=1", { fresh: 2 })).to.equal(
+      "https://example.test/?old=1&fresh=2"
+    );
+  });
+  it("keeps new queries before fragments", () => {
+    expect(encode("/relative#part", { fresh: 2 })).to.equal(
+      "/relative?fresh=2#part"
+    );
+    expect(encode("https://example.test/?old=1#part", { fresh: 2 })).to.equal(
+      "https://example.test/?old=1&fresh=2#part"
+    );
+  });
+  it("preserves empty parameters and existing separators", () => {
+    expect(encode("mongodb://host/db", {})).to.equal("mongodb://host/db");
+    expect(encode("/path?", { fresh: 2 })).to.equal("/path?fresh=2");
+    expect(encode("/path?old=1&", { fresh: 2 })).to.equal(
+      "/path?old=1&fresh=2"
+    );
   });
 });

@@ -17,46 +17,53 @@
   },
   "homepage": "https://github.com/blossm-network/toolbox#readme",
   "engines": {
-    "node": ">= 20.19.0"
+    "node": ">= 24.22.1"
   },
   "scripts": {
     "preversion": "yarn test",
     "version": "auto-changelog && git add CHANGELOG.md",
     "postversion": "git push",
-    "precommit": "lint-staged",
-    "bootstrap": "lerna bootstrap --use-workspaces",
-    "compile": "lerna run compile",
-    "clean": "lerna run clean",
-    "test": "lerna run test",
+    "bootstrap": "yarn install --frozen-lockfile",
+    "test": "yarn test:tooling && lerna run test --concurrency 2",
     "patch": "lerna version patch",
     "minor": "lerna version minor",
     "major": "lerna version major",
-    "check-packages": "yarn clean && yarn compile && yarn test",
-    "lerna-publish": "npx lerna publish -y from-package",
-    "format": "eslint --fix ."
+    "check-packages": "yarn runtime:check && yarn workspace:check && yarn lint && yarn test",
+    "lerna-publish": "lerna publish -y from-package",
+    "format": "prettier --write .",
+    "runtime:check": "node tools/runtime.js",
+    "runtime:sync": "node tools/runtime.js --write",
+    "test:runtime": "node --test tools/test/runtime.js",
+    "lint": "eslint .",
+    "test:lint": "node --test tools/test/lint.js",
+    "prepare": "husky",
+    "test:tooling": "node --test tools/test/*.js",
+    "workspace:check": "node tools/workspaces.js",
+    "test:consumer": "node tools/consumer.js"
   },
   "devDependencies": {
-    "auto-changelog": "^2.0.0",
-    "chai": "^5.2.0",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.1",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-prettier": "^3.1.1",
-    "prettier": "^2.0.4",
-    "husky": "^4.2.5",
-    "lerna": "^3.20.2",
-    "lint-staged": "^10.1.3",
-    "mocha": "^11.6.0",
-    "sinon": "^21.0.0"
+    "auto-changelog": "^2.7.0",
+    "chai": "^6.3.0",
+    "eslint": "^10.13.0",
+    "prettier": "^3.9.10",
+    "husky": "^9.1.7",
+    "lerna": "^10.1.1",
+    "lint-staged": "^17.6.0",
+    "mocha": "^12.0.3",
+    "sinon": "^22.1.0",
+    "@eslint/js": "^10.0.1",
+    "globals": "^17.13.0",
+    "eslint-plugin-import-x": "^4.17.1",
+    "semver": "^7.8.5"
   },
   "lint-staged": {
     "*.js": [
       "eslint --fix",
-      "git add"
+      "prettier --write"
     ],
     "*.json": [
-      "eslint --fix",
-      "git add"
+      "prettier --write"
     ]
-  }
+  },
+  "packageManager": "yarn@1.22.22"
 }

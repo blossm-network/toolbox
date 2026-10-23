@@ -18,7 +18,7 @@ const viewStore = async ({ schema, indexes, secretFn }) => {
 
   const formattedSchema = deps.formatSchema(schema, typeKey);
 
-  _viewStore = deps.db.store({
+  _viewStore = await deps.db.store({
     name: "views",
     schema: {
       body: formattedSchema,
@@ -97,9 +97,9 @@ export default async ({
   one,
   group,
   updateKeys,
+  consistency = false,
 } = {}) => {
   const allIndexes = [
-    [{ "headers.id": 1 }],
     ...(process.env.CONTEXT
       ? [
           [
@@ -134,25 +134,32 @@ export default async ({
     for (const index of indexes) {
       let customElement = {};
       let hasTextIndex = false;
+      const newPartialWordIndexes = [];
       for (const key in index[0]) {
         customElement[`body.${key}`] = index[0][key];
         //Make text indexes partially searchable, with the exception of ids.
         if (index[0][key] == "text") {
           hasTextIndex = true;
-          if (!key.endsWith(".id")) partialWordTextIndexes.push(`body.${key}`);
+          if (
+            !key.endsWith(".id") &&
+            !partialWordTextIndexes.includes(`body.${key}`)
+          ) {
+            partialWordTextIndexes.push(`body.${key}`);
+            newPartialWordIndexes.push(`body.${key}`);
+          }
         }
       }
 
-      if (partialWordTextIndexes.length > 0)
-        for (const index of partialWordTextIndexes)
+      if (newPartialWordIndexes.length > 0)
+        for (const index of newPartialWordIndexes)
           customIndexes.push([{ [index]: 1 }]);
 
-      const customOptions = {};
+      const customOptions = { ...index[1] };
 
       //Make the id searchable.
       if (hasTextIndex) {
         customElement["headers.id"] = "text";
-        customOptions.name = "text-search";
+        customOptions.name = customOptions.name || "text-search";
       }
 
       if (index[1] && index[1].weights) {
@@ -190,28 +197,30 @@ export default async ({
     secretFn,
   });
 
-  const streamFn = async ({ query, text, sort, select, parallel, fn }) => {
+  const searchQuery = (query, text) => {
     const textIdUuid = deps.uuidValidator(text);
+    const partialText = text && text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return {
+      ...query,
+      ...(text && {
+        $or: [
+          { $text: { $search: textIdUuid ? `"${text}"` : text } },
+          ...(!textIdUuid
+            ? partialWordTextIndexes.map((index) => ({
+                [index]: { $regex: partialText, $options: "i" },
+              }))
+            : []),
+        ],
+      }),
+    };
+  };
+
+  const streamFn = async ({ query, text, sort, select, parallel, fn }) => {
     const cursor = text
       ? deps.db
           .aggregate({
             store,
-            query: {
-              ...query,
-              $or: [
-                {
-                  $text: { $search: textIdUuid ? `"${text}"` : text },
-                },
-                ...(!textIdUuid
-                  ? partialWordTextIndexes.map((index) => ({
-                      [index]: {
-                        $regex: text,
-                        $options: "i",
-                      },
-                    }))
-                  : []),
-              ],
-            },
+            query: searchQuery(query, text),
             ...((select || text) && {
               select: {
                 ...select,
@@ -250,26 +259,10 @@ export default async ({
   };
 
   const findFn = ({ query, text, limit, select, skip, sort }) => {
-    const textIdUuid = deps.uuidValidator(text);
     return text
       ? deps.db.aggregate({
           store,
-          query: {
-            ...query,
-            $or: [
-              {
-                $text: { $search: textIdUuid ? `"${text}"` : text },
-              },
-              ...(!textIdUuid
-                ? partialWordTextIndexes.map((index) => ({
-                    [index]: {
-                      $regex: text,
-                      $options: "i",
-                    },
-                  }))
-                : []),
-            ],
-          },
+          query: searchQuery(query, text),
           select: {
             ...select,
             ...(select &&
@@ -305,34 +298,16 @@ export default async ({
   };
 
   const countFn = async ({ query, text }) => {
-    const textIdUuid = deps.uuidValidator(text);
     return await deps.db.count({
       store,
-      query: {
-        ...query,
-        ...(text && {
-          $or: [
-            {
-              $text: { $search: textIdUuid ? `"${text}"` : text },
-            },
-            ...(!textIdUuid
-              ? partialWordTextIndexes.map((index) => ({
-                  [index]: {
-                    $regex: text,
-                    $options: "i",
-                  },
-                }))
-              : []),
-          ],
-        }),
-      },
+      query: searchQuery(query, text),
     });
   };
 
-  const writeFn = async ({ query, data, arrayFilters }) => {
+  let projectionSession;
+  const persistWrite = async ({ query, data, arrayFilters, session }) => {
     const update = {};
     const setKey = "$set";
-    let containsMatcher = false;
     for (const key of Object.keys(data)) {
       if (key.charAt(0) == "$") {
         update[key] = {
@@ -340,13 +315,16 @@ export default async ({
           ...data[key],
         };
       } else {
-        if (key.includes(".$")) containsMatcher = true;
         update[setKey] = {
           ...update[setKey],
           [key]: data[key],
         };
       }
     }
+
+    const containsMatcher = Object.values(update).some((fields) =>
+      Object.keys(fields).some((key) => key.includes(".$"))
+    );
 
     return await deps.db.write({
       store,
@@ -359,17 +337,42 @@ export default async ({
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
+        ...(session && { session }),
         ...(arrayFilters && { arrayFilters }),
       },
     });
   };
+  const writeFn = (params) =>
+    params.session
+      ? persistWrite(params)
+      : projectionSession.legacy((session) =>
+          persistWrite({ ...params, session })
+        );
 
-  const removeFn = (query) =>
+  const persistRemove = (query, session) =>
     deps.db.remove({
       store,
       query,
+      ...(session && { options: { session } }),
     });
+  const removeFn = (query, session) =>
+    session
+      ? persistRemove(query, session)
+      : projectionSession.legacy((transaction) =>
+          persistRemove(query, transaction)
+        );
 
+  projectionSession = await deps.projectionSession({
+    store,
+    writeFn,
+    removeFn,
+    formatFn,
+    updateFn,
+    updateKeys,
+    queryFn,
+    enabled: consistency === "fenced",
+    prepared: consistency === "prepared",
+  });
   deps.viewStore({
     streamFn,
     findFn,
@@ -377,6 +380,9 @@ export default async ({
     removeFn,
     countFn,
     groupsLookupFn,
+    ...(projectionSession.handle && {
+      projectionSessionFn: projectionSession.handle,
+    }),
     ...(queryFn && { queryFn }),
     ...(formatCsv && { formatCsv }),
     ...(sortFn && { sortFn }),

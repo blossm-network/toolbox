@@ -44,13 +44,32 @@ const composeUpdate = (update, query, matchDelimiter) => {
     }
   }
 
+  const matches = (element, key, value, root) => {
+    const [first, ...rest] = key.split(".");
+    // A descendant array is selected by its own positional operation. It may
+    // be supplied by a sibling operation before it exists in this element.
+    if (
+      rest.length > 0 &&
+      (Array.isArray(element[first]) ||
+        matchUpdates.some(
+          (other) =>
+            other.root == root &&
+            other.key == first &&
+            Array.isArray(other.value)
+        ))
+    )
+      return true;
+    return getValue(element, key) == value;
+  };
+
   for (const matchUpdate of matchUpdates) {
     let relevantQueryParams = [];
     for (const queryKey in query) {
-      const querySplit = queryKey.split(`${matchUpdate.root}.`);
-      if (querySplit.length > 1) {
+      const prefix = `${matchUpdate.root}.`;
+      const key = queryKey.slice(prefix.length);
+      if (queryKey.startsWith(prefix)) {
         relevantQueryParams.push({
-          key: querySplit[1],
+          key,
           value: query[queryKey],
           context: matchUpdate.root,
         });
@@ -61,10 +80,7 @@ const composeUpdate = (update, query, matchDelimiter) => {
     if (result[matchUpdate.root] != undefined) {
       result[matchUpdate.root] = result[matchUpdate.root].map((element) => {
         for (const param of relevantQueryParams) {
-          if (
-            element[param.key] != undefined &&
-            element[param.key] != param.value
-          )
+          if (!matches(element, param.key, param.value, matchUpdate.root))
             return element;
         }
 
@@ -82,6 +98,20 @@ const composeUpdate = (update, query, matchDelimiter) => {
     ) {
       result[propertySplit[0]] = result[propertySplit[0]].map(
         (outerElement) => {
+          for (const queryKey in query) {
+            const prefix = `${propertySplit[0]}.`;
+            if (
+              queryKey.startsWith(prefix) &&
+              !queryKey.startsWith(`${matchUpdate.root}.`) &&
+              !matches(
+                outerElement,
+                queryKey.slice(prefix.length),
+                query[queryKey],
+                propertySplit[0]
+              )
+            )
+              return outerElement;
+          }
           if (outerElement[propertySplit[1]] == undefined) return outerElement;
           return {
             ...outerElement,
@@ -89,8 +119,7 @@ const composeUpdate = (update, query, matchDelimiter) => {
               (element) => {
                 for (const param of relevantQueryParams)
                   if (
-                    element[param.key] != undefined &&
-                    element[param.key] != param.value
+                    !matches(element, param.key, param.value, matchUpdate.root)
                   )
                     return element;
                 return {
@@ -107,10 +136,7 @@ const composeUpdate = (update, query, matchDelimiter) => {
       result[matchUpdate.root] = getValue(result, matchUpdate.root).map(
         (element) => {
           for (const param of relevantQueryParams) {
-            if (
-              element[param.key] != undefined &&
-              element[param.key] != param.value
-            )
+            if (!matches(element, param.key, param.value, matchUpdate.root))
               return element;
           }
 
@@ -126,7 +152,8 @@ const composeUpdate = (update, query, matchDelimiter) => {
     if (result[matchUpdate.root] instanceof Array) {
       result[matchUpdate.root] = result[matchUpdate.root].map((element) => {
         for (const param of relevantQueryParams)
-          if (element[param.key] != param.value) return element;
+          if (!matches(element, param.key, param.value, matchUpdate.root))
+            return element;
 
         return {
           ...element,
@@ -150,7 +177,8 @@ const composeUpdate = (update, query, matchDelimiter) => {
       const key = `${propertySplit[0]}${matchDelimiter}${propertySplit[1]}`;
       result[key] = result[key].map((element) => {
         for (const param of relevantQueryParams)
-          if (element[param.key] != param.value) return element;
+          if (!matches(element, param.key, param.value, matchUpdate.root))
+            return element;
 
         return {
           ...element,
@@ -181,9 +209,8 @@ const composeUpdate = (update, query, matchDelimiter) => {
         result[rootRoot] = composeUpdate(
           {
             ...result[rootRoot],
-            [`${rootSplit
-              .join(".")
-              .replace(`${rootRoot}.`, "")}.${last}`]: result[key],
+            [`${rootSplit.join(".").replace(`${rootRoot}.`, "")}.${last}`]:
+              result[key],
           },
           {},
           matchDelimiter

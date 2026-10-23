@@ -38,17 +38,17 @@ export default async ({
   onError = (err) => logger.error("Database has errored.", { err }),
 }) => {
   const connectionString = deps.urlEncodeQueryData(
-    `${protocol}://${user}:${password}@${host}/${database}`,
+    `${protocol}://${encodeURIComponent(user)}:${encodeURIComponent(password)}@${host}/${database}`,
     ...(parameters ? [parameters] : [])
   );
-
-  await connect({ connectionString, poolSize, autoIndex });
 
   const db = deps.mongoose.connection;
 
   if (onError != undefined) db.on("error", onError);
 
   if (onOpen != undefined) db.once("open", onOpen);
+
+  await connect({ connectionString, poolSize, autoIndex });
 
   return db;
 };

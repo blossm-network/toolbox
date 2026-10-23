@@ -14,21 +14,29 @@ export default ({
   blockPublisherPublicKeyFn,
   isPublic,
   blockLimit,
+  canonicalFormat = 2,
 }) => async (transaction) => {
-  const previousBlock = await latestBlockFn();
+  const hashOptions = canonicalFormat == 1 ? [] : [{ canonicalFormat }];
+  const previousBlock = await latestBlockFn({
+    ...(transaction && { transaction }),
+  });
+
+  if (canonicalFormat == 1 && previousBlock?.headers.canonicalFormat == 2)
+    throw new Error("Cannot append a legacy block after canonical format 2 activation.");
 
   const genesisPrevious = "~";
 
   if (!previousBlock) {
-    const emptyMerkleRoot = await (await deps.merkleRoot([])).toString(
-      "base64"
-    );
+    const emptyMerkleRoot = await (
+      await deps.merkleRoot([])
+    ).toString("base64");
 
     const emptyEncoding = Buffer.from(deps.encode([]));
     const emptyByteLength = Buffer.byteLength(emptyEncoding);
 
     const blockHeaders = {
-      pHash: deps.hash(genesisPrevious).create(),
+      ...(canonicalFormat == 2 && { canonicalFormat }),
+      pHash: deps.hash(genesisPrevious, ...hashOptions).create(),
       created: deps.dateString(),
       number: 0,
       start: "2020-01-01T05:00:00.000Z",
@@ -48,7 +56,7 @@ export default ({
       key: Buffer.from(await blockPublisherPublicKeyFn()).toString("base64"),
     };
 
-    const blockHeadersHash = deps.hash(blockHeaders).create();
+    const blockHeadersHash = deps.hash(blockHeaders, ...hashOptions).create();
     const signedBlockHeadersHash = await signFn(blockHeadersHash);
 
     const genesisBlock = {
@@ -80,25 +88,31 @@ export default ({
     handlers,
   });
 
-  let lastRootEnd;
-  let end = deps.dateString();
+  // Snapshot lastEventNumber owns progress; timestamps are block metadata only.
+  // ponytail: scan all roots, use a durable pending-root queue if scan cost warrants it.
+  const end = deps.dateString();
 
-  let count;
+  let count = 0;
   let full = false;
 
   const increment = Math.round(blockLimit * 0.1);
 
   await rootStreamFn({
-    updatedOnOrAfter: previousBlock.headers.end,
-    updatedBefore: end,
+    ...(transaction && { transaction }),
     reverse: true,
-    fn: async ({ root, updated }) => {
+    fn: async ({ root }) => {
       if (count >= blockLimit - increment) {
         full = true;
         return;
       }
 
-      const aggregate = await aggregateFn(root, { includeEvents: true });
+      const aggregate = await aggregateFn(root, {
+        includeEvents: true,
+        ...(transaction && { transaction }),
+      });
+
+      if (canonicalFormat == 1 && aggregate.events.some(e => e.headers?.canonicalFormat == 2))
+        throw new Error("Cannot export canonical format 2 events in a legacy block.");
 
       if (aggregate.events.length == 0) return;
 
@@ -114,8 +128,11 @@ export default ({
                 ? e
                 : {
                     ...e,
-                    payload: await encryptFn(deps.cononicalString(e.payload)),
-                  }
+                    payload: await encryptFn(
+                      deps.cononicalString(e.payload, ...hashOptions)
+                    ),
+                  },
+              ...hashOptions
             ),
           ]);
           if (!txs[e.tx.id]) txs[e.tx.id] = [];
@@ -127,20 +144,25 @@ export default ({
 
       const eventsMerkleRoot = await deps.merkleRoot(stringifiedEventPairs);
 
-      const contextHash = deps.hash(aggregate.context).create();
-      const groupsHash = deps.hash(aggregate.groups).create();
-      const stateHash = deps.hash(aggregate.state).create();
+      const contextHash = deps
+        .hash(aggregate.context, ...hashOptions)
+        .create();
+      const groupsHash = deps.hash(aggregate.groups, ...hashOptions).create();
+      const stateHash = deps.hash(aggregate.state, ...hashOptions).create();
 
       const previousHash =
-        aggregate.headers.snapshotHash || deps.hash(genesisPrevious).create();
+        aggregate.headers.snapshotHash ||
+        deps.hash(genesisPrevious, ...hashOptions).create();
 
       const encodedEvents = Buffer.from(deps.encode(stringifiedEventPairs));
 
-      const nextSnapshotNumber = aggregate.headers.number == undefined
-        ? 0
-        : aggregate.headers.number + 1;
+      const nextSnapshotNumber =
+        aggregate.headers.number == undefined
+          ? 0
+          : aggregate.headers.number + 1;
 
       const snapshotHeaders = {
+        ...(canonicalFormat == 2 && { canonicalFormat }),
         nonce: `${root}_${nextSnapshotNumber}`,
         block: nextBlockNumber,
         cHash: contextHash,
@@ -160,7 +182,9 @@ export default ({
         eSize: Buffer.byteLength(encodedEvents),
       };
 
-      const snapshotHeadersHash = deps.hash(snapshotHeaders).create();
+      const snapshotHeadersHash = deps
+        .hash(snapshotHeaders, ...hashOptions)
+        .create();
 
       const normalizedSnapshot = {
         hash: snapshotHeadersHash,
@@ -183,13 +207,8 @@ export default ({
         context: snapshot.context,
         state: snapshot.state,
       });
-
-      lastRootEnd =
-        lastRootEnd == undefined || updated > lastRootEnd
-          ? updated
-          : lastRootEnd;
     },
-    parallel: increment,
+    parallel: transaction ? 1 : increment,
   });
 
   const stringifiedSnapshotPairs = [];
@@ -203,8 +222,11 @@ export default ({
             ? s
             : {
                 ...s,
-                state: await encryptFn(deps.cononicalString(s.state)),
-              }
+                state: await encryptFn(
+                  deps.cononicalString(s.state, ...hashOptions)
+                ),
+              },
+          ...hashOptions
         ),
       ]);
     })
@@ -214,19 +236,16 @@ export default ({
   for (const key in txs) {
     stringifiedTxPairs.push([
       deps.hash(key).create(),
-      deps.cononicalString(txs[key]),
+      deps.cononicalString(txs[key], ...hashOptions),
     ]);
   }
 
-  const [
-    snapshotsMerkleRoot,
-    allEventsMerkleRoot,
-    txsMerkleRoot,
-  ] = await Promise.all([
-    deps.merkleRoot(stringifiedSnapshotPairs),
-    deps.merkleRoot(allStringifiedEventPairs),
-    deps.merkleRoot(stringifiedTxPairs),
-  ]);
+  const [snapshotsMerkleRoot, allEventsMerkleRoot, txsMerkleRoot] =
+    await Promise.all([
+      deps.merkleRoot(stringifiedSnapshotPairs),
+      deps.merkleRoot(allStringifiedEventPairs),
+      deps.merkleRoot(stringifiedTxPairs),
+    ]);
 
   const encodedAllEvents = Buffer.from(deps.encode(allStringifiedEventPairs));
   const encodedSnapshots = Buffer.from(deps.encode(stringifiedSnapshotPairs));
@@ -235,11 +254,12 @@ export default ({
   const sCount = stringifiedSnapshotPairs.length;
 
   const blockHeaders = {
+    ...(canonicalFormat == 2 && { canonicalFormat }),
     pHash: previousBlock.hash,
     created: deps.dateString(),
     number: previousBlock.headers.number + 1,
     start: previousBlock.headers.end,
-    end: lastRootEnd || end,
+    end,
     eCount: allStringifiedEventPairs.length,
     sCount,
     tCount: stringifiedTxPairs.length,
@@ -255,7 +275,7 @@ export default ({
     key: Buffer.from(await blockPublisherPublicKeyFn()).toString("base64"),
   };
 
-  const blockHeadersHash = deps.hash(blockHeaders).create();
+  const blockHeadersHash = deps.hash(blockHeaders, ...hashOptions).create();
   const signedBlockHeadersHash = await signFn(blockHeadersHash);
 
   const normalizedBlock = {

@@ -31,6 +31,31 @@ describe("Command gateway", () => {
   afterEach(() => {
     restore();
   });
+  it("authenticates and authorizes before parsing bounded uploads", async () => {
+    const authentication = () => {};
+    const authorization = () => {};
+    const upload = () => {};
+    const uploader = fake.returns(upload);
+    const post = fake.returns({ listen: fake() });
+    replace(deps, "server", fake.returns({ post }));
+    replace(deps, "authentication", fake.returns(authentication));
+    replace(deps, "authorization", fake.returns(authorization));
+    replace(deps, "post", fake());
+    replace(deps, "uploader", uploader);
+    const uploadLimits = { fileSize: 1024 };
+
+    await gateway({
+      commands: [{ name: "upload", multipart: true, uploadLimits }],
+      verifyFn: fake(),
+    });
+
+    expect(post.firstCall.args[1].preMiddleware).to.deep.equal([
+      authentication,
+      authorization,
+      upload,
+    ]);
+    expect(uploader).to.have.been.calledWith(uploadLimits);
+  });
   it("should call with the correct params", async () => {
     const corsMiddlewareFake = fake();
     replace(deps, "corsMiddleware", corsMiddlewareFake);
@@ -269,9 +294,7 @@ describe("Command gateway", () => {
     const anyResult = "some-any-results";
     const anyFake = fake.returns(anyResult);
 
-    replace(deps, "uploader", {
-      any: anyFake,
-    });
+    replace(deps, "uploader", anyFake);
 
     await gateway({
       commands,
@@ -315,7 +338,7 @@ describe("Command gateway", () => {
     });
     expect(postFake).to.have.been.calledWith(gatewayPostResult, {
       path: `/${name}`,
-      preMiddleware: [anyResult, authenticationResult, authorizationResult],
+      preMiddleware: [authenticationResult, authorizationResult, anyResult],
     });
     expect(authenticationFake).to.have.been.calledWith({
       verifyFn: verifyFnResult,

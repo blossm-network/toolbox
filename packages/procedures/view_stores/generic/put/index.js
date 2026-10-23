@@ -28,66 +28,7 @@ const formatBody = (value) => {
   return formattedBody;
 };
 
-//NOT MEANT TO BE PUBLIC SINCE THERES NO REQUIRED CONTEXT CHECK.
-export default ({
-  writeFn,
-  formatFn,
-  updateFn = defaultFn,
-  updateKeys,
-}) => async (req, res) => {
-  const customUpdate = updateFn(req.body.update);
-
-  const context = req.body.context &&
-    process.env.CONTEXT &&
-    req.body.context[process.env.CONTEXT] && {
-      root: req.body.context[process.env.CONTEXT].root,
-      domain: process.env.CONTEXT,
-      service: req.body.context[process.env.CONTEXT].service,
-      network: req.body.context[process.env.CONTEXT].network,
-    };
-
-  const groups =
-    req.body.groups &&
-    req.body.groups.map((group) => ({
-      root: group.root,
-      service: group.service,
-      network: group.network,
-    }));
-
-  const formattedBody = formatBody(customUpdate);
-
-  const data = {
-    "headers.id": req.params.id,
-    "headers.modified": deps.dateString(),
-    ...formattedBody,
-    ...(req.body.trace && {
-      [`trace.${req.body.trace.service}.${req.body.trace.domain}`]: req.body
-        .trace.txIds,
-    }),
-    ...(context && { "headers.context": context }),
-    ...(groups && { "headers.groups": groups }),
-  };
-
-  let formattedQuery;
-
-  if (req.body.query) {
-    if (!formattedQuery) formattedQuery = {};
-    for (const key in req.body.query) {
-      formattedQuery[`body.${key}`] = req.body.query[key];
-    }
-  }
-
-  const newView = await writeFn({
-    query: {
-      "headers.id": req.params.id,
-      ...formattedQuery,
-    },
-    data,
-    ...(req.body.arrayFilters && { arrayFilters: req.body.arrayFilters }),
-  });
-
-  if (!newView) return res.sendStatus(204);
-
+export const formatView = ({ formatFn, updateKeys }, newView) => {
   //TODO this function is duplicated in /get. Refactor.
   const formattedTrace = [];
   for (const service in newView.trace) {
@@ -100,7 +41,7 @@ export default ({
   const values =
     updateKeys && updateKeys.map((key) => getValue(newView.body, key));
 
-  res.status(200).send({
+  return {
     view: {
       body: formatFn({
         body: newView.body,
@@ -121,5 +62,74 @@ export default ({
       // Fallback for .flat().
       keys: [].concat(...values),
     }),
+  };
+};
+
+//NOT MEANT TO BE PUBLIC SINCE THERES NO REQUIRED CONTEXT CHECK.
+export const write = ({
+  writeFn,
+  formatFn,
+  updateFn = defaultFn,
+  updateKeys,
+}) => async ({ id, body }) => {
+  const customUpdate = updateFn(body.update);
+
+  const context = body.context &&
+    process.env.CONTEXT &&
+    body.context[process.env.CONTEXT] && {
+      root: body.context[process.env.CONTEXT].root,
+      domain: process.env.CONTEXT,
+      service: body.context[process.env.CONTEXT].service,
+      network: body.context[process.env.CONTEXT].network,
+    };
+
+  const groups =
+    body.groups &&
+    body.groups.map((group) => ({
+      root: group.root,
+      service: group.service,
+      network: group.network,
+    }));
+
+  const formattedBody = formatBody(customUpdate);
+
+  const data = {
+    "headers.id": id,
+    "headers.modified": deps.dateString(),
+    ...formattedBody,
+    ...(body.trace && {
+      [`trace.${body.trace.service}.${body.trace.domain}`]: body
+        .trace.txIds,
+    }),
+    ...(context && { "headers.context": context }),
+    ...(groups && { "headers.groups": groups }),
+  };
+
+  let formattedQuery;
+
+  if (body.query) {
+    if (!formattedQuery) formattedQuery = {};
+    for (const key in body.query) {
+      formattedQuery[`body.${key}`] = body.query[key];
+    }
+  }
+
+  const newView = await writeFn({
+    query: {
+      "headers.id": id,
+      ...formattedQuery,
+    },
+    data,
+    ...(body.arrayFilters && { arrayFilters: body.arrayFilters }),
   });
+
+  if (!newView) return;
+
+  return formatView({ formatFn, updateKeys }, newView);
+};
+
+export default (options) => async (req, res) => {
+  const result = await write(options)({ id: req.params.id, body: req.body });
+  if (!result) return res.sendStatus(204);
+  res.status(200).send(result);
 };

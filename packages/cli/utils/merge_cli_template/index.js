@@ -1,6 +1,7 @@
 import roboSay from "@blossm/robo-say";
 import rootDir from "@blossm/cli-root-dir";
-import hash from "@blossm/operation-hash";
+import hash, { environment as operationIdentityEnvironment } from "@blossm/operation-hash";
+import environmentName from "@blossm/node-external-token/environment_name.js";
 import { promisify } from "util";
 import yaml from "yaml";
 import path from "path";
@@ -38,7 +39,7 @@ const envDependencyKeyEnvironmentVariables = ({ env, config }) => {
   let environmentVariables = {};
 
   for (const network in config.dependencies) {
-    const baseName = network.toUpperCase().split(".").join("_");
+    const baseName = environmentName(network);
     const { root, secretName } = config.dependencies[network].keys[env];
     environmentVariables = {
       ...environmentVariables,
@@ -51,6 +52,7 @@ const envDependencyKeyEnvironmentVariables = ({ env, config }) => {
 };
 
 const envBaseContainerRegistry = ({ env, config }) => {
+  if (!config.core || !config.core.registries) return;
   switch (env) {
     case "production":
       return config.core.registries.production;
@@ -654,7 +656,7 @@ const writeConfig = ({
               ...(dependency.name ? [dependency.name] : []),
               ...(dependency.domain ? [dependency.domain] : []),
               ...(dependency.service ? [dependency.service] : []),
-              ...(dependency.context ? [dependency.context] : []),
+              ...((dependency.context || dependency.procedure == "view-composite") ? [dependency.context] : []),
               dependency.procedure
             )}.${localNetwork}`,
             mocks: dependency.mocks,
@@ -748,8 +750,9 @@ const configure = async (workingDir, configFn, env, strict) => {
     const events = config.events;
     const procedure = config.procedure;
     const name = config.name;
-    const envVars = config.env && config.env[env];
-    const devEnvVars = config.devEnv && config.devEnv[env];
+    const identityEnvironment = operationIdentityEnvironment();
+    const envVars = { ...(config.env && config.env[env]), ...identityEnvironment };
+    const devEnvVars = { ...(config.devEnv && config.devEnv[env]), ...identityEnvironment };
 
     const dependencyKeyEnvironmentVariables = envDependencyKeyEnvironmentVariables(
       { env, config: blossmConfig }
@@ -766,12 +769,10 @@ const configure = async (workingDir, configFn, env, strict) => {
     const secretBucketKeyRing = "secrets-bucket";
 
     const containerRegistery = `us.gcr.io/${project}`;
-    const baseContainerRegistery = blossmConfig.base
-      ? envBaseContainerRegistry({
-          env,
-          config: blossmConfig,
-        })
-      : containerRegistery;
+    const baseContainerRegistery = envBaseContainerRegistry({
+      env,
+      config: blossmConfig,
+    }) || containerRegistery;
 
     const mainContainerName = "main";
 

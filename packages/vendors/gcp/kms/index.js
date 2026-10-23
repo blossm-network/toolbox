@@ -1,10 +1,13 @@
 import kms from "@google-cloud/kms";
 
 import deps from "./deps.js";
+import lazyClient from "@blossm/lazy-client";
 
 const publicKeys = {};
 
-export const __client = new kms.KeyManagementServiceClient();
+// The SDK constructor starts credential discovery for its operations client.
+// Defer construction until the exported client is actually used.
+export const __client = lazyClient(kms.KeyManagementServiceClient);
 
 const createKey = async ({ id, ring, project, location }) => {
   const parent = __client.keyRingPath(project, location, ring);
@@ -85,29 +88,33 @@ const sign = async ({
   return signature.toString(format);
 };
 
-const verify = ({ key, ring, location, version, project }) => async ({
-  message,
-  signature,
-  format = "base64",
-}) => {
-  const instanceKey = `${project}.${ring}.${key}`;
-  if (publicKeys[instanceKey] == undefined) {
-    const pem = await publicKey({
-      key,
-      ring,
-      location,
-      version,
+const verify =
+  ({ key, ring, location, version, project }) =>
+  async ({ message, signature, format = "base64" }) => {
+    const instanceKey = __client.cryptoKeyVersionPath(
       project,
-    });
+      location,
+      ring,
+      key,
+      version
+    );
+    if (publicKeys[instanceKey] == undefined) {
+      const pem = await publicKey({
+        key,
+        ring,
+        location,
+        version,
+        project,
+      });
 
-    publicKeys[instanceKey] = pem;
-  }
+      publicKeys[instanceKey] = pem;
+    }
 
-  return deps.crypto
-    .createVerify("SHA256")
-    .update(message)
-    .verify(publicKeys[instanceKey], signature, format);
-};
+    return deps.crypto
+      .createVerify("SHA256")
+      .update(message)
+      .verify(publicKeys[instanceKey], signature, format);
+  };
 
 export default {
   __client,

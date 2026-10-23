@@ -3,6 +3,18 @@ import deps from "./deps.js";
 const defaultQueryFn = (query) => query;
 const defaultSortFn = (sort) => sort;
 const defaultLimit = 50;
+const maxLimit = 100;
+
+const paginationValue = (value, fallback, minimum, maximum, name) => {
+  if (value === undefined) return fallback;
+  const number =
+    typeof value == "string" && /^\d+$/.test(value) ? Number(value) : value;
+  if (!Number.isSafeInteger(number) || number < minimum || number > maximum)
+    throw deps.badRequestError.message(`Invalid ${name}.`, {
+      info: { minimum, maximum },
+    });
+  return number;
+};
 
 //Returns at most one value of a given key in an object.
 const getValue = (object, key) => {
@@ -16,23 +28,19 @@ const getValue = (object, key) => {
     : object[keyParts[0]];
 };
 
-const parseSpecialValues = (obj) => {
-  const result = {};
-  const array = [];
-  for (const key in obj) {
-    const parsedInt = parseInt(key);
-    if ((parsedInt === 0 || parsedInt) && array.length == parsedInt)
-      array.push(obj[key]);
-    if (typeof obj[key] == "object") result[key] = parseSpecialValues(obj[key]);
-    else if (typeof obj[key] == "string" && obj[key].charAt(0) == "#")
-      result[key] = parseInt(obj[key].substring(1));
-    else if (typeof obj[key] == "string" && obj[key].charAt(0) == "@")
-      result[key] = new Date(obj[key].substring(1));
-    else result[key] = obj[key];
-  }
+const parseSpecialValues = (value) => {
+  if (typeof value == "string" && value.charAt(0) == "#")
+    return parseInt(value.substring(1));
+  if (typeof value == "string" && value.charAt(0) == "@")
+    return new Date(value.substring(1));
+  if (value === null || typeof value != "object") return value;
+  if (Array.isArray(value)) return value.map(parseSpecialValues);
 
-  if (Object.keys(obj).length == array.length) return array;
-  return result;
+  const keys = Object.keys(value);
+  const entries = keys.map((key) => [key, parseSpecialValues(value[key])]);
+  return keys.length > 0 && keys.every((key, index) => key === String(index))
+    ? entries.map((entry) => entry[1])
+    : Object.fromEntries(entries);
 };
 
 export default ({
@@ -114,8 +122,12 @@ export default ({
   const sortBody = sortFn(req.query.sort);
   let formattedSort;
   if (!bootstrap) {
-    if (req.query.limit) req.query.limit = parseInt(req.query.limit);
-    if (req.query.skip) req.query.skip = parseInt(req.query.skip);
+    req.query.limit = paginationValue(
+      req.query.limit, defaultLimit, 1, maxLimit, "limit"
+    );
+    req.query.skip = paginationValue(
+      req.query.skip, 0, 0, Number.MAX_SAFE_INTEGER, "skip"
+    );
     if (sortBody) {
       formattedSort = {};
       for (const key in sortBody)
@@ -151,7 +163,7 @@ export default ({
       ...formatCsv.fn(result.body),
     }));
 
-    const csv = deps.jsonToCsv({ data, fields });
+    const csv = deps.jsonToCsv({ data, fields, spreadsheetSafe: true });
 
     res.writeHead(200, {
       "Content-Type": "text/csv",
@@ -224,6 +236,7 @@ export default ({
             ...(req.query.sort && {
               sort: req.query.sort,
             }),
+            ...(req.query.text && { text: req.query.text }),
             skip: skip + limit,
             limit,
           })

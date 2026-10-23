@@ -212,7 +212,7 @@ describe("View store base integration tests", () => {
         updates: moreUpdate,
         count: moreCount,
         content: moreContent,
-      } = JSON.parse(response1.body);
+      } = JSON.parse(moreResponse1.body);
 
       const moreParsedBody = config.one ? moreContent : moreContent[0];
 
@@ -444,8 +444,8 @@ describe("View store base integration tests", () => {
           const { content: sortedContent } = JSON.parse(response7.body);
 
           for (let i = 0; i < sortedContent.length; i++) {
-            for (const key in examples[sort.order[i]].get.get) {
-              expect(sortedContent[i][key]).to.deep.equal(examples[1].get[key]);
+            for (const key in examples[sort.order[i]].get) {
+              expect(sortedContent[i][key]).to.deep.equal(examples[sort.order[i]].get[key]);
             }
           }
         }

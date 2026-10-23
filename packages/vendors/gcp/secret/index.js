@@ -2,15 +2,28 @@ import deps from "./deps.js";
 
 const createKeyIfNeeded = async ({ key, project, ring, location }) => {
   try {
-    await deps.createKey({
-      id: key,
-      project,
-      ring,
-      location,
-    });
-  } catch (e) {
-    return;
+    await deps.createKey({ id: key, project, ring, location });
+  } catch (err) {
+    if (err.code !== 6) throw err;
   }
+};
+
+const withEncryptedFile = async (fn) => {
+  const filename = `${deps.uuid()}.txt.encrypted`;
+  let result;
+  let failure;
+  try {
+    result = await fn(filename);
+  } catch (err) {
+    failure = err;
+  }
+  try {
+    await deps.unlink(filename);
+  } catch (err) {
+    if (!failure && err.code !== "ENOENT") throw err;
+  }
+  if (failure) throw failure;
+  return result;
 };
 
 const get = async (
@@ -21,24 +34,22 @@ const get = async (
     location = process.env.GCP_KMS_SECRET_BUCKET_KEY_LOCATION,
     bucket = process.env.GCP_SECRET_BUCKET,
   } = {}
-) => {
-  const file = `${key}.txt.encrypted`;
-  const fileName = `${deps.uuid()}.txt.encrypted`;
-  await deps.download({ bucket, file, destination: fileName });
-  const encrypted = await deps.readFile(fileName);
-  const [secret] = await Promise.all([
-    deps.decrypt({
+) =>
+  withEncryptedFile(async (filename) => {
+    await deps.download({
+      bucket,
+      file: `${key}.txt.encrypted`,
+      destination: filename,
+    });
+    const encrypted = await deps.readFile(filename);
+    return deps.decrypt({
       message: encrypted.toString().trim(),
       ring,
       key,
       location,
       project,
-    }),
-    deps.unlink(fileName),
-  ]);
-
-  return secret;
-};
+    });
+  });
 
 const create = async (
   key,
@@ -50,13 +61,7 @@ const create = async (
     bucket = process.env.GCP_SECRET_BUCKET,
   } = {}
 ) => {
-  await createKeyIfNeeded({
-    key,
-    project,
-    ring,
-    location,
-  });
-
+  await createKeyIfNeeded({ key, project, ring, location });
   const ciphertext = await deps.encrypt({
     message,
     key,
@@ -64,18 +69,14 @@ const create = async (
     location,
     project,
   });
-
-  const filename = `${key}.txt.encrypted`;
-  await deps.writeFile(filename, ciphertext);
-  await deps.upload({
-    file: filename,
-    bucket,
+  await withEncryptedFile(async (filename) => {
+    await deps.writeFile(filename, ciphertext);
+    await deps.upload({
+      file: filename,
+      bucket,
+      destination: `${key}.txt.encrypted`,
+    });
   });
-
-  await deps.unlink(filename);
 };
 
-export default {
-  get,
-  create,
-};
+export default { get, create };

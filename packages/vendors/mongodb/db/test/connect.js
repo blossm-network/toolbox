@@ -1,4 +1,5 @@
 import * as chai from "chai";
+import { EventEmitter } from "node:events";
 import sinonChai from "sinon-chai";
 import { restore, replace, replaceGetter, fake } from "sinon";
 
@@ -75,6 +76,30 @@ describe("Connects", () => {
       autoIndex,
       maxPoolSize: poolSize,
     });
+  });
+
+  it("round-trips reserved and Unicode credentials through the real driver parser", async () => {
+    const user = "user/:@%#雪";
+    const password = "pass/:@%#雪";
+    await connect({ protocol: "mongodb", user, password, host: "localhost", database });
+    const [uri] = connectFake.lastCall.args;
+    const client = new deps.mongoose.mongo.MongoClient(uri);
+    expect(client.options.credentials.username).to.equal(user);
+    expect(client.options.credentials.password).to.equal(password);
+  });
+
+  it("registers lifecycle handlers before the connection opens", async () => {
+    restore();
+    const connection = new EventEmitter();
+    const onOpen = fake();
+    const onError = fake();
+    replaceGetter(deps.mongoose, "connection", fake.returns(connection));
+    replace(deps.mongoose, "connect", fake(async () => {
+      expect(connection.listenerCount("error")).to.equal(1);
+      connection.emit("open");
+      expect(onOpen.callCount).to.equal(1);
+    }));
+    await connect({ protocol, user, password, host, database, onOpen, onError });
   });
 
   it("it pass along the onError callback", async () => {

@@ -4,9 +4,20 @@ export default async (fn) => {
   if (process.env.NODE_ENV == "local") return await fn();
   const session = await deps.db.startSession();
   let result;
-  await session.withTransaction(async () => {
-    result = await fn(session);
-  });
-  await session.endSession();
+  let cleanupFailed = false;
+  let cleanupError;
+  try {
+    await session.withTransaction(async () => {
+      result = await fn(session);
+    });
+  } finally {
+    try {
+      await session.endSession();
+    } catch (err) {
+      cleanupFailed = true;
+      cleanupError = err;
+    }
+  }
+  if (cleanupFailed) throw cleanupError;
   return result;
 };

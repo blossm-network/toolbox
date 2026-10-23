@@ -6,24 +6,29 @@
   "type": "module",
   "author": "blossm.network",
   "engines": {
-    "node": ">= 20.19.0"
+    "node": ">= 24.22.1"
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "test": "mocha --recursive test"
   },
   "dependencies": {
     "@blossm/cli-root-dir": "^0.0.15",
     "@blossm/operation-hash": "^0.0.17",
-    "any-json": "^3.1.0",
-    "chalk": "^5.4.1",
+    "@blossm/robo-say": "^0.0.11",
+    "chalk": "^6.0.1",
     "common-tags": "^1.8.2",
-    "fs-extra": "^11.3.0",
-    "yaml": "^2.8.0"
+    "fs-extra": "^11.4.1",
+    "yaml": "^2.9.1",
+    "@blossm/node-external-token": "^0.0.203"
   },
   "devDependencies": {
-    "mocha": "^11.7.0"
+    "mocha": "^12.0.3",
+    "@blossm/rpc": "^0.0.268",
+    "@blossm/view-composite-rpc": "^0.0.165",
+    "@blossm/operation-short-name": "^0.0.1",
+    "@blossm/mongodb-database": "^0.0.134"
   }
 }

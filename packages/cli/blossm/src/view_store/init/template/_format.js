@@ -11,3 +11,5 @@
 // export default ({ body, id }) => {
 //   return { body };
 // };
+
+export default ({ body }) => body;

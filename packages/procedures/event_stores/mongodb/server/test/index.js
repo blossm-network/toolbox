@@ -1,4 +1,6 @@
 import * as chai from "chai";
+import mongoose from "mongoose";
+import hash from "@blossm/hash";
 import sinonChai from "sinon-chai";
 import chaiDatetime from "chai-datetime";
 import { restore, replace, fake, stub, useFakeTimers } from "sinon";
@@ -42,6 +44,7 @@ const publishFn = "some-publish-fn";
 describe("Mongodb event store", () => {
   beforeEach(async () => {
     __resetStoresForTest();
+    replace(deps, "publishPending", fake.returns("some-pending-publish-fn"));
     process.env.NODE_ENV = "some-env";
     clock = useFakeTimers(now.getTime());
   });
@@ -49,12 +52,67 @@ describe("Mongodb event store", () => {
     clock.restore();
     restore();
   });
+  it("preserves hashed transaction claims and path metadata through model casting", async () => {
+    const server = (await import("../index.js")).default;
+    const store = fake(async ({ name }) => ({ name }));
+    replace(deps, "db", { store });
+    replace(deps, "eventStore", fake());
+    await server({ schema: {}, secretFn: fake.resolves("secret") });
+    const { schema, typeKey } = store.firstCall.args[0];
+    const model = mongoose.model("TransactionRoundTrip", new mongoose.Schema(schema, { typeKey }));
+    try {
+      const tx = { id: "transaction", claims: { exp: 1700000000, iat: 1600000000, aud: ["one", "two"], custom: { role: "reader" } }, path: [{ name: "command", extra: "trace" }] };
+      const stored = new model({ tx }).toObject().tx;
+      expect(stored).to.deep.equal(tx);
+      expect(hash(stored).create()).to.equal(hash(tx).create());
+    } finally { mongoose.deleteModel("TransactionRoundTrip"); }
+  });
+  it("keeps each cached collection bound to its own operations on repeated startup", async () => {
+    const server = (await import("../index.js")).default;
+    const stores = Object.fromEntries(["events", "snapshots", "counts", "blockchain", "publications"].map((name) => [name, { name }]));
+    const store = fake(async ({ name }) => stores[name]);
+    replace(deps, "db", { store });
+    replace(deps, "eventStore", fake());
+    const bindings = {
+      findSnapshots: "snapshotStore", findEvents: "eventStore", findOneSnapshot: "snapshotStore",
+      eventStream: "eventStore", saveEvents: "eventStore",
+      reserveRootCounts: "countsStore", rootStream: "countsStore", count: "countsStore",
+      idempotencyConflictCheck: "eventStore", saveSnapshot: "snapshotStore",
+      saveBlock: "blockchainStore", latestBlock: "blockchainStore",
+    };
+    for (const name of Object.keys(bindings)) replace(deps, name, fake());
+    await server({ schema: {}, secretFn: fake.resolves("secret") });
+    await server({ schema: {}, secretFn: fake.resolves("secret") });
+    expect(store.callCount).to.equal(5);
+    const names = { eventStore: "events", snapshotStore: "snapshots", countsStore: "counts", blockchainStore: "blockchain" };
+    for (const [operation, key] of Object.entries(bindings)) {
+      expect(deps[operation].secondCall.args[0][key]).to.equal(stores[names[key]]);
+    }
+  });
+  it("registers each configured payload and state field as its own index", async () => {
+    const server = (await import("../index.js")).default;
+    const store = fake(async ({ name }) => ({ name }));
+    replace(deps, "db", { store });
+    replace(deps, "eventStore", fake());
+    await server({ schema: {}, indexes: ["amount", "other", "nested.field"], secretFn: fake.resolves("secret") });
+    for (const [position, prefix] of [[0, "payload"], [1, "state"]]) {
+      const { schema, indexes, typeKey } = store.getCall(position).args[0];
+      const actual = new mongoose.Schema(schema, { typeKey });
+      for (const index of indexes) actual.index(...index);
+      const registered = actual.indexes();
+      for (const field of ["amount", "other", "nested.field"]) {
+        expect(registered.some(([keys]) => Object.keys(keys).length == 1 && keys[`${prefix}.${field}`] == 1)).to.equal(true);
+      }
+      expect(indexes.slice(-3)).to.deep.equal(["amount", "other", "nested.field"].map((field) => [{ [`${prefix}.${field}`]: 1 }]));
+    }
+  });
   it("should call with the correct params", async () => {
     const mongodbEventStore = (await import("../index.js")).default; 
     const eStore = "some-event-store";
     const sStore = "some-snapshot-store";
     const cStore = "some-counts-store";
     const bStore = "some-blockchain-store";
+    const pStore = "some-publications-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
@@ -63,7 +121,9 @@ describe("Mongodb event store", () => {
       .onCall(2)
       .returns(cStore)
       .onCall(3)
-      .returns(bStore);
+      .returns(bStore)
+      .onCall(4)
+      .returns(pStore);
 
     const secretFake = fake.returns(password);
 
@@ -103,9 +163,6 @@ describe("Mongodb event store", () => {
     const eventStreamResult = "some-event-stream-result";
     const eventStreamFake = fake.returns(eventStreamResult);
     replace(deps, "eventStream", eventStreamFake);
-    const queryResult = "some-query-result";
-    const queryFake = fake.returns(queryResult);
-    replace(deps, "query", queryFake);
     const idempotencyConflictCheckResult =
       "some-idempotency-conflict-check-result";
     const idempotencyConflictCheckFake = fake.returns(
@@ -140,6 +197,7 @@ describe("Mongodb event store", () => {
       createBlockFn,
       signFn,
       blockPublisherPublicKeyFn,
+      canonicalFormat: 2,
       isPublic,
     });
 
@@ -169,6 +227,7 @@ describe("Mongodb event store", () => {
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
+          canonicalFormat: { $type: Number },
           nonce: {
             $type: String,
             required: true,
@@ -218,45 +277,11 @@ describe("Mongodb event store", () => {
           ],
           default: undefined,
         },
-        tx: {
-          ip: { $type: String },
-          id: { $type: String },
-          claims: {
-            $type: {
-              iss: String,
-              aud: String,
-              sub: String,
-              exp: String,
-              iat: String,
-              jti: String,
-              _id: false,
-            },
-          },
-          path: {
-            $type: [
-              {
-                id: { $type: String },
-                name: { $type: String },
-                domain: { $type: String },
-                service: { $type: String },
-                network: { $type: String, required: true },
-                host: { $type: String, required: true },
-                procedure: { $type: String, required: true },
-                hash: { $type: String, required: true },
-                issued: { $type: Date },
-                timestamp: { $type: Date },
-                _id: false,
-              },
-            ],
-          },
-          _id: false,
-        },
+        tx: { $type: Object },
         payload: formattedSchemaWithOptions,
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
-        [{ "headers.idempotency": 1 }],
         [{ "tx.id": 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.number": 1 }],
@@ -287,6 +312,7 @@ describe("Mongodb event store", () => {
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
+          canonicalFormat: { $type: Number },
           nonce: {
             $type: String,
             required: true,
@@ -327,7 +353,6 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.created": -1 }],
       ],
@@ -341,7 +366,6 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }],
         [{ root: 1, updated: 1 }],
         [{ root: 1, updated: -1 }],
       ],
@@ -352,6 +376,7 @@ describe("Mongodb event store", () => {
         hash: { $type: String, required: true, unique: true },
         signature: { $type: String, required: true },
         headers: {
+          canonicalFormat: { $type: Number },
           pHash: { $type: String, required: true },
           created: { $type: Date, required: true },
           number: { $type: Number, required: true, unique: true },
@@ -377,11 +402,12 @@ describe("Mongodb event store", () => {
         snapshots: { $type: Buffer, required: true },
       },
       typeKey: "$type",
-      indexes: [[{ "headers.number": 1 }]],
+      indexes: [],
     });
     expect(secretFake).to.have.been.calledWith("mongodb-event-store");
 
     expect(saveEventsFake).to.have.been.calledWith({
+      publicationsStore: pStore,
       eventStore: eStore,
       handlers,
     });
@@ -406,11 +432,6 @@ describe("Mongodb event store", () => {
     expect(findEventsFake).to.have.been.calledWith({
       eventStore: eStore,
     });
-    expect(queryFake).to.have.been.calledWith({
-      eventStore: eStore,
-      snapshotStore: sStore,
-      handlers,
-    });
     expect(saveBlockFake).to.have.been.calledWith({
       blockchainStore: bStore,
     });
@@ -424,13 +445,13 @@ describe("Mongodb event store", () => {
       blockchainStore: bStore,
     });
     expect(eventStoreFake).to.have.been.calledWith({
+      publishPendingFn: "some-pending-publish-fn",
       findOneSnapshotFn: findOneSnapshotResult,
       findSnapshotsFn: findSnapshotsResult,
       eventStreamFn: eventStreamResult,
       findEventsFn: findEventsResult,
       handlers,
       saveEventsFn: saveEventsResult,
-      queryFn: queryResult,
       reserveRootCountsFn: reserveRootCountsResult,
       rootStreamFn: rootStreamResult,
       countFn: countResult,
@@ -443,12 +464,13 @@ describe("Mongodb event store", () => {
       encryptFn,
       createBlockFn,
       blockPublisherPublicKeyFn,
+      canonicalFormat: 2,
       isPublic,
       idempotencyConflictCheckFn: idempotencyConflictCheckResult,
     });
 
     await mongodbEventStore();
-    expect(storeFake).to.have.been.callCount(4);
+    expect(storeFake).to.have.been.callCount(5);
   });
   it("should call with the correct params with indexes and local env", async () => {
     const mongodbEventStore = (await import("../index.js")).default;
@@ -456,6 +478,7 @@ describe("Mongodb event store", () => {
     const sStore = "some-snapshot-store";
     const cStore = "some-counts-store";
     const bStore = "some-blockchain-store";
+    const pStore = "some-publications-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
@@ -464,7 +487,9 @@ describe("Mongodb event store", () => {
       .onCall(2)
       .returns(cStore)
       .onCall(3)
-      .returns(bStore);
+      .returns(bStore)
+      .onCall(4)
+      .returns(pStore);
 
     const secretFake = fake.returns(password);
 
@@ -500,9 +525,6 @@ describe("Mongodb event store", () => {
     const eventStreamResult = "some-event-stream-result";
     const eventStreamFake = fake.returns(eventStreamResult);
     replace(deps, "eventStream", eventStreamFake);
-    const queryResult = "some-query-result";
-    const queryFake = fake.returns(queryResult);
-    replace(deps, "query", queryFake);
     const idempotencyConflictCheckResult =
       "some-idempotency-conflict-check-result";
     const idempotencyConflictCheckFake = fake.returns(
@@ -540,6 +562,7 @@ describe("Mongodb event store", () => {
       createBlockFn,
       signFn,
       blockPublisherPublicKeyFn,
+      canonicalFormat: 2,
       isPublic,
       handlers,
     });
@@ -570,6 +593,7 @@ describe("Mongodb event store", () => {
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
+          canonicalFormat: { $type: Number },
           nonce: {
             $type: String,
             required: true,
@@ -619,45 +643,11 @@ describe("Mongodb event store", () => {
           ],
           default: undefined,
         },
-        tx: {
-          ip: { $type: String },
-          id: { $type: String },
-          claims: {
-            $type: {
-              iss: String,
-              aud: String,
-              sub: String,
-              exp: String,
-              iat: String,
-              jti: String,
-              _id: false,
-            },
-          },
-          path: {
-            $type: [
-              {
-                id: { $type: String },
-                name: { $type: String },
-                domain: { $type: String },
-                service: { $type: String },
-                network: { $type: String, required: true },
-                host: { $type: String, required: true },
-                procedure: { $type: String, required: true },
-                hash: { $type: String, required: true },
-                issued: { $type: Date },
-                timestamp: { $type: Date },
-                _id: false,
-              },
-            ],
-          },
-          _id: false,
-        },
+        tx: { $type: Object },
         payload: formattedSchemaWithOptions,
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
-        [{ "headers.idempotency": 1 }],
         [{ "tx.id": 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.number": 1 }],
@@ -689,6 +679,7 @@ describe("Mongodb event store", () => {
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
+          canonicalFormat: { $type: Number },
           nonce: {
             $type: String,
             required: true,
@@ -729,7 +720,6 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.created": -1 }],
         [{ [`state.${index}`]: 1 }],
@@ -744,7 +734,6 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }],
         [{ root: 1, updated: 1 }],
         [{ root: 1, updated: -1 }],
       ],
@@ -755,6 +744,7 @@ describe("Mongodb event store", () => {
         hash: { $type: String, required: true, unique: true },
         signature: { $type: String, required: true },
         headers: {
+          canonicalFormat: { $type: Number },
           pHash: { $type: String, required: true },
           created: { $type: Date, required: true },
           number: { $type: Number, required: true, unique: true },
@@ -780,7 +770,7 @@ describe("Mongodb event store", () => {
         txs: { $type: Buffer, required: true },
       },
       typeKey: "$type",
-      indexes: [[{ "headers.number": 1 }]],
+      indexes: [],
     });
     expect(eventStoreFake).to.have.been.calledWith({
       findOneSnapshotFn: findOneSnapshotResult,
@@ -789,7 +779,6 @@ describe("Mongodb event store", () => {
       findEventsFn: findEventsResult,
       saveEventsFn: saveEventsResult,
       handlers,
-      queryFn: queryResult,
       reserveRootCountsFn: reserveRootCountsResult,
       rootStreamFn: rootStreamResult,
       countFn: countResult,
@@ -802,6 +791,7 @@ describe("Mongodb event store", () => {
       encryptFn,
       createBlockFn,
       blockPublisherPublicKeyFn,
+      canonicalFormat: 2,
       isPublic,
       createTransactionFn: deps.createTransaction,
     });
@@ -812,6 +802,7 @@ describe("Mongodb event store", () => {
     const sStore = "some-snapshot-store";
     const cStore = "some-counts-store";
     const bStore = "some-blockchain-store";
+    const pStore = "some-publications-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
@@ -820,7 +811,9 @@ describe("Mongodb event store", () => {
       .onCall(2)
       .returns(cStore)
       .onCall(3)
-      .returns(bStore);
+      .returns(bStore)
+      .onCall(4)
+      .returns(pStore);
 
     const secretFake = fake.returns(password);
 
@@ -855,9 +848,6 @@ describe("Mongodb event store", () => {
     const eventStreamResult = "some-event-stream-result";
     const eventStreamFake = fake.returns(eventStreamResult);
     replace(deps, "eventStream", eventStreamFake);
-    const queryResult = "some-query-result";
-    const queryFake = fake.returns(queryResult);
-    replace(deps, "query", queryFake);
     const idempotencyConflictCheckResult =
       "some-idempotency-conflict-check-result";
     const idempotencyConflictCheckFake = fake.returns(
@@ -884,6 +874,7 @@ describe("Mongodb event store", () => {
       createBlockFn,
       signFn,
       blockPublisherPublicKeyFn,
+      canonicalFormat: 2,
       isPublic,
     });
 
@@ -913,6 +904,7 @@ describe("Mongodb event store", () => {
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
+          canonicalFormat: { $type: Number },
           nonce: {
             $type: String,
             required: true,
@@ -962,45 +954,11 @@ describe("Mongodb event store", () => {
           ],
           default: undefined,
         },
-        tx: {
-          ip: { $type: String },
-          id: { $type: String },
-          claims: {
-            $type: {
-              iss: String,
-              aud: String,
-              sub: String,
-              exp: String,
-              iat: String,
-              jti: String,
-              _id: false,
-            },
-          },
-          path: {
-            $type: [
-              {
-                id: { $type: String },
-                name: { $type: String },
-                domain: { $type: String },
-                service: { $type: String },
-                network: { $type: String, required: true },
-                host: { $type: String, required: true },
-                procedure: { $type: String, required: true },
-                hash: { $type: String, required: true },
-                issued: { $type: Date },
-                timestamp: { $type: Date },
-                _id: false,
-              },
-            ],
-          },
-          _id: false,
-        },
+        tx: { $type: Object },
         payload: formattedSchemaWithOptions,
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
-        [{ "headers.idempotency": 1 }],
         [{ "tx.id": 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.number": 1 }],
@@ -1031,6 +989,7 @@ describe("Mongodb event store", () => {
       schema: {
         hash: { $type: String, required: true, unique: true },
         headers: {
+          canonicalFormat: { $type: Number },
           nonce: {
             $type: String,
             required: true,
@@ -1071,7 +1030,6 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.created": -1 }],
       ],
@@ -1085,7 +1043,6 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }],
         [{ root: 1, updated: 1 }],
         [{ root: 1, updated: -1 }],
       ],
@@ -1096,6 +1053,7 @@ describe("Mongodb event store", () => {
         hash: { $type: String, required: true, unique: true },
         signature: { $type: String, required: true },
         headers: {
+          canonicalFormat: { $type: Number },
           pHash: { $type: String, required: true },
           created: { $type: Date, required: true },
           number: { $type: Number, required: true, unique: true },
@@ -1121,7 +1079,7 @@ describe("Mongodb event store", () => {
         snapshots: { $type: Buffer, required: true },
       },
       typeKey: "$type",
-      indexes: [[{ "headers.number": 1 }]],
+      indexes: [],
     });
   });
 });

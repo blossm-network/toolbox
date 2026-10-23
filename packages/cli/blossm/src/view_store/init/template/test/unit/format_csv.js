@@ -1,25 +1,16 @@
 import fs from "fs";
-import path from "path";
 import * as chai from "chai";
-import sinonChai from "sinon-chai";
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-chai.use(sinonChai);
 const { expect } = chai;
+const filename = new URL("../../format_csv.js", import.meta.url);
+const hook = fs.existsSync(filename)
+  ? (await import(filename.href)).default
+  : undefined;
 
-const formatCsv =
-  fs.existsSync(path.resolve(__dirname, "../../format_csv.js")) &&
-  import("../../format_csv");
-
-describe("View store format csv tests", () => {
-  if (!formatCsv) return;
-  it("should convert correctly", async () => {
-    const result = formatCsv.fn({ name: "some-name" });
-    expect(result).to.deep.equal({ name: "some-name" });
-    expect(formatCsv.fields).to.equal(["name"]);
+describe("View store format_csv tests", () => {
+  if (!fs.existsSync(filename)) return;
+  it("converts the example correctly", () => {
+    expect(hook.fn({ name: "some-name" })).to.deep.equal({ name: "some-name" });
+    expect(hook.fields).to.deep.equal(["name"]);
   });
 });

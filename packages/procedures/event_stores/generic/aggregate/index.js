@@ -2,7 +2,7 @@ import deps from "./deps.js";
 
 export default ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
   root,
-  { timestamp, includeEvents = false, eventLimit } = {}
+  { timestamp, includeEvents = false, eventLimit, transaction } = {}
 ) => {
   const snapshot = await findOneSnapshotFn({
     query: {
@@ -12,11 +12,13 @@ export default ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
       }),
     },
     sort: {
+      "headers.number": -1,
       "headers.created": -1,
     },
     select: {
       events: 0,
     },
+    ...(transaction && { transaction }),
   });
 
   const aggregate = {
@@ -45,6 +47,7 @@ export default ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
   };
 
   await eventStreamFn({
+    ...(transaction && { transaction }),
     query: {
       "headers.root": root,
       ...(snapshot && {
@@ -89,7 +92,9 @@ export default ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
             result[key] = value;
           } else if (
             value !== result[key] &&
-            (typeof value != "object" ||
+            (value == null ||
+              result[key] == null ||
+              typeof value != "object" ||
               value.root != result[key].root ||
               value.service != result[key].service ||
               value.network != result[key].network)

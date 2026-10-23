@@ -4,10 +4,7 @@ export default (err) =>
         errors: err.body._embedded.errors.map((error) => {
           return {
             message: error.message,
-            path: error.path
-              .split("/")
-              .filter((part) => part.length > 1)
-              .join("."),
+            path: error.path.split("/").filter(Boolean).join("."),
           };
         }),
       }

@@ -12,6 +12,7 @@ import normalize from "./normalize.js";
 import config from "./config.json" with { type: "json" };
 
 export default commandProcedure({
+  ...(config.canonicalFormat != undefined && { canonicalFormat: config.canonicalFormat }),
   mainFn: main,
   ...(config.contexts && { contexts: config.contexts }),
   ...(config.root && { requiresRoot: config.root }),
@@ -198,10 +199,10 @@ export default commandProcedure({
         ...(async && { enqueue: { fn: gcpQueue.enqueue } }),
       })
       .add({ eventData, tx }),
-  countFn: ({ context, claims, token }) => ({ domain, service, root }) => {
+  countFn: ({ context, claims, token }) => async ({ domain, service, root }) => {
     const {
       body: { count },
-    } = eventStore({ domain, service })
+    } = await eventStore({ domain, service })
       .set({
         ...(context && { context }),
         ...(claims && { claims }),

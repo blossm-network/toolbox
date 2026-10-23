@@ -49,3 +49,16 @@ describe("Invalid range", () => {
     expect(response.errors).to.have.lengthOf(1);
   });
 });
+
+describe("Inclusive bound messages", () => {
+  it("describes accepted endpoints accurately", () => {
+    expect(validator.numberRange(2, bounds).isValid()).to.equal(true);
+    expect(validator.numberRange(3, bounds).isValid()).to.equal(true);
+    expect(validator.numberRange(1, bounds).errors[0].message).to.include(
+      "at least 2"
+    );
+    expect(validator.numberRange(4, bounds).errors[0].message).to.include(
+      "at most 3"
+    );
+  });
+});

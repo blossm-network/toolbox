@@ -6,7 +6,7 @@
   "type": "module",
   "author": "blossm.network",
   "engines": {
-    "node": ">= 20.19.0"
+    "node": ">= 24.22.1"
   },
   "publishConfig": {
     "access": "public"
@@ -17,13 +17,13 @@
     "@blossm/phone-number": "^0.0.9",
     "@blossm/uuid-validator": "^0.0.3",
     "@blossm/validation": "^0.0.10",
-    "ethereumjs-util": "^7.0.7",
+    "ethereumjs-util": "^7.1.5",
     "is-image-url": "^1.1.8"
   },
   "scripts": {
     "test": "mocha --recursive"
   },
   "devDependencies": {
-    "mocha": "^11.7.0"
+    "mocha": "^12.0.3"
   }
 }

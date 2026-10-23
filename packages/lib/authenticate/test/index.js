@@ -103,3 +103,37 @@ describe("Authorize", () => {
     }
   });
 });
+
+describe("Basic credential boundaries", () => {
+  for (const { root, secret } of [
+    { root: "root", secret: "secret:with:colons" },
+    { root: "utilisateur", secret: "café-🔑" },
+  ]) {
+    it(`preserves ${
+      secret.includes(":") ? "colons" : "Unicode"
+    } in the secret`, async () => {
+      let received;
+      await authenticate({
+        basic: Buffer.from(`${root}:${secret}`, "utf8").toString("base64"),
+        keyClaimsFn: async (credentials) => {
+          received = credentials;
+          return {};
+        },
+      });
+      expect(received).to.deep.equal({ root, secret });
+    });
+  }
+  it("rejects credentials with no separator", async () => {
+    const keyClaimsFn = fake();
+    try {
+      await authenticate({
+        basic: Buffer.from("malformed").toString("base64"),
+        keyClaimsFn,
+      });
+      expect.fail("a separator is required");
+    } catch (error) {
+      expect(error.message).to.equal("The Basic token is malformed.");
+    }
+    expect(keyClaimsFn).not.to.have.been.called;
+  });
+});

@@ -23,6 +23,7 @@ const formatSchemaValue = (value, typeKey, { wrapType = true } = {}) => {
     return formattedObj;
   } else if (value.type != undefined && value.type instanceof Array) {
     let formattedObj = {
+      ...value,
       [typeKey]: value.type.map((e) =>
         formatSchemaValue(e, typeKey, {
           wrapType: false,
@@ -129,7 +130,17 @@ const removeIds = ({ schema, typeKey, subdocumentsOnly = true }) => {
   return newSchema;
 };
 
+const copySchema = (value) => {
+  if (Array.isArray(value)) return value.map(copySchema);
+  if (value && Object.getPrototypeOf(value) === Object.prototype)
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [key, copySchema(item)])
+    );
+  return value;
+};
+
 export default (schema, typeKey, { options } = {}) => {
+  schema = copySchema(schema);
   const newSchema = {};
   for (const property in schema) {
     newSchema[property] = {

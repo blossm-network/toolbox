@@ -6,12 +6,14 @@ let _eventStore;
 let _snapshotStore;
 let _countsStore;
 let _blockchainStore;
+let _publicationsStore;
 
 export function __resetStoresForTest() {
   _eventStore = undefined;
   _snapshotStore = undefined;
   _countsStore = undefined;
   _blockchainStore = undefined;
+  _publicationsStore = undefined;
 }
 
 const typeKey = "$type";
@@ -22,11 +24,12 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     return _eventStore;
   }
 
-  _eventStore = deps.db.store({
+  _eventStore = await deps.db.store({
     name: `events`,
     schema: {
       hash: { [typeKey]: String, required: true, unique: true },
       headers: {
+        canonicalFormat: { [typeKey]: Number },
         nonce: {
           [typeKey]: String,
           required: true,
@@ -76,45 +79,11 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
         ],
         default: undefined,
       },
-      tx: {
-        ip: { [typeKey]: String },
-        id: { [typeKey]: String },
-        claims: {
-          [typeKey]: {
-            iss: String,
-            aud: String,
-            sub: String,
-            exp: String,
-            iat: String,
-            jti: String,
-            _id: false,
-          },
-        },
-        path: {
-          [typeKey]: [
-            {
-              name: { [typeKey]: String },
-              id: { [typeKey]: String },
-              domain: { [typeKey]: String },
-              service: { [typeKey]: String },
-              network: { [typeKey]: String, required: true },
-              host: { [typeKey]: String, required: true },
-              procedure: { [typeKey]: String, required: true },
-              hash: { [typeKey]: String, required: true },
-              issued: { [typeKey]: Date },
-              timestamp: { [typeKey]: Date },
-              _id: false,
-            },
-          ],
-        },
-        _id: false,
-      },
+      tx: { [typeKey]: Object },
       payload: schema,
     },
     typeKey,
     indexes: [
-      [{ hash: 1 }],
-      [{ "headers.idempotency": 1 }],
       [{ "tx.id": 1 }],
       [{ "headers.root": 1 }],
       //Need this in order to query by root and sort by number.
@@ -127,13 +96,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
           "headers.action": 1,
         },
       ],
-      ...(indexes.length == 0
-        ? []
-        : [
-            indexes.map((index) => {
-              return { [`payload.${index}`]: 1 };
-            }),
-          ]),
+      ...indexes.map((index) => [{ [`payload.${index}`]: 1 }]),
     ],
     connection: {
       protocol: process.env.MONGODB_PROTOCOL,
@@ -158,11 +121,12 @@ const snapshotStore = async ({ schema, indexes }) => {
     return _snapshotStore;
   }
 
-  _snapshotStore = deps.db.store({
+  _snapshotStore = await deps.db.store({
     name: "snapshots",
     schema: {
       hash: { $type: String, required: true, unique: true },
       headers: {
+        canonicalFormat: { [typeKey]: Number },
         nonce: {
           [typeKey]: String,
           required: true,
@@ -203,16 +167,9 @@ const snapshotStore = async ({ schema, indexes }) => {
     },
     typeKey,
     indexes: [
-      [{ hash: 1 }],
       [{ "headers.root": 1 }],
       [{ "headers.root": 1, "headers.created": -1 }],
-      ...(indexes.length == 0
-        ? []
-        : [
-            indexes.map((index) => {
-              return { [`state.${index}`]: 1 };
-            }),
-          ]),
+      ...indexes.map((index) => [{ [`state.${index}`]: 1 }]),
     ],
   });
 
@@ -225,7 +182,7 @@ const countsStore = async () => {
     return _countsStore;
   }
 
-  _countsStore = deps.db.store({
+  _countsStore = await deps.db.store({
     name: "counts",
     schema: {
       root: { [typeKey]: String, required: true, unique: true },
@@ -234,7 +191,6 @@ const countsStore = async () => {
     },
     typeKey,
     indexes: [
-      [{ root: 1 }],
       [{ root: 1, updated: 1 }],
       [{ root: 1, updated: -1 }],
     ],
@@ -246,15 +202,16 @@ const countsStore = async () => {
 const blockchainStore = async () => {
   if (_blockchainStore != undefined) {
     logger.info("Thank you existing blockchain store database.");
-    return _countsStore;
+    return _blockchainStore;
   }
 
-  _blockchainStore = deps.db.store({
+  _blockchainStore = await deps.db.store({
     name: "blockchain",
     schema: {
       hash: { [typeKey]: String, required: true, unique: true },
       signature: { [typeKey]: String, required: true },
       headers: {
+        canonicalFormat: { [typeKey]: Number },
         pHash: { [typeKey]: String, required: true },
         created: { [typeKey]: Date, required: true },
         number: { [typeKey]: Number, required: true, unique: true },
@@ -280,13 +237,31 @@ const blockchainStore = async () => {
       snapshots: { [typeKey]: Buffer, required: true },
     },
     typeKey,
-    indexes: [[{ "headers.number": 1 }]],
+    indexes: [],
   });
 
   return _blockchainStore;
 };
 
+const publicationsStore = async () => {
+  if (_publicationsStore != undefined) return _publicationsStore;
+  _publicationsStore = await deps.db.store({
+    name: "publications",
+    schema: {
+      hash: { [typeKey]: String, required: true, unique: true },
+      topic: { [typeKey]: String, required: true },
+      created: { [typeKey]: Date, required: true },
+      data: { [typeKey]: Object, required: true },
+      attempts: { [typeKey]: Number, default: 0 },
+    },
+    typeKey,
+    indexes: [[{ attempts: 1, created: 1, hash: 1 }]],
+  });
+  return _publicationsStore;
+};
+
 export default async ({
+  canonicalFormat = 2,
   schema,
   indexes = [],
   handlers,
@@ -317,6 +292,8 @@ export default async ({
   });
   const cStore = await countsStore();
   const bStore = await blockchainStore();
+  const pStore =
+    process.env.NODE_ENV == "local" ? undefined : await publicationsStore();
 
   deps.eventStore({
     findSnapshotsFn: deps.findSnapshots({
@@ -334,11 +311,7 @@ export default async ({
     handlers,
     saveEventsFn: deps.saveEvents({
       eventStore: eStore,
-      handlers,
-    }),
-    queryFn: deps.query({
-      eventStore: eStore,
-      snapshotStore: sStore,
+      ...(pStore && { publicationsStore: pStore }),
       handlers,
     }),
     reserveRootCountsFn: deps.reserveRootCounts({
@@ -364,10 +337,14 @@ export default async ({
       blockchainStore: bStore,
     }),
     publishFn,
+    ...(pStore && {
+      publishPendingFn: deps.publishPending({ publicationsStore: pStore, publishFn }),
+    }),
     encryptFn,
     createBlockFn,
     signFn,
     blockPublisherPublicKeyFn,
+    ...(canonicalFormat != undefined && { canonicalFormat }),
     isPublic,
   });
 };

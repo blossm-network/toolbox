@@ -3,50 +3,14 @@ import gcpSecret from "@blossm/gcp-secret";
 import fact from "@blossm/fact-rpc";
 import gcpToken from "@blossm/gcp-token";
 
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import optionalImport from "./optional_import.js";
 
-let query;
-try {
-  query = (await import("./query.js")).default;
-} catch (e) {
-  // query.js does not exist, query remains undefined
-}
-
-let sort;
-try {
-  sort = (await import("./sort.js")).default;
-} catch (e) {
-  // sort.js does not exist, sort remains undefined
-}
-
-let update;
-try {
-  update = (await import("./update.js")).default;
-} catch (e) {
-  // update.js does not exist, update remains undefined
-}
-
-let format;
-try {
-  format = (await import("./format.js")).default;
-} catch (e) {
-  // format.js does not exist, format remains undefined
-}
-
-let empty;
-try {
-  empty = (await import("./empty.js")).default;
-} catch (e) {
-  // empty.js does not exist, empty remains undefined
-}
-
-let formatCsv;
-try {
-  formatCsv = (await import("./format_csv.js")).default;
-} catch (e) {
-  // format_csv.js does not exist, formatCsv remains undefined
-}
+const query = await optionalImport(new URL("./query.js", import.meta.url));
+const sort = await optionalImport(new URL("./sort.js", import.meta.url));
+const update = await optionalImport(new URL("./update.js", import.meta.url));
+const format = await optionalImport(new URL("./format.js", import.meta.url));
+const empty = await optionalImport(new URL("./empty.js", import.meta.url));
+const formatCsv = await optionalImport(new URL("./format_csv.js", import.meta.url));
 
 import config from "./config.json" with { type: "json" };
 
@@ -55,6 +19,7 @@ export default viewStore({
   indexes: config.indexes,
   sorts: config.sorts,
   secretFn: gcpSecret.get,
+  consistency: config.consistency,
   ...(config.keys && { updateKeys: config.keys }),
   ...(query && { queryFn: query }),
   ...(formatCsv && { formatCsv }),

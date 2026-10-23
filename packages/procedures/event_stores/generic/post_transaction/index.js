@@ -8,22 +8,24 @@ export default ({
   tx: { path: txPath = [], claims: txClaims, id: txId, ip: txIp } = {},
 }) => async (transaction) => {
   const eventRootCounts = eventData.reduce((result, { event }) => {
-    if (result[event.headers.root] == undefined) result[event.headers.root] = 0;
+    if (result[event.headers.root] == undefined)
+      result[event.headers.root] = 0;
     result[event.headers.root]++;
     return result;
   }, {});
 
   const eventNumberOffsets = {};
 
-  const [...updatedCountObjects] = await Promise.all(
-    Object.keys(eventRootCounts).map((root) =>
-      reserveRootCountsFn({
+  const updatedCountObjects = [];
+  for (const root of Object.keys(eventRootCounts).sort()) {
+    updatedCountObjects.push(
+      await reserveRootCountsFn({
         root,
         amount: eventRootCounts[root],
         ...(transaction && { transaction }),
       })
-    )
-  );
+    );
+  }
 
   const currentEventCounts = updatedCountObjects.reduce(
     (result, countObject) => {
@@ -86,23 +88,29 @@ export default ({
 
           eventNumberOffsets[event.headers.root]++;
 
+          const { canonicalFormat } = event.headers;
+          const hashOptions =
+            canonicalFormat == undefined ? [] : [{ canonicalFormat }];
           const context = event.context || {};
           const groupsAdded = event.groupsAdded;
           const groupsRemoved = event.groupsRemoved;
-          const payload = event.payload || {};
+          const payload = canonicalFormat == 2
+            ? (event.payload === undefined ? {} : event.payload)
+            : event.payload || {};
           const tx = {
             ...(txClaims && { claims: txClaims }),
             ...(txId && { id: txId }),
             ...(txIp && { ip: txIp }),
             path: txPath,
           };
-          const hashedPayload = deps.hash(payload).create();
-          const hashedContext = deps.hash(context).create();
+          const hashedPayload = deps.hash(payload, ...hashOptions).create();
+          const hashedContext = deps.hash(context, ...hashOptions).create();
           const hashedGroupsAdded =
-            groupsAdded && deps.hash(groupsAdded).create();
+            groupsAdded && deps.hash(groupsAdded, ...hashOptions).create();
           const hashedGroupsRemoved =
-            groupsRemoved && deps.hash(groupsRemoved).create();
-          const hashedTx = deps.hash(tx).create();
+            groupsRemoved &&
+            deps.hash(groupsRemoved, ...hashOptions).create();
+          const hashedTx = deps.hash(tx, ...hashOptions).create();
 
           const headers = {
             root: event.headers.root,
@@ -112,6 +120,7 @@ export default ({
             network: event.headers.network,
             topic: event.headers.topic,
             version: event.headers.version,
+            ...(canonicalFormat != undefined && { canonicalFormat }),
             created: event.headers.created,
             idempotency: event.headers.idempotency,
             committed: deps.dateString(),
@@ -124,7 +133,7 @@ export default ({
             tHash: hashedTx,
           };
 
-          const hash = deps.hash(headers).create();
+          const hash = deps.hash(headers, ...hashOptions).create();
 
           normalizedEvents.push({
             hash,

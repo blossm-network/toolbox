@@ -13,12 +13,19 @@ const camelCased = (str) =>
   });
 
 const flagValue = async (flag, args) => {
-  const value = args[`--${flag.name}`] || flag.default;
-  if (value) return value;
+  const value = args[`--${flag.name}`] ?? flag.default;
+  if (value != null) {
+    if (flag.choices && !flag.choices.includes(value)) {
+      throw new Error(
+        `${flag.name} must be one of [${flag.choices.join(", ")}].`
+      );
+    }
+    return value;
+  }
 
   if (flag.choices) {
     const { flagValue } = await prompt({
-      type: "list",
+      type: "select",
       name: "flagValue",
       message: roboSay(
         `Which of these ${flag.name}'s do you wanna use by default?`
@@ -85,7 +92,7 @@ const parseArgs = async (
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        `I couldn't read the command. Flags should be set like \`--flag=flagValue\`, \`--flag flagValue\`, or \`-f flagValue\``
+        e.message || `I couldn't read the command. Flags should be set like \`--flag=flagValue\`, \`--flag flagValue\`, or \`-f flagValue\``
       ),
       red.bold("error")
     );
@@ -106,7 +113,7 @@ const validate = async ({ entrypointType, choices, options }) => {
       process.exit(1);
     } else {
       const answers = await prompt({
-        type: "list",
+        type: "select",
         name: "entrypoint",
         message: roboSay(
           `Which of these ${entrypointType}'s do you wanna run?`

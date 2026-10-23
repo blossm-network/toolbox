@@ -51,7 +51,7 @@ export default async (args) => {
   });
   if (!input.env) {
     const { env } = await prompt({
-      type: "list",
+      type: "select",
       choices: ["production", "sandbox", "staging", "development"],
       name: "env",
       message: roboSay(`What environment is this for?`),
@@ -59,5 +59,5 @@ export default async (args) => {
     input.env = env;
   }
 
-  create(input);
+  return create(input);
 };

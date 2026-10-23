@@ -23,7 +23,13 @@ export default ({ downloadFileFn }) => async ({
 }) => {
   if (!principal) throw forbidden.message("Missing required permissions.");
 
-  const cacheKey = `${cacheKeyPrefix}.${principal.root}.${principal.service}.${principal.network}`;
+  const cacheKey = `${cacheKeyPrefix}.${JSON.stringify([
+    process.env.NETWORK,
+    principal.root,
+    principal.service,
+    principal.network,
+    context ? [context.root, context.service, context.network] : null,
+  ])}`;
 
   //Lookup permissions in cache. If found, use them.
   let { permissions: cachedPermissions } =

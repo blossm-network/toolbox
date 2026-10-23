@@ -14,3 +14,5 @@
 // }),
 // fields: ["name"],
 // };
+
+export default { fn: (view) => ({ name: view.name }), fields: ["name"] };

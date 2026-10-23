@@ -5,6 +5,7 @@ import rootDir from "@blossm/cli-root-dir";
 import path from "path";
 import yaml from "yaml";
 import gcpQueue from "@blossm/gcp-queue";
+import uuid from "@blossm/uuid";
 
 const envProject = ({ env, config }) => {
   switch (env) {
@@ -89,6 +90,12 @@ const execute = async (input, configFn) => {
       config: rootConfig,
       env: input.env,
     });
+    const data = input.data && JSON.parse(input.data);
+    const executionData = blossmConfig.procedure === "projection"
+      ? input.data
+        ? { ...data, playId: data.playId || uuid() }
+        : { replayId: uuid() }
+      : data;
 
     await gcpQueue.enqueue({
       queue:
@@ -103,7 +110,7 @@ const execute = async (input, configFn) => {
       })}`,
       name: operationName,
       hash: operationHash,
-      ...(input.data && { data: JSON.parse(input.data) }),
+      ...(executionData && { data: executionData }),
     });
   } catch (err) {
     process.exitCode = 1;

@@ -98,7 +98,7 @@ export default ({ name, context = process.env.CONTEXT, region = process.env.GCP_
   } = {}) => (id, { query } = {}) =>
     deps
       .rpc({region, operationNameComponents: [name, ...(context ? [context] : []), "view-store"]})
-      .delete(id, {
+      .del(id, {
         ...(query && { query }),
       })
       .in({
@@ -107,6 +107,14 @@ export default ({ name, context = process.env.CONTEXT, region = process.env.GCP_
       .with({
         ...(internalTokenFn && { internalTokenFn }),
       });
+  const projectionSession = ({
+    token: { internalFn: internalTokenFn } = {},
+  } = {}) => (params) =>
+    deps
+      .rpc({ region, operationNameComponents: [name, ...(context ? [context] : []), "view-store"] })
+      .post(params)
+      .in({})
+      .with({ path: "/projection-session", ...(internalTokenFn && { internalTokenFn }) });
   return {
     set: ({ context: contexts, token, currentToken, enqueue }) => {
       return {
@@ -114,11 +122,13 @@ export default ({ name, context = process.env.CONTEXT, region = process.env.GCP_
         idStream: idStream({ contexts, token, currentToken }),
         update: update({ contexts, token, enqueue }),
         delete: del({ contexts, token }),
+        projectionSession: projectionSession({ token }),
       };
     },
     read: read(),
     idStream: idStream(),
     update: update(),
     delete: del(),
+    projectionSession: projectionSession(),
   };
 };

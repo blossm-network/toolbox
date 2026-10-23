@@ -6,7 +6,7 @@
   "type": "module",
   "author": "blossm.network",
   "engines": {
-    "node": ">= 20.19.0"
+    "node": ">= 24.22.1"
   },
   "publishConfig": {
     "access": "public"
@@ -15,9 +15,10 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "canonical-json": "^0.2.0"
+    "canonical-json": "0.2.0",
+    "fast-json-stable-stringify": "2.1.0"
   },
   "devDependencies": {
-    "mocha": "^11.7.0"
+    "mocha": "^12.0.3"
   }
 }

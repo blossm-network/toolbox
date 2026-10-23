@@ -50,7 +50,77 @@ process.env.MONGODB_DATABASE = database;
 
 let mongodbViewStore;
 describe("View store", () => {
+  it("should search literal punctuation consistently in find, count and stream", async () => {
+    const aggregate = fake.returns({ cursor: () => ({ eachAsync: async () => {} }) });
+    const count = fake.resolves(0);
+    replace(deps, "db", { store: fake.returns({}), aggregate, count });
+    const server = fake();
+    replace(deps, "viewStore", server);
+    replace(deps, "formatSchema", fake.returns({}));
+    await mongodbViewStore({
+      schema: {},
+      indexes: [[{ name: "text" }]],
+      secretFn: async () => "test-password",
+    });
+    const handlers = server.firstCall.args[0];
+    const text = "a.*[b](c)+?^$|\\";
+    handlers.findFn({ query: {}, text });
+    await handlers.countFn({ query: {}, text });
+    await handlers.streamFn({ query: {}, text, fn: () => {} });
+    for (const call of [...aggregate.getCalls(), ...count.getCalls()]) {
+      const { $or } = call.args[0].query;
+      expect($or[0]).to.deep.equal({ $text: { $search: text } });
+      const pattern = new RegExp($or[1]["body.name"].$regex, "i");
+      expect(pattern.test(text)).to.equal(true);
+      expect(pattern.test("anything else")).to.equal(false);
+      expect($or[1]["body.name"].$regex).to.equal("a\\.\\*\\[b\\]\\(c\\)\\+\\?\\^\\$\\|\\\\");
+    }
+  });
+
+  it("should disable positional upsert for both plain and operator update paths", async () => {
+    const write = fake.resolves(null);
+    replace(deps, "db", { store: fake.returns({}), write });
+    const server = fake();
+    replace(deps, "viewStore", server);
+    replace(deps, "formatSchema", fake.returns({}));
+    await mongodbViewStore({ schema: {}, secretFn: async () => "test-password" });
+    const { writeFn } = server.firstCall.args[0];
+    for (const data of [
+      { "body.things.$.name": "value" },
+      { $set: { "body.things.$.name": "value" } },
+      { $set: { "body.things.$[item].name": "value" } },
+    ]) {
+      await writeFn({ query: { "headers.id": "missing" }, data });
+      expect(write.lastCall.args[0].options.upsert).to.equal(false);
+    }
+  });
+
+  it("should preserve custom index options without duplicating partial-word indexes", async () => {
+    const store = fake.returns({});
+    replace(deps, "db", { store });
+    replace(deps, "viewStore", fake());
+    replace(deps, "formatSchema", fake.returns({}));
+    const options = {
+      unique: true,
+      sparse: true,
+      partialFilterExpression: { "body.enabled": true },
+    };
+    await mongodbViewStore({
+      schema: {},
+      indexes: [
+        [{ email: 1 }, options],
+        [{ title: "text" }],
+        [{ other: 1 }],
+      ],
+      secretFn: async () => "test-password",
+    });
+    const built = store.firstCall.args[0].indexes;
+    expect(built).to.deep.include([{ "body.email": 1 }, options]);
+    expect(built.filter(([keys]) => keys["body.title"] === 1)).to.have.length(1);
+  });
+
   beforeEach(async () => {
+    replace(deps, "projectionSession", fake.resolves({ legacy: async (fn) => fn() }));
     __resetStoresForTest();
     mongodbViewStore = (await import("../index.js")).default;
     process.env.NODE_ENV = "some-env";
@@ -186,7 +256,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "headers.id": 1 }],
         [
           {
             "headers.context": 1,
@@ -446,7 +515,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "headers.id": 1 }],
         [
           {
             "headers.context": 1,
@@ -755,7 +823,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "headers.id": 1 }],
         [
           {
             "headers.context": 1,
@@ -1028,7 +1095,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "headers.id": 1 }],
         [
           {
             "headers.context": 1,
@@ -1183,7 +1249,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "headers.id": 1 }],
         [
           {
             "headers.groups": 1,
@@ -1444,7 +1509,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "headers.id": 1 }],
         [
           {
             "headers.context": 1,

@@ -8,6 +8,7 @@ const create = async ({
   schedule,
   timeZone,
   token,
+  oidcToken,
   project,
   location,
 }) => {
@@ -20,7 +21,9 @@ const create = async ({
     httpTarget: {
       uri: url,
       httpMethod: "POST",
-      oauthToken: token,
+      headers: { "content-type": "application/json" },
+      ...(token && { oauthToken: token }),
+      ...(oidcToken && { oidcToken }),
       body,
     },
     schedule,

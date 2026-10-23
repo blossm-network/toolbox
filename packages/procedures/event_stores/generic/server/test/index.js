@@ -94,6 +94,7 @@ describe("Event store", () => {
       createBlockFn,
       signFn,
       blockPublisherPublicKeyFn,
+      canonicalFormat: 2,
       isPublic,
     });
     expect(listenFake).to.have.been.calledOnce;
@@ -121,6 +122,7 @@ describe("Event store", () => {
     );
     expect(postFake).to.have.been.calledWith(eventStorePostResult);
     expect(eventStoreGetFake).to.have.been.calledWith({
+      rootStreamFn,
       findSnapshotsFn,
       findEventsFn,
       findOneSnapshotFn,
@@ -148,9 +150,11 @@ describe("Event store", () => {
       findOneSnapshotFn,
       eventStreamFn,
       handlers,
+      canonicalFormat: 2,
       isPublic,
     });
     expect(eventStorePostFake).to.have.been.calledWith({
+      canonicalFormat: 2,
       saveEventsFn,
       reserveRootCountsFn,
       publishFn,

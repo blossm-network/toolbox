@@ -1,14 +1,42 @@
 import base64url from "base64url";
+import signatureFormat from "ecdsa-sig-formatter";
+import resolveFormat from "./format.js";
 import decode from "./decode.js";
+import timeClaim from "./time_claim.js";
 
 import deps from "../deps.js";
 
-export default async ({ token, verifyFn, audience, algorithm }) => {
-  const [header, payload, signature] = token.split(".");
+export default async ({
+  token,
+  verifyFn,
+  audience,
+  algorithm,
+  format = "legacy",
+}) => {
+  const jose = resolveFormat({ format, algorithm });
+  const components = token.split(".");
+  if (components.length != 3)
+    throw deps.invalidCredentialsError.message("The token format is invalid.");
+  const [header, payload, signature] = components;
+  let decodedSignature;
+  try {
+    if (
+      jose &&
+      Buffer.from(signature, "base64url").toString("base64url") !== signature
+    )
+      throw new TypeError("Noncanonical signature encoding.");
+    decodedSignature = jose
+      ? signatureFormat.joseToDer(signature, algorithm).toString("base64")
+      : base64url.toBase64(signature);
+  } catch (_) {
+    throw deps.invalidCredentialsError.message(
+      "The token signature encoding is invalid."
+    );
+  }
 
   const isVerified = await verifyFn({
     message: `${header}.${payload}`,
-    signature: base64url.toBase64(signature),
+    signature: decodedSignature,
   });
 
   if (!isVerified)
@@ -19,20 +47,31 @@ export default async ({ token, verifyFn, audience, algorithm }) => {
   if (headers.alg != algorithm)
     throw deps.invalidCredentialsError.message("The token algorithm is wrong.");
 
-  if (!claims.aud.split(",").includes(audience))
+  const audiences = jose
+    ? typeof claims.aud == "string"
+      ? [claims.aud]
+      : claims.aud
+    : typeof claims.aud == "string"
+    ? claims.aud.split(",")
+    : [];
+  if (
+    !Array.isArray(audiences) ||
+    !audiences.every((value) => typeof value == "string") ||
+    !audiences.includes(audience)
+  )
     throw deps.invalidCredentialsError.message(
       "The token is intended for a different audience."
     );
 
   //Throw if the token is expired.
-  const now = new Date();
+  const now = Date.now();
 
-  if (Date.parse(claims.exp) < now)
+  if (timeClaim(claims.exp, { format }) <= now)
     throw deps.invalidCredentialsError.message("The token is expired.", {
       info: { reason: "expired" },
     });
 
-  if (claims.nbf && Date.parse(claims.nbf) > now)
+  if (claims.nbf !== undefined && timeClaim(claims.nbf, { format }) > now)
     throw deps.invalidCredentialsError.message("The token isn't active yet.");
 
   return claims;
