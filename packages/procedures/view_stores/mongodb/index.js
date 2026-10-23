@@ -134,25 +134,32 @@ export default async ({
     for (const index of indexes) {
       let customElement = {};
       let hasTextIndex = false;
+      const newPartialWordIndexes = [];
       for (const key in index[0]) {
         customElement[`body.${key}`] = index[0][key];
         //Make text indexes partially searchable, with the exception of ids.
         if (index[0][key] == "text") {
           hasTextIndex = true;
-          if (!key.endsWith(".id")) partialWordTextIndexes.push(`body.${key}`);
+          if (
+            !key.endsWith(".id") &&
+            !partialWordTextIndexes.includes(`body.${key}`)
+          ) {
+            partialWordTextIndexes.push(`body.${key}`);
+            newPartialWordIndexes.push(`body.${key}`);
+          }
         }
       }
 
-      if (partialWordTextIndexes.length > 0)
-        for (const index of partialWordTextIndexes)
+      if (newPartialWordIndexes.length > 0)
+        for (const index of newPartialWordIndexes)
           customIndexes.push([{ [index]: 1 }]);
 
-      const customOptions = {};
+      const customOptions = { ...index[1] };
 
       //Make the id searchable.
       if (hasTextIndex) {
         customElement["headers.id"] = "text";
-        customOptions.name = "text-search";
+        customOptions.name = customOptions.name || "text-search";
       }
 
       if (index[1] && index[1].weights) {
