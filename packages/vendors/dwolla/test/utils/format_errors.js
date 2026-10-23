@@ -53,4 +53,12 @@ describe("Validate error info", () => {
 
     expect(result).to.be.undefined;
   });
+  it("preserves array indices and single-character field names", () => {
+    const result = validateErrorInfo({
+      body: {
+        _embedded: { errors: [{ message: "missing", path: "/owners/0/x" }] },
+      },
+    });
+    expect(result.errors[0].path).to.equal("owners.0.x");
+  });
 });
