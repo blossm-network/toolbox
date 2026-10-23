@@ -5,7 +5,8 @@
     "@blossm/gcp-secret": "*",
     "@blossm/gcp-token": "*",
     "@blossm/gcp-queue": "*",
-    "@blossm/event-store-rpc": "*"
+    "@blossm/event-store-rpc": "*",
+    "@blossm/gcp-kms": "*"
   },
   "devDependencies": {
     "localenv": "^0.2.2",
