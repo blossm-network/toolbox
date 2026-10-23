@@ -1,5 +1,5 @@
 import { badRequest, forbidden, resourceNotFound } from "@blossm/errors";
-import Client from "dwolla-v2";
+import { Client } from "dwolla-v2";
 import FormData from "form-data";
 
 const dwolla = (key, secret, { environment }) => {
