@@ -17,7 +17,7 @@ describe("Mongodb event store idempotency conflict check", () => {
     restore();
   });
   it("should call with the correct params", async () => {
-    const findOneFake = fake.returns();
+    const findOneFake = fake();
 
     const db = {
       findOne: findOneFake,

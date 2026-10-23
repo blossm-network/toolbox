@@ -339,7 +339,7 @@ describe("View store put", () => {
     });
   });
   it("should call with the correct params with no write result", async () => {
-    const writeFake = fake.returns();
+    const writeFake = fake();
     const formatFake = fake.returns(formattedWriteResult);
 
     const req = {
