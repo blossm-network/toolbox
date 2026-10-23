@@ -2,6 +2,44 @@ import { expect } from "chai";
 import formatUpdate from "../index.js";
 
 describe("Format update", () => {
+  it("should leave unmatched parents and unidentified array elements unchanged", () => {
+    const result = formatUpdate(
+      {
+        parents: [
+          { id: "selected", children: [{ id: "child" }, { other: true }] },
+          { id: "other", children: [{ id: "child" }] },
+          { children: [{ id: "child" }] },
+        ],
+        "parents.children.$.name": "updated",
+      },
+      { "parents.id": "selected", "parents.children.id": "child" },
+      ".$."
+    );
+    expect(result.parents).to.deep.equal([
+      {
+        id: "selected",
+        children: [{ id: "child", name: "updated" }, { other: true }],
+      },
+      { id: "other", children: [{ id: "child" }] },
+      { children: [{ id: "child" }] },
+    ]);
+  });
+
+  it("should not compose a positional change into an element missing its query key", () => {
+    const result = formatUpdate(
+      {
+        things: [{ id: "selected" }, { other: true }],
+        "things.$.name": "updated",
+      },
+      { "things.id": "selected" },
+      ".$."
+    );
+    expect(result.things).to.deep.equal([
+      { id: "selected", name: "updated" },
+      { other: true },
+    ]);
+  });
+
   it("should return the composed update with two parts", () => {
     const query = {
       "some.thing-id": "some-thing-id",
