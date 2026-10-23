@@ -6,7 +6,7 @@
   "type": "module",
   "author": "sustainers.market",
   "engines": {
-    "node": ">= 20.19.0"
+    "node": ">= 24.22.1"
   },
   "publishConfig": {
     "access": "public"
