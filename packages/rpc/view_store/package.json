@@ -1,7 +1,7 @@
 {
   "name": "@blossm/view-store-rpc",
   "description": "Interact with a view store.",
-  "version": "0.0.320",
+  "version": "0.0.321",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -15,7 +15,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/rpc": "^0.0.268"
+    "@blossm/rpc": "^0.0.269"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",
