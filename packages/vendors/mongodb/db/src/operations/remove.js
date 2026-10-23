@@ -1,1 +1,2 @@
-export default ({ store, query }) => store.deleteOne(query);
+export default ({ store, query, options }) =>
+  store.deleteOne(query, ...(options ? [options] : []));

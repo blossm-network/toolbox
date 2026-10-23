@@ -23,6 +23,7 @@ const internalTokenFn = "some-internal-token-fn";
 const root = "some-root";
 
 describe("Replay projection", () => {
+  beforeEach(() => { replace(deps, "uuid", fake.returns("generated-play-id")); });
   afterEach(() => {
     restore();
   });
@@ -65,6 +66,7 @@ describe("Replay projection", () => {
     });
 
     expect(postFake).to.have.been.calledWith({
+      playId: "generated-play-id",
       root,
       domain,
       service,
@@ -103,6 +105,7 @@ describe("Replay projection", () => {
       operationNameComponents: [name, "projection"]
     });
     expect(postFake).to.have.been.calledWith({
+      playId: "generated-play-id",
       root,
       domain,
       service,
@@ -114,6 +117,17 @@ describe("Replay projection", () => {
 
 describe("Projection token composition", () => {
   afterEach(restore);
+
+  it("preserves an explicit play ID across task submission", async () => {
+    const { default: rpc } = await import("../../generic/index.js");
+    const { default: rpcDeps } = await import("../../generic/deps.js");
+    replace(deps, "rpc", rpc);
+    replace(rpcDeps, "operationToken", fake.resolves(null));
+    const post = fake.resolves({ statusCode: 204 });
+    replace(rpcDeps, "post", post);
+    await projection({ name: "example" }).play({ root, domain, service, playId: "stable-task" });
+    expect(post.firstCall.args[1].body.playId).to.equal("stable-task");
+  });
 
   it("passes its token producer through the generic RPC boundary", async () => {
     const { default: rpc } = await import("../../generic/index.js");

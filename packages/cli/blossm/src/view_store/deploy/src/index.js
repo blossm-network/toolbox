@@ -19,6 +19,7 @@ export default viewStore({
   indexes: config.indexes,
   sorts: config.sorts,
   secretFn: gcpSecret.get,
+  consistency: config.consistency,
   ...(config.keys && { updateKeys: config.keys }),
   ...(query && { queryFn: query }),
   ...(formatCsv && { formatCsv }),

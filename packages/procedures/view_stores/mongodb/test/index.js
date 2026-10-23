@@ -120,6 +120,7 @@ describe("View store", () => {
   });
 
   beforeEach(async () => {
+    replace(deps, "projectionSession", fake.resolves({ legacy: async (fn) => fn() }));
     __resetStoresForTest();
     mongodbViewStore = (await import("../index.js")).default;
     process.env.NODE_ENV = "some-env";

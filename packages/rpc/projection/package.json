@@ -15,6 +15,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@blossm/uuid": "^0.0.9",
     "@blossm/rpc": "^0.0.268"
   },
   "devDependencies": {
