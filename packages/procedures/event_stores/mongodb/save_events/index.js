@@ -1,5 +1,3 @@
-import logger from "@blossm/logger";
-
 import deps from "./deps.js";
 
 export default ({ eventStore, publicationsStore, handlers }) => async ({
@@ -47,8 +45,6 @@ export default ({ eventStore, publicationsStore, handlers }) => async ({
         options: { session: transaction },
       });
   } catch (err) {
-    logger.verbose("Insert all error", { err, writeErrors: err.writeErrors });
-
     if (err.code == 11000) {
       const duplicateKeyObjects = [];
       const start = "key: {";
