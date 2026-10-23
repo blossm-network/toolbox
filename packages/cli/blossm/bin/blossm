@@ -7,4 +7,10 @@ import * as mod from '../src/index.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-mod.cli(process.argv);
+try {
+  await mod.cli(process.argv);
+} catch (err) {
+  //eslint-disable-next-line no-console
+  console.error(err.message || err);
+  process.exitCode = 1;
+}

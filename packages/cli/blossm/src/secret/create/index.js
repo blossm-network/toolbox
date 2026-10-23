@@ -104,5 +104,5 @@ export default async (args) => {
     input.env = env;
   }
 
-  create(input);
+  return create(input);
 };
