@@ -1,0 +1,23 @@
+{
+  "name": "@blossm/contract-abis-trusted-forwarder",
+  "version": "0.0.1",
+  "description": "Pinned OpenZeppelin ERC2771Forwarder ABI for onchain operations",
+  "main": "index.js",
+  "type": "module",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 20.19.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "devDependencies": {
+    "mocha": "^11.7.0",
+    "chai": "^5.2.0",
+    "viem": "^2.38.0"
+  },
+  "license": "MIT"
+}
