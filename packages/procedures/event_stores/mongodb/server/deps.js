@@ -1,3 +1,4 @@
+import publishPending from "./src/publish_pending.js";
 import { store } from "@blossm/mongodb-database";
 import { string as dateString } from "@blossm/datetime";
 import eventStore from "@blossm/event-store";
@@ -18,6 +19,7 @@ import idempotencyConflictCheck from "@blossm/mongodb-event-store-idempotency-co
 
 export default {
   dateString,
+  publishPending,
   eventStore,
   db: { store },
   saveEvents,

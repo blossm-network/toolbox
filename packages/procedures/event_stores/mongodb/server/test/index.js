@@ -44,6 +44,7 @@ const publishFn = "some-publish-fn";
 describe("Mongodb event store", () => {
   beforeEach(async () => {
     __resetStoresForTest();
+    replace(deps, "publishPending", fake.returns("some-pending-publish-fn"));
     process.env.NODE_ENV = "some-env";
     clock = useFakeTimers(now.getTime());
   });
@@ -68,7 +69,7 @@ describe("Mongodb event store", () => {
   });
   it("keeps each cached collection bound to its own operations on repeated startup", async () => {
     const server = (await import("../index.js")).default;
-    const stores = Object.fromEntries(["events", "snapshots", "counts", "blockchain"].map((name) => [name, { name }]));
+    const stores = Object.fromEntries(["events", "snapshots", "counts", "blockchain", "publications"].map((name) => [name, { name }]));
     const store = fake(async ({ name }) => stores[name]);
     replace(deps, "db", { store });
     replace(deps, "eventStore", fake());
@@ -82,7 +83,7 @@ describe("Mongodb event store", () => {
     for (const name of Object.keys(bindings)) replace(deps, name, fake());
     await server({ schema: {}, secretFn: fake.resolves("secret") });
     await server({ schema: {}, secretFn: fake.resolves("secret") });
-    expect(store.callCount).to.equal(4);
+    expect(store.callCount).to.equal(5);
     const names = { eventStore: "events", snapshotStore: "snapshots", countsStore: "counts", blockchainStore: "blockchain" };
     for (const [operation, key] of Object.entries(bindings)) {
       expect(deps[operation].secondCall.args[0][key]).to.equal(stores[names[key]]);
@@ -111,6 +112,7 @@ describe("Mongodb event store", () => {
     const sStore = "some-snapshot-store";
     const cStore = "some-counts-store";
     const bStore = "some-blockchain-store";
+    const pStore = "some-publications-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
@@ -119,7 +121,9 @@ describe("Mongodb event store", () => {
       .onCall(2)
       .returns(cStore)
       .onCall(3)
-      .returns(bStore);
+      .returns(bStore)
+      .onCall(4)
+      .returns(pStore);
 
     const secretFake = fake.returns(password);
 
@@ -403,6 +407,7 @@ describe("Mongodb event store", () => {
     expect(secretFake).to.have.been.calledWith("mongodb-event-store");
 
     expect(saveEventsFake).to.have.been.calledWith({
+      publicationsStore: pStore,
       eventStore: eStore,
       handlers,
     });
@@ -440,6 +445,7 @@ describe("Mongodb event store", () => {
       blockchainStore: bStore,
     });
     expect(eventStoreFake).to.have.been.calledWith({
+      publishPendingFn: "some-pending-publish-fn",
       findOneSnapshotFn: findOneSnapshotResult,
       findSnapshotsFn: findSnapshotsResult,
       eventStreamFn: eventStreamResult,
@@ -464,7 +470,7 @@ describe("Mongodb event store", () => {
     });
 
     await mongodbEventStore();
-    expect(storeFake).to.have.been.callCount(4);
+    expect(storeFake).to.have.been.callCount(5);
   });
   it("should call with the correct params with indexes and local env", async () => {
     const mongodbEventStore = (await import("../index.js")).default;
@@ -472,6 +478,7 @@ describe("Mongodb event store", () => {
     const sStore = "some-snapshot-store";
     const cStore = "some-counts-store";
     const bStore = "some-blockchain-store";
+    const pStore = "some-publications-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
@@ -480,7 +487,9 @@ describe("Mongodb event store", () => {
       .onCall(2)
       .returns(cStore)
       .onCall(3)
-      .returns(bStore);
+      .returns(bStore)
+      .onCall(4)
+      .returns(pStore);
 
     const secretFake = fake.returns(password);
 
@@ -793,6 +802,7 @@ describe("Mongodb event store", () => {
     const sStore = "some-snapshot-store";
     const cStore = "some-counts-store";
     const bStore = "some-blockchain-store";
+    const pStore = "some-publications-store";
     const storeFake = stub()
       .onCall(0)
       .returns(eStore)
@@ -801,7 +811,9 @@ describe("Mongodb event store", () => {
       .onCall(2)
       .returns(cStore)
       .onCall(3)
-      .returns(bStore);
+      .returns(bStore)
+      .onCall(4)
+      .returns(pStore);
 
     const secretFake = fake.returns(password);
 

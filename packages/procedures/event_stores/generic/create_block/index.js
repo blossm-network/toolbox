@@ -17,6 +17,7 @@ export default ({
   createBlockFn,
   isPublic,
   canonicalFormat,
+  publishPendingFn,
 }) => async (_, res) => {
   const { block, full } = await createTransactionFn(
     deps.createBlockTransaction({
@@ -38,6 +39,9 @@ export default ({
 
   //Create another block if the one just created was full.
   if (full) await createBlockFn();
+
+  if (process.env.NODE_ENV != "local" && publishPendingFn)
+    await publishPendingFn();
 
   res.send(block);
 };
