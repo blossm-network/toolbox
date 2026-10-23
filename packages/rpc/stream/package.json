@@ -15,15 +15,13 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.40",
-    "@blossm/hash": "^0.0.13",
-    "@blossm/logger": "^0.0.13",
     "@blossm/network-token": "^0.0.10",
     "@blossm/network-url": "^0.0.7",
     "@blossm/operation-short-name": "^0.0.1",
     "@blossm/operation-token": "^0.0.21",
     "@blossm/operation-url": "^0.0.23",
-    "@blossm/request": "^0.0.69"
+    "@blossm/request": "^0.0.69",
+    "@blossm/operation-hash": "^0.0.17"
   },
   "devDependencies": {
     "mocha": "^11.6.0",
