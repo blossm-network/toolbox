@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@blossm/errors": "^0.0.40",
-    "cors": "^2.8.5"
+    "cors": "^2.8.6"
   },
   "devDependencies": {
     "mocha": "^11.7.0"

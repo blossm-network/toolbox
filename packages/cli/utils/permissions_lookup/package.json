@@ -20,7 +20,7 @@
     "@blossm/redis": "^0.0.16",
     "@blossm/role-permissions": "^0.0.30",
     "@blossm/uuid": "^0.0.9",
-    "yaml": "^2.8.0"
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "mocha": "^11.7.0"
