@@ -163,7 +163,7 @@ export default ({
       ...formatCsv.fn(result.body),
     }));
 
-    const csv = deps.jsonToCsv({ data, fields });
+    const csv = deps.jsonToCsv({ data, fields, spreadsheetSafe: true });
 
     res.writeHead(200, {
       "Content-Type": "text/csv",

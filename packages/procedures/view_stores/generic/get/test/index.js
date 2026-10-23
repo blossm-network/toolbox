@@ -323,6 +323,7 @@ describe("View store get", () => {
       },
     });
     expect(jsonToCsvFake).to.have.been.calledWith({
+      spreadsheetSafe: true,
       data: results.map((result) => ({
         id: result.headers.id,
         some: "csv-data",
