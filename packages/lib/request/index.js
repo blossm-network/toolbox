@@ -28,7 +28,7 @@ const common = async ({
 }) => {
   const context = contextFor({ signal, timeout });
   try {
-    context.signal.throwIfAborted();
+    if (formData === undefined) context.signal.throwIfAborted();
     const requestHeaders = new Headers(headers);
     if (formData !== undefined && body !== undefined)
       throw new TypeError("Use either body or formData for an HTTP request.");

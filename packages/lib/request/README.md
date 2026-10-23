@@ -10,7 +10,10 @@ those decoded representations.
 `formData` accepts scalar fields, Buffers, Blobs and `{value, options}` fields
 with `filename` and `contentType`. File streams use native file-backed Blobs;
 other multipart streams are buffered with cancellation. File-stream byte ranges
-and existing descriptors are respected. Use one of `body` and `formData`.
+and existing descriptors are respected. Passing formData hands its Node input
+streams to the adapter: they are consumed during preparation or destroyed on
+failure/cancellation, including a signal that was already aborted. Successfully
+consumed streams with autoClose:false retain caller ownership of their descriptor. Use one of `body` and `formData`.
 
 All methods accept `signal` and `timeout` in milliseconds, default 30 seconds per
 multipart-preparation phase, upload/response-header wait, and response-chunk wait.
