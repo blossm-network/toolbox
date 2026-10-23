@@ -52,6 +52,7 @@ const envDependencyKeyEnvironmentVariables = ({ env, config }) => {
 };
 
 const envBaseContainerRegistry = ({ env, config }) => {
+  if (!config.core || !config.core.registries) return;
   switch (env) {
     case "production":
       return config.core.registries.production;
@@ -768,12 +769,10 @@ const configure = async (workingDir, configFn, env, strict) => {
     const secretBucketKeyRing = "secrets-bucket";
 
     const containerRegistery = `us.gcr.io/${project}`;
-    const baseContainerRegistery = blossmConfig.base
-      ? envBaseContainerRegistry({
-          env,
-          config: blossmConfig,
-        })
-      : containerRegistery;
+    const baseContainerRegistery = envBaseContainerRegistry({
+      env,
+      config: blossmConfig,
+    }) || containerRegistery;
 
     const mainContainerName = "main";
 
