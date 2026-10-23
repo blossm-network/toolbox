@@ -16,3 +16,14 @@ describe("Invalid numbers equal", () => {
     expect(response.errors).to.have.lengthOf(1);
   });
 });
+
+describe("Zero equality", () => {
+  it("accepts equal zero values", () => {
+    expect(validator.numbersEqual(0, 0).isValid()).to.equal(true);
+    expect(validator.numbersEqual(-0, 0).isValid()).to.equal(true);
+  });
+  it("still rejects unequal or invalid numeric values", () => {
+    expect(validator.numbersEqual(0, 1).isValid()).to.equal(false);
+    expect(validator.numbersEqual("0", "0").isValid()).to.equal(false);
+  });
+});
