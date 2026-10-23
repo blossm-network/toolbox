@@ -278,8 +278,6 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
-        [{ "headers.idempotency": 1 }],
         [{ "tx.id": 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.number": 1 }],
@@ -351,7 +349,6 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.created": -1 }],
       ],
@@ -365,7 +362,6 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }],
         [{ root: 1, updated: 1 }],
         [{ root: 1, updated: -1 }],
       ],
@@ -402,7 +398,7 @@ describe("Mongodb event store", () => {
         snapshots: { $type: Buffer, required: true },
       },
       typeKey: "$type",
-      indexes: [[{ "headers.number": 1 }]],
+      indexes: [],
     });
     expect(secretFake).to.have.been.calledWith("mongodb-event-store");
 
@@ -643,8 +639,6 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
-        [{ "headers.idempotency": 1 }],
         [{ "tx.id": 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.number": 1 }],
@@ -717,7 +711,6 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.created": -1 }],
         [{ [`state.${index}`]: 1 }],
@@ -732,7 +725,6 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }],
         [{ root: 1, updated: 1 }],
         [{ root: 1, updated: -1 }],
       ],
@@ -769,7 +761,7 @@ describe("Mongodb event store", () => {
         txs: { $type: Buffer, required: true },
       },
       typeKey: "$type",
-      indexes: [[{ "headers.number": 1 }]],
+      indexes: [],
     });
     expect(eventStoreFake).to.have.been.calledWith({
       findOneSnapshotFn: findOneSnapshotResult,
@@ -955,8 +947,6 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
-        [{ "headers.idempotency": 1 }],
         [{ "tx.id": 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.number": 1 }],
@@ -1028,7 +1018,6 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ hash: 1 }],
         [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.created": -1 }],
       ],
@@ -1042,7 +1031,6 @@ describe("Mongodb event store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ root: 1 }],
         [{ root: 1, updated: 1 }],
         [{ root: 1, updated: -1 }],
       ],
@@ -1079,7 +1067,7 @@ describe("Mongodb event store", () => {
         snapshots: { $type: Buffer, required: true },
       },
       typeKey: "$type",
-      indexes: [[{ "headers.number": 1 }]],
+      indexes: [],
     });
   });
 });

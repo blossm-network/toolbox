@@ -82,8 +82,6 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     },
     typeKey,
     indexes: [
-      [{ hash: 1 }],
-      [{ "headers.idempotency": 1 }],
       [{ "tx.id": 1 }],
       [{ "headers.root": 1 }],
       //Need this in order to query by root and sort by number.
@@ -167,7 +165,6 @@ const snapshotStore = async ({ schema, indexes }) => {
     },
     typeKey,
     indexes: [
-      [{ hash: 1 }],
       [{ "headers.root": 1 }],
       [{ "headers.root": 1, "headers.created": -1 }],
       ...indexes.map((index) => [{ [`state.${index}`]: 1 }]),
@@ -192,7 +189,6 @@ const countsStore = async () => {
     },
     typeKey,
     indexes: [
-      [{ root: 1 }],
       [{ root: 1, updated: 1 }],
       [{ root: 1, updated: -1 }],
     ],
@@ -239,7 +235,7 @@ const blockchainStore = async () => {
       snapshots: { [typeKey]: Buffer, required: true },
     },
     typeKey,
-    indexes: [[{ "headers.number": 1 }]],
+    indexes: [],
   });
 
   return _blockchainStore;
