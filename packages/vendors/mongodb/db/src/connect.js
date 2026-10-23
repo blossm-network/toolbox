@@ -42,13 +42,13 @@ export default async ({
     ...(parameters ? [parameters] : [])
   );
 
-  await connect({ connectionString, poolSize, autoIndex });
-
   const db = deps.mongoose.connection;
 
   if (onError != undefined) db.on("error", onError);
 
   if (onOpen != undefined) db.once("open", onOpen);
+
+  await connect({ connectionString, poolSize, autoIndex });
 
   return db;
 };
