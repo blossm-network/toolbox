@@ -6,12 +6,14 @@ let _eventStore;
 let _snapshotStore;
 let _countsStore;
 let _blockchainStore;
+let _publicationsStore;
 
 export function __resetStoresForTest() {
   _eventStore = undefined;
   _snapshotStore = undefined;
   _countsStore = undefined;
   _blockchainStore = undefined;
+  _publicationsStore = undefined;
 }
 
 const typeKey = "$type";
@@ -286,6 +288,23 @@ const blockchainStore = async () => {
   return _blockchainStore;
 };
 
+const publicationsStore = async () => {
+  if (_publicationsStore != undefined) return _publicationsStore;
+  _publicationsStore = await deps.db.store({
+    name: "publications",
+    schema: {
+      hash: { [typeKey]: String, required: true, unique: true },
+      topic: { [typeKey]: String, required: true },
+      created: { [typeKey]: Date, required: true },
+      data: { [typeKey]: Object, required: true },
+      attempts: { [typeKey]: Number, default: 0 },
+    },
+    typeKey,
+    indexes: [[{ attempts: 1, created: 1, hash: 1 }]],
+  });
+  return _publicationsStore;
+};
+
 export default async ({
   schema,
   indexes = [],
@@ -317,6 +336,8 @@ export default async ({
   });
   const cStore = await countsStore();
   const bStore = await blockchainStore();
+  const pStore =
+    process.env.NODE_ENV == "local" ? undefined : await publicationsStore();
 
   deps.eventStore({
     findSnapshotsFn: deps.findSnapshots({
@@ -334,6 +355,7 @@ export default async ({
     handlers,
     saveEventsFn: deps.saveEvents({
       eventStore: eStore,
+      ...(pStore && { publicationsStore: pStore }),
       handlers,
     }),
     queryFn: deps.query({
@@ -364,6 +386,9 @@ export default async ({
       blockchainStore: bStore,
     }),
     publishFn,
+    ...(pStore && {
+      publishPendingFn: deps.publishPending({ publicationsStore: pStore, publishFn }),
+    }),
     encryptFn,
     createBlockFn,
     signFn,

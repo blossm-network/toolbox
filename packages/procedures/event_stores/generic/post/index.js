@@ -4,6 +4,7 @@ export default ({
     saveEventsFn,
     reserveRootCountsFn,
     publishFn,
+    publishPendingFn,
     createTransactionFn,
     idempotencyConflictCheckFn,
   }) =>
@@ -36,7 +37,9 @@ export default ({
       })
     );
 
-    if (process.env.NODE_ENV != "local")
+    if (process.env.NODE_ENV != "local" && publishPendingFn)
+      await publishPendingFn();
+    else if (process.env.NODE_ENV != "local")
       await Promise.all(
         receipt.map((e) =>
           publishFn(

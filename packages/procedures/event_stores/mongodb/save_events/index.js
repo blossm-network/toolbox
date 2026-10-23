@@ -2,10 +2,15 @@ import logger from "@blossm/logger";
 
 import deps from "./deps.js";
 
-export default ({ eventStore, handlers }) => async ({
+export default ({ eventStore, publicationsStore, handlers }) => async ({
   events,
   transaction,
 }) => {
+  if (publicationsStore && !transaction)
+    throw deps.internalServerError.message(
+      "Durable publications require an event transaction."
+    );
+
   for (const event of events) {
     const handler = handlers[event.headers.action];
 
@@ -23,6 +28,24 @@ export default ({ eventStore, handlers }) => async ({
       data: events,
       ...(transaction && { options: { session: transaction } }),
     });
+    if (publicationsStore && events.length)
+      await deps.db.create({
+        store: publicationsStore,
+        data: events.map(({ hash, headers }) => ({
+          hash,
+          topic: headers.topic,
+          created: headers.committed,
+          data: {
+            root: headers.root,
+            action: headers.action,
+            domain: headers.domain,
+            service: headers.service,
+            network: headers.network,
+            timestamp: headers.committed,
+          },
+        })),
+        options: { session: transaction },
+      });
   } catch (err) {
     logger.verbose("Insert all error", { err, writeErrors: err.writeErrors });
 

@@ -4,6 +4,7 @@ export default async ({
   saveEventsFn,
   reserveRootCountsFn,
   publishFn,
+  publishPendingFn,
   rootStreamFn,
   createTransactionFn,
   idempotencyConflictCheckFn,
@@ -66,6 +67,7 @@ export default async ({
         eventStreamFn,
         handlers,
         isPublic,
+        ...(publishPendingFn && { publishPendingFn }),
       }),
       { path: "/create-block" }
     )
@@ -74,6 +76,7 @@ export default async ({
         saveEventsFn,
         reserveRootCountsFn,
         publishFn,
+        ...(publishPendingFn && { publishPendingFn }),
         createTransactionFn,
         idempotencyConflictCheckFn,
         findOneSnapshotFn,
