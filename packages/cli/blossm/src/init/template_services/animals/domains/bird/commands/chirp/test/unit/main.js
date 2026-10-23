@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import chaiDatetime from "chai-datetime";
 import sinonChai from "sinon-chai";
-import { restore, useFakeTimers } from "sinon";
+import { fake, restore, useFakeTimers } from "sinon";
 
 import main from "../../main.js";
 
