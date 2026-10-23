@@ -26,8 +26,8 @@ describe("Optional numbers", () => {
 
 describe("Refinement functions", () => {
   it("should not contain errors if value is not empty and passes refinement function", () => {
-    const fn = (value) => value == 0;
-    const response = number({ value: validNumber, fn });
+    const refinementFn = (value) => value == 0;
+    const response = number({ value: validNumber, refinementFn });
     expect(response.errors).to.be.empty;
   });
 });
