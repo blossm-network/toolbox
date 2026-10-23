@@ -624,7 +624,7 @@ export default ({
       runIntegrationTests,
       runBaseIntegrationTests,
       strict,
-    }),
+    }).flat(),
   };
 
   fs.writeFileSync(buildPath, yaml.stringify(build));
