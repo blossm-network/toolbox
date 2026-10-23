@@ -53,9 +53,7 @@ describe("Contextual Compose dependencies", () => {
         containerRegistery: "registry",
         network: "example.test",
       });
-      const peers = Object.values(result).filter(
-        (service) => service.image !== "mongo:8.0.10"
-      );
+      const peers = Object.values(result);
       assert.equal(peers.length, 2);
       assert.equal(new Set(peers.map((peer) => peer.container_name)).size, 2);
       for (let i = 0; i < dependencies.length; i++) {

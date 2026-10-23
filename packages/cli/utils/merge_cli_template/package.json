@@ -25,6 +25,7 @@
     "@blossm/node-external-token": "^0.0.203"
   },
   "devDependencies": {
-    "mocha": "^11.7.0"
+    "mocha": "^11.7.0",
+    "@blossm/mongodb-database": "^0.0.134"
   }
 }
