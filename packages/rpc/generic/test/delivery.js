@@ -1,3 +1,5 @@
+import { COMMITTED, DUPLICATE } from "@blossm/event-outcome-consts";
+import { COMPLETED, QUEUED } from "@blossm/rpc-delivery-consts";
 import assert from "node:assert/strict";
 import { expect } from "chai";
 import { fake, replace, restore, stub } from "sinon";
@@ -5,7 +7,7 @@ import { fake, replace, restore, stub } from "sinon";
 import operation from "../index.js";
 import deps from "../deps.js";
 
-const outcomes = ["committed", "duplicate"];
+const outcomes = [COMMITTED, DUPLICATE];
 const response = {
   statusCode: 200,
   body: JSON.stringify({ outcomes }),
@@ -45,7 +47,7 @@ describe("RPC delivery outcomes", () => {
     expect(await post({ includeDelivery: true })).to.deep.equal({
       statusCode: 200,
       body: { outcomes },
-      delivery: "completed",
+      delivery: COMPLETED,
     });
   });
 
@@ -66,7 +68,7 @@ describe("RPC delivery outcomes", () => {
     await new Promise(setImmediate);
     expect(settled).to.equal(false);
     accept({ name: "accepted-task" });
-    expect(await result).to.deep.equal({ delivery: "queued" });
+    expect(await result).to.deep.equal({ delivery: QUEUED });
     expect(deps.post.callCount).to.equal(0);
   });
 
@@ -82,7 +84,7 @@ describe("RPC delivery outcomes", () => {
     ).to.deep.equal({
       statusCode: 200,
       body: { outcomes },
-      delivery: "completed",
+      delivery: COMPLETED,
     });
     expect(deps.enqueueOperation.callCount).to.equal(0);
   });
@@ -91,7 +93,7 @@ describe("RPC delivery outcomes", () => {
     replace(deps, "enqueueOperation", fake.resolves(undefined));
     expect(
       await post({ includeDelivery: true, enqueueFn: fake() })
-    ).to.deep.equal({ delivery: "queued" });
+    ).to.deep.equal({ delivery: QUEUED });
     deps.post.resolves(undefined);
     expect(await post({ includeDelivery: true })).to.equal(undefined);
   });

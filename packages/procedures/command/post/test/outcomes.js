@@ -1,3 +1,10 @@
+import {
+  COMMITTED,
+  DUPLICATE,
+  QUEUED,
+  UNKNOWN,
+} from "@blossm/event-outcome-consts";
+import { QUEUED as DELIVERY_QUEUED } from "@blossm/rpc-delivery-consts";
 import assert from "node:assert/strict";
 import { fake } from "sinon";
 import post from "../index.js";
@@ -42,18 +49,18 @@ describe("Event outcomes passed to thenFn", () => {
       if (domain === "one") {
         assert.equal(async, false);
         await new Promise(setImmediate);
-        return { body: { outcomes: ["committed", "duplicate"] } };
+        return { body: { outcomes: [COMMITTED, DUPLICATE] } };
       }
       assert.equal(async, true);
-      return { delivery: "queued" };
+      return { delivery: DELIVERY_QUEUED };
     });
     await fixture({ events, thenFn }, addFn).run();
     assert.deepEqual(thenFn.firstCall.args, [
       {
         outcomes: [
-          { event: events[0], status: "committed" },
-          { event: events[1], status: "queued" },
-          { event: events[2], status: "duplicate" },
+          { event: events[0], status: COMMITTED },
+          { event: events[1], status: QUEUED },
+          { event: events[2], status: DUPLICATE },
         ],
       },
     ]);
@@ -67,7 +74,7 @@ describe("Event outcomes passed to thenFn", () => {
       const thenFn = fake();
       await fixture({ events: [event], thenFn }, fake.resolves(response)).run();
       assert.deepEqual(thenFn.firstCall.args[0], {
-        outcomes: [{ event, status: "unknown" }],
+        outcomes: [{ event, status: UNKNOWN }],
       });
     });
   }
@@ -81,13 +88,13 @@ describe("Event outcomes passed to thenFn", () => {
   it("lets callbacks skip effects and response additions on duplicates", async () => {
     const effect = fake.resolves({ response: { upgraded: true } });
     const event = { action: "answer", payload: {}, correctNumber: 0 };
-    for (const status of ["committed", "duplicate", "queued", "unknown"]) {
+    for (const status of [COMMITTED, DUPLICATE, QUEUED, UNKNOWN]) {
       const f = fixture(
         {
           events: [event],
           response: { kept: true },
           thenFn: async ({ outcomes }) => {
-            if (outcomes[0].status !== "committed") return;
+            if (outcomes[0].status !== COMMITTED) return;
             return effect();
           },
         },
@@ -97,7 +104,7 @@ describe("Event outcomes passed to thenFn", () => {
       assert.equal(f.res.send.firstCall.args[0].kept, true);
       assert.equal(
         f.res.send.firstCall.args[0].upgraded,
-        status === "committed" ? true : undefined
+        status === COMMITTED ? true : undefined
       );
     }
     assert.equal(effect.callCount, 1);
@@ -110,8 +117,8 @@ describe("Event outcomes passed to thenFn", () => {
       async ({ logEventsFn }) => {
         logged = await logEventsFn([event]);
       },
-      fake.resolves({ body: { outcomes: ["committed"] } })
+      fake.resolves({ body: { outcomes: [COMMITTED] } })
     ).run();
-    assert.deepEqual(logged, [{ event, status: "committed" }]);
+    assert.deepEqual(logged, [{ event, status: COMMITTED }]);
   });
 });

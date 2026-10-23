@@ -1,3 +1,4 @@
+import { COMPLETED, QUEUED } from "@blossm/rpc-delivery-consts";
 import logger from "@blossm/logger";
 
 import deps from "./deps.js";
@@ -152,7 +153,7 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
             });
           }
 
-          if (includeDelivery && enqueued) return { delivery: "queued" };
+          if (includeDelivery && enqueued) return { delivery: QUEUED };
 
           //Stream doesn't have a reponse.
           if (!response) return;
@@ -168,7 +169,7 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
                   headers: formatResponse(response.headers),
                 }),
                 statusCode: response.statusCode,
-                ...(includeDelivery && { delivery: "completed" }),
+                ...(includeDelivery && { delivery: COMPLETED }),
               };
         },
       };

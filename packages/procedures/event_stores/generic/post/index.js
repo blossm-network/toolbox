@@ -1,3 +1,4 @@
+import { COMMITTED, DUPLICATE } from "@blossm/event-outcome-consts";
 import deps from "./deps.js";
 
 export default ({
@@ -23,7 +24,7 @@ export default ({
       const duplicate =
         idempotency != undefined && (conflicts[index] || seen.has(idempotency));
       seen.add(idempotency);
-      outcomes.push(duplicate ? "duplicate" : "committed");
+      outcomes.push(duplicate ? DUPLICATE : COMMITTED);
       return !duplicate;
     });
 

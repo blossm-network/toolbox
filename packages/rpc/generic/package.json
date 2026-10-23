@@ -24,9 +24,11 @@
     "@blossm/operation-short-name": "^0.0.1",
     "@blossm/operation-token": "^0.0.21",
     "@blossm/operation-url": "^0.0.23",
-    "@blossm/request": "^0.0.69"
+    "@blossm/request": "^0.0.69",
+    "@blossm/rpc-delivery-consts": "^0.0.1"
   },
   "devDependencies": {
+    "@blossm/event-outcome-consts": "^0.0.1",
     "mocha": "^11.6.0",
     "sinon": "^21.0.0",
     "sinon-chai": "^4.0.0"

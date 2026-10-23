@@ -11,3 +11,6 @@ still fail normally. Without the option, successful requests retain HTTP 204.
 Outcomes describe this submission, not historical callback execution or a saved
 command response. Commit can precede a publication/HTTP failure; ordinary
 outcomes do not close that recovery window or provide cross-store atomicity.
+
+Import the shared outcome values from `@blossm/event-outcome-consts` rather than
+spelling their wire values in application code.

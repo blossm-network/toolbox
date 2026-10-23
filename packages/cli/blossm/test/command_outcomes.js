@@ -1,3 +1,4 @@
+import { COMMITTED } from "@blossm/event-outcome-consts";
 import assert from "node:assert/strict";
 import { load } from "./load.js";
 
@@ -10,7 +11,7 @@ describe("Generated command write outcomes", () => {
         const tx = { id: "transaction" };
         const context = { session: { root: "session" } };
         const claims = { principal: "principal" };
-        const response = { body: { outcomes: ["committed"] } };
+        const response = { body: { outcomes: [COMMITTED] } };
         const gcpToken = () => {};
         const enqueue = () => {};
         let destination, settings, submitted;

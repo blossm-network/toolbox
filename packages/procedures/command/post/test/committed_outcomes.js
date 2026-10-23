@@ -1,3 +1,4 @@
+import { COMMITTED, DUPLICATE } from "@blossm/event-outcome-consts";
 import assert from "node:assert/strict";
 import { fake, replace, restore, useFakeTimers } from "sinon";
 import commandPost from "../index.js";
@@ -108,7 +109,7 @@ describe("Callbacks after committed event outcomes", () => {
         ],
         thenFn: async ({ outcomes: results }) => {
           outcomes.push(results[0].status);
-          if (results[0].status !== "committed") return;
+          if (results[0].status !== COMMITTED) return;
           return upgrade();
         },
       }),
@@ -149,7 +150,7 @@ describe("Callbacks after committed event outcomes", () => {
   it("keeps both duplicate requests successful but upgrades only the newly committed one", async () => {
     const f = fixture(true);
     await Promise.all([f.run(), f.run()]);
-    assert.deepEqual(f.outcomes.sort(), ["committed", "duplicate"]);
+    assert.deepEqual(f.outcomes.sort(), [COMMITTED, DUPLICATE]);
     assert.equal(f.upgrade.callCount, 1);
     assert.equal(f.written.length, 1);
     assert.equal("answerId" in f.written[0].payload, false);
@@ -166,7 +167,7 @@ describe("Callbacks after committed event outcomes", () => {
       results.find((result) => result.status === "rejected").reason.statusCode,
       412
     );
-    assert.deepEqual(f.outcomes, ["committed"]);
+    assert.deepEqual(f.outcomes, [COMMITTED]);
     assert.equal(f.upgrade.callCount, 1);
     assert.equal(f.written.length, 1);
   });

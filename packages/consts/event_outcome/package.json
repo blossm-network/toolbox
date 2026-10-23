@@ -1,0 +1,17 @@
+{
+  "name": "@blossm/event-outcome-consts",
+  "version": "0.0.1",
+  "description": "Event write outcome constants.",
+  "main": "index.js",
+  "type": "module",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 20.19.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

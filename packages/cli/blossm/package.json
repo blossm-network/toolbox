@@ -8,6 +8,7 @@
     "test": "mocha --recursive"
   },
   "devDependencies": {
+    "@blossm/event-outcome-consts": "^0.0.1",
     "mocha": "^11.6.0"
   },
   "bin": {
