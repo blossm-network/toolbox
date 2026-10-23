@@ -83,3 +83,12 @@ describe("Invalid optional string", () => {
     });
   });
 });
+
+describe("Rejected predicate messages", () => {
+  it("provides a useful message without echoing the value", () => {
+    const value = "private-input";
+    const error = validator.string(value, { fn: () => false }).errors[0];
+    expect(error.message).to.be.a("string").and.not.be.empty;
+    expect(error.message).not.to.include(value);
+  });
+});

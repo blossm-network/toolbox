@@ -20,7 +20,9 @@ describe("Valid boolean array", () => {
 
 describe("Optional boolean array", () => {
   it("should not contain errors if value is not valid, regardless of optional flag", () => {
-    const response = validator.booleanArray(validBooleanArray, { optional: true });
+    const response = validator.booleanArray(validBooleanArray, {
+      optional: true,
+    });
     expect(response.errors).to.be.empty;
   });
   it("should not contain errors if value is null", () => {
@@ -31,15 +33,14 @@ describe("Optional boolean array", () => {
 
 describe("Invalid boolean array", () => {
   it("should contain one error if array has values that are not booleans", () => {
-    const response = validator.booleanArray({ value: invalidBooleanArray });
+    const response = validator.booleanArray(invalidBooleanArray);
     expect(response.errors).to.have.lengthOf(1);
   });
 });
 
 describe("Invalid optional boolean array", () => {
   it("should contain one error if array has values that are not booleans, regardless of optional flag", () => {
-    const response = validator.booleanArray({
-      value: invalidBooleanArray,
+    const response = validator.booleanArray(invalidBooleanArray, {
       optional: true,
     });
     expect(response.errors).to.have.lengthOf(1);

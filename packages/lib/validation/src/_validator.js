@@ -74,9 +74,17 @@ export default ({
           } catch (e) {
             const isString = typeof e == "string";
             if (isString) return e;
-            else if (e.message) return e.message;
-            else return baseMessageFn(e, context.title);
+            else if (e && e.message) return e.message;
+            else
+              return baseMessageFn(
+                e || new Error("This value is invalid."),
+                context.title
+              );
           }
+          return baseMessageFn(
+            new Error("This value is invalid."),
+            context.title
+          );
         };
         return refinedFn;
       })();
