@@ -3,6 +3,18 @@ import deps from "./deps.js";
 const defaultQueryFn = (query) => query;
 const defaultSortFn = (sort) => sort;
 const defaultLimit = 50;
+const maxLimit = 100;
+
+const paginationValue = (value, fallback, minimum, maximum, name) => {
+  if (value === undefined) return fallback;
+  const number =
+    typeof value == "string" && /^\d+$/.test(value) ? Number(value) : value;
+  if (!Number.isSafeInteger(number) || number < minimum || number > maximum)
+    throw deps.badRequestError.message(`Invalid ${name}.`, {
+      info: { minimum, maximum },
+    });
+  return number;
+};
 
 //Returns at most one value of a given key in an object.
 const getValue = (object, key) => {
@@ -110,8 +122,12 @@ export default ({
   const sortBody = sortFn(req.query.sort);
   let formattedSort;
   if (!bootstrap) {
-    if (req.query.limit) req.query.limit = parseInt(req.query.limit);
-    if (req.query.skip) req.query.skip = parseInt(req.query.skip);
+    req.query.limit = paginationValue(
+      req.query.limit, defaultLimit, 1, maxLimit, "limit"
+    );
+    req.query.skip = paginationValue(
+      req.query.skip, 0, 0, Number.MAX_SAFE_INTEGER, "skip"
+    );
     if (sortBody) {
       formattedSort = {};
       for (const key in sortBody)
