@@ -6,7 +6,7 @@ import postTransaction from "../../../generic/post_transaction/index.js";
 import createBlock from "../../../generic/create_block/index.js";
 import server from "../index.js";
 import serverDeps from "../deps.js";
-import publicationsDeps from "../src/publications_deps.js";
+import publicationsDeps from "../src/pending_deps.js";
 
 const uri = process.env.BLOSSM_TEST_MONGODB_URI;
 if (!/^mongodb:\/\/127\.0\.0\.1:\d+\//.test(uri || ""))
