@@ -12,7 +12,7 @@ export default viewComposite({
     query,
     sort,
   }) => {
-    await viewStore({
+    return await viewStore({
       name,
       context,
     })
