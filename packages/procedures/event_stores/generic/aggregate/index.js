@@ -89,7 +89,9 @@ export default ({ findOneSnapshotFn, eventStreamFn, handlers }) => async (
             result[key] = value;
           } else if (
             value !== result[key] &&
-            (typeof value != "object" ||
+            (value == null ||
+              result[key] == null ||
+              typeof value != "object" ||
               value.root != result[key].root ||
               value.service != result[key].service ||
               value.network != result[key].network)
