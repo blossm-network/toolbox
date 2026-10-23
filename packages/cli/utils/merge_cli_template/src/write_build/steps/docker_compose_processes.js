@@ -1,4 +1,7 @@
+import { dockerImage } from "../../../runtime.js";
+
 export default {
-  name: "docker/compose:1.29.2",
-  args: ["ps"],
+  name: dockerImage,
+  entrypoint: "docker",
+  args: ["compose", "ps"],
 };
