@@ -159,7 +159,27 @@ try {
   );
 
   await append(3, 11);
-  const contenders = await Promise.allSettled([build(), build()]);
+  let arrivals = 0;
+  let release;
+  const bothRead = new Promise((resolve) => {
+    release = resolve;
+  });
+  const initialNumbers = [];
+  const contendedLatest = async (options) => {
+    const latest = await configuration.latestBlockFn(options);
+    if (arrivals < 2) {
+      initialNumbers.push(latest.headers.number);
+      if (++arrivals == 2) release();
+      await bothRead;
+    }
+    return latest;
+  };
+  const contenders = await Promise.allSettled([
+    build({ latestBlockFn: contendedLatest }),
+    build({ latestBlockFn: contendedLatest }),
+  ]);
+  assert.equal(initialNumbers.length, 2);
+  assert.equal(initialNumbers[0], initialNumbers[1]);
   for (const result of contenders)
     assert.equal(result.status, "fulfilled", result.reason?.stack);
   assert.equal(
