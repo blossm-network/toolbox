@@ -1,84 +1,62 @@
 import * as chai from "chai";
-import { fake, restore } from "sinon";
+import { fake } from "sinon";
 import { forEach } from "../index.js";
+import mongoose from "mongoose";
 
 const { expect } = chai;
 
-const query = "some-query";
+// Use the installed cursor's actual eachAsync implementation, without a server.
+const cursorFor = (documents, error) => {
+  const connection = mongoose.createConnection();
+  const Model = connection.model("cursor-test", new mongoose.Schema({}, { strict: false, autoCreate: false }));
+  Model.collection.buffer = false;
+  Model.collection.find = () => ({
+    next: async () => {
+      if (error) throw error;
+      return documents.shift() ?? null;
+    },
+    close: async () => {},
+  });
+  const cursor = Model.find().lean().cursor();
+  return cursor;
+};
+
+const input = (cursor) => {
+  const cursorFake = fake.returns(cursor);
+  return { find: fake.returns({ cursor: cursorFake }) };
+};
 
 describe("For each", () => {
-  afterEach(() => {
-    restore();
+  it("awaits each callback before finishing and preserves cursor order", async () => {
+    const completed = [];
+    const store = input(cursorFor([{ value: 1 }, { value: 2 }]));
+    const result = await forEach({
+      store,
+      query: { active: true },
+      fn: async ({ value }) => {
+        await new Promise((resolve) => setTimeout(resolve, value == 1 ? 10 : 0));
+        completed.push(value);
+      },
+    });
+    expect(completed).to.deep.equal([1, 2]);
+    expect(result).to.equal(undefined);
+    expect(store.find.firstCall.args).to.deep.equal([{ active: true }]);
   });
 
-  it("it should return the correct result", async () => {
-    const data = "some-data";
-    const on = (param, fn) => {
-      switch (param) {
-        case "data":
-          fn(data);
-          return { on };
-        case "error":
-          return { on };
-        case "end":
-          return fn();
+  for (const failure of ["callback", "cursor", "sync callback"]) {
+    it(`rejects on ${failure} failure`, async () => {
+      const error = new Error("iteration failed");
+      const cursor = cursorFor([{ value: 1 }], failure == "cursor" ? error : undefined);
+      let actual;
+      try {
+        await forEach({
+          store: input(cursor),
+          fn: failure == "sync callback" ? () => { throw error; } : async () => { throw error; },
+        });
+      } catch (err) {
+        actual = err;
       }
-    };
-    const cursorFake = fake.returns({
-      on,
+      expect(actual).to.equal(error);
     });
-    const findFake = fake.returns({
-      cursor: cursorFake,
-    });
-    const store = {
-      find: findFake,
-    };
-
-    const fnFake = fake();
-
-    const result = await forEach({ store, query, fn: fnFake });
-
-    expect(findFake).to.have.been.calledWith(query);
-    expect(result).to.be.undefined;
-    expect(fnFake).to.have.been.calledWith(data);
-  });
-});
-
-describe("Throws", () => {
-  it("it should throw if an error function is passed", async () => {
-    const error = new Error("no good");
-    const data = "some-data";
-    const on = (param, fn) => {
-      switch (param) {
-        case "data":
-          fn(data);
-          return { on };
-        case "error":
-          fn(error);
-          return { on };
-        case "end":
-          return fn();
-      }
-    };
-    const cursorFake = fake.returns({
-      on,
-    });
-    const findFake = fake.returns({
-      cursor: cursorFake,
-    });
-    const store = {
-      find: findFake,
-    };
-
-    const fnFake = fake();
-
-    try {
-      await forEach({ store, query, fn: fnFake });
-
-      //shouldn't get called
-      expect(1).to.equal(0);
-    } catch (e) {
-      expect(e).to.equal(error);
-    }
-  });
+  }
 });
