@@ -11,6 +11,10 @@
 
 For repository tests, versioning and npm releases, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
+A PostgreSQL event-store adapter is available alongside MongoDB through direct
+composition. See its [setup, persistence boundaries and integration tests](packages/procedures/event_stores/postgres/server/README.md).
+The CLI continues to generate MongoDB deployments.
+
 ### Contents:
 1. [Install](#install)
 2. [Overview](#overview)
