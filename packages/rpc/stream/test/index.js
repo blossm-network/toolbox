@@ -1,304 +1,139 @@
-import * as chai from "chai";
-import sinonChai from "sinon-chai";
-import { restore, replace, fake, stub, match } from "sinon";
-
-import deps from "../deps.js";
+import assert from "node:assert/strict";
+import { fake, replace, restore } from "sinon";
 import stream from "../index.js";
+import deps from "../deps.js";
+import request from "../../../lib/request/index.js";
+import requestDeps from "../../../lib/request/deps.js";
 
-chai.use(sinonChai);
+const parts = ["account", "core", "event-store"];
+const region = "region";
 
-const { expect } = chai;
-
-const context = { b: 4 };
-const claims = "some-claims";
-const region = "some-region";
-const operarationPart1 = "some-operaration1";
-const operarationPart2 = "some-operaration2";
-const otherOperarationPart1 = "some-other-operaration1";
-const otherOperarationPart2 = "some-other-operaration2";
-const token = "some-token";
-const otherToken = "some-other-token";
-const type = "some-type";
-const otherType = "some-other-type";
-const id = "some-id";
-const otherQuery = {
-  b: 2,
-};
-const tokenFn = "some-token-fn";
-const currentToken = "some-current-token";
-const url = "some-url";
-const otherUrl = "some-other-url";
-const hash1 = "some-hash1";
-const hash2 = "some-hash2";
-const operationShortName1 = "some-operation-short-name1";
-const operationShortName2 = "some-operation-short-name2";
-const host = "some-host";
-const envRegion = "some-env-region";
-const gcpComputeUrlId = "some-env-gcp-compute-url-id";
-
-process.env.GCP_REGION = envRegion;
-process.env.GCP_COMPUTE_URL_ID = gcpComputeUrlId;
-
-describe("Operation", () => {
+describe("Merged stream RPC", () => {
   beforeEach(() => {
-    process.env.HOST = host;
-    process.env.NODE_ENV = "not-local";
+    process.env.HOST = "internal";
+    process.env.NODE_ENV = "production";
   });
-  afterEach(() => {
-    restore();
-  });
+  afterEach(restore);
 
-  it("should call stream with the correct params", async () => {
-    const streamManyFake = fake();
-    replace(deps, "streamMany", streamManyFake);
-
-    const operationTokenFake = stub()
-      .onFirstCall()
-      .returns({ token, type })
-      .onSecondCall()
-      .returns({ token: otherToken, type: otherType });
-    replace(deps, "operationToken", operationTokenFake);
-
-    const operationUrlFake = stub()
-      .onFirstCall()
-      .returns(url)
-      .onSecondCall()
-      .returns(otherUrl);
-    replace(deps, "operationUrl", operationUrlFake);
-
-    const hashFake = stub()
-      .onFirstCall()
-      .returns(hash1)
-      .onSecondCall()
-      .returns(hash2);
-    replace(deps, "hash", hashFake);
-
-    const operationShortNameFake = stub()
-      .onFirstCall()
-      .returns(operationShortName1)
-      .onSecondCall()
-      .returns(operationShortName2);
-    replace(deps, "operationShortName", operationShortNameFake);
-
-    const fnFake = fake();
-    const sortFn = "some-sort-fn";
-    const query = {
-      id,
-      a: 1,
-    };
-    const result = await stream(
-      { 
-        region,
-        operationNameComponentQueries: [
-        { operationNameComponents: [operarationPart1, operarationPart2], query },
-        {
-          operationNameComponents: [otherOperarationPart1, otherOperarationPart2],
-          query: otherQuery,
-        },
+  it("constructs ordinary RPC identity and preserves caller query objects", async () => {
+    const producer = fake.resolves({ token: "fake-identity", type: "Bearer" });
+    const streamMany = fake.resolves();
+    replace(deps, "streamMany", streamMany);
+    const query = Object.freeze({ id: "root", active: true });
+    await stream({
+      region,
+      operationNameComponentQueries: [
+        { operationNameComponents: parts, query },
       ],
-      fn: fnFake,
-      sortFn
+      fn: () => undefined,
     })
-      .in({ context, host })
-      .with({ internalTokenFn: tokenFn, currentToken, claims });
-
-    expect(streamManyFake).to.have.been.calledWith(
-      [
-        {
-          url,
-          query: {
-            a: 1,
-            context,
-            claims,
-            token: currentToken,
-          },
-          headers: {
-            authorization: `${type} ${token}`,
-          },
-        },
-        {
-          url: otherUrl,
-          query: {
-            b: 2,
-            context,
-            claims,
-            token: currentToken,
-          },
-          headers: {
-            authorization: `${otherType} ${otherToken}`,
-          },
-        },
-      ],
-      match((func) => {
-        const obj = { a: 1 };
-        const stringObj = JSON.stringify(obj);
-        const buffer = Buffer.from(stringObj);
-        func(buffer);
-        return fnFake.calledWith({ a: 1 });
-      }),
-      sortFn
-    );
-    expect(operationTokenFake.getCall(0)).to.have.been.calledWith({
-      tokenFn,
-      operationNameComponents: [operarationPart1, operarationPart2],
-      hash: hash1,
-    });
-    expect(operationTokenFake.getCall(1)).to.have.been.calledWith({
-      tokenFn,
-      operationNameComponents: [otherOperarationPart1, otherOperarationPart2],
-      hash: hash2,
-    });
-    expect(operationUrlFake.getCall(0)).to.have.been.calledWith({
-      protocol: "https",
-      host: `${region}-${operationShortName1}-${hash1}-${gcpComputeUrlId}.${region}.run.app`,
-      id,
-    });
-    expect(operationUrlFake.getCall(1)).to.have.been.calledWith({
-      protocol: "https",
-      host: `${region}-${operationShortName2}-${hash2}-${gcpComputeUrlId}.${region}.run.app`
-    });
-    expect(result).to.equal();
-  });
-  it("should call stream with the correct params with multiple parsedData", async () => {
-    const streamManyFake = fake();
-    replace(deps, "streamMany", streamManyFake);
-
-    const operationTokenFake = fake.returns({ token, type });
-    replace(deps, "operationToken", operationTokenFake);
-
-    const operationUrlFake = fake.returns(url);
-    replace(deps, "operationUrl", operationUrlFake);
-
-    const hashFake = fake.returns(hash1);
-    replace(deps, "hash", hashFake);
-
-    const operationShortNameFake = fake.returns(operationShortName1);
-    replace(deps, "operationShortName", operationShortNameFake);
-
-    const fnFake = fake();
-    const sortFn = "some-sort-fn";
-    const query = {
-      id,
-      a: 1,
-    };
-    const result = await stream({ 
-        region,
-        operationNameComponentQueries: [
-        { operationNameComponents: [operarationPart1, operarationPart2], query },
-        ],
-        fn: fnFake,
-        sortFn
-      })
-      .in({ context, host })
-      .with({ internalTokenFn: tokenFn, currentToken, claims });
-
-    expect(streamManyFake).to.have.been.calledWith(
-      [
-        {
-          url,
-          query: {
-            a: 1,
-            context,
-            claims,
-            token: currentToken,
-          },
-          headers: {
-            authorization: `${type} ${token}`,
-          },
-        },
-      ],
-      match((func) => {
-        const response = func("some-data");
-        return Promise.resolve(response) == response;
-      }),
-      sortFn
-    );
-    expect(operationTokenFake).to.have.been.calledWith({
-      tokenFn,
-      operationNameComponents: [operarationPart1, operarationPart2],
-      hash: hash1,
-    });
-    expect(operationUrlFake).to.have.been.calledWith({
-      protocol: "https",
-      host: `${region}-${operationShortName1}-${hash1}-${gcpComputeUrlId}.${region}.run.app`,
-      id,
-    });
-    expect(result).to.equal();
-    const obj = { a: 1, b: { c: 3 } };
-    const obj1 = { k: 1, b: { c: 3 } };
-    const obj2 = { p: 1, b: { c: 3 } };
-    const stringObj = JSON.stringify(obj);
-    const stringObj1 = JSON.stringify(obj1);
-    const stringObj2 = JSON.stringify(obj2);
-    const leftover = '{ "q": 3';
-    const buffer = Buffer.from(stringObj + stringObj1 + stringObj2 + leftover);
-    await streamManyFake.lastCall.args[1](buffer);
-    await streamManyFake.lastCall.args[1](Buffer.from('}{ "w": 4'));
-    await streamManyFake.lastCall.args[1](Buffer.from("}"));
-    expect(fnFake.getCall(0)).to.have.been.calledWith({ a: 1, b: { c: 3 } });
-    expect(fnFake.getCall(1)).calledWith({ k: 1, b: { c: 3 } });
-    expect(fnFake.getCall(2)).calledWith({ p: 1, b: { c: 3 } });
-    expect(fnFake.getCall(3)).calledWith({ q: 3 });
-    expect(fnFake.getCall(4)).calledWith({ w: 4 });
-  });
-  it("should return error correctly", async () => {
-    const errorStatusCode = 400;
-    const statusMessage = "some-status-message";
-    const errorMessage = "some-error-message";
-    const info = { some: "info" };
-    const code = "some-code";
-    const errBody = { message: errorMessage, info, code };
-    const streamManyFake = fake.returns({
-      statusCode: errorStatusCode,
-      statusMessage,
-      body: JSON.stringify(errBody),
-    });
-    replace(deps, "streamMany", streamManyFake);
-
-    const operationTokenFake = fake.returns({ token, type });
-    replace(deps, "operationToken", operationTokenFake);
-
-    const operationUrlFake = fake.returns(url);
-    replace(deps, "operationUrl", operationUrlFake);
-
-    const hashFake = fake.returns(hash1);
-    replace(deps, "hash", hashFake);
-
-    const operationShortNameFake = fake.returns(operationShortName1);
-    replace(deps, "operationShortName", operationShortNameFake);
-
-    const fnFake = fake();
-    const sortFn = "some-sort-fn";
-    const query = {
-      id,
-      a: 1,
-    };
-    const error = "some-error";
-    const constructErrorFake = fake.returns(error);
-    replace(deps, "constructError", constructErrorFake);
-
-    try {
-      await stream(
-        { 
-          region,
-          operationNameComponentQueries: [
-            { operationNameComponents: [operarationPart1, operarationPart2], query }
-          ],
-          fn: fnFake,
-          sortFn
-        })
-        .in({ context, host })
-        .with({ internalTokenFn: tokenFn, currentToken, claims });
-
-      expect(3).to.equal(4);
-    } catch (e) {
-      expect(constructErrorFake).to.have.been.calledWith({
-        statusCode: errorStatusCode,
-        message: errorMessage,
-        info,
-        code,
+      .in({ context: { principal: "p" } })
+      .with({
+        path: "/stream",
+        internalTokenFn: producer,
+        currentToken: "fake-current",
+        claims: { role: "reader" },
       });
-      expect(e).to.equal(error);
-    }
+    assert.equal(producer.callCount, 1);
+    assert.equal(typeof producer.firstCall.args[0].hash, "string");
+    const target = streamMany.firstCall.args[0][0];
+    assert.match(target.url, /\/stream\/root$/);
+    assert.doesNotMatch(target.url, /object Object/);
+    assert.deepEqual(target.headers, { authorization: "Bearer fake-identity" });
+    assert.deepEqual(target.query, {
+      active: true,
+      context: { principal: "p" },
+      token: "fake-current",
+      claims: { role: "reader" },
+    });
+    assert.deepEqual(query, { id: "root", active: true });
+    assert.equal(streamMany.firstCall.args[3].decode, request.jsonDecoder);
+  });
+
+  it("permits no custom token producer and never forwards internal claims externally", async () => {
+    const streamMany = fake.resolves();
+    replace(deps, "streamMany", streamMany);
+    await stream({
+      operationNameComponentQueries: [{ operationNameComponents: parts }],
+      fn: () => undefined,
+    })
+      .in({})
+      .with();
+    assert.equal(streamMany.firstCall.args[0][0].headers, undefined);
+    await stream({
+      operationNameComponentQueries: [
+        { operationNameComponents: parts, query: { id: "r", a: 1 } },
+      ],
+      fn: () => undefined,
+    })
+      .in({
+        host: "other.invalid",
+        network: "other",
+        context: { principal: "private" },
+      })
+      .with({
+        path: "/aggregate",
+        externalTokenFn: async () => ({
+          token: "fake-external",
+          type: "Bearer",
+        }),
+        claims: { secret: true },
+        currentToken: "private-token",
+      });
+    assert.deepEqual(streamMany.lastCall.args[0][0], {
+      url: "https://other.invalid/aggregate/r",
+      query: { a: 1 },
+      headers: { authorization: "Bearer fake-external" },
+    });
+  });
+
+  it("decodes fragmented records independently before sorting actual HTTP source bodies", async () => {
+    replace(deps, "streamMany", request.streamMany);
+    replace(requestDeps, "fetch", async (url) => {
+      const values =
+        url.pathname === "/first"
+          ? ['{"n":1,"text":"} 🦋"}{"n":', "3}"]
+          : ['{"n":2}{"n":', "4}"];
+      return new Response(
+        new ReadableStream({
+          start(controller) {
+            for (const part of values) controller.enqueue(Buffer.from(part));
+            controller.close();
+          },
+        })
+      );
+    });
+    const output = [];
+    await stream({
+      operationNameComponentQueries: [
+        { operationNameComponents: parts, query: { id: "first" } },
+        { operationNameComponents: parts, query: { id: "second" } },
+      ],
+      fn: async (record) => output.push(record.n),
+      sortFn: (a, b) => a.n - b.n,
+    })
+      .in({})
+      .with();
+    assert.deepEqual(output, [1, 2, 3, 4]);
+  });
+
+  it("propagates actual upstream HTTP errors and callback failures", async () => {
+    replace(deps, "streamMany", request.streamMany);
+    replace(
+      requestDeps,
+      "fetch",
+      async () => new Response('{"message":"busy"}', { status: 503 })
+    );
+    await assert.rejects(
+      stream({
+        operationNameComponentQueries: [{ operationNameComponents: parts }],
+        fn: () => {
+          throw new Error("must not run");
+        },
+      })
+        .in({})
+        .with(),
+      (error) => error.statusCode === 503 && error.message === "busy"
+    );
   });
 });
