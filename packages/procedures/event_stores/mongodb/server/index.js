@@ -7,6 +7,7 @@ let _snapshotStore;
 let _countsStore;
 let _blockchainStore;
 let _publicationsStore;
+let _actionsStore;
 
 export function __resetStoresForTest() {
   _eventStore = undefined;
@@ -14,6 +15,7 @@ export function __resetStoresForTest() {
   _countsStore = undefined;
   _blockchainStore = undefined;
   _publicationsStore = undefined;
+  _actionsStore = undefined;
 }
 
 const typeKey = "$type";
@@ -301,6 +303,24 @@ const publicationsStore = async () => {
   return _publicationsStore;
 };
 
+const actionsStore = async () => {
+  if (_actionsStore != undefined) return _actionsStore;
+  _actionsStore = await deps.db.store({
+    name: "actions",
+    schema: {
+      id: { [typeKey]: String, required: true, unique: true },
+      eventHash: { [typeKey]: String, required: true },
+      intentHash: { [typeKey]: String, required: true },
+      intent: { [typeKey]: String, required: true },
+      created: { [typeKey]: Date, required: true },
+      attempts: { [typeKey]: Number, default: 0 },
+    },
+    typeKey,
+    indexes: [[{ attempts: 1, created: 1, id: 1 }]],
+  });
+  return _actionsStore;
+};
+
 export default async ({
   schema,
   indexes = [],
@@ -308,12 +328,22 @@ export default async ({
   secretFn,
   publishFn,
   publicationBatchSize,
+  actionsFn,
+  deliverActionFn,
   encryptFn,
   createBlockFn,
   signFn,
   blockPublisherPublicKeyFn,
   isPublic,
 } = {}) => {
+  if (!!actionsFn !== !!deliverActionFn)
+    throw deps.internalServerError.message(
+      "Durable actions require both preparation and delivery."
+    );
+  if (actionsFn && process.env.NODE_ENV == "local")
+    throw deps.internalServerError.message(
+      "Durable actions require transactions; local mode disables them."
+    );
   const eStore = await eventStore({
     schema: deps.formatSchema(schema, typeKey, {
       options: {
@@ -335,6 +365,21 @@ export default async ({
   const bStore = await blockchainStore();
   const pStore =
     process.env.NODE_ENV == "local" ? undefined : await publicationsStore();
+  const aStore = actionsFn ? await actionsStore() : undefined;
+  const drains = [
+    ...(pStore
+      ? [
+          deps.publishPending({
+            publicationsStore: pStore,
+            publishFn,
+            batchSize: publicationBatchSize,
+          }),
+        ]
+      : []),
+    ...(aStore
+      ? [deps.deliverActions({ actionsStore: aStore, deliverActionFn })]
+      : []),
+  ];
 
   return deps.eventStore({
     findSnapshotsFn: deps.findSnapshots({
@@ -353,6 +398,7 @@ export default async ({
     saveEventsFn: deps.saveEvents({
       eventStore: eStore,
       ...(pStore && { publicationsStore: pStore }),
+      ...(aStore && { actionsStore: aStore, actionsFn }),
       handlers,
     }),
     queryFn: deps.query({
@@ -382,13 +428,13 @@ export default async ({
     latestBlockFn: deps.latestBlock({
       blockchainStore: bStore,
     }),
-    publishPendingFn: pStore
-      ? deps.publishPending({
-          publicationsStore: pStore,
-          publishFn,
-          batchSize: publicationBatchSize,
-        })
-      : undefined,
+    publishPendingFn: aStore
+      ? async () => {
+          const results = await Promise.allSettled(drains.map((drain) => drain()));
+          const failure = results.find((result) => result.status == "rejected");
+          if (failure) throw failure.reason;
+        }
+      : drains[0],
     encryptFn,
     createBlockFn,
     signFn,
