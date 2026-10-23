@@ -1,2 +1,2 @@
 export default ({ title = "string", max }) =>
-  `This ${title.toLowerCase()} should be less than ${max} characters. Give this another try after cutting some words.`;
+  `This ${title.toLowerCase()} should be at most ${max} characters. Give this another try after cutting some words.`;
