@@ -15,10 +15,14 @@ export default (
     value,
     title,
     path,
-    refinementFn: (string) =>
-      (fn == undefined || fn(string)) &&
-      (shouldAllowEmptyString || stringIsNotEmpty(string)) &&
-      isWithinBounds(string),
+    refinementFn: (string) => {
+      const result = fn == undefined ? true : fn(string);
+      return (
+        (result == undefined || result) &&
+        (shouldAllowEmptyString || stringIsNotEmpty(string)) &&
+        isWithinBounds(string)
+      );
+    },
     refinementMessageFn: (value, title) => {
       if (!optional && !stringIsNotEmpty(value)) {
         return stringEmptyMessage(title);
