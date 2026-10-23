@@ -19,7 +19,7 @@ The Mongo replica-set regression is opt-in, uses a fresh randomly named database
 and drops it afterward. From the repository root:
 
 ```sh
-BLOSSM_MONGO_TEST_URI='mongodb://127.0.0.1:58472/blossm_audit_events?replicaSet=blossm-audit' node packages/procedures/event_stores/mongodb/server/integration/frontier.js
+BLOSSM_TEST_MONGODB_URI='mongodb://127.0.0.1:58472/blossm_audit_events?replicaSet=blossm-audit' node packages/procedures/event_stores/mongodb/server/integration/frontier.js
 ```
 
 It checks a held event commit across an empty block, exact event inclusion,

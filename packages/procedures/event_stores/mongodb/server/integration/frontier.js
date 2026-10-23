@@ -1,4 +1,4 @@
-// Run explicitly with BLOSSM_MONGO_TEST_URI pointing at a disposable localhost replica set.
+// Run explicitly with BLOSSM_TEST_MONGODB_URI pointing at a disposable localhost replica set.
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import mongoose from "mongoose";
@@ -11,8 +11,8 @@ import saveSnapshot from "../../save_snapshot/index.js";
 import saveBlock from "../../save_block/index.js";
 import { decode } from "../../../../../lib/rlp/index.js";
 
-const uri = process.env.BLOSSM_MONGO_TEST_URI;
-assert(uri, "Set BLOSSM_MONGO_TEST_URI to a disposable localhost replica set.");
+const uri = process.env.BLOSSM_TEST_MONGODB_URI;
+assert(uri, "Set BLOSSM_TEST_MONGODB_URI to a disposable localhost replica set.");
 assert(
   ["localhost", "127.0.0.1", "[::1]"].includes(new URL(uri).hostname),
   "Only localhost test databases are permitted."
