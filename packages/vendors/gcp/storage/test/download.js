@@ -76,4 +76,23 @@ describe("Download", () => {
       expect(e).to.equal(error);
     }
   });
+  for (const destination of ["roles", "dir.with.dots/roles", ".hidden"]) {
+    it(`preserves the extensionless destination ${destination}`, async () => {
+      const downloadFake = fake();
+      replace(
+        storage.__client,
+        "bucket",
+        fake.returns({
+          getFiles: fake.resolves([
+            [{ download: downloadFake }, { download: downloadFake }],
+          ]),
+        })
+      );
+      await storage.download({ bucket, destination });
+      expect(downloadFake.firstCall.args).to.deep.equal([{ destination }]);
+      expect(downloadFake.secondCall.args).to.deep.equal([
+        { destination: `${destination}_1` },
+      ]);
+    });
+  }
 });

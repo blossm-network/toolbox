@@ -1,3 +1,4 @@
+import { parse, join } from "node:path";
 import { Storage } from "@google-cloud/storage";
 
 const __client = new Storage();
@@ -19,15 +20,14 @@ const download = async ({ bucket: bucketName, destination, file }) => {
     });
   } else {
     const [files] = await bucket.getFiles();
+    const { dir, name, ext } = parse(destination);
     let counter = 0;
     for (const file of files) {
-      const lastDotIndex = destination.lastIndexOf(".");
-      const fileName = destination.slice(0, lastDotIndex);
-      const fileExtension = destination.slice(lastDotIndex + 1);
       await file.download({
-        destination: `${fileName}${
-          counter == 0 ? "" : `_${counter}`
-        }.${fileExtension}`,
+        destination: join(
+          dir,
+          `${name}${counter === 0 ? "" : `_${counter}`}${ext}`
+        ),
       });
       counter++;
     }
