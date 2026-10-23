@@ -34,3 +34,14 @@ verification, and a bounded plan for outstanding legacy tokens. Select the forma
 from trusted route/key configuration, not an unverified claim or heuristic retry.
 Keep legacy verification on its designated path until old tokens expire, then
 remove that path. No stored events, hashes or existing tokens are rewritten.
+
+`claimTimestamp(value)` converts either a legacy ISO string or NumericDate number
+to epoch milliseconds for expiry readers. It rejects missing, malformed or
+nonfinite times. Validation supplies its explicit trusted format to the same
+helper, so this conversion is not heuristic authentication or format fallback.
+The connection-token cache and command gateway cookie expiry readers use it and
+support both date representations. They decode tokens for expiry handling; they
+do not establish authenticity. Keep issuance on legacy defaults until format
+configuration is passed explicitly through authentication and generated gateway
+consumers and the outstanding-token rollout is ready. Do not switch issuance
+globally merely because these expiry readers support NumericDate.

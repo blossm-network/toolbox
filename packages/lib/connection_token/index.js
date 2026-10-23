@@ -35,7 +35,7 @@ export default ({ credentialsFn }) => async ({ network }) => {
 
     const { claims } = deps.decode(newToken.value);
     token = newToken.value;
-    exp = new Date(claims.exp).toISOString();
+    exp = new Date(deps.claimTimestamp(claims.exp)).toISOString();
 
     await deps.redis.writeObject(cacheKey, {
       token,
