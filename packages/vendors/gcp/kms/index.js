@@ -1,10 +1,13 @@
 import kms from "@google-cloud/kms";
 
 import deps from "./deps.js";
+import lazyClient from "./client.js";
 
 const publicKeys = {};
 
-export const __client = new kms.KeyManagementServiceClient();
+// The SDK constructor starts credential discovery for its operations client.
+// Defer construction until the exported client is actually used.
+export const __client = lazyClient(kms.KeyManagementServiceClient);
 
 const createKey = async ({ id, ring, project, location }) => {
   const parent = __client.keyRingPath(project, location, ring);
