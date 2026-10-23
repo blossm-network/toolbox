@@ -2,7 +2,7 @@
   "name": "@blossm/cli",
   "version": "0.0.1956",
   "description": "A command line tool for interacting with blossm.",
-  "main": "index.js",
+  "main": "src/index.js",
   "type": "module",
   "scripts": {
     "test": "mocha --recursive test"
@@ -29,6 +29,16 @@
     "@blossm/robo-say": "^0.0.11",
     "chalk": "^5.4.1",
     "esm": "^3.2.25",
-    "yaml": "^2.8.0"
+    "yaml": "^2.8.0",
+    "fs-extra": "^11.4.1",
+    "inquirer": "^7.3.3"
+  },
+  "devDependencies": {
+    "mocha": "^11.7.0",
+    "chai": "^5.2.0",
+    "arg": "^5.0.2",
+    "sinon": "^21.0.0",
+    "sinon-chai": "^4.0.0",
+    "chai-datetime": "^1.8.1"
   }
 }
