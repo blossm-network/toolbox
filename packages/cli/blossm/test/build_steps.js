@@ -466,10 +466,18 @@ exit "$WRITE_STATUS"
   });
 
   it("writes environment data without shell or build-variable interpolation", async () => {
-    const writeEnv = await load(`${buildDir}/steps/write_env.js`);
+    const runtimeUrl = new URL(
+      "../../utils/merge_cli_template/runtime.js",
+      import.meta.url
+    );
+    // The runtime owner lands in a separate PR. Use its actual image selection
+    // whenever present instead of substituting a fake version in the fixture.
+    const runtime = fs.existsSync(runtimeUrl) ? await import(runtimeUrl) : {};
+    const writeEnv = await load(`${buildDir}/steps/write_env.js`, runtime);
     const literal =
       '$VAR $(touch marker) `touch marker` "quotes"\nEOM\nOTHER=value';
     const step = writeEnv({ custom: { LITERAL: literal } });
+    if (runtime.nodeImage) assert.strictEqual(step.name, runtime.nodeImage);
     assert.strictEqual(step.entrypoint, "node");
     assert.strictEqual(step.args[0], "-e");
     assert(!step.args[2].includes("$"));
