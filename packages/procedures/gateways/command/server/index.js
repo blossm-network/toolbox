@@ -38,6 +38,7 @@ export default async ({
     context,
     node = false,
     multipart = false,
+    uploadLimits,
     local = false,
   } of commands) {
     server = server.post(
@@ -56,7 +57,6 @@ export default async ({
       {
         path: `/${name}`,
         preMiddleware: [
-          ...(multipart ? [deps.uploader.any()] : []),
           deps.authentication({
             verifyFn: verifyFn({ key }),
             cookieKey: key,
@@ -84,6 +84,7 @@ export default async ({
                 }),
               ]
             : []),
+          ...(multipart ? [deps.uploader(uploadLimits)] : []),
         ],
       }
     );
