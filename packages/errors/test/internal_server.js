@@ -14,7 +14,7 @@ describe("Internal server", () => {
       statusCode: 500,
       code: "InternalServer",
       info: {},
-      message,
+      message: "An internal server error occurred.",
     });
   });
   it("message correct with props", () => {
@@ -23,9 +23,8 @@ describe("Internal server", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 500,
       code: "InternalServer",
-      info,
-      cause,
-      message,
+      info: {},
+      message: "An internal server error occurred.",
     });
   });
 });

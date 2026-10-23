@@ -3,6 +3,7 @@ import sinonChai from "sinon-chai";
 import { restore, fake } from "sinon";
 
 import errorMiddleware from "../index.js";
+import { publicError } from "@blossm/errors";
 
 chai.use(sinonChai);
 
@@ -35,7 +36,7 @@ describe("Error middleware", () => {
     const nextFake = fake();
     await errorMiddleware(err, req, res, nextFake);
     expect(statusFake).to.have.been.calledWith(statusCode);
-    expect(sendFake).to.have.been.calledWith(err);
+    expect(sendFake).to.have.been.calledWith(publicError(err));
     expect(nextFake).to.have.been.calledWith();
   });
   it("should call correctly with no status code", async () => {
@@ -54,7 +55,7 @@ describe("Error middleware", () => {
 
     await errorMiddleware(err, req, res, nextFake);
     expect(statusFake).to.have.been.calledWith(500);
-    expect(sendFake).to.have.been.calledWith(err);
+    expect(sendFake).to.have.been.calledWith(publicError(err));
     expect(nextFake).to.have.been.calledWith();
   });
   it("should remove the token correctly if unauthorized", async () => {
@@ -76,7 +77,7 @@ describe("Error middleware", () => {
     const nextFake = fake();
     await errorMiddleware(err, req, res, nextFake);
     expect(statusFake).to.have.been.calledWith(statusCode);
-    expect(sendFake).to.have.been.calledWith(err);
+    expect(sendFake).to.have.been.calledWith(publicError(err));
     expect(clearCookieFake).to.have.been.calledWith("access");
     expect(nextFake).to.have.been.calledWith();
   });

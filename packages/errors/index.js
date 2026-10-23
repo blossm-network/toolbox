@@ -86,3 +86,5 @@ export {
   unauthorized,
   preconditionFailed,
 };
+
+export { default as publicError } from "./src/public_error.js";
