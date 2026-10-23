@@ -52,6 +52,9 @@ try {
     blockPublisherPublicKeyFn: async () => "public-key",
     isPublic: true,
   });
+  await Promise.all(
+    mongoose.modelNames().map((name) => mongoose.model(name).init())
+  );
   const eventStore = mongoose.model("events");
   const publicationsStore = mongoose.model("publications");
   const countsStore = mongoose.model("counts");
@@ -175,17 +178,14 @@ try {
   await composition.createTransactionFn((transaction) =>
     append("ack-before-delete", transaction)
   );
-  const db = publicationsDeps.db;
-  publicationsDeps.db = {
-    ...db,
-    remove: async () => {
-      throw new Error("delete unavailable");
-    },
+  const remove = publicationsDeps.db.remove;
+  publicationsDeps.db.remove = async () => {
+    throw new Error("delete unavailable");
   };
   try {
     await assert.rejects(block(), /delete unavailable/);
   } finally {
-    publicationsDeps.db = db;
+    publicationsDeps.db.remove = remove;
   }
   assert.equal(await publicationsStore.countDocuments(), 1);
   const empty = await block();
