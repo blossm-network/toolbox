@@ -178,3 +178,33 @@ describe("Format schema", () => {
     });
   });
 });
+
+describe("Array descriptor options", () => {
+  it("preserves validators, defaults and indexes", () => {
+    const validate = (values) => values.length > 0;
+    const descriptor = {
+      type: [String],
+      required: true,
+      default: [],
+      index: true,
+      validate,
+    };
+    const result = formatSchema({ list: descriptor }, "$type");
+    expect(result.list).to.deep.equal({
+      $type: [String],
+      required: true,
+      default: [],
+      index: true,
+      validate,
+    });
+  });
+  it("does not mutate the source schema", () => {
+    const item = Object.freeze({ name: String });
+    const items = Object.freeze([item]);
+    const schema = Object.freeze({ items });
+    expect(formatSchema(schema, "$type")).to.deep.equal({
+      items: { $type: [{ name: String, _id: false }] },
+    });
+    expect(schema.items[0]).to.equal(item);
+  });
+});
