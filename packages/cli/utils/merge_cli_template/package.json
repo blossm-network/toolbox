@@ -21,7 +21,8 @@
     "chalk": "^5.4.1",
     "common-tags": "^1.8.2",
     "fs-extra": "^11.3.0",
-    "yaml": "^2.8.0"
+    "yaml": "^2.8.0",
+    "@blossm/node-external-token": "^0.0.203"
   },
   "devDependencies": {
     "mocha": "^11.7.0"
