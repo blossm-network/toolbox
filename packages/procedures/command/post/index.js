@@ -11,6 +11,8 @@ const processEvents = async ({
   txId,
 }) => {
   const eventDataPerStore = {};
+  const outcomes = events.map((event) => ({ event, status: "unknown" }));
+  const indexes = new Map();
   for (const {
     root,
     payload = {},
@@ -45,6 +47,7 @@ const processEvents = async ({
       event,
       ...(correctNumber != undefined && { number: correctNumber }),
     };
+    indexes.set(normalizedEventData, indexes.size);
 
     eventDataPerStore[service] = eventDataPerStore[service] || {};
 
@@ -57,26 +60,38 @@ const processEvents = async ({
   for (const service in eventDataPerStore) {
     for (const domain in eventDataPerStore[service]) {
       fns.push(
-        addFn({
-          domain,
-          service,
-          ...(context && { context }),
-          ...(claims && { claims }),
-          eventData: eventDataPerStore[service][domain],
-          async: !eventDataPerStore[service][domain].some(
-            (normalizedEvent) => normalizedEvent.number != undefined
-          ),
-          tx: {
-            ...(tx && tx.ip && { ip: tx.ip }),
-            id: txId,
-            path,
-          },
+        Promise.resolve(
+          addFn({
+            domain,
+            service,
+            ...(context && { context }),
+            ...(claims && { claims }),
+            eventData: eventDataPerStore[service][domain],
+            returnOutcomes: true,
+            async: !eventDataPerStore[service][domain].some(
+              (normalizedEvent) => normalizedEvent.number != undefined
+            ),
+            tx: {
+              ...(tx && tx.ip && { ip: tx.ip }),
+              id: txId,
+              path,
+            },
+          })
+        ).then((result) => {
+          const { body, delivery } = result || {};
+          eventDataPerStore[service][domain].forEach((entry, index) => {
+            outcomes[indexes.get(entry)].status =
+              delivery == "queued"
+                ? "queued"
+                : body?.outcomes?.[index] || "unknown";
+          });
         })
       );
     }
   }
 
   await Promise.all(fns);
+  return outcomes;
 };
 
 export default ({
@@ -200,7 +215,7 @@ export default ({
       generateRootFn: deps.uuid,
     })) || {};
 
-  await processEvents({
+  const outcomes = await processEvents({
     events,
     addFn,
     ...(req.body.headers.idempotency && {
@@ -215,7 +230,7 @@ export default ({
   });
 
   if (thenFn) {
-    const result = (await thenFn()) || {};
+    const result = (await thenFn({ outcomes })) || {};
 
     if (result.response != undefined)
       response = { ...response, ...result.response };

@@ -202,6 +202,7 @@ describe("Command handler post", () => {
       ],
     });
     expect(addFnFake).to.have.been.calledWith({
+      returnOutcomes: true,
       domain,
       service,
       eventData: [
@@ -360,6 +361,7 @@ describe("Command handler post", () => {
       ],
     });
     expect(addFnFake).to.have.been.calledWith({
+      returnOutcomes: true,
       domain,
       service,
       eventData: [
@@ -527,6 +529,7 @@ describe("Command handler post", () => {
       ],
     });
     expect(addFnFake).to.have.been.calledWith({
+      returnOutcomes: true,
       domain,
       service,
       eventData: [
@@ -965,6 +968,7 @@ describe("Command handler post", () => {
       generateRootFn: match(() => true),
     });
     expect(addFnFake).to.have.been.calledWith({
+      returnOutcomes: true,
       domain,
       service,
       eventData: [{ event, number: correctNumber }],
@@ -1356,6 +1360,7 @@ describe("Command handler post", () => {
     });
 
     expect(addFnFake).to.have.been.calledWith({
+      returnOutcomes: true,
       domain,
       service,
       context,
@@ -1510,6 +1515,7 @@ describe("Command handler post", () => {
     });
 
     expect(addFnFake).to.have.been.calledWith({
+      returnOutcomes: true,
       domain,
       service,
       eventData: [{ event }],
@@ -1681,6 +1687,7 @@ describe("Command handler post", () => {
     });
 
     expect(addFnFake).to.have.been.calledWith({
+      returnOutcomes: true,
       domain: eventDomain,
       service: eventService,
       context,
@@ -1902,6 +1909,7 @@ describe("Command handler post", () => {
       ],
     });
     expect(addFnFake).to.have.been.calledWith({
+      returnOutcomes: true,
       domain,
       service,
       context,
@@ -2105,6 +2113,7 @@ describe("Command handler post", () => {
       ],
     });
     expect(addFnFake).to.have.been.calledWith({
+      returnOutcomes: true,
       domain,
       service,
       context,
@@ -2130,6 +2139,7 @@ describe("Command handler post", () => {
       async: false,
     });
     expect(addFnFake).to.have.been.calledWith({
+      returnOutcomes: true,
       domain: differentDomain,
       service: differentService,
       context,
@@ -2293,6 +2303,7 @@ describe("Command handler post", () => {
       ],
     });
     expect(addFnFake).to.have.been.calledWith({
+      returnOutcomes: true,
       domain,
       service,
       eventData: [
