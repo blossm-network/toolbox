@@ -1,4 +1,5 @@
 import deps from "./deps.js";
+import jsonDecoder from "./src/json_decoder.js";
 import formDataBody from "./src/form_data.js";
 import {
   chunks,
@@ -138,4 +139,4 @@ const streamMany = async (requests, onDataFn, sortFn, options = {}) => {
   }
 };
 
-export default { post, put, del, get, stream, streamMany };
+export default { post, put, del, get, stream, streamMany, jsonDecoder };

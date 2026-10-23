@@ -659,7 +659,7 @@ describe("Operation", () => {
     expect(streamFake).to.have.been.calledWith(
       url,
       match((func) => {
-        const response = func("some-data");
+        const response = func("");
         return Promise.resolve(response) == response;
       }),
       {
@@ -1058,4 +1058,39 @@ describe("RPC upstream error composition", () => {
       expect(error?.message).to.equal(body.message);
     });
   }
+});
+
+describe("RPC stream framing", () => {
+  afterEach(restore);
+
+  for (const value of [{ a: 1 }, { text: 'quotes " and braces } {, slash \\ and Unicode 🦋' }, { nested: [{ enabled: true }, { n: 2 }] }]) {
+    it(`preserves every possible byte split of ${JSON.stringify(value)}`, async () => {
+      const bytes = Buffer.from(JSON.stringify(value));
+      replace(deps, "operationToken", fake.resolves(null));
+      for (let split = 1; split < bytes.length; split++) {
+        const original = deps.stream;
+        deps.stream = async (_, fn) => {
+          await fn(bytes.subarray(0, split));
+          await fn(bytes.subarray(split));
+        };
+        try {
+          const output = [];
+          await operation({ region, operationNameComponents }).stream((record) => output.push(record), {}).in({}).with();
+          expect(output).to.deep.equal([value]);
+        } finally {
+          deps.stream = original;
+        }
+      }
+    });
+  }
+
+  it("rejects a stream that ends within a JSON record", async () => {
+    replace(deps, "operationToken", fake.resolves(null));
+    replace(deps, "stream", async (_, fn) => { await fn(Buffer.from('{"partial":')); });
+    let error;
+    try {
+      await operation({ region, operationNameComponents }).stream(() => undefined, {}).in({}).with();
+    } catch (err) { error = err; }
+    expect(error).to.be.instanceOf(SyntaxError);
+  });
 });

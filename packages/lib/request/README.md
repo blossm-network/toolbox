@@ -26,3 +26,9 @@ An empty request list completes without callbacks. Failure cancels all sources.
 The optional `decode` factory returns a per-source `{write,end}` decoder so
 framed records can be decoded before comparing/merging, without sharing parser
 state between sources. Without a decoder, values remain raw byte chunks.
+
+`jsonDecoder()` is the shared concatenated-JSON object/array decoder used by RPC.
+Each source gets its own decoder. It retains partial records, UTF-8 bytes,
+quoted strings and escapes across chunks, and rejects a truncated final record.
+Binary or scalar streams should use the RPC `raw` option. A decoder buffers its
+current record; it does not load an entire multi-record stream.
