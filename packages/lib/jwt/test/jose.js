@@ -173,6 +173,27 @@ describe("Opt-in JOSE wire format", () => {
       { message: "The token signature encoding is invalid." }
     );
   });
+  it("rejects noncanonical JOSE signatures instead of ignoring extra characters", async () => {
+    const token = standardToken({ aud: audience, exp: Date.now() / 1000 + 60 });
+    const [header, payload, signature] = token.split(".");
+    const alphabet =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+    const unusedBits =
+      signature.slice(0, -1) +
+      alphabet[alphabet.indexOf(signature.slice(-1)) + 1];
+    for (const altered of [signature + "!!", signature + "=", unusedBits]) {
+      await assert.rejects(
+        validate({
+          token: `${header}.${payload}.${altered}`,
+          audience,
+          algorithm,
+          verifyFn,
+          format: "jose",
+        }),
+        { message: "The token signature encoding is invalid." }
+      );
+    }
+  });
   it("limits the opt-in codec to supported ECDSA algorithms", async () => {
     await assert.rejects(
       create({ options: {}, signFn, format: "jose", algorithm: "RS256" }),
