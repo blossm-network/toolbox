@@ -17,8 +17,14 @@ export default async ({
     });
     return claims;
   } else if (basic && keyClaimsFn) {
-    const credentials = Buffer.from(basic, "base64").toString("ascii");
-    const [root, secret] = credentials.split(":");
+    const credentials = Buffer.from(basic, "base64").toString("utf8");
+    const separator = credentials.indexOf(":");
+    if (separator == -1)
+      throw deps.invalidCredentialsError.message(
+        "The Basic token is malformed."
+      );
+    const root = credentials.slice(0, separator);
+    const secret = credentials.slice(separator + 1);
     const claims = await keyClaimsFn({ root, secret });
 
     return claims;
