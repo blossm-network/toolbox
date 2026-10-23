@@ -24,13 +24,6 @@
     core-js "^2.6.5"
     regenerator-runtime "^0.13.4"
 
-"@blossm/errors@^0.0.16":
-  version "0.0.16"
-  resolved "https://registry.npmjs.org/@blossm/errors/-/errors-0.0.16.tgz#a1573d7d42ebd19bae70ebb6841676d6d3debad3"
-  integrity sha512-RU64bgtvbegTAEXFCnbyr90DAnR5OnytYc/uzYRiuzCFeC0v8Qv8t2CYzvpKiMzpyI0PLjhyjzEhrWZ8G3udLA==
-  dependencies:
-    restify-errors "^8.0.0"
-
 "@blossm/errors@^0.0.37":
   version "0.0.37"
   resolved "https://registry.npmjs.org/@blossm/errors/-/errors-0.0.37.tgz#af866fc282d4d3adf92fd133a508fd855f790117"
