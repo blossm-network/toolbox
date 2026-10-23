@@ -99,7 +99,6 @@ export default async ({
   updateKeys,
 } = {}) => {
   const allIndexes = [
-    [{ "headers.id": 1 }],
     ...(process.env.CONTEXT
       ? [
           [
