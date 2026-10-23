@@ -39,8 +39,10 @@ vendors:
   # The cache that you want to use and how to connect to it. This is optional.
   cache:
     redis:
-      ip:
+      host:
         production: # 10.79.5.20
+      port:
+        production: 6379
 
   # The cloud computing service you want to use and how to connect to it.
   cloud:

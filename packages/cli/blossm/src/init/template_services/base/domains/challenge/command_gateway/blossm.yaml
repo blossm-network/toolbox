@@ -1,4 +1,4 @@
-domain: session
+domain: challenge
 service: core
 
 # Specifies commands that get forwarded to the core layer network to fulfill.
