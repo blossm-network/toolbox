@@ -51,7 +51,7 @@ describe("Dwolla get business authority status", () => {
   it("it should get correctly with 404", async () => {
     const message = "some-error-message";
     const getError = new Error(message);
-    getError.statusCode = 404;
+    getError.status = 404;
     const getFake = fake.rejects(getError);
     const dwollaClient = {
       get: getFake,
@@ -103,14 +103,8 @@ describe("Dwolla get business authority status", () => {
       //shouldn't be called.
       expect(2).to.equal(1);
     } catch (e) {
-      expect(messageFake).to.have.been.calledWith(
-        "This customer couldn't be made.",
-        {
-          info: { errors: [{ message }] },
-          source: getError,
-        }
-      );
-      expect(e).to.equal(error);
+      expect(messageFake).to.have.not.been.called;
+      expect(e).to.equal(getError);
     }
   });
 });

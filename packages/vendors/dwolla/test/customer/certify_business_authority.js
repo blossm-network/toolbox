@@ -46,7 +46,7 @@ describe("Dwolla certify business authority", () => {
   it("it should post correctly with 404", async () => {
     const message = "some-error-message";
     const postError = new Error(message);
-    postError.statusCode = 404;
+    postError.status = 404;
     const postFake = fake.rejects(postError);
     const dwollaClient = {
       post: postFake,
@@ -98,14 +98,8 @@ describe("Dwolla certify business authority", () => {
       //shouldn't be called.
       expect(2).to.equal(1);
     } catch (e) {
-      expect(messageFake).to.have.been.calledWith(
-        "This authority couldn't be made.",
-        {
-          info: { errors: [{ message }] },
-          source: postError,
-        }
-      );
-      expect(e).to.equal(error);
+      expect(messageFake).to.have.not.been.called;
+      expect(e).to.equal(postError);
     }
   });
 });

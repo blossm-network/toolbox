@@ -164,9 +164,9 @@ describe("Dwolla create business customer authority", () => {
     const path0 = "/somePath/yep";
     const errorMessage1 = "some-other-error";
     const path1 = "/someOtherPath/";
-    postError.statusCode = 400;
-    postError.code = "ValidationError";
+    postError.status = 400;
     postError.body = {
+      code: "ValidationError",
       _embedded: {
         errors: [
           { message: errorMessage0, path: path0 },
@@ -229,7 +229,7 @@ describe("Dwolla create business customer authority", () => {
   it("it should post correctly with 400 default", async () => {
     const message = "some-error-message";
     const postError = new Error(message);
-    postError.statusCode = 400;
+    postError.status = 400;
     const postFake = fake.rejects(postError);
     const dwollaClient = {
       post: postFake,
@@ -274,7 +274,7 @@ describe("Dwolla create business customer authority", () => {
   it("it should post correctly with 403 default", async () => {
     const message = "some-error-message";
     const postError = new Error(message);
-    postError.statusCode = 403;
+    postError.status = 403;
     const postFake = fake.rejects(postError);
     const dwollaClient = {
       post: postFake,
@@ -350,14 +350,8 @@ describe("Dwolla create business customer authority", () => {
       //shouldn't be called.
       expect(2).to.equal(1);
     } catch (e) {
-      expect(messageFake).to.have.been.calledWith(
-        "This authority couldn't be made.",
-        {
-          info: { errors: [{ message }] },
-          source: postError,
-        }
-      );
-      expect(e).to.equal(error);
+      expect(messageFake).to.have.not.been.called;
+      expect(e).to.equal(postError);
     }
   });
 });
