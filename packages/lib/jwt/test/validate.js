@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import crypto from "crypto";
 import * as chai from "chai";
+import sinonChai from "sinon-chai";
 import chaiAsPromised from "chai-as-promised";
 import chaiDatetime from "chai-datetime";
 import { fake, replace, restore, useFakeTimers } from "sinon";
@@ -11,6 +12,7 @@ import { create, validate } from "../index.js";
 
 const { expect } = chai;
 
+chai.use(sinonChai);
 chai.use(chaiAsPromised);
 chai.use(chaiDatetime);
 
