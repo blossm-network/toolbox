@@ -1,8 +1,4 @@
-import moment from "moment-timezone";
+import moment from "moment";
 
 export default (string, offset) =>
-  moment(string)
-    .utcOffset(
-      offset + (moment.tz(string, "America/New_York").isDST() ? 60 : 0)
-    )
-    .format("MMMM Do YYYY, h:mm:ss a");
+  moment(string).utcOffset(offset).format("MMMM Do YYYY, h:mm:ss a");
