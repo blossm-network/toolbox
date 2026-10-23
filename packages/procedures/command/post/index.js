@@ -214,7 +214,16 @@ export default ({
     txId,
   });
 
-  if (thenFn) await thenFn();
+  if (thenFn) {
+    const result = (await thenFn()) || {};
+
+    if (result.response != undefined)
+      response = { ...response, ...result.response };
+    if (result.headers != undefined) headers = { ...headers, ...result.headers };
+    if (result.tokens != undefined) tokens = [...(tokens || []), ...result.tokens];
+    if (result.revoke != undefined) revoke = [...(revoke || []), ...result.revoke];
+    if (result.statusCode != undefined) statusCode = result.statusCode;
+  }
 
   if (tokens || revoke) {
     if (!response) response = {};
@@ -231,6 +240,6 @@ export default ({
         ...(events.length && { _id: commandId, _tx: txId }),
       });
   } else {
-    res.set(headers).sendStatus(204);
+    res.set(headers).sendStatus(statusCode || 204);
   }
 };
