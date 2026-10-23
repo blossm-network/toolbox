@@ -8,3 +8,8 @@ Existing synchronous consumers must change to `await store(options)`.
 
 `connect(options)` registers lifecycle handlers before opening the connection.
 Credentials are raw values: the adapter encodes their URI components once.
+
+`mapReduce` remains exported for import compatibility, but is deprecated and
+rejects with an explicit migration error. Mongoose 8 removed `Model.mapReduce`.
+Use the exported `aggregate` operation with a pipeline suited to the consumer;
+this adapter does not translate arbitrary JavaScript map/reduce functions.
