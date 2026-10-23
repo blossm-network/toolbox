@@ -9,6 +9,8 @@
 
 #### The project also aspires to interoperate with the Ethereum blockchain to provide an application experience layer that can interact with Contracts and respond to events, while providing a function execution and event storage layer for trivial intraday application events that don't need to be on-chain in real time.
 
+For repository tests, versioning and npm releases, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ### Contents:
 1. [Install](#install)
 2. [Overview](#overview)
