@@ -58,25 +58,32 @@ describe("Authorize", () => {
 
     const permissionsLookupFn = fake.returns(permissions);
 
-    const error = "some-error";
-    const tokenInvalidFake = fake.returns(error);
-    replace(deps, "invalidCredentialsError", {
-      tokenInvalid: tokenInvalidFake,
-    });
-
+    const error = new Error("missing permission");
+    const message = fake.returns(error);
+    replace(deps, "invalidCredentialsError", { message });
     try {
       await authorize({
         permissionsLookupFn,
+        permissions: [{ service, domain, privilege }],
         network,
         principal,
       });
-
-      //shouldnt be called;
-      expect(1).to.equal(2);
-    } catch (e) {
-      expect(e).to.equal(e);
+      expect.fail("missing permissions must be denied");
+    } catch (received) {
+      expect(received).to.equal(error);
     }
+    expect(message).to.have.been.calledWith("There are missing permissions.");
   });
+  it("accepts any matching alternative permission", async () => {
+    const matching = { service, domain, privilege };
+    const document = await authorize({
+      permissionsLookupFn: async () => [matching],
+      permissions: [{ service, domain, privilege: "another" }, matching],
+      principal,
+    });
+    expect(document).to.deep.equal({ permissions: [matching] });
+  });
+
   it("should authorize with permissions as none", async () => {
     const document = await authorize({
       context,
