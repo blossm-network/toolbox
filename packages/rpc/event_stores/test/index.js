@@ -51,7 +51,7 @@ describe("Event store", () => {
     const fn = "some-fn";
     const sortFn = "some-sort-fn";
 
-    const storeQueries = "some-store-queries";
+    const storeQueries = [{ domain: "account", service: "core", query: {} }];
     const result = await eventStores({storeQueries, region})
       .set({
         context,
@@ -63,12 +63,12 @@ describe("Event store", () => {
       })
       .stream(fn, sortFn);
 
-    expect(streamFake).to.have.been.calledWith({ region, storeQueries, fn, sortFn });
+    expect(streamFake).to.have.been.calledWith({ region, operationNameComponentQueries: [{ operationNameComponents: ["account", "core", "event-store"], query: {} }], fn, sortFn });
     expect(inFake).to.have.been.calledWith({
       context,
     });
     expect(withFake).to.have.been.calledWith({
-      path: "/stream",
+      path: "/stream-aggregates",
       internalTokenFn,
       externalTokenFn,
       claims,
@@ -90,14 +90,36 @@ describe("Event store", () => {
     const fn = "some-fn";
     const sortFn = "some-sort-fn";
 
-    const storeQueries = "some-store-queries";
+    const storeQueries = [{ domain: "account", service: "core", query: {} }];
     const result = await eventStores({storeQueries}).stream(fn, sortFn);
 
-    expect(streamFake).to.have.been.calledWith({ region: envRegion, storeQueries, fn, sortFn });
+    expect(streamFake).to.have.been.calledWith({ region: envRegion, operationNameComponentQueries: [{ operationNameComponents: ["account", "core", "event-store"], query: {} }], fn, sortFn });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
-      path: "/stream",
+      path: "/stream-aggregates",
     });
     expect(result).to.equal(stream);
+  });
+});
+
+describe("Multiple event-store RPC composition", () => {
+  afterEach(restore);
+
+  it("targets the deployed aggregate stream with real identity helpers and optional tokens", async () => {
+    const { default: stream } = await import("../../stream/index.js");
+    const { default: streamDeps } = await import("../../stream/deps.js");
+    const { default: hash } = await import("../../../lib/operation_hash/index.js");
+    const { default: shortName } = await import("../../../lib/operation_short_name/index.js");
+    replace(deps, "stream", stream);
+    const streamMany = fake.resolves();
+    replace(streamDeps, "streamMany", streamMany);
+    const query = Object.freeze({ root: "root", timestamp: "2026-10-22" });
+    await eventStores({ storeQueries: [{ domain: "account", service: "core", query }], region: "region" }).stream(() => undefined);
+    const parts = ["account", "core", "event-store"];
+    expect(streamMany.firstCall.args[0]).to.deep.equal([{
+      url: `https://region-${shortName(parts)}-${hash(...parts)}-${process.env.GCP_COMPUTE_URL_ID}.region.run.app/stream-aggregates`,
+      query,
+    }]);
+    expect(streamMany.firstCall.args[3].decode).to.be.a("function");
   });
 });
