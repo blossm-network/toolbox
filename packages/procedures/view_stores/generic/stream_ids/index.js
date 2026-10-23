@@ -1,25 +1,27 @@
 const defaultFn = (query) => query;
 
+export const queryForIds = ({ query, context }) => {
+  const formattedQueryBody = {};
+  for (const key in query) formattedQueryBody[`body.${key}`] = query[key];
+  return {
+    ...formattedQueryBody,
+    ...(context && {
+      "headers.context": {
+        root: context[process.env.CONTEXT].root,
+        domain: process.env.CONTEXT,
+        service: context[process.env.CONTEXT].service,
+        network: context[process.env.CONTEXT].network,
+      },
+    }),
+  };
+};
+
 //NOT MEANT TO BE PUBLIC SINCE THERES NO REQUIRED CONTEXT CHECK.
 export default ({ streamFn, queryFn = defaultFn }) => {
   return async (req, res) => {
     const queryBody = queryFn(req.query.query || {});
-    const formattedQueryBody = {};
-    for (const key in queryBody)
-      formattedQueryBody[`body.${key}`] = queryBody[key];
-
     await streamFn({
-      query: {
-        ...formattedQueryBody,
-        ...(req.query.context && {
-          "headers.context": {
-            root: req.query.context[process.env.CONTEXT].root,
-            domain: process.env.CONTEXT,
-            service: req.query.context[process.env.CONTEXT].service,
-            network: req.query.context[process.env.CONTEXT].network,
-          },
-        }),
-      },
+      query: queryForIds({ query: queryBody, context: req.query.context }),
       ...(req.query.sort && { sort: req.query.sort }),
       ...(req.query.parallel && { parallel: req.query.parallel }),
       fn: (view) =>
