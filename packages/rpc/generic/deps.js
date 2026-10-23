@@ -14,6 +14,7 @@ export default {
   get: request.get,
   del: request.del,
   stream: request.stream,
+  jsonDecoder: request.jsonDecoder,
   constructError: construct,
   operationUrl,
   operationToken,
