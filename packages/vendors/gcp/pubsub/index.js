@@ -5,14 +5,15 @@ export const __pubsub = new PubSub();
 const publish = async (data, topic) => {
   const string = JSON.stringify(data);
   const buffer = Buffer.from(string);
-  return __pubsub.topic(topic).publishMessage({ data:buffer });
+  return __pubsub.topic(topic).publishMessage({ data: buffer });
 };
 
 const subscribe = async ({ topic, name, fn }) => {
   const subscription = __pubsub.topic(topic).subscription(name);
   const [exists] = await subscription.exists();
-  if (exists) await subscription.delete();
-  subscription.create(fn);
+  if (!exists) await subscription.create();
+  subscription.on("message", fn);
+  return subscription;
 };
 
 const unsubscribe = async ({ topic, name }) => {
