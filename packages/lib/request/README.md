@@ -6,10 +6,13 @@ GET/DELETE and multipart responses retain text bodies. Every ordinary response
 has `headers`, `statusCode`, `statusMessage` and `body`, including HTTP errors.
 `formData` accepts scalar fields, Buffers, Blobs and `{value, options}` fields
 with `filename` and `contentType`. File streams use native file-backed Blobs;
-other multipart streams are buffered. Use one of `body` and `formData`.
+other multipart streams are buffered with cancellation. File-stream byte ranges
+and existing descriptors are respected. Use one of `body` and `formData`.
 
-All methods accept `signal` and `timeout` in milliseconds, default 30 seconds
-without network progress. Streams await each callback before reading again,
+All methods accept `signal` and `timeout` in milliseconds, default 30 seconds per
+multipart-preparation phase, upload/response-header wait, and response-chunk wait.
+Upload progress does not reset the upload/headers deadline. Streams await each
+callback before reading again,
 reject HTTP errors before callbacks, abort on callback failure/cancellation and
 optionally call `onResponseFn({headers,statusCode,statusMessage})` before data.
 A slow callback does not consume the network idle timeout. Callers own retries;

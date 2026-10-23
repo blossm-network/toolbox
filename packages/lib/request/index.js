@@ -9,6 +9,7 @@ import {
   parse,
   read,
   signalFor,
+  timed,
 } from "./src/response.js";
 
 const contextFor = ({ signal, timeout = 30000 } = {}) => {
@@ -27,11 +28,17 @@ const common = async ({
 }) => {
   const context = contextFor({ signal, timeout });
   try {
+    context.signal.throwIfAborted();
     const requestHeaders = new Headers(headers);
     if (formData !== undefined && body !== undefined)
       throw new TypeError("Use either body or formData for an HTTP request.");
     let requestBody;
-    if (formData !== undefined) requestBody = await formDataBody(formData);
+    if (formData !== undefined)
+      requestBody = await timed(
+        () => formDataBody(formData, context.signal),
+        context.controller,
+        context.timeout
+      );
     else if (body !== undefined) {
       requestBody = JSON.stringify(body);
       if (!requestHeaders.has("content-type"))
@@ -110,7 +117,7 @@ const streamMany = async (requests, onDataFn, sortFn, options = {}) => {
       {
         ...context,
         timeout: request.timeout ?? context.timeout,
-        signal: signalFor(context.controller, request.signal || options.signal),
+        signal: signalFor(context.controller, request.signal, options.signal),
       }
     )
   );
