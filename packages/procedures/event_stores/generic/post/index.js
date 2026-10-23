@@ -17,13 +17,11 @@ export default ({
       )
     );
     const seen = new Set();
-    const uniqueEventData = req.body.eventData.filter(({ event }, index) => {
-      if (conflicts[index]) return false;
-      const { idempotency } = event.headers;
-      if (idempotency == undefined) return true;
-      if (seen.has(idempotency)) return false;
-      seen.add(idempotency);
-      return true;
+    const uniqueEventData = req.body.eventData.filter((entry, index) => {
+      const key = entry.event.headers.idempotency;
+      const duplicate = conflicts[index] || seen.has(key);
+      seen.add(key);
+      return entry.number != undefined || key == undefined || !duplicate;
     });
 
     const { receipt } = await createTransactionFn(
