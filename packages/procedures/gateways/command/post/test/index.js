@@ -1,3 +1,5 @@
+import crypto from "crypto";
+import { create } from "@blossm/jwt";
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, replace, fake, match, useFakeTimers } from "sinon";
@@ -650,4 +652,45 @@ describe("Command gateway post", () => {
       expect(e).to.equal(error);
     }
   });
+});
+
+describe("Token cookie expiration formats", () => {
+  afterEach(restore);
+  const keys = crypto.generateKeyPairSync("ec", { namedCurve: "prime256v1" });
+  for (const format of ["legacy", "jose"]) {
+    it(`sets the correct browser expiration for a ${format} token`, async () => {
+      const clock = useFakeTimers(1700000000000);
+      try {
+        const token = await create({
+          options: { audience: "example.test", expiresIn: 60000 },
+          format,
+          signFn: (message) =>
+            crypto
+              .sign("sha256", Buffer.from(message), keys.privateKey)
+              .toString("base64"),
+        });
+        replace(deps, "validate", async () => {});
+        replace(deps, "command", () => ({
+          set: () => ({
+            issue: async () => ({
+              body: {
+                _tokens: [
+                  { network: "example.test", type: "access", value: token },
+                ],
+              },
+              statusCode: 200,
+            }),
+          }),
+        }));
+        const cookie = fake();
+        const res = { cookie, status: () => res, send: fake() };
+        await post({})({ body: { headers: {} }, headers: {} }, res);
+        expect(cookie.firstCall.args[2].expires.getTime()).to.equal(
+          Date.now() + 60000
+        );
+      } finally {
+        clock.restore();
+      }
+    });
+  }
 });

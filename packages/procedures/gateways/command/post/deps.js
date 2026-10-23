@@ -1,7 +1,7 @@
 import validate from "@blossm/validate-command";
 import command from "@blossm/command-rpc";
 import { string as dateString } from "@blossm/datetime";
-import { decode } from "@blossm/jwt";
+import { decode, claimTimestamp } from "@blossm/jwt";
 import { forbidden } from "@blossm/errors";
 
 export default {
@@ -9,5 +9,6 @@ export default {
   command,
   dateString,
   decode,
+  claimTimestamp,
   forbiddenError: forbidden,
 };
