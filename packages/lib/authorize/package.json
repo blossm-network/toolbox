@@ -12,6 +12,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@blossm/errors": "^0.0.40",
     "@blossm/jwt": "^0.0.71",
     "@blossm/tokens-from-req": "^0.0.33"
   },

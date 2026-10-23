@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@blossm/uuid": "^0.0.9",
+    "@blossm/cli-root-dir": "^0.0.15",
     "@blossm/gcp-queue": "^0.0.37",
     "@blossm/normalize-cli": "^0.0.22",
     "@blossm/robo-say": "^0.0.11",
