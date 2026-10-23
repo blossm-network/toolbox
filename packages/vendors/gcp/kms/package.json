@@ -15,7 +15,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@google-cloud/kms": "^5.7.0"
+    "@google-cloud/kms": "^6.3.0",
+    "@blossm/lazy-client": "^0.0.1"
   },
   "devDependencies": {
     "dotenv": "^18.0.9",

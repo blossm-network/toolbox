@@ -18,7 +18,7 @@ const flagValue = async (flag, args) => {
 
   if (flag.choices) {
     const { flagValue } = await prompt({
-      type: "list",
+      type: "select",
       name: "flagValue",
       message: roboSay(
         `Which of these ${flag.name}'s do you wanna use by default?`
@@ -106,7 +106,7 @@ const validate = async ({ entrypointType, choices, options }) => {
       process.exit(1);
     } else {
       const answers = await prompt({
-        type: "list",
+        type: "select",
         name: "entrypoint",
         message: roboSay(
           `Which of these ${entrypointType}'s do you wanna run?`
