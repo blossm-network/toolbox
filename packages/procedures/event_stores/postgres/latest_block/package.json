@@ -1,0 +1,25 @@
+{
+  "name": "@blossm/postgres-event-store-latest-block",
+  "description": "A postgres event store latest block function.",
+  "version": "0.0.1",
+  "main": "index.js",
+  "type": "module",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 20.19.0"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@blossm/postgres-event-store-storage": "^0.0.1"
+  },
+  "devDependencies": {
+    "chai": "^5.2.0",
+    "mocha": "^11.6.0",
+    "sinon": "^21.0.0"
+  }
+}

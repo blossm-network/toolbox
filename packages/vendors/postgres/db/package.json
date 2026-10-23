@@ -1,0 +1,26 @@
+{
+  "name": "@blossm/postgres-database",
+  "version": "0.0.1",
+  "description": "Read and write from a PostgreSQL database.",
+  "main": "index.js",
+  "type": "module",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 20.19.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "dependencies": {
+    "@blossm/logger": "^0.0.13",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "chai": "^5.2.0",
+    "mocha": "^11.7.0",
+    "sinon": "^21.0.0"
+  }
+}

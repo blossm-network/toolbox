@@ -9,6 +9,10 @@
 
 #### The project also aspires to interoperate with the Ethereum blockchain to provide an application experience layer that can interact with Contracts and respond to events, while providing a function execution and event storage layer for trivial intraday application events that don't need to be on-chain in real time.
 
+A PostgreSQL event-store adapter is available alongside MongoDB through direct
+composition. See its [setup, persistence boundaries and integration tests](packages/procedures/event_stores/postgres/server/README.md).
+The CLI continues to generate MongoDB deployments.
+
 ### Contents:
 1. [Install](#install)
 2. [Overview](#overview)
