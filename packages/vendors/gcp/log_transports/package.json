@@ -12,8 +12,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@google-cloud/logging-winston": "^6.0.2",
-    "dotenv": "^16.6.1",
+    "@google-cloud/logging-winston": "^7.3.0",
     "winston": "^3.19.0"
   }
 }
