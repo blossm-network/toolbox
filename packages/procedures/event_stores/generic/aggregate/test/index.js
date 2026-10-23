@@ -538,7 +538,7 @@ describe("Mongodb event store aggregate", () => {
   });
   it("should call with the correct params with no snapshot found", async () => {
     const eventStreamFnFake = stub().yieldsTo("fn", event);
-    const findOneSnapshotFnFake = fake.returns();
+    const findOneSnapshotFnFake = fake();
 
     const result = await aggregate({
       handlers,
