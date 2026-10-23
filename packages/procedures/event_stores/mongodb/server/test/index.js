@@ -52,6 +52,57 @@ describe("Mongodb event store", () => {
     clock.restore();
     restore();
   });
+  for (const mode of ["remote", "local"]) {
+    it(`keeps each cached collection bound to its own operations on repeated ${mode} startup`, async () => {
+      process.env.NODE_ENV = mode;
+      const server = (await import("../index.js")).default;
+      const stores = Object.fromEntries(
+        ["events", "snapshots", "counts", "blockchain", "publications"].map(
+          (name) => [name, { name }],
+        ),
+      );
+      const store = fake(async ({ name }) => stores[name]);
+      replace(deps, "db", { store });
+      replace(deps, "eventStore", fake());
+      const bindings = {
+        normalizeTransaction: { eventStore: stores.events },
+        findSnapshots: { snapshotStore: stores.snapshots },
+        findEvents: { eventStore: stores.events },
+        findOneSnapshot: { snapshotStore: stores.snapshots },
+        eventStream: { eventStore: stores.events },
+        saveEvents: {
+          eventStore: stores.events,
+          ...(mode === "remote" && { publicationsStore: stores.publications }),
+        },
+        reserveRootCounts: { countsStore: stores.counts },
+        rootStream: { countsStore: stores.counts, snapshotStore: stores.snapshots },
+        count: { countsStore: stores.counts },
+        idempotencyConflictCheck: { eventStore: stores.events },
+        saveSnapshot: { snapshotStore: stores.snapshots },
+        saveBlock: { blockchainStore: stores.blockchain },
+        latestBlock: { blockchainStore: stores.blockchain },
+      };
+      for (const name of Object.keys(bindings)) replace(deps, name, fake());
+      await server({ schema: {}, secretFn: fake.resolves("secret") });
+      await server({ schema: {}, secretFn: fake.resolves("secret") });
+      const expectedStores = mode === "local" ? 4 : 5;
+      expect(store.callCount).to.equal(expectedStores);
+      expect(new Set(store.getCalls().map(({ args }) => args[0].name)).size).to.equal(expectedStores);
+      for (const [operation, expected] of Object.entries(bindings)) {
+        expect(deps[operation].callCount).to.equal(2);
+        for (const call of deps[operation].getCalls())
+          for (const [key, model] of Object.entries(expected))
+            expect(call.args[0][key], `${operation}.${key}`).to.equal(model);
+      }
+      if (mode === "remote") {
+        expect(deps.publishPending.callCount).to.equal(2);
+        for (const call of deps.publishPending.getCalls())
+          expect(call.args[0].publicationsStore).to.equal(stores.publications);
+      } else {
+        expect(deps.publishPending.callCount).to.equal(0);
+      }
+    });
+  }
   it("preserves hashed transaction claims and path metadata through model casting", async () => {
     const server = (await import("../index.js")).default;
     const store = fake(async ({ name }) => ({ name }));
