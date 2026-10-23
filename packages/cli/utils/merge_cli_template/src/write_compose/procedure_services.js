@@ -6,6 +6,7 @@ import hash from "@blossm/operation-hash";
 import rootDir from "@blossm/cli-root-dir";
 
 import databaseService from "./database_service.js";
+import mainService from "./main_service.js";
 
 const findEnvForDependency = (env, dependency, dir) => {
   for (const file of fs.readdirSync(dir)) {
@@ -80,11 +81,10 @@ export default ({
   for (const dependency of config.testing.dependencies) {
     const customEnv = findEnvForDependency(env, dependency, rootDir.path());
 
-    const commonServiceImagePrefix = `${
-      localCoreNetwork && dependency.network == localCoreNetwork
-        ? baseContainerRegistery
-        : containerRegistery
-    }/${dependency.procedure}`;
+    const registry = localCoreNetwork && dependency.network == localCoreNetwork
+      ? baseContainerRegistery
+      : containerRegistery;
+    const commonServiceImagePrefix = `${registry}/${dependency.procedure}`;
 
     switch (dependency.procedure) {
       case "http": {
@@ -112,16 +112,14 @@ export default ({
           );
 
           const key = `${dependency.name}${
-            config.context ? `-${config.context}` : ""
+            dependency.context ? `-${dependency.context}` : ""
           }`;
 
           services = {
             ...services,
             [key]: {
               ...common,
-              image: `${commonServiceImagePrefix}${
-                dependency.context ? `.${dependency.context}` : ""
-              }.${dependency.name}:latest`,
+              image: mainService({ ...dependency, containerRegistery: registry }).image,
               container_name: `${operationHash}.${network}`,
               depends_on: [databaseServiceKey],
               environment: {
@@ -129,7 +127,7 @@ export default ({
                 ...commonStoreEnvironment,
                 PROCEDURE: dependency.procedure,
                 OPERATION_HASH: operationHash,
-                ...(dependency.context && { CONTEXT: dependency.contxt }),
+                ...(dependency.context && { CONTEXT: dependency.context }),
                 NAME: dependency.name,
               },
             },
@@ -145,15 +143,13 @@ export default ({
             dependency.procedure
           );
 
-          const key = `${dependency.name}-${config.context}`;
+          const key = `${dependency.name}${dependency.context ? `-${dependency.context}` : ""}`;
 
           services = {
             ...services,
             [key]: {
               ...common,
-              image: `${commonServiceImagePrefix}${
-                dependency.context ? `${dependency.context}` : ""
-              }.${dependency.name}:latest`,
+              image: mainService({ ...dependency, containerRegistery: registry }).image,
               container_name: `${operationHash}.${network}`,
               environment: {
                 ...commonEnvironment,
