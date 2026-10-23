@@ -145,6 +145,7 @@ export default ({
           }),
           updateQueue({
             name: `view-store${context ? `-${context}` : ""}-${name}`,
+            project,
             maxDispatchPerSecond: 50,
             maxConcurrentDispatches: 100,
           }),
