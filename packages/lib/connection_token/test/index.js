@@ -2,9 +2,10 @@ import * as chai from "chai";
 import sinonChai from "sinon-chai";
 chai.use(sinonChai);
 const { expect } = chai;
-import { restore, fake, replace, match, stub } from "sinon";
+import { restore, fake, replace, match, stub, useFakeTimers } from "sinon";
 import deps from "../deps.js";
 import connectionToken from "../index.js";
+import { create } from "@blossm/jwt";
 
 const token = "some-token";
 const root = "some-credentials-root";
@@ -27,7 +28,7 @@ describe("Connection token", () => {
       set: setFake,
     });
     replace(deps, "command", commandFake);
-    const decodeFake = fake.returns({ exp });
+    const decodeFake = fake.returns({ claims: { exp } });
     replace(deps, "decode", decodeFake);
     const basicTokenFake = fake.returns(basicToken);
     replace(deps, "basicToken", basicTokenFake);
@@ -73,7 +74,7 @@ describe("Connection token", () => {
     expect(readObjectFake).to.have.been.calledWith(`_cToken.${network}`);
     expect(writeObjectFake).to.have.been.calledOnceWith(`_cToken.${network}`, {
       token,
-      exp: new Date(Date.parse(exp)),
+      exp,
     });
     expect(commandFake).to.have.been.calledOnce;
     expect(anotherResult).to.deep.equal({ token, type: "Bearer" });
@@ -93,7 +94,7 @@ describe("Connection token", () => {
       set: setFake,
     });
     replace(deps, "command", commandFake);
-    const decodeFake = fake.returns({ exp });
+    const decodeFake = fake.returns({ claims: { exp } });
     replace(deps, "decode", decodeFake);
     const basicTokenFake = fake.returns(basicToken);
     replace(deps, "basicToken", basicTokenFake);
@@ -124,7 +125,7 @@ describe("Connection token", () => {
       set: setFake,
     });
     replace(deps, "command", commandFake);
-    const decodeFake = fake.returns({ exp });
+    const decodeFake = fake.returns({ claims: { exp } });
     replace(deps, "decode", decodeFake);
     const basicTokenFake = fake.returns(basicToken);
     replace(deps, "basicToken", basicTokenFake);
@@ -149,4 +150,64 @@ describe("Connection token", () => {
     })({ network });
     expect(result).to.have.be.null;
   });
+});
+
+describe("Connection token expiration", () => {
+  afterEach(restore);
+  it("uses actual decoded claims and serializable expiry to refresh the token", async () => {
+    const clock = useFakeTimers();
+    try {
+      let cached;
+      const issue = fake(async () => ({
+        body: {
+          token: {
+            value: await create({
+              options: {
+                issuer: "remote",
+                audience: "remote",
+                expiresIn: 1000,
+              },
+              signFn: () => "c2lnbmF0dXJl",
+            }),
+          },
+        },
+      }));
+      replace(deps, "command", () => ({ set: () => ({ issue }) }));
+      replace(deps, "redis", {
+        readObject: async () => cached,
+        writeObject: async (_, value) => {
+          cached = JSON.parse(JSON.stringify(value));
+        },
+        setExpiry: async () => {},
+      });
+      const token = connectionToken({
+        credentialsFn: async () => ({ root, secret }),
+      });
+      await token({ network });
+      expect(cached.exp).to.equal(new Date(Date.now() + 1000).toISOString());
+      await token({ network });
+      expect(issue.callCount).to.equal(1);
+      clock.tick(1000);
+      await token({ network });
+      expect(issue.callCount).to.equal(2);
+    } finally {
+      clock.restore();
+    }
+  });
+  for (const expiry of [undefined, "invalid"]) {
+    it(`refreshes cached tokens with ${expiry} expiration`, async () => {
+      const issue = fake.returns({ body: {} });
+      replace(deps, "command", () => ({ set: () => ({ issue }) }));
+      replace(deps, "redis", {
+        readObject: async () => ({ token: "stale", exp: expiry }),
+        writeObject: fake(),
+        setExpiry: fake(),
+      });
+      const result = await connectionToken({
+        credentialsFn: async () => ({ root, secret }),
+      })({ network });
+      expect(result).to.equal(null);
+      expect(issue.callCount).to.equal(1);
+    });
+  }
 });
