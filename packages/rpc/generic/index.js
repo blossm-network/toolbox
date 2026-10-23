@@ -162,9 +162,7 @@ export default ({region, operationNameComponents}) => ({
       id,
       data,
     }),
-  get: (query, { raw } = {}) => {
-    const id = query.id;
-    delete query.id;
+  get: ({ id, ...query } = {}, { raw } = {}) => {
     return common({
       method: deps.get,
       dataParam: "query",
@@ -175,9 +173,7 @@ export default ({region, operationNameComponents}) => ({
       raw,
     });
   },
-  stream: (fn, query, { raw } = {}) => {
-    const id = query.id;
-    delete query.id;
+  stream: (fn, { id, ...query } = {}, { raw, onResponseFn, signal, timeout } = {}) => {
     const decoder = raw ? null : deps.jsonDecoder();
     return common({
       method: async (url, data) => {
@@ -187,7 +183,12 @@ export default ({region, operationNameComponents}) => ({
             if (raw) return await fn(data);
             for (const value of decoder.write(data)) await fn(value);
           },
-          data
+          {
+            ...data,
+            ...(onResponseFn && { onResponseFn }),
+            ...(signal && { signal }),
+            ...(timeout !== undefined && { timeout }),
+          }
         );
         if (decoder) for (const value of decoder.end()) await fn(value);
         return response;

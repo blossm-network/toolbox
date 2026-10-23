@@ -1094,3 +1094,16 @@ describe("RPC stream framing", () => {
     expect(error).to.be.instanceOf(SyntaxError);
   });
 });
+
+describe("RPC query ownership", () => {
+  afterEach(restore);
+  it("retains a reusable frozen query for reads and streams", async () => {
+    replace(deps, "operationToken", fake.resolves(null));
+    replace(deps, "get", fake.resolves({ statusCode: 204 }));
+    replace(deps, "stream", fake.resolves());
+    const query = Object.freeze({ id: "root", active: true });
+    await operation({ region, operationNameComponents }).get(query).in({}).with();
+    await operation({ region, operationNameComponents }).stream(() => undefined, query).in({}).with();
+    expect(query).to.deep.equal({ id: "root", active: true });
+  });
+});
