@@ -132,9 +132,7 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
               operationNameComponents,
               region,
             });
-            const {
-              parsedData: [parsedBody],
-            } = response.body ? jsonString(response.body) : { parsedData: [] };
+            const parsedBody = formatResponse(response.body);
             throw deps.constructError({
               statusCode: response.statusCode,
               message: (parsedBody && parsedBody.message) || "Not specified",

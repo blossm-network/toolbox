@@ -71,6 +71,16 @@ const construct = ({ statusCode, code, message, info }) => {
       return preconditionFailed.message(message, { info });
     case 500:
       return internalServer.message(message, { info });
+    default:
+      return new restifyErrors.HttpError(
+        {
+          statusCode: Number.isInteger(statusCode) && statusCode >= 400 && statusCode <= 599 ? statusCode : 502,
+          code: code || "UpstreamError",
+          info,
+          toJSON,
+        },
+        message || "The upstream request failed."
+      );
   }
 };
 
