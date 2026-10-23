@@ -2,72 +2,66 @@ import deps from "./deps.js";
 
 export default ({
   canonicalFormat,
-  saveEventsFn,
-  reserveRootCountsFn,
-  publishFn,
-  createTransactionFn,
-  idempotencyConflictCheckFn,
-}) => async (req, res) => {
-  if (
-    canonicalFormat != undefined &&
-    req.body.eventData.some(
-      ({ event }) => (event.headers.canonicalFormat ?? 1) != canonicalFormat
+    saveEventsFn,
+    reserveRootCountsFn,
+    publishFn,
+    createTransactionFn,
+    idempotencyConflictCheckFn,
+  }) =>
+  async (req, res) => {
+    if (
+      canonicalFormat != undefined &&
+      req.body.eventData.some(
+        ({ event }) => (event.headers.canonicalFormat ?? 1) != canonicalFormat
+      )
     )
-  )
-    throw deps.badRequestError.message(
-      "Event canonical format does not match this store."
-    );
+      throw deps.badRequestError.message(
+        "Event canonical format does not match this store."
+      );
 
-  const uniqueEventData = [];
-
-  const timestamp = deps.dateString();
-
-  await Promise.all(
-    req.body.eventData.map(async ({ event, number }) => {
-      if (event.headers.idempotency != undefined) {
-        const conflict = await idempotencyConflictCheckFn(
-          event.headers.idempotency
-        );
-
-        //If theres no idempotency conflict in the database and no local conflict, proceed.
-        if (
-          conflict ||
-          uniqueEventData.some(
-            ({ event: uniqueEvent }) =>
-              uniqueEvent.headers.idempotency == event.headers.idempotency
-          )
-        )
-          return;
-      }
-      uniqueEventData.push({ event, ...(number != undefined && { number }) });
-    })
-  );
-
-  const { receipt } = await createTransactionFn(
-    deps.postTransaction({
-      eventData: uniqueEventData,
-      tx: req.body.tx,
-      saveEventsFn,
-      reserveRootCountsFn,
-    })
-  );
-
-  if (process.env.NODE_ENV != "local")
-    await Promise.all(
-      receipt.map((e) =>
-        publishFn(
-          {
-            root: e.root,
-            action: e.action,
-            domain: process.env.DOMAIN,
-            service: process.env.SERVICE,
-            network: process.env.NETWORK,
-            timestamp,
-          },
-          e.topic
-        )
+    const timestamp = deps.dateString();
+    const conflicts = await Promise.all(
+      req.body.eventData.map(({ event }) =>
+        event.headers.idempotency == undefined
+          ? false
+          : idempotencyConflictCheckFn(event.headers.idempotency)
       )
     );
+    const seen = new Set();
+    const uniqueEventData = req.body.eventData.filter(({ event }, index) => {
+      if (conflicts[index]) return false;
+      const { idempotency } = event.headers;
+      if (idempotency == undefined) return true;
+      if (seen.has(idempotency)) return false;
+      seen.add(idempotency);
+      return true;
+    });
 
-  res.sendStatus(204);
-};
+    const { receipt } = await createTransactionFn(
+      deps.postTransaction({
+        eventData: uniqueEventData,
+        tx: req.body.tx,
+        saveEventsFn,
+        reserveRootCountsFn,
+      })
+    );
+
+    if (process.env.NODE_ENV != "local")
+      await Promise.all(
+        receipt.map((e) =>
+          publishFn(
+            {
+              root: e.root,
+              action: e.action,
+              domain: process.env.DOMAIN,
+              service: process.env.SERVICE,
+              network: process.env.NETWORK,
+              timestamp,
+            },
+            e.topic
+          )
+        )
+      );
+
+    res.sendStatus(204);
+  };
