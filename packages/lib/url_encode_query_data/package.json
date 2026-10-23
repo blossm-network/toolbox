@@ -16,5 +16,8 @@
   },
   "devDependencies": {
     "mocha": "^11.7.0"
+  },
+  "dependencies": {
+    "qs": "^6.16.1"
   }
 }

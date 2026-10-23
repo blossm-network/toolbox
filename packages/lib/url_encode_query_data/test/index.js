@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import * as chai from "chai";
 import encode from "../index.js";
 
@@ -24,13 +25,20 @@ describe("Url encode", () => {
     const params = ["are", "you"];
     const url = "http://google.com";
     const response = await encode(url, params);
-    expect(response).to.equal(
-      `${url}?0=are&1=you`
-    );
+    expect(response).to.equal(`${url}?0=are&1=you`);
   });
   it("should call get with no params", async () => {
     const url = "http://google.com";
     const reseponse = await encode(url);
     expect(reseponse).to.deep.equal(url);
+  });
+});
+
+describe("Package dependencies", () => {
+  it("declares the runtime encoder for standalone consumers", () => {
+    const manifest = JSON.parse(
+      readFileSync(new URL("../package.json", import.meta.url), "utf8")
+    );
+    expect(manifest.dependencies).to.have.property("qs").that.is.a("string");
   });
 });
