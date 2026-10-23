@@ -29,10 +29,12 @@ describe("Mongodb event store find one snapshot store", () => {
     const sort = "some-sort";
     const select = "some-select";
 
+    const transaction = {};
     const result = await findSnapshot({ snapshotStore })({
       query,
       sort,
       select,
+      transaction,
     });
     expect(findOneFake).to.have.been.calledWith({
       store: snapshotStore,
@@ -41,6 +43,7 @@ describe("Mongodb event store find one snapshot store", () => {
       select,
       options: {
         lean: true,
+        session: transaction,
       },
     });
     expect(result).to.deep.equal(snapshot);

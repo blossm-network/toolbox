@@ -2,6 +2,7 @@ import deps from "./deps.js";
 
 export default ({ eventStore }) => async ({
   parallel = 1,
+  transaction,
   query,
   sort,
   limit,
@@ -13,7 +14,7 @@ export default ({ eventStore }) => async ({
       query,
       ...(sort && { sort }),
       ...(limit && { limit }),
-      options: { lean: true },
+      options: { lean: true, ...(transaction && { session: transaction }) },
     })
     .cursor();
 

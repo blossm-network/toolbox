@@ -36,8 +36,10 @@ describe("Mongodb event store event stream", () => {
     const sort = "some-sort";
     const limit = "some-limit";
     const query = "some-query";
+    const transaction = {};
     const result = await stream({ eventStore })({
       parallel,
+      transaction,
       sort,
       limit,
       query,
@@ -50,6 +52,7 @@ describe("Mongodb event store event stream", () => {
       limit,
       options: {
         lean: true,
+        session: transaction,
       },
     });
     expect(cursorFake).to.have.been.calledWith();
