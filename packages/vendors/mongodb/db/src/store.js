@@ -1,7 +1,7 @@
 import connect from "./connect.js";
 import deps from "../deps.js";
 
-export default ({
+export default async ({
   name,
   schema,
   indexes = [],
@@ -29,7 +29,7 @@ export default ({
     protocol != undefined &&
     database != undefined
   ) {
-    connect({
+    await connect({
       protocol,
       user,
       password,
@@ -54,5 +54,7 @@ export default ({
 
   for (const index of indexes) store.index(...index);
 
-  return deps.mongoose.model(name, store, name);
+  const model = deps.mongoose.model(name, store, name);
+  await model.init();
+  return model;
 };
