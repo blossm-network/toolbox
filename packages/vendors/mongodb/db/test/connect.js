@@ -77,6 +77,16 @@ describe("Connects", () => {
     });
   });
 
+  it("round-trips reserved and Unicode credentials through the real driver parser", async () => {
+    const user = "user/:@%#雪";
+    const password = "pass/:@%#雪";
+    await connect({ protocol: "mongodb", user, password, host: "localhost", database });
+    const [uri] = connectFake.lastCall.args;
+    const client = new deps.mongoose.mongo.MongoClient(uri);
+    expect(client.options.credentials.username).to.equal(user);
+    expect(client.options.credentials.password).to.equal(password);
+  });
+
   it("it pass along the onError callback", async () => {
     const onError = (name) => name;
 
