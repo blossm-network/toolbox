@@ -21,6 +21,6 @@
     "@blossm/redis": "^0.0.16"
   },
   "devDependencies": {
-    "mocha": "^11.7.0"
+    "mocha": "^12.0.3"
   }
 }

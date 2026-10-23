@@ -18,9 +18,9 @@
     "twilio": "^5.13.1"
   },
   "devDependencies": {
-    "chai": "^5.2.0",
-    "mocha": "^11.6.0",
-    "sinon": "^21.0.0",
-    "sinon-chai": "^4.0.0"
+    "chai": "^6.3.0",
+    "mocha": "^12.0.3",
+    "sinon": "^22.1.0",
+    "sinon-chai": "^4.0.1"
   }
 }

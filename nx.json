@@ -1,0 +1,7 @@
+{
+  "targetDefaults": {
+    "test": {
+      "cache": false
+    }
+  }
+}
