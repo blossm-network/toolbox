@@ -30,7 +30,10 @@ export default (results) => {
   return deps.invalidArgumentError.message("Some information is invalid.", {
     info: {
       errors: errors.map((e) => {
-        return { message: e.message, path: e.path[0] };
+        return {
+          message: e.message,
+          path: Array.isArray(e.path) ? e.path.join(".") || undefined : e.path,
+        };
       }),
     },
   });
