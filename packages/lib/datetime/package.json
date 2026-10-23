@@ -12,8 +12,7 @@
     "access": "public"
   },
   "dependencies": {
-    "moment": "^2.31.0",
-    "moment-timezone": "^0.6.5"
+    "moment": "^2.31.0"
   },
   "scripts": {
     "test": "mocha --recursive"
