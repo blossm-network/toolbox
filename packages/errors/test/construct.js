@@ -1,5 +1,7 @@
 import * as chai from "chai";
-import { construct } from "../index.js";
+import restifyErrors from "restify-errors";
+import { construct, internalServer } from "../index.js";
+import createError from "../src/create_error.js";
 
 const { expect } = chai;
 
@@ -159,6 +161,48 @@ describe("Construct", () => {
 });
 
 describe("Upstream status fallback", () => {
+  it("preserves declared metadata and code for an upstream status", () => {
+    const info = { traceId: "trace-123", resourceId: "resource-456" };
+    const error = construct({
+      statusCode: 503,
+      code: "ServiceBusy",
+      message: "The upstream service is busy.",
+      info,
+    });
+    expect(error.toJSON()).to.deep.equal({
+      statusCode: 503,
+      code: "ServiceBusy",
+      message: "The upstream service is busy.",
+      info,
+    });
+  });
+
+  it("keeps a generic HTTP error cause private while preserving declared metadata", () => {
+    const info = { traceId: "trace-123" };
+    const cause = internalServer.message("FAKE_PASSWORD", {
+      info: { token: "FAKE_TOKEN" },
+    });
+    const error = createError(
+      restifyErrors.HttpError,
+      "The upstream service is busy.",
+      {
+        statusCode: 503,
+        code: "ServiceBusy",
+        cause,
+        info,
+      }
+    );
+    expect(error.toJSON()).to.deep.equal({
+      statusCode: 503,
+      code: "ServiceBusy",
+      message: "The upstream service is busy.",
+      info,
+    });
+    expect(error.cause()).to.equal(cause);
+    expect(error.info().token).to.equal("FAKE_TOKEN");
+    expect(JSON.stringify(error)).not.to.match(/FAKE_|stack|cause/);
+  });
+
   for (const statusCode of [418, 429, 502, 503, 504]) {
     it(`constructs an Error for ${statusCode}`, () => {
       const error = construct({ statusCode, message: "upstream failed" });
