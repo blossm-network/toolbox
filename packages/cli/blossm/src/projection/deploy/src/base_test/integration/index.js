@@ -1,3 +1,4 @@
+import checkResponse from "../assert_response.js";
 import "localenv";
 import * as chai from "chai";
 import viewStore from "@blossm/view-store-rpc";
@@ -22,41 +23,6 @@ const groupRoot = "some-group-root";
 const groupService = "some-group-service";
 const groupNetwork = "some-group-network";
 
-const checkResponse = ({ data, expected }) => {
-  for (const property in expected) {
-    try {
-      expect(data[property]).to.exist;
-    } catch (err) {
-      //eslint-disable-next-line no-console
-      console.log("Expectation doesn't exist.", {
-        property,
-        actual: data,
-        expected,
-      });
-    }
-    if (expected[property]) {
-      if (
-        typeof expected[property] == "object" &&
-        !(expected[property] instanceof Array)
-      ) {
-        checkResponse({
-          data: data[property],
-          expected: expected[property],
-        });
-      } else if (expected[property] instanceof Array) {
-        expect(data[property]).to.be.an("array");
-        for (let i = 0; i < expected[property].length; i++) {
-          checkResponse({
-            data: data[property][i],
-            expected: expected[property][i],
-          });
-        }
-      } else {
-        expect(data[property]).to.deep.equal(expected[property]);
-      }
-    }
-  }
-};
 
 //TODO add integration tests for /replay
 describe("Projection integration tests", () => {

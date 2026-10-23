@@ -4,7 +4,7 @@ const { expect } = chai;
 const checkResponse = ({ data, expected }) => {
   for (const property in expected) {
     expect(data[property]).to.exist;
-    if (expected[property]) {
+    if (expected[property] != null) {
       if (
         typeof expected[property] == "object" &&
         !(expected[property] instanceof Array)
@@ -19,7 +19,7 @@ const checkResponse = ({ data, expected }) => {
         for (const expectedValue of expected[property]) {
           checkResponse({
             data: data[property][i],
-            expected: expectedValue[i],
+            expected: expectedValue,
           });
           i++;
         }
