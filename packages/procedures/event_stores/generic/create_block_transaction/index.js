@@ -89,7 +89,7 @@ export default ({
   let lastRootEnd;
   let end = deps.dateString();
 
-  let count;
+  let count = 0;
   let full = false;
 
   const increment = Math.round(blockLimit * 0.1);
