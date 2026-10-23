@@ -189,7 +189,7 @@ export default ({
           ? updated
           : lastRootEnd;
     },
-    parallel: increment,
+    parallel: transaction ? 1 : increment,
   });
 
   const stringifiedSnapshotPairs = [];
