@@ -234,3 +234,154 @@ describe("Merged HTTP streams", () => {
     assert.ok(cancelled);
   });
 });
+
+describe("Native transport compatibility", () => {
+  afterEach(restore);
+
+  it("preserves every Set-Cookie response header separately", async () => {
+    replace(
+      deps,
+      "fetch",
+      async () =>
+        new Response("ok", {
+          headers: [
+            ["set-cookie", "access=a; Path=/"],
+            ["set-cookie", "challenge=b; Path=/"],
+          ],
+        })
+    );
+    const result = await request.get("https://example.invalid");
+    assert.deepEqual(result.headers["set-cookie"], [
+      "access=a; Path=/",
+      "challenge=b; Path=/",
+    ]);
+  });
+
+  it("uploads only the selected file stream range", async () => {
+    const { createReadStream } = await import("node:fs");
+    const { readFile } = await import("node:fs/promises");
+    const file = new URL("../README.md", import.meta.url);
+    const bytes = await readFile(file);
+    replace(deps, "fetch", async (_, options) => {
+      assert.deepEqual(
+        Buffer.from(await options.body.get("file").arrayBuffer()),
+        bytes.subarray(3, 9)
+      );
+      return response();
+    });
+    await request.post("https://example.invalid", {
+      formData: { file: createReadStream(file, { start: 3, end: 8 }) },
+    });
+  });
+
+  it("honors an existing file descriptor instead of reopening a named path", async () => {
+    const { createReadStream } = await import("node:fs");
+    const { open, readFile } = await import("node:fs/promises");
+    const file = new URL("../README.md", import.meta.url);
+    const bytes = await readFile(file);
+    const descriptor = await open(file);
+    try {
+      replace(deps, "fetch", async (_, options) => {
+        assert.deepEqual(
+          Buffer.from(await options.body.get("file").arrayBuffer()),
+          bytes.subarray(2, 7)
+        );
+        return response();
+      });
+      await request.post("https://example.invalid", {
+        formData: {
+          file: {
+            value: createReadStream(file, {
+              fd: descriptor.fd,
+              autoClose: false,
+              start: 2,
+              end: 6,
+            }),
+            options: { filename: "range.txt", contentType: "text/plain" },
+          },
+        },
+      });
+    } finally {
+      await descriptor.close();
+    }
+  });
+
+  it("cancels a multipart preparation before reading a pre-aborted stream", async () => {
+    const { Readable } = await import("node:stream");
+    const input = new Readable({ read() {} });
+    const controller = new AbortController();
+    const failure = new Error("cancel preparation");
+    controller.abort(failure);
+    const pending = request
+      .post("https://example.invalid", {
+        formData: { file: input },
+        signal: controller.signal,
+      })
+      .catch((error) => error);
+    const stalled = Symbol("stalled");
+    const outcome = await Promise.race([
+      pending,
+      new Promise((resolve) => setTimeout(() => resolve(stalled), 25)),
+    ]);
+    input.destroy();
+    assert.notEqual(outcome, stalled);
+    assert.equal(outcome, failure);
+  });
+
+  it("times out and destroys a stalled multipart input", async () => {
+    const { Readable } = await import("node:stream");
+    const input = new Readable({ read() {} });
+    const pending = request
+      .post("https://example.invalid", {
+        formData: { file: input },
+        timeout: 10,
+      })
+      .catch((error) => error);
+    const stalled = Symbol("stalled");
+    const outcome = await Promise.race([
+      pending,
+      new Promise((resolve) => setTimeout(() => resolve(stalled), 40)),
+    ]);
+    input.destroy();
+    assert.notEqual(outcome, stalled);
+    assert.equal(outcome.name, "TimeoutError");
+    assert.ok(input.destroyed);
+  });
+});
+
+describe("Merged cancellation signals", () => {
+  afterEach(restore);
+
+  it("honors global cancellation even when a source has its own signal", async () => {
+    replace(
+      deps,
+      "fetch",
+      async (_, { signal }) =>
+        new Promise((resolve, reject) => {
+          signal.addEventListener("abort", () => reject(signal.reason), {
+            once: true,
+          });
+        })
+    );
+    const global = new AbortController();
+    const source = new AbortController();
+    const failure = new Error("cancel all sources");
+    const pending = request
+      .streamMany(
+        [{ url: "https://example.invalid", signal: source.signal }],
+        () => undefined,
+        undefined,
+        { signal: global.signal }
+      )
+      .catch((error) => error);
+    global.abort(failure);
+    const stalled = Symbol("stalled");
+    const outcome = await Promise.race([
+      pending,
+      new Promise((resolve) => setTimeout(() => resolve(stalled), 25)),
+    ]);
+    source.abort(failure);
+    assert.notEqual(outcome, stalled);
+    assert.equal(outcome, failure);
+  });
+});

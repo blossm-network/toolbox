@@ -1,10 +1,15 @@
 import deps from "../deps.js";
 
-export const metadata = (response) => ({
-  headers: Object.fromEntries(response.headers),
-  statusCode: response.status,
-  statusMessage: response.statusText,
-});
+export const metadata = (response) => {
+  const headers = Object.fromEntries(response.headers);
+  const cookies = response.headers.getSetCookie();
+  if (cookies.length) headers["set-cookie"] = cookies;
+  return {
+    headers,
+    statusCode: response.status,
+    statusMessage: response.statusText,
+  };
+};
 
 export const timed = async (fn, controller, timeout) => {
   const timer = setTimeout(
@@ -21,8 +26,8 @@ export const timed = async (fn, controller, timeout) => {
   }
 };
 
-export const signalFor = (controller, signal) =>
-  signal ? AbortSignal.any([controller.signal, signal]) : controller.signal;
+export const signalFor = (controller, ...signals) =>
+  AbortSignal.any([controller.signal, ...signals.filter(Boolean)]);
 
 export const open = async ({
   url,
