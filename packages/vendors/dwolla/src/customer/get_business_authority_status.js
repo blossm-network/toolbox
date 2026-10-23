@@ -10,7 +10,7 @@ export default (dwolla) => async (id) => {
       status,
     };
   } catch (err) {
-    switch (err.statusCode) {
+    switch (err.status) {
       case 404:
         throw deps.resourceNotFoundError.message(
           "This authority wasn't found.",
@@ -20,10 +20,7 @@ export default (dwolla) => async (id) => {
           }
         );
       default:
-        throw deps.badRequestError.message("This customer couldn't be made.", {
-          info: { errors: [{ message: err.message }] },
-          source: err,
-        });
+        throw err;
     }
   }
 };
