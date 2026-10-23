@@ -29,26 +29,26 @@ const formatBody = (value) => {
 };
 
 //NOT MEANT TO BE PUBLIC SINCE THERES NO REQUIRED CONTEXT CHECK.
-export default ({
+export const write = ({
   writeFn,
   formatFn,
   updateFn = defaultFn,
   updateKeys,
-}) => async (req, res) => {
-  const customUpdate = updateFn(req.body.update);
+}) => async ({ id, body }) => {
+  const customUpdate = updateFn(body.update);
 
-  const context = req.body.context &&
+  const context = body.context &&
     process.env.CONTEXT &&
-    req.body.context[process.env.CONTEXT] && {
-      root: req.body.context[process.env.CONTEXT].root,
+    body.context[process.env.CONTEXT] && {
+      root: body.context[process.env.CONTEXT].root,
       domain: process.env.CONTEXT,
-      service: req.body.context[process.env.CONTEXT].service,
-      network: req.body.context[process.env.CONTEXT].network,
+      service: body.context[process.env.CONTEXT].service,
+      network: body.context[process.env.CONTEXT].network,
     };
 
   const groups =
-    req.body.groups &&
-    req.body.groups.map((group) => ({
+    body.groups &&
+    body.groups.map((group) => ({
       root: group.root,
       service: group.service,
       network: group.network,
@@ -57,11 +57,11 @@ export default ({
   const formattedBody = formatBody(customUpdate);
 
   const data = {
-    "headers.id": req.params.id,
+    "headers.id": id,
     "headers.modified": deps.dateString(),
     ...formattedBody,
-    ...(req.body.trace && {
-      [`trace.${req.body.trace.service}.${req.body.trace.domain}`]: req.body
+    ...(body.trace && {
+      [`trace.${body.trace.service}.${body.trace.domain}`]: body
         .trace.txIds,
     }),
     ...(context && { "headers.context": context }),
@@ -70,23 +70,23 @@ export default ({
 
   let formattedQuery;
 
-  if (req.body.query) {
+  if (body.query) {
     if (!formattedQuery) formattedQuery = {};
-    for (const key in req.body.query) {
-      formattedQuery[`body.${key}`] = req.body.query[key];
+    for (const key in body.query) {
+      formattedQuery[`body.${key}`] = body.query[key];
     }
   }
 
   const newView = await writeFn({
     query: {
-      "headers.id": req.params.id,
+      "headers.id": id,
       ...formattedQuery,
     },
     data,
-    ...(req.body.arrayFilters && { arrayFilters: req.body.arrayFilters }),
+    ...(body.arrayFilters && { arrayFilters: body.arrayFilters }),
   });
 
-  if (!newView) return res.sendStatus(204);
+  if (!newView) return;
 
   //TODO this function is duplicated in /get. Refactor.
   const formattedTrace = [];
@@ -100,7 +100,7 @@ export default ({
   const values =
     updateKeys && updateKeys.map((key) => getValue(newView.body, key));
 
-  res.status(200).send({
+  return {
     view: {
       body: formatFn({
         body: newView.body,
@@ -121,5 +121,11 @@ export default ({
       // Fallback for .flat().
       keys: [].concat(...values),
     }),
-  });
+  };
+};
+
+export default (options) => async (req, res) => {
+  const result = await write(options)({ id: req.params.id, body: req.body });
+  if (!result) return res.sendStatus(204);
+  res.status(200).send(result);
 };
