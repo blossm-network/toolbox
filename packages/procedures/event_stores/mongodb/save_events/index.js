@@ -31,16 +31,28 @@ export default ({ eventStore, handlers }) => async ({
       const start = "key: {";
       const end = "}";
 
-      for (const error of err.writeErrors) {
-        const startIndex = error.errmsg.lastIndexOf(start);
-        const endIndex = error.errmsg.lastIndexOf(end);
+      const writeErrors = Array.isArray(err.writeErrors) ? err.writeErrors : [err];
+      for (const writeError of writeErrors) {
+        const error = writeError.err || writeError;
+        const keyValue = error.keyValue || (error.errInfo && error.errInfo.keyValue);
+        if (keyValue) {
+          duplicateKeyObjects.push(keyValue);
+          continue;
+        }
+        const message = error.errmsg || error.message;
+        if (typeof message != "string") continue;
+        const startIndex = message.lastIndexOf(start);
+        const endIndex = message.lastIndexOf(end);
         if (startIndex < 0 || endIndex < 0) continue;
 
-        const string = error.errmsg.substr(
+        const string = message.substr(
           startIndex + start.length,
           endIndex - startIndex - start.length
         );
-        const [key, value] = string.trim().split(":");
+        const separator = string.indexOf(":");
+        if (separator < 0) continue;
+        const key = string.slice(0, separator);
+        const value = string.slice(separator + 1);
         const object = {
           [key.trim().replace(/'/g, "")]: value.trim().replace(/'/g, ""),
         };
