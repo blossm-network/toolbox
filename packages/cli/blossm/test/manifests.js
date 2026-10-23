@@ -21,6 +21,21 @@ describe("CLI and generated manifest contracts", () => {
         assert.ok(dependencies[name], `${name} must be declared directly`);
     });
   }
+  it("declares the tools executed by its own fixture suites", () => {
+    const dependencies = json("../package.json").devDependencies || {};
+    for (const name of [
+      "mocha",
+      "chai",
+      "arg",
+      "sinon",
+      "sinon-chai",
+      "chai-datetime",
+    ])
+      assert.ok(
+        dependencies[name],
+        `${name} must be available to standalone CLI tests`
+      );
+  });
   it("points the CLI package main at its existing implementation", () => {
     assert.ok(
       existsSync(new URL(`../${json("../package.json").main}`, import.meta.url))
