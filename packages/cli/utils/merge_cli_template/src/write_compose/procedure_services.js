@@ -5,7 +5,7 @@ import fs from "fs-extra";
 import hash, { environment as operationIdentityEnvironment } from "@blossm/operation-hash";
 import rootDir from "@blossm/cli-root-dir";
 
-import databaseService from "./database_service.js";
+import databaseName from "./database_name.js";
 import mainService from "./main_service.js";
 
 // Index source configs once; installed/generated trees and symlinks are not procedures.
@@ -15,7 +15,10 @@ const dependencyConfigs = (dir, configs = []) => {
     const filePath = path.join(dir, entry.name);
     if (entry.isFile() && ["blossm.yaml", "blossm.yml"].includes(entry.name)) {
       configs.push(yaml.parse(fs.readFileSync(filePath, "utf8")));
-    } else if (entry.isDirectory() && !["node_modules", ".git", ".blossm", "dist", "build"].includes(entry.name)) {
+    } else if (
+      entry.isDirectory() &&
+      !["node_modules", ".git", ".blossm", "dist", "build"].includes(entry.name)
+    ) {
       dependencyConfigs(filePath, configs);
     }
   }
@@ -23,12 +26,14 @@ const dependencyConfigs = (dir, configs = []) => {
 };
 
 const findEnvForDependency = (env, dependency, configs, network) => {
-  const matches = configs.filter(config =>
-    ["procedure", "domain", "service", "name", "context"].every(key =>
-      (dependency[key] ?? null) === (config[key] ?? null)
-    ) && (dependency.network || network) === (config.network || network)
+  const matches = configs.filter(
+    (config) =>
+      ["procedure", "domain", "service", "name", "context"].every(
+        (key) => (dependency[key] ?? null) === (config[key] ?? null)
+      ) && (dependency.network || network) === (config.network || network)
   );
-  if (matches.length > 1) throw new Error("Ambiguous dependency procedure configuration.");
+  if (matches.length > 1)
+    throw new Error("Ambiguous dependency procedure configuration.");
   return matches[0]?.env?.[env];
 };
 
@@ -47,8 +52,6 @@ export default ({
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
-  mongodbAdminDatabase,
-  mongodbDatabase,
   mongodbHost,
   mongodbProtocol,
   mongodbUser,
@@ -78,19 +81,21 @@ export default ({
     MONGODB_HOST: `${mongodbHost}`,
     MONGODB_USER_PASSWORD: `${mongodbUserPassword}`,
     MONGODB_PROTOCOL: `${mongodbProtocol}`,
-    MONGODB_DATABASE: `${mongodbDatabase}`,
   };
 
   let services = {};
-  let includeDatabase = false;
-  const configs = config.testing.dependencies.some(dependency => dependency.procedure != "http")
-    ? dependencyConfigs(rootDir.path()) : [];
+  const configs = config.testing.dependencies.some(
+    (dependency) => dependency.procedure != "http"
+  )
+    ? dependencyConfigs(rootDir.path())
+    : [];
   for (const dependency of config.testing.dependencies) {
     const customEnv = findEnvForDependency(env, dependency, configs, network);
 
-    const registry = localCoreNetwork && dependency.network == localCoreNetwork
-      ? baseContainerRegistery
-      : containerRegistery;
+    const registry =
+      localCoreNetwork && dependency.network == localCoreNetwork
+        ? baseContainerRegistery
+        : containerRegistery;
     const commonServiceImagePrefix = `${registry}/${dependency.procedure}`;
 
     switch (dependency.procedure) {
@@ -126,12 +131,18 @@ export default ({
             ...services,
             [key]: {
               ...common,
-              image: mainService({ ...dependency, containerRegistery: registry }).image,
+              image: mainService({
+                ...dependency,
+                containerRegistery: registry,
+              }).image,
               container_name: `${operationHash}.${network}`,
-              depends_on: [databaseServiceKey],
+              depends_on: {
+                [databaseServiceKey]: { condition: "service_healthy" },
+              },
               environment: {
                 ...commonEnvironment,
                 ...commonStoreEnvironment,
+                MONGODB_DATABASE: databaseName(dependency),
                 PROCEDURE: dependency.procedure,
                 OPERATION_HASH: operationHash,
                 ...(dependency.context && { CONTEXT: dependency.context }),
@@ -139,7 +150,6 @@ export default ({
               },
             },
           };
-          includeDatabase = true;
         }
         break;
       case "view-composite":
@@ -150,13 +160,18 @@ export default ({
             dependency.procedure
           );
 
-          const key = `${dependency.name}${dependency.context ? `-${dependency.context}` : ""}`;
+          const key = `${dependency.name}${
+            dependency.context ? `-${dependency.context}` : ""
+          }`;
 
           services = {
             ...services,
             [key]: {
               ...common,
-              image: mainService({ ...dependency, containerRegistery: registry }).image,
+              image: mainService({
+                ...dependency,
+                containerRegistery: registry,
+              }).image,
               container_name: `${operationHash}.${network}`,
               environment: {
                 ...commonEnvironment,
@@ -184,10 +199,13 @@ export default ({
               ...common,
               image: `${commonServiceImagePrefix}.${dependency.service}.${dependency.domain}:latest`,
               container_name: `${operationHash}.${network}`,
-              depends_on: [databaseServiceKey],
+              depends_on: {
+                [databaseServiceKey]: { condition: "service_healthy" },
+              },
               environment: {
                 ...commonEnvironment,
                 ...commonStoreEnvironment,
+                MONGODB_DATABASE: databaseName(dependency),
                 PROCEDURE: dependency.procedure,
                 OPERATION_HASH: operationHash,
                 DOMAIN: dependency.domain,
@@ -195,7 +213,6 @@ export default ({
               },
             },
           };
-          includeDatabase = true;
         }
         break;
       case "command":
@@ -264,17 +281,5 @@ export default ({
         break;
     }
   }
-  return {
-    ...services,
-    ...(includeDatabase
-      ? {
-          [databaseServiceKey]: databaseService({
-            adminDatabase: mongodbAdminDatabase,
-            database: mongodbDatabase,
-            user: mongodbUser,
-            userPassword: mongodbUserPassword,
-          }),
-        }
-      : []),
-  };
+  return services;
 };

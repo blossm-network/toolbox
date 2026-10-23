@@ -27,6 +27,7 @@
     "mocha": "^12.0.3",
     "@blossm/rpc": "^0.0.268",
     "@blossm/view-composite-rpc": "^0.0.165",
-    "@blossm/operation-short-name": "^0.0.1"
+    "@blossm/operation-short-name": "^0.0.1",
+    "@blossm/mongodb-database": "^0.0.134"
   }
 }

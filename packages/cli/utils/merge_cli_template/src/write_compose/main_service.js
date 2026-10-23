@@ -1,3 +1,5 @@
+import databaseName from "./database_name.js";
+
 export default ({
   procedure,
   operationHash,
@@ -22,7 +24,6 @@ export default ({
   mongodbUser,
   mongodbUserPassword,
   mongodbHost,
-  mongodbDatabase,
   mongodbProtocol,
   envVars,
   devEnvVars,
@@ -54,7 +55,13 @@ export default ({
     MONGODB_USER: mongodbUser,
     MONGODB_HOST: mongodbHost,
     MONGODB_USER_PASSWORD: mongodbUserPassword,
-    MONGODB_DATABASE: mongodbDatabase,
+    MONGODB_DATABASE: databaseName({
+      procedure,
+      service,
+      domain,
+      context,
+      name,
+    }),
     MONGODB_PROTOCOL: mongodbProtocol,
   };
 
