@@ -340,9 +340,26 @@ describe("Fact", () => {
       host: `f.some-domain.some-service.some-other-network`,
     });
     expect(withFake).to.have.been.calledWith({
-      path: "/stream",
+      path: `/${name}/stream`,
       externalTokenFn,
       claims,
     });
+  });
+});
+
+describe("Federated fact routing composition", () => {
+  afterEach(restore);
+
+  it("includes the fact name in the public streaming route", async () => {
+    const { default: rpc } = await import("../../generic/index.js");
+    const { default: rpcDeps } = await import("../../generic/deps.js");
+    replace(deps, "rpc", rpc);
+    replace(rpcDeps, "networkToken", fake.resolves({ token: "fake", type: "Bearer" }));
+    const stream = fake.resolves();
+    replace(rpcDeps, "stream", stream);
+
+    await fact({ name: "balance", domain: "account", service: "core", network: "other.invalid" })
+      .stream(() => undefined, { root: "root" });
+    expect(stream.firstCall.args[0]).to.equal("https://f.account.core.other.invalid/balance/stream/root");
   });
 });
