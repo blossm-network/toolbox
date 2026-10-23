@@ -15,6 +15,7 @@ const project = "some-project";
 const encrypted = "some-encrpyted-secret";
 const secretMessage = "some-secret";
 const cipher = "cipher";
+const fileName = "some-file-name";
 
 process.env.GCP_SECRET_BUCKET = bucket;
 process.env.GCP_KMS_SECRET_BUCKET_KEY_RING = ring;
@@ -22,6 +23,7 @@ process.env.GCP_KMS_SECRET_BUCKET_KEY_LOCATION = location;
 process.env.GCP_PROJECT = project;
 
 describe("Secrets", () => {
+  beforeEach(() => replace(deps, "uuid", fake.returns(fileName)));
   afterEach(() => {
     restore();
   });
@@ -38,9 +40,6 @@ describe("Secrets", () => {
     replace(deps, "readFile", readFileFake);
     replace(deps, "decrypt", decryptFake);
     replace(deps, "unlink", unlinkFake);
-
-    const fileName = "some-file-name";
-    replace(deps, "uuid", fake.returns(fileName));
 
     const result = await secret.get(key);
     expect(downloadFake).to.have.been.calledWith({
@@ -72,9 +71,6 @@ describe("Secrets", () => {
     replace(deps, "readFile", readFileFake);
     replace(deps, "decrypt", decryptFake);
     replace(deps, "unlink", unlinkFake);
-
-    const fileName = "some-file-name";
-    replace(deps, "uuid", fake.returns(fileName));
 
     const result = await secret.get(key, {
       project: "some-other-project",
@@ -138,18 +134,21 @@ describe("Secrets", () => {
       project,
     });
     expect(writeFileFake).to.have.been.calledWith(
-      `${key}.txt.encrypted`,
+      `${fileName}.txt.encrypted`,
       cipher
     );
     expect(uploadFake).to.have.been.calledWith({
-      file: `${key}.txt.encrypted`,
+      file: `${fileName}.txt.encrypted`,
+      destination: `${key}.txt.encrypted`,
       bucket,
     });
-    expect(unlinkFake).to.have.been.calledWith(`${key}.txt.encrypted`);
+    expect(unlinkFake).to.have.been.calledWith(`${fileName}.txt.encrypted`);
     expect(result).to.be.undefined;
   });
   it("should create the correct secret if creating a key throws", async () => {
-    const createKeyFake = fake.rejects("some-error");
+    const createKeyFake = fake.rejects(
+      Object.assign(new Error("already exists"), { code: 6 })
+    );
     const uploadFake = fake();
     const writeFileFake = fake();
     const encryptFake = fake.returns(cipher);
@@ -175,14 +174,15 @@ describe("Secrets", () => {
       project,
     });
     expect(writeFileFake).to.have.been.calledWith(
-      `${key}.txt.encrypted`,
+      `${fileName}.txt.encrypted`,
       cipher
     );
     expect(uploadFake).to.have.been.calledWith({
-      file: `${key}.txt.encrypted`,
+      file: `${fileName}.txt.encrypted`,
+      destination: `${key}.txt.encrypted`,
       bucket,
     });
-    expect(unlinkFake).to.have.been.calledWith(`${key}.txt.encrypted`);
+    expect(unlinkFake).to.have.been.calledWith(`${fileName}.txt.encrypted`);
     expect(result).to.be.undefined;
   });
   it("should create the correct secret with passed in params", async () => {
@@ -217,14 +217,15 @@ describe("Secrets", () => {
       project: "some-other-project",
     });
     expect(writeFileFake).to.have.been.calledWith(
-      `${key}.txt.encrypted`,
+      `${fileName}.txt.encrypted`,
       cipher
     );
     expect(uploadFake).to.have.been.calledWith({
-      file: `${key}.txt.encrypted`,
+      file: `${fileName}.txt.encrypted`,
+      destination: `${key}.txt.encrypted`,
       bucket: "some-other-bucket",
     });
-    expect(unlinkFake).to.have.been.calledWith(`${key}.txt.encrypted`);
+    expect(unlinkFake).to.have.been.calledWith(`${fileName}.txt.encrypted`);
     expect(result).to.be.undefined;
   });
   it("should throw correctly with create", async () => {
