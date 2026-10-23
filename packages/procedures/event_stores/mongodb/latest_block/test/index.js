@@ -25,7 +25,8 @@ describe("Mongodb event store get block", () => {
 
     replace(deps, "db", db);
 
-    const result = await getProof({ blockchainStore })();
+    const transaction = {};
+    const result = await getProof({ blockchainStore })({ transaction });
     expect(findOneFake).to.have.been.calledWith({
       store: blockchainStore,
       query: {},
@@ -34,6 +35,7 @@ describe("Mongodb event store get block", () => {
       },
       options: {
         lean: true,
+        session: transaction,
       },
     });
     expect(result).to.deep.equal(block);

@@ -17,7 +17,9 @@ export default ({
   canonicalFormat = 2,
 }) => async (transaction) => {
   const hashOptions = canonicalFormat == 1 ? [] : [{ canonicalFormat }];
-  const previousBlock = await latestBlockFn();
+  const previousBlock = await latestBlockFn({
+    ...(transaction && { transaction }),
+  });
 
   if (canonicalFormat == 1 && previousBlock?.headers.canonicalFormat == 2)
     throw new Error("Cannot append a legacy block after canonical format 2 activation.");
@@ -86,8 +88,9 @@ export default ({
     handlers,
   });
 
-  let lastRootEnd;
-  let end = deps.dateString();
+  // Snapshot lastEventNumber owns progress; timestamps are block metadata only.
+  // ponytail: scan all roots, use a durable pending-root queue if scan cost warrants it.
+  const end = deps.dateString();
 
   let count = 0;
   let full = false;
@@ -95,16 +98,18 @@ export default ({
   const increment = Math.round(blockLimit * 0.1);
 
   await rootStreamFn({
-    updatedOnOrAfter: previousBlock.headers.end,
-    updatedBefore: end,
+    ...(transaction && { transaction }),
     reverse: true,
-    fn: async ({ root, updated }) => {
+    fn: async ({ root }) => {
       if (count >= blockLimit - increment) {
         full = true;
         return;
       }
 
-      const aggregate = await aggregateFn(root, { includeEvents: true });
+      const aggregate = await aggregateFn(root, {
+        includeEvents: true,
+        ...(transaction && { transaction }),
+      });
 
       if (canonicalFormat == 1 && aggregate.events.some(e => e.headers?.canonicalFormat == 2))
         throw new Error("Cannot export canonical format 2 events in a legacy block.");
@@ -202,11 +207,6 @@ export default ({
         context: snapshot.context,
         state: snapshot.state,
       });
-
-      lastRootEnd =
-        lastRootEnd == undefined || updated > lastRootEnd
-          ? updated
-          : lastRootEnd;
     },
     parallel: transaction ? 1 : increment,
   });
@@ -259,7 +259,7 @@ export default ({
     created: deps.dateString(),
     number: previousBlock.headers.number + 1,
     start: previousBlock.headers.end,
-    end: lastRootEnd || end,
+    end,
     eCount: allStringifiedEventPairs.length,
     sCount,
     tCount: stringifiedTxPairs.length,

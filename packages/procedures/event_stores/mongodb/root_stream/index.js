@@ -2,6 +2,7 @@ import deps from "./deps.js";
 
 export default ({ countsStore }) => async ({
   parallel = 1,
+  transaction,
   updatedOnOrAfter,
   updatedBefore,
   limit,
@@ -24,7 +25,7 @@ export default ({ countsStore }) => async ({
         root: 1,
       },
       ...(limit && { limit }),
-      options: { lean: true },
+      options: { lean: true, ...(transaction && { session: transaction }) },
     })
     .cursor();
 
