@@ -1134,7 +1134,7 @@ describe("Event store create block transaction", () => {
     });
   });
   it("should call with the correct params with no previous block", async () => {
-    const latestBlockFnFake = fake.returns();
+    const latestBlockFnFake = fake();
     const updated = deps.dateString();
 
     const rootStreamFnFake = stub().yieldsTo("fn", { root, updated });
