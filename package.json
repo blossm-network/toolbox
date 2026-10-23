@@ -36,7 +36,9 @@
     "format": "eslint --fix .",
     "runtime:check": "node tools/runtime.js",
     "runtime:sync": "node tools/runtime.js --write",
-    "test:runtime": "node --test tools/test/runtime.js"
+    "test:runtime": "node --test tools/test/runtime.js",
+    "lint": "eslint .",
+    "test:lint": "node --test tools/test/lint.js"
   },
   "devDependencies": {
     "auto-changelog": "^2.0.0",
