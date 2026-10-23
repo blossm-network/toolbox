@@ -15,7 +15,10 @@ const scheduleString = "some-schedule";
 const timeZone = "some-time-zone";
 const project = "some-project";
 const location = "some-location";
-const token = "some-token";
+const token = {
+  serviceAccountEmail: "scheduler@example.invalid",
+  scope: "https://www.googleapis.com/auth/cloud-platform",
+};
 
 describe("Schedule", () => {
   afterEach(() => {
@@ -43,6 +46,7 @@ describe("Schedule", () => {
         httpTarget: {
           uri: url,
           httpMethod: "POST",
+          headers: { "content-type": "application/json" },
           oauthToken: token,
           body: Buffer.from(JSON.stringify(data)),
         },
