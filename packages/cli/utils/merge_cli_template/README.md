@@ -26,8 +26,10 @@ and [Compose health dependency behavior](https://docs.docker.com/compose/how-tos
 
 This is an isolated local fixture, not a production database deployment. It
 retains the existing no-auth container setup and known fixture credentials;
-the host port binds to loopback. Exact role grants are prepared for the named
-databases, without any `*AnyDatabase` role. Use fresh fixture data when changing
+the host port binds to loopback, and other containers on the private Compose
+network can reach it. Authorization is disabled in the generated daemon, so its
+configured database roles do not enforce access restrictions. Exact role grants
+are prepared for the named databases, without any `*AnyDatabase` role. Use fresh fixture data when changing
 the configured stores; no production database or existing application data is
 migrated by this generator.
 
@@ -43,5 +45,7 @@ It owns a temporary loopback port, process and data directory. It executes the
 actual readiness script, checks repeated initialization, commits an atomic
 multi-database transaction, verifies independent view/fence/receipt data and
 restarts that temporary server with authentication to prove an unrelated
-database is denied. This is native Mongo verification; it does not claim that
-a Docker container or Cloud Build job was executed.
+database is denied. That authenticated restart proves role-grant correctness in
+an authentication-enabled native daemon; it does not prove authorization parity
+with the generated no-auth Compose fixture. No Docker container or Cloud Build
+job was executed.
