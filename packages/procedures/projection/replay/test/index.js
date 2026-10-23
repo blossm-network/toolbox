@@ -8,6 +8,25 @@ chai.use(sinonChai);
 const { expect } = chai;
 
 describe("Command handler post", () => {
+  it("keeps child play IDs stable across replay retries and distinct across new replays", async () => {
+    const playIds = [];
+    const handler = replay({
+      requireReplayId: true,
+      replayStores: [{ service: "service", domain: "domain" }],
+      rootStreamFn: async ({ fn }) => fn({ root: "root" }),
+      playFn: async ({ playId }) => playIds.push(playId),
+    });
+    const res = { sendStatus: () => {} };
+    await handler({ body: { replayId: "one-replay" } }, res);
+    await handler({ body: { replayId: "one-replay" } }, res);
+    await handler({ body: { replayId: "new-replay" } }, res);
+    expect(playIds[0]).to.equal(playIds[1]);
+    expect(playIds[0]).not.to.equal(playIds[2]);
+    let error;
+    try { await handler({}, res); } catch (caught) { error = caught; }
+    expect(error && error.statusCode).to.equal(400);
+  });
+
   it("should call with the correct params", async () => {
     const rootStreamFnFake = fake();
 

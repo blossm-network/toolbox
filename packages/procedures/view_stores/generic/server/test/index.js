@@ -8,6 +8,19 @@ chai.use(sinonChai);
 const { expect } = chai;
 
 describe("View store", () => {
+  it("should register the optional internal projection session route", async () => {
+    const viewStore = (await import("../index.js")).default;
+    const server = {};
+    for (const method of ["post", "get", "put", "delete"])
+      server[method] = fake.returns(server);
+    server.listen = fake();
+    replace(deps, "server", () => server);
+    const projectionSessionFn = () => {};
+    await viewStore({ projectionSessionFn });
+    expect(server.post).to.have.been.calledWith(projectionSessionFn, {
+      path: "/projection-session",
+    });
+  });
   beforeEach(() => {
     process.env.NODE_ENV = "some-env";
   });

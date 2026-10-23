@@ -14,6 +14,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "@blossm/errors": "^0.0.40"
+  },
   "devDependencies": {
     "chai-datetime": "^1.8.1",
     "mocha": "^11.6.0",

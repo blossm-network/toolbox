@@ -22,6 +22,27 @@ const data = Buffer.from(
 );
 
 describe("Command handler post", () => {
+  it("starts the durable session before reading any aggregate and retains the delivery ID", async () => {
+    const order = [];
+    const session = { add: () => {} };
+    await play({
+      sessionFn: async ({ playId, run }) => {
+        expect(playId).to.equal("pubsub:subscription:message");
+        order.push("lease");
+        await run(session);
+      },
+      aggregateFn: async () => { order.push("aggregate"); return {}; },
+      mainFn: async (args) => {
+        expect(args.session).to.equal(session);
+        order.push("transform");
+      },
+    })(
+      { body: { subscription: "subscription", message: { data, messageId: "message" } } },
+      { sendStatus: () => {} }
+    );
+    expect(order).to.deep.equal(["lease", "aggregate", "transform"]);
+  });
+
   afterEach(() => {
     restore();
   });

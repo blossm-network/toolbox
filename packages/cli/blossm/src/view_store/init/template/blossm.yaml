@@ -3,6 +3,9 @@
 #
 name: some-name
 context: some-context
+# Replica-set projection consistency is opt-in. See the Mongo view-store guide.
+# Stage with consistency: prepared, then activate alongside the projection.
+# consistency: fenced
 
 # If the requesting principal needs to be in one of the matching view's groups. Defaults to false.
 group: false

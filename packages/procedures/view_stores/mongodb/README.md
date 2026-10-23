@@ -1,5 +1,8 @@
 A view store server.
 
+For atomic, retry-safe projection writes, see [fenced projection sessions](PROJECTION_SESSIONS.md).
+Activation is explicit and requires a replica set and a quiesced migration.
+
 Index keys are relative to the view body. MongoDB index options are preserved;
 text weight keys are also relative to the body. Field paths inside other native
 MongoDB options, such as partialFilterExpression or wildcardProjection, refer to
