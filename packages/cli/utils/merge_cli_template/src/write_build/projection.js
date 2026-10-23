@@ -144,6 +144,7 @@ export default ({
           }),
           updateQueue({
             name: `projection${context ? `-${context}` : ""}-${name}-replay`,
+            project,
             maxDispatchPerSecond: 1,
             maxConcurrentDispatches: 1,
           }),
@@ -155,6 +156,7 @@ export default ({
           }),
           updateQueue({
             name: `projection${context ? `-${context}` : ""}-${name}-play`,
+            project,
             maxDispatchPerSecond: 50,
             maxConcurrentDispatches: 100,
           }),
