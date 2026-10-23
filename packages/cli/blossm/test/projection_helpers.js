@@ -1,7 +1,7 @@
 import assert from "assert";
 import { load } from "./load.js";
 
-const fixture = async ({ handler, response = { body: {} } }) => {
+const fixture = async ({ handler, response = { body: {} }, aggregateFn }) => {
   const updates = [];
   const deletions = [];
   const notifications = [];
@@ -40,11 +40,27 @@ const fixture = async ({ handler, response = { body: {} } }) => {
           headers: { service: "animals", domain: "bird", root: "root" },
         },
         push,
+        aggregateFn,
       }),
   };
 };
 
 describe("Generated projection helper semantics", () => {
+  it("propagates deletion requested by a recursively replayed aggregate", async () => {
+    const test = await fixture({
+      handler: async ({ state }) =>
+        state && state.deleted
+          ? { id: "id", del: true }
+          : {
+              id: "id",
+              replay: [{ root: "related", service: "animals", domain: "bird" }],
+            },
+      aggregateFn: async () => ({ state: { deleted: true } }),
+    });
+    await test.run();
+    assert.strictEqual(test.deletions.length, 1);
+    assert.deepStrictEqual(test.updates, []);
+  });
   it("treats a no-content update as a completed no-op without pushing", async () => {
     const test = await fixture({
       handler: async () => ({ id: "id", update: { label: "new" } }),
