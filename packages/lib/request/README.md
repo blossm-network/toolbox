@@ -4,6 +4,9 @@ HTTP access through Node's native fetch, with the existing `post`, `put`, `del`,
 JSON writes accept `body`; their response bodies are parsed when valid JSON.
 GET/DELETE and multipart responses retain text bodies. Every ordinary response
 has `headers`, `statusCode`, `statusMessage` and `body`, including HTTP errors.
+Repeated Set-Cookie headers remain an array. Native fetch decodes supported
+compression, so metadata removes the stale Content-Encoding/Content-Length for
+those decoded representations.
 `formData` accepts scalar fields, Buffers, Blobs and `{value, options}` fields
 with `filename` and `contentType`. File streams use native file-backed Blobs;
 other multipart streams are buffered with cancellation. File-stream byte ranges

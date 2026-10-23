@@ -12,7 +12,8 @@ export default async (fields, signal) => {
         ? field
         : { value: field };
     let body = value;
-    let filename = options.filename;
+    const filename =
+      options.filename || (value?.path && basename(value.path.toString()));
     if (Buffer.isBuffer(value) || value instanceof Uint8Array) {
       body = new Blob([value], { type: options.contentType });
     } else if (
@@ -21,7 +22,6 @@ export default async (fields, signal) => {
       !value.readableEncoding &&
       value.bytesRead === 0
     ) {
-      filename = filename || basename(value.path.toString());
       value.destroy();
       const file = await deps.openAsBlob(value.path, {
         type: options.contentType,
