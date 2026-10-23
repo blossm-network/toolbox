@@ -49,7 +49,7 @@ describe("Dwolla suspend customer", () => {
   it("it should post correctly with 404", async () => {
     const message = "some-error-message";
     const deleteError = new Error(message);
-    deleteError.statusCode = 404;
+    deleteError.status = 404;
     const deleteFake = fake.rejects(deleteError);
     const dwollaClient = {
       delete: deleteFake,
@@ -101,14 +101,8 @@ describe("Dwolla suspend customer", () => {
       //shouldn't be called.
       expect(2).to.equal(1);
     } catch (e) {
-      expect(messageFake).to.have.been.calledWith(
-        "This authority couldn't be made.",
-        {
-          info: { errors: [{ message }] },
-          source: deleteError,
-        }
-      );
-      expect(e).to.equal(error);
+      expect(messageFake).to.have.not.been.called;
+      expect(e).to.equal(deleteError);
     }
   });
 });
