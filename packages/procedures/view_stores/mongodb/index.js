@@ -97,6 +97,7 @@ export default async ({
   one,
   group,
   updateKeys,
+  consistency = false,
 } = {}) => {
   const allIndexes = [
     [{ "headers.id": 1 }],
@@ -304,7 +305,8 @@ export default async ({
     });
   };
 
-  const writeFn = async ({ query, data, arrayFilters }) => {
+  let projectionSession;
+  const persistWrite = async ({ query, data, arrayFilters, session }) => {
     const update = {};
     const setKey = "$set";
     for (const key of Object.keys(data)) {
@@ -336,17 +338,42 @@ export default async ({
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
+        ...(session && { session }),
         ...(arrayFilters && { arrayFilters }),
       },
     });
   };
+  const writeFn = (params) =>
+    params.session
+      ? persistWrite(params)
+      : projectionSession.legacy((session) =>
+          persistWrite({ ...params, session })
+        );
 
-  const removeFn = (query) =>
+  const persistRemove = (query, session) =>
     deps.db.remove({
       store,
       query,
+      ...(session && { options: { session } }),
     });
+  const removeFn = (query, session) =>
+    session
+      ? persistRemove(query, session)
+      : projectionSession.legacy((transaction) =>
+          persistRemove(query, transaction)
+        );
 
+  projectionSession = await deps.projectionSession({
+    store,
+    writeFn,
+    removeFn,
+    formatFn,
+    updateFn,
+    updateKeys,
+    queryFn,
+    enabled: consistency === "fenced",
+    prepared: consistency === "prepared",
+  });
   deps.viewStore({
     streamFn,
     findFn,
@@ -354,6 +381,9 @@ export default async ({
     removeFn,
     countFn,
     groupsLookupFn,
+    ...(projectionSession.handle && {
+      projectionSessionFn: projectionSession.handle,
+    }),
     ...(queryFn && { queryFn }),
     ...(formatCsv && { formatCsv }),
     ...(sortFn && { sortFn }),

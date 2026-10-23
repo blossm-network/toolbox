@@ -463,3 +463,20 @@ describe("Get views", () => {
     expect(withFake).to.have.been.calledWith();
   });
 });
+
+describe('Projection session RPC composition', () => {
+  afterEach(restore);
+
+  it("sends session operations synchronously to the internal session route", async () => {
+    const { default: rpc } = await import("../../generic/index.js");
+    const { default: rpcDeps } = await import("../../generic/deps.js");
+    replace(deps, "rpc", rpc);
+    replace(rpcDeps, "operationToken", fake.resolves(null));
+    const post = fake.resolves({ statusCode: 200, body: {} });
+    replace(rpcDeps, "post", post);
+    await viewStore({ name: "example" }).projectionSession({ action: "begin", playId: "stable" });
+    expect(post).to.have.been.calledOnce;
+    expect(post.firstCall.args[0]).to.match(/\/projection-session$/);
+    expect(post.firstCall.args[1].body).to.deep.equal({ action: "begin", playId: "stable" });
+  });
+});
