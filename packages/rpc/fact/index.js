@@ -57,7 +57,7 @@ export default ({ name, domain, service = process.env.SERVICE, region = process.
         }),
       })
       .with({
-        path: "/stream",
+        path: internal ? "/stream" : `/${name}/stream`,
         ...(internalTokenFn && { internalTokenFn }),
         ...(externalTokenFn && { externalTokenFn }),
         ...(currentToken && { currentToken }),
