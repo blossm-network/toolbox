@@ -1,5 +1,6 @@
 import * as chai from "chai";
 import mongoose from "mongoose";
+import hash from "@blossm/hash";
 import sinonChai from "sinon-chai";
 import chaiDatetime from "chai-datetime";
 import { restore, replace, fake, stub, useFakeTimers } from "sinon";
@@ -49,6 +50,21 @@ describe("Mongodb event store", () => {
   afterEach(() => {
     clock.restore();
     restore();
+  });
+  it("preserves hashed transaction claims and path metadata through model casting", async () => {
+    const server = (await import("../index.js")).default;
+    const store = fake(async ({ name }) => ({ name }));
+    replace(deps, "db", { store });
+    replace(deps, "eventStore", fake());
+    await server({ schema: {}, secretFn: fake.resolves("secret") });
+    const { schema, typeKey } = store.firstCall.args[0];
+    const model = mongoose.model("TransactionRoundTrip", new mongoose.Schema(schema, { typeKey }));
+    try {
+      const tx = { id: "transaction", claims: { exp: 1700000000, iat: 1600000000, aud: ["one", "two"], custom: { role: "reader" } }, path: [{ name: "command", extra: "trace" }] };
+      const stored = new model({ tx }).toObject().tx;
+      expect(stored).to.deep.equal(tx);
+      expect(hash(stored).create()).to.equal(hash(tx).create());
+    } finally { mongoose.deleteModel("TransactionRoundTrip"); }
   });
   it("keeps each cached collection bound to its own operations on repeated startup", async () => {
     const server = (await import("../index.js")).default;
@@ -260,39 +276,7 @@ describe("Mongodb event store", () => {
           ],
           default: undefined,
         },
-        tx: {
-          ip: { $type: String },
-          id: { $type: String },
-          claims: {
-            $type: {
-              iss: String,
-              aud: String,
-              sub: String,
-              exp: String,
-              iat: String,
-              jti: String,
-              _id: false,
-            },
-          },
-          path: {
-            $type: [
-              {
-                id: { $type: String },
-                name: { $type: String },
-                domain: { $type: String },
-                service: { $type: String },
-                network: { $type: String, required: true },
-                host: { $type: String, required: true },
-                procedure: { $type: String, required: true },
-                hash: { $type: String, required: true },
-                issued: { $type: Date },
-                timestamp: { $type: Date },
-                _id: false,
-              },
-            ],
-          },
-          _id: false,
-        },
+        tx: { $type: Object },
         payload: formattedSchemaWithOptions,
       },
       typeKey: "$type",
@@ -666,39 +650,7 @@ describe("Mongodb event store", () => {
           ],
           default: undefined,
         },
-        tx: {
-          ip: { $type: String },
-          id: { $type: String },
-          claims: {
-            $type: {
-              iss: String,
-              aud: String,
-              sub: String,
-              exp: String,
-              iat: String,
-              jti: String,
-              _id: false,
-            },
-          },
-          path: {
-            $type: [
-              {
-                id: { $type: String },
-                name: { $type: String },
-                domain: { $type: String },
-                service: { $type: String },
-                network: { $type: String, required: true },
-                host: { $type: String, required: true },
-                procedure: { $type: String, required: true },
-                hash: { $type: String, required: true },
-                issued: { $type: Date },
-                timestamp: { $type: Date },
-                _id: false,
-              },
-            ],
-          },
-          _id: false,
-        },
+        tx: { $type: Object },
         payload: formattedSchemaWithOptions,
       },
       typeKey: "$type",
@@ -1014,39 +966,7 @@ describe("Mongodb event store", () => {
           ],
           default: undefined,
         },
-        tx: {
-          ip: { $type: String },
-          id: { $type: String },
-          claims: {
-            $type: {
-              iss: String,
-              aud: String,
-              sub: String,
-              exp: String,
-              iat: String,
-              jti: String,
-              _id: false,
-            },
-          },
-          path: {
-            $type: [
-              {
-                id: { $type: String },
-                name: { $type: String },
-                domain: { $type: String },
-                service: { $type: String },
-                network: { $type: String, required: true },
-                host: { $type: String, required: true },
-                procedure: { $type: String, required: true },
-                hash: { $type: String, required: true },
-                issued: { $type: Date },
-                timestamp: { $type: Date },
-                _id: false,
-              },
-            ],
-          },
-          _id: false,
-        },
+        tx: { $type: Object },
         payload: formattedSchemaWithOptions,
       },
       typeKey: "$type",
