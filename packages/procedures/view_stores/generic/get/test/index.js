@@ -44,6 +44,32 @@ process.env.NETWORK = envNetwork;
 process.env.CORE_NETWORK = coreNetwork;
 
 describe("View store get", () => {
+  it("should reject unsafe pagination before querying persistence", async () => {
+    const findFn = fake.resolves([]);
+    const countFn = fake.resolves(0);
+    for (const pagination of [
+      { limit: "101" },
+      { limit: "-1" },
+      { limit: "1.5" },
+      { limit: "not-a-number" },
+      { skip: "-1" },
+      { skip: "9007199254740992" },
+    ]) {
+      let error;
+      try {
+        await get({ findFn, countFn })(
+          { query: { context, ...pagination }, params: {} },
+          { send: () => {} }
+        );
+      } catch (caught) {
+        error = caught;
+      }
+      expect(error && error.statusCode).to.equal(400);
+    }
+    expect(findFn).not.to.have.been.called;
+    expect(countFn).not.to.have.been.called;
+  });
+
   it("should preserve null and empty objects and parse markers recursively in query arrays", async () => {
     let received;
     const handler = get({
