@@ -27,6 +27,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
     schema: {
       hash: { [typeKey]: String, required: true, unique: true },
       headers: {
+        canonicalFormat: { [typeKey]: Number },
         nonce: {
           [typeKey]: String,
           required: true,
@@ -163,6 +164,7 @@ const snapshotStore = async ({ schema, indexes }) => {
     schema: {
       hash: { $type: String, required: true, unique: true },
       headers: {
+        canonicalFormat: { [typeKey]: Number },
         nonce: {
           [typeKey]: String,
           required: true,
@@ -255,6 +257,7 @@ const blockchainStore = async () => {
       hash: { [typeKey]: String, required: true, unique: true },
       signature: { [typeKey]: String, required: true },
       headers: {
+        canonicalFormat: { [typeKey]: Number },
         pHash: { [typeKey]: String, required: true },
         created: { [typeKey]: Date, required: true },
         number: { [typeKey]: Number, required: true, unique: true },
@@ -287,6 +290,7 @@ const blockchainStore = async () => {
 };
 
 export default async ({
+  canonicalFormat = 2,
   schema,
   indexes = [],
   handlers,
@@ -368,6 +372,7 @@ export default async ({
     createBlockFn,
     signFn,
     blockPublisherPublicKeyFn,
+    ...(canonicalFormat != undefined && { canonicalFormat }),
     isPublic,
   });
 };

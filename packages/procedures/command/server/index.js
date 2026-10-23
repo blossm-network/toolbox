@@ -2,6 +2,7 @@ import deps from "./deps.js";
 
 export default async ({
   version,
+  canonicalFormat,
   mainFn,
   validateFn,
   normalizeFn,
@@ -20,6 +21,7 @@ export default async ({
     .post(
       deps.post({
         version,
+        ...(canonicalFormat != undefined && { canonicalFormat }),
         mainFn,
         aggregateFn,
         commandFn,

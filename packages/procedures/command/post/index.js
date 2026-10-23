@@ -2,6 +2,7 @@ import deps from "./deps.js";
 
 const processEvents = async ({
   events,
+  canonicalFormat,
   addFn,
   idempotency,
   context,
@@ -24,6 +25,7 @@ const processEvents = async ({
     service = process.env.SERVICE,
   } of events) {
     const event = deps.createEvent({
+      ...(canonicalFormat != undefined && { canonicalFormat }),
       ...(root && { root }),
       payload,
       version,
@@ -80,6 +82,7 @@ const processEvents = async ({
 };
 
 export default ({
+  canonicalFormat,
   mainFn,
   validateFn,
   normalizeFn,
@@ -186,6 +189,7 @@ export default ({
       logEventsFn: (events) =>
         processEvents({
           events,
+          ...(canonicalFormat != undefined && { canonicalFormat }),
           addFn,
           ...(req.body.headers.idempotency && {
             idempotency: req.body.headers.idempotency,
@@ -202,6 +206,7 @@ export default ({
 
   await processEvents({
     events,
+    ...(canonicalFormat != undefined && { canonicalFormat }),
     addFn,
     ...(req.body.headers.idempotency && {
       idempotency: req.body.headers.idempotency,

@@ -16,7 +16,8 @@
   },
   "dependencies": {
     "@blossm/datetime": "^0.0.18",
-    "@blossm/event-store-post-transaction": "^0.0.47"
+    "@blossm/event-store-post-transaction": "^0.0.47",
+    "@blossm/errors": "^0.0.40"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",

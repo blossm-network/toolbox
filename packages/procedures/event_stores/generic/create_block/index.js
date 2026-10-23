@@ -16,6 +16,7 @@ export default ({
   handlers,
   createBlockFn,
   isPublic,
+  canonicalFormat,
 }) => async (_, res) => {
   const { block, full } = await createTransactionFn(
     deps.createBlockTransaction({
@@ -29,6 +30,7 @@ export default ({
       eventStreamFn,
       handlers,
       blockPublisherPublicKeyFn,
+      ...(canonicalFormat != undefined && { canonicalFormat }),
       isPublic,
       blockLimit,
     })

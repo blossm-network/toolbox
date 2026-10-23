@@ -1,12 +1,23 @@
 import deps from "./deps.js";
 
 export default ({
+  canonicalFormat,
   saveEventsFn,
   reserveRootCountsFn,
   publishFn,
   createTransactionFn,
   idempotencyConflictCheckFn,
 }) => async (req, res) => {
+  if (
+    canonicalFormat != undefined &&
+    req.body.eventData.some(
+      ({ event }) => (event.headers.canonicalFormat ?? 1) != canonicalFormat
+    )
+  )
+    throw deps.badRequestError.message(
+      "Event canonical format does not match this store."
+    );
+
   const uniqueEventData = [];
 
   const timestamp = deps.dateString();
