@@ -10,14 +10,16 @@ const cursorFor = (documents, error) => {
   const connection = mongoose.createConnection();
   const Model = connection.model("cursor-test", new mongoose.Schema({}, { strict: false, autoCreate: false }));
   Model.collection.buffer = false;
+  const close = fake.resolves();
   Model.collection.find = () => ({
     next: async () => {
       if (error) throw error;
       return documents.shift() ?? null;
     },
-    close: async () => {},
+    close,
   });
   const cursor = Model.find().lean().cursor();
+  cursor.closedFake = close;
   return cursor;
 };
 
@@ -29,7 +31,8 @@ const input = (cursor) => {
 describe("For each", () => {
   it("awaits each callback before finishing and preserves cursor order", async () => {
     const completed = [];
-    const store = input(cursorFor([{ value: 1 }, { value: 2 }]));
+    const cursor = cursorFor([{ value: 1 }, { value: 2 }]);
+    const store = input(cursor);
     const result = await forEach({
       store,
       query: { active: true },
@@ -39,6 +42,7 @@ describe("For each", () => {
       },
     });
     expect(completed).to.deep.equal([1, 2]);
+    expect(cursor.closedFake.callCount).to.equal(1);
     expect(result).to.equal(undefined);
     expect(store.find.firstCall.args).to.deep.equal([{ active: true }]);
   });
@@ -57,6 +61,35 @@ describe("For each", () => {
         actual = err;
       }
       expect(actual).to.equal(error);
+      expect(cursor.closedFake.callCount).to.equal(1);
     });
   }
+  it("preserves callback errors when closing also fails", async () => {
+    const error = new Error("callback failure");
+    const cursor = cursorFor([{ value: 1 }]);
+    cursor.close = fake.rejects(new Error("cleanup failure"));
+    let actual;
+    try {
+      await forEach({ store: input(cursor), fn: async () => { throw error; } });
+    } catch (err) {
+      actual = err;
+    }
+    expect(actual).to.equal(error);
+    expect(cursor.close.callCount).to.equal(1);
+  });
+
+  it("rejects a closing failure after callbacks complete", async () => {
+    const error = new Error("cleanup failure");
+    const cursor = cursorFor([{ value: 1 }]);
+    cursor.close = fake.rejects(error);
+    let actual;
+    try {
+      await forEach({ store: input(cursor), fn: async () => {} });
+    } catch (err) {
+      actual = err;
+    }
+    expect(actual).to.equal(error);
+    expect(cursor.close.callCount).to.equal(1);
+  });
+
 });
