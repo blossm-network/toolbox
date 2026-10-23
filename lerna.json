@@ -2,17 +2,12 @@
   "npmClient": "yarn",
   "command": {
     "publish": {
-      "ignoreChanges": [
-        "*.md"
-      ]
+      "ignoreChanges": ["*.md"]
     },
     "version": {
       "allowBranch": "master"
     }
   },
-  "useWorkspaces": true,
-  "packages": [
-    "packages/**/*"
-  ],
+  "packages": ["packages/**/*"],
   "version": "independent"
 }

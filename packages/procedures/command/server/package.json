@@ -20,8 +20,8 @@
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",
-    "mocha": "^11.6.0",
-    "sinon": "^21.0.0",
-    "sinon-chai": "^4.0.0"
+    "mocha": "^12.0.3",
+    "sinon": "^22.1.0",
+    "sinon-chai": "^4.0.1"
   }
 }

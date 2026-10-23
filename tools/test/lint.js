@@ -7,8 +7,13 @@ const root = fileURLToPath(new URL("../../", import.meta.url));
 const lint = (source) =>
   spawnSync(
     process.execPath,
-    ["node_modules/eslint/bin/eslint.js", "--stdin", "--stdin-filename", "audit-check.js"],
-    { cwd: root, input: source, encoding: "utf8" }
+    [
+      "node_modules/eslint/bin/eslint.js",
+      "--stdin",
+      "--stdin-filename",
+      "audit-check.js",
+    ],
+    { cwd: root, input: source, encoding: "utf8" },
   );
 
 test("lint accepts ordinary ESM and rejects undefined bindings", () => {
