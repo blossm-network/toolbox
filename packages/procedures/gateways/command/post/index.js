@@ -69,7 +69,7 @@ export default ({
             domain: token.network,
             httpOnly: true,
             secure: true,
-            expires: new Date(claims.exp),
+            expires: new Date(deps.claimTimestamp(claims.exp)),
           });
         }
         delete response._tokens;

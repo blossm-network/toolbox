@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 chai.use(sinonChai);
@@ -154,46 +155,53 @@ describe("Connection token", () => {
 
 describe("Connection token expiration", () => {
   afterEach(restore);
-  it("uses actual decoded claims and serializable expiry to refresh the token", async () => {
-    const clock = useFakeTimers();
-    try {
-      let cached;
-      const issue = fake(async () => ({
-        body: {
-          token: {
-            value: await create({
-              options: {
-                issuer: "remote",
-                audience: "remote",
-                expiresIn: 1000,
-              },
-              signFn: () => "c2lnbmF0dXJl",
-            }),
+  const keys = crypto.generateKeyPairSync("ec", { namedCurve: "prime256v1" });
+  for (const format of ["legacy", "jose"]) {
+    it(`uses actual ${format} claims and serializable expiry to refresh the token`, async () => {
+      const clock = useFakeTimers();
+      try {
+        let cached;
+        const issue = fake(async () => ({
+          body: {
+            token: {
+              value: await create({
+                options: {
+                  issuer: "remote",
+                  audience: "remote",
+                  expiresIn: 1000,
+                },
+                signFn: (message) =>
+                  crypto
+                    .sign("sha256", Buffer.from(message), keys.privateKey)
+                    .toString("base64"),
+                format,
+              }),
+            },
           },
-        },
-      }));
-      replace(deps, "command", () => ({ set: () => ({ issue }) }));
-      replace(deps, "redis", {
-        readObject: async () => cached,
-        writeObject: async (_, value) => {
-          cached = JSON.parse(JSON.stringify(value));
-        },
-        setExpiry: async () => {},
-      });
-      const token = connectionToken({
-        credentialsFn: async () => ({ root, secret }),
-      });
-      await token({ network });
-      expect(cached.exp).to.equal(new Date(Date.now() + 1000).toISOString());
-      await token({ network });
-      expect(issue.callCount).to.equal(1);
-      clock.tick(1000);
-      await token({ network });
-      expect(issue.callCount).to.equal(2);
-    } finally {
-      clock.restore();
-    }
-  });
+        }));
+        replace(deps, "command", () => ({ set: () => ({ issue }) }));
+        replace(deps, "redis", {
+          readObject: async () => cached,
+          writeObject: async (_, value) => {
+            cached = JSON.parse(JSON.stringify(value));
+          },
+          setExpiry: async () => {},
+        });
+        const token = connectionToken({
+          credentialsFn: async () => ({ root, secret }),
+        });
+        await token({ network });
+        expect(cached.exp).to.equal(new Date(Date.now() + 1000).toISOString());
+        await token({ network });
+        expect(issue.callCount).to.equal(1);
+        clock.tick(1000);
+        await token({ network });
+        expect(issue.callCount).to.equal(2);
+      } finally {
+        clock.restore();
+      }
+    });
+  }
   for (const expiry of [undefined, "invalid"]) {
     it(`refreshes cached tokens with ${expiry} expiration`, async () => {
       const issue = fake.returns({ body: {} });
