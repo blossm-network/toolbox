@@ -323,7 +323,12 @@ describe("Native transport compatibility", () => {
       pending,
       new Promise((resolve) => setTimeout(() => resolve(stalled), 25)),
     ]);
+    const destroyed = input.destroyed;
     input.destroy();
+    assert.ok(
+      destroyed,
+      "cancelled uploads relinquish handed-off input streams"
+    );
     assert.notEqual(outcome, stalled);
     assert.equal(outcome, failure);
   });
