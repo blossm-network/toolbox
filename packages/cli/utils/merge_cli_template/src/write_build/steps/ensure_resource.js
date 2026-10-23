@@ -9,9 +9,7 @@ export default ({ describe, create, update = [] }) => ({
     `if gcloud "$\${@:1:${describe.length}}" >/dev/null 2>&1; then
       ${
         update.length
-          ? `exec gcloud "$\${@:${
-              describe.length + create.length + 1
-            }}"`
+          ? `exec gcloud "$\${@:${describe.length + create.length + 1}}"`
           : "exit 0"
       }
     else
