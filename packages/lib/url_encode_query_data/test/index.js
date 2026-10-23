@@ -42,3 +42,26 @@ describe("Package dependencies", () => {
     expect(manifest.dependencies).to.have.property("qs").that.is.a("string");
   });
 });
+
+describe("Existing URL components", () => {
+  it("appends parameters to an existing query", () => {
+    expect(encode("https://example.test/?old=1", { fresh: 2 })).to.equal(
+      "https://example.test/?old=1&fresh=2"
+    );
+  });
+  it("keeps new queries before fragments", () => {
+    expect(encode("/relative#part", { fresh: 2 })).to.equal(
+      "/relative?fresh=2#part"
+    );
+    expect(encode("https://example.test/?old=1#part", { fresh: 2 })).to.equal(
+      "https://example.test/?old=1&fresh=2#part"
+    );
+  });
+  it("preserves empty parameters and existing separators", () => {
+    expect(encode("mongodb://host/db", {})).to.equal("mongodb://host/db");
+    expect(encode("/path?", { fresh: 2 })).to.equal("/path?fresh=2");
+    expect(encode("/path?old=1&", { fresh: 2 })).to.equal(
+      "/path?old=1&fresh=2"
+    );
+  });
+});
