@@ -34,34 +34,18 @@ const fixture = async ({ handler, response = { body: {} }, aggregateFn }) => {
     updates,
     deletions,
     notifications,
-    run: (push = false, session) =>
+    run: (push = false) =>
       projection.mainFn({
         aggregate: {
           headers: { service: "animals", domain: "bird", root: "root" },
         },
         push,
         aggregateFn,
-        session,
       }),
   };
 };
 
 describe("Generated projection helper semantics", () => {
-  it("buffers query-selected operations in handler order without an external ID stream", async () => {
-    const test = await fixture({
-      handler: async () => ({
-        ops: [
-          { query: { count: 1 }, update: { $inc: { count: 1 } } },
-          { id: "id", update: { count: 4 } },
-        ],
-      }),
-    });
-    const operations = [];
-    await test.run(false, { add: (operation) => operations.push(operation) });
-    assert.deepStrictEqual(operations.map(({ type }) => type), ["put-query", "put"]);
-    assert.deepStrictEqual(operations[0].query, { count: 1 });
-    assert.deepStrictEqual(test.updates, []);
-  });
   it("propagates deletion requested by a recursively replayed aggregate", async () => {
     const test = await fixture({
       handler: async ({ state }) =>

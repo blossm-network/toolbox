@@ -164,3 +164,25 @@ describe("Projection session client", () => {
     assert.equal(pushed, current);
   });
 });
+
+
+describe("Generated projection session wiring", () => {
+  it("buffers query-selected operations in handler order without an external ID stream", async () => {
+    const projection = await load("blossm/src/projection/deploy/src/index.js", {
+      projection: (options) => options,
+      config: { name: "cards" }, process: { env: {} },
+      handlers: { animals: { bird: async () => ({ ops: [
+        { query: { count: 1 }, update: { $inc: { count: 1 } } },
+        { id: "id", update: { count: 4 } },
+      ] }) } },
+      gcpSecret: { get: () => {} }, composeUpdate: (update) => update,
+      viewStore: () => { throw new Error("No external ID stream"); },
+    });
+    const operations = [];
+    await projection.mainFn({ aggregate: { headers: {
+      service: "animals", domain: "bird", root: "root",
+    } }, session: { add: (operation) => operations.push(operation) } });
+    assert.deepStrictEqual(operations.map(({ type }) => type), ["put-query", "put"]);
+    assert.deepStrictEqual(operations[0].query, { count: 1 });
+  });
+});
