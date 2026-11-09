@@ -14,3 +14,8 @@ once the configured indexes initialize.
 An explicit single-field ascending index takes precedence over an automatically
 generated partial-word search helper on the same field. Its configured constraints
 and options are retained.
+
+Partial-word text matching treats punctuation literally, not as regular-expression
+syntax. The full-text branch retains MongoDB text-search syntax. Search still
+depends on the configured indexes and database execution limits; escaping a
+pattern does not make an unanchored partial-word search constant-cost.
