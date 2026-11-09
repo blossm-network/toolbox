@@ -24,7 +24,6 @@ describe("Unauthorized", () => {
       statusCode: 401,
       code: "Unauthorized",
       info,
-      cause,
       message,
     });
   });
