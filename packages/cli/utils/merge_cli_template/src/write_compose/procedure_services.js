@@ -5,7 +5,7 @@ import fs from "fs-extra";
 import hash from "@blossm/operation-hash";
 import rootDir from "@blossm/cli-root-dir";
 
-import databaseService from "./database_service.js";
+import databaseName from "../database_name.js";
 import mainService from "./main_service.js";
 
 // Index source configs once; installed/generated trees and symlinks are not procedures.
@@ -52,8 +52,6 @@ export default ({
   secretBucket,
   secretBucketKeyLocation,
   secretBucketKeyRing,
-  mongodbAdminDatabase,
-  mongodbDatabase,
   mongodbHost,
   mongodbProtocol,
   mongodbUser,
@@ -81,11 +79,9 @@ export default ({
     MONGODB_HOST: `${mongodbHost}`,
     MONGODB_USER_PASSWORD: `${mongodbUserPassword}`,
     MONGODB_PROTOCOL: `${mongodbProtocol}`,
-    MONGODB_DATABASE: `${mongodbDatabase}`,
   };
 
   let services = {};
-  let includeDatabase = false;
   const configs = config.testing.dependencies.some(
     (dependency) => dependency.procedure != "http"
   )
@@ -142,6 +138,7 @@ export default ({
               environment: {
                 ...commonEnvironment,
                 ...commonStoreEnvironment,
+                MONGODB_DATABASE: databaseName(dependency),
                 PROCEDURE: dependency.procedure,
                 OPERATION_HASH: operationHash,
                 ...(dependency.context && { CONTEXT: dependency.context }),
@@ -149,7 +146,6 @@ export default ({
               },
             },
           };
-          includeDatabase = true;
         }
         break;
       case "view-composite":
@@ -203,6 +199,7 @@ export default ({
               environment: {
                 ...commonEnvironment,
                 ...commonStoreEnvironment,
+                MONGODB_DATABASE: databaseName(dependency),
                 PROCEDURE: dependency.procedure,
                 OPERATION_HASH: operationHash,
                 DOMAIN: dependency.domain,
@@ -210,7 +207,6 @@ export default ({
               },
             },
           };
-          includeDatabase = true;
         }
         break;
       case "command":
@@ -277,17 +273,5 @@ export default ({
         break;
     }
   }
-  return {
-    ...services,
-    ...(includeDatabase
-      ? {
-          [databaseServiceKey]: databaseService({
-            adminDatabase: mongodbAdminDatabase,
-            database: mongodbDatabase,
-            user: mongodbUser,
-            userPassword: mongodbUserPassword,
-          }),
-        }
-      : []),
-  };
+  return services;
 };

@@ -1,15 +1,10 @@
-export default ({
-  adminDatabase,
-  database,
-  user,
-  userPassword,
-}) => {
+export default ({ adminDatabase, databases, user, userPassword }) => {
   return {
     image: "mongo:8.0.10",
     container_name: "mongodb",
     environment: {
       MONGODB_INITDB_DATABASE: `${adminDatabase}`,
-      MONGODB_DATABASE: `${database}`,
+      MONGODB_DATABASES: JSON.stringify(databases),
       MONGODB_USER: `${user}`,
       MONGODB_USER_PASSWORD: `${userPassword}`,
     },
