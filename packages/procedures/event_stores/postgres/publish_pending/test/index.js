@@ -11,11 +11,12 @@ describe("Postgres pending publications", () => {
     replace(deps, "deliverPending", fake.returns(drain));
     const publishFn = fake.resolves();
     expect(
-      publishPending({ publicationsStore: "notices", publishFn })
+      publishPending({ publicationsStore: "notices", publishFn, batchSize: 2 })
     ).to.equal(drain);
     const options = deps.deliverPending.firstCall.args[0];
     expect(options.store).to.equal("notices");
     expect(options.key).to.equal("hash");
+    expect(options.batchSize).to.equal(2);
     expect(options.db).to.equal(deps.db);
     const notice = { data: { root: "root" }, topic: "topic" };
     await options.deliverFn(notice);

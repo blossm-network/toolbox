@@ -6,6 +6,7 @@ export default async ({
   indexes = [],
   handlers,
   publishFn,
+  publicationBatchSize,
   encryptFn,
   createBlockFn,
   signFn,
@@ -46,7 +47,12 @@ export default async ({
       saveBlockFn: deps.saveBlock({ blockchainStore }),
       latestBlockFn: deps.latestBlock({ blockchainStore }),
       publishPendingFn:
-        pStore && deps.publishPending({ publicationsStore: pStore, publishFn }),
+        pStore &&
+        deps.publishPending({
+          publicationsStore: pStore,
+          publishFn,
+          batchSize: publicationBatchSize,
+        }),
       encryptFn,
       createBlockFn,
       signFn,

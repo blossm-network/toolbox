@@ -692,4 +692,30 @@ describe("Postgres event store integration", function () {
       await find({ store: stores.publicationsStore, limit: 101 })
     ).to.have.length(100);
   });
+
+  it("honors the server publication batch size across successive recovery calls", async () => {
+    replace(deps.db, "connect", () => database);
+    replace(deps, "eventStore", async (options) => options);
+    const bounded = await eventStore({
+      namespace,
+      handlers,
+      publicationBatchSize: 2,
+      publishFn: async (...args) => published.push(args),
+    });
+    await append(
+      Array.from({ length: 4 }, (_, index) => ({
+        event: event(`bounded-${index}`),
+      }))
+    );
+    expect(await find({ store: stores.publicationsStore })).to.have.length(4);
+
+    await bounded.publishPendingFn();
+    expect(published).to.have.length(2);
+    expect(await find({ store: stores.publicationsStore })).to.have.length(2);
+
+    await bounded.publishPendingFn();
+    expect(published).to.have.length(4);
+    expect(new Set(published.map(([notice]) => notice.root)).size).to.equal(4);
+    expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+  });
 });

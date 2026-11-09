@@ -30,6 +30,7 @@ describe("Postgres event store server", () => {
       indexes: ["color"],
       handlers: { paint: () => {} },
       publishFn: () => {},
+      publicationBatchSize: 2,
       encryptFn: () => {},
       createBlockFn: () => {},
       signFn: () => {},
@@ -49,7 +50,11 @@ describe("Postgres event store server", () => {
       },
     ]);
     expect(deps.publishPending.firstCall.args).to.deep.equal([
-      { publicationsStore: "publications", publishFn: options.publishFn },
+      {
+        publicationsStore: "publications",
+        publishFn: options.publishFn,
+        batchSize: options.publicationBatchSize,
+      },
     ]);
     expect(deps.createTransaction.firstCall.args).to.deep.equal([{ database }]);
     for (const name of ["findSnapshots", "findOneSnapshot", "saveSnapshot"])

@@ -88,9 +88,13 @@ adapter must be used with that framework contract, not the older generic runtime
 POST dispatches pending notices after commitment, including duplicate retries.
 Recurring `/create-block` requests also drive recovery when no new events arrive.
 Direct compositions must arrange those recurring calls; there is no background
-worker. Each call attempts up to 100 notices in attempts/created/hash order,
+worker. Each call attempts one batch in attempts/created/hash order,
 retains failed notices and deletes only after publication acknowledges delivery.
 One failing topic does not prevent the remainder of the batch from being tried.
+Set the server's optional `publicationBatchSize` to a positive safe integer to
+bound work per invocation. The shared delivery loop owns the default of 100.
+Successful notices are deleted, so the next call selects the outstanding batch
+without a cursor or offset; this option does not change action delivery.
 
 Delivery is at least once. Concurrent dispatchers or a stop between publication
 and deletion can deliver duplicates; subscribers must tolerate them. A delivery
