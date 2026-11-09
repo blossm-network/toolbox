@@ -137,55 +137,14 @@ describe("Pending event publications", () => {
     expect(deps.db.write.callCount).to.equal(1);
     expect(deps.db.remove.callCount).to.equal(1);
   });
-  it("honors a custom batch size and leaves remaining notices for later invocations", async () => {
-    const notices = Array.from({ length: 5 }, (_, index) => ({
-      hash: String(index),
-      topic: "topic",
-      data: {},
-    }));
-    replace(deps, "db", {
-      find: fake(async ({ limit }) => notices.slice(0, limit)),
-      remove: fake(async ({ query }) => {
-        notices.splice(
-          notices.findIndex(({ hash }) => hash === query.hash),
-          1
-        );
-      }),
-      write: fake.resolves(),
-    });
-    const publishFn = fake.resolves();
-    const drain = publishPending({
-      publicationsStore: "outbox",
-      publishFn,
-      batchSize: 2,
-    });
-    await drain();
-    expect(publishFn.callCount).to.equal(2);
-    expect(notices.length).to.equal(3);
-    await drain();
-    expect(publishFn.callCount).to.equal(4);
-    expect(notices.length).to.equal(1);
-    await drain();
-    expect(publishFn.callCount).to.equal(5);
-    expect(notices.length).to.equal(0);
-  });
 
-  it("rejects batch sizes that cannot bound a positive number of notices", () => {
-    for (const batchSize of [
-      0,
-      -1,
-      1.5,
-      Infinity,
-      NaN,
-      Number.MAX_SAFE_INTEGER + 1,
-      "2",
-    ])
-      expect(() =>
-        publishPending({
-          publicationsStore: "outbox",
-          publishFn: fake(),
-          batchSize,
-        })
-      ).to.throw(RangeError);
+  it("forwards the configured size to the shared delivery operation", () => {
+    const deliverPending = fake.returns("dispatcher");
+    replace(deps, "deliverPending", deliverPending);
+    const publishFn = fake();
+    expect(
+      publishPending({ publicationsStore: "outbox", publishFn, batchSize: 2 })
+    ).to.equal("dispatcher");
+    expect(deliverPending.firstCall.args[0].batchSize).to.equal(2);
   });
 });

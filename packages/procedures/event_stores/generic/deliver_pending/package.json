@@ -1,0 +1,21 @@
+{
+  "name": "@blossm/event-store-deliver-pending",
+  "description": "Retries pending deliveries and removes acknowledged records.",
+  "version": "0.0.1",
+  "main": "index.js",
+  "type": "module",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 20.19.0"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "mocha": "^11.6.0",
+    "sinon": "^21.0.0"
+  }
+}
