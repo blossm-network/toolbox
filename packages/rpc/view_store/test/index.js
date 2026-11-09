@@ -390,7 +390,7 @@ describe("Get views", () => {
       in: inFake,
     });
     const rpcFake = fake.returns({
-      delete: deleteFake,
+      del: deleteFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -424,7 +424,7 @@ describe("Get views", () => {
       in: inFake,
     });
     const rpcFake = fake.returns({
-      delete: deleteFake,
+      del: deleteFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -447,7 +447,7 @@ describe("Get views", () => {
       in: inFake,
     });
     const rpcFake = fake.returns({
-      delete: deleteFake,
+      del: deleteFake,
     });
     replace(deps, "rpc", rpcFake);
 
@@ -461,5 +461,23 @@ describe("Get views", () => {
     expect(deleteFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith();
+  });
+});
+
+describe("View delete RPC composition", () => {
+  afterEach(restore);
+
+  it("uses the generic RPC delete transport", async () => {
+    const { default: rpc } = await import("../../generic/index.js");
+    const { default: rpcDeps } = await import("../../generic/deps.js");
+    replace(deps, "rpc", rpc);
+    replace(rpcDeps, "operationToken", fake.resolves(null));
+    const del = fake.resolves({ statusCode: 204 });
+    replace(rpcDeps, "del", del);
+
+    await viewStore({ name: "example" }).delete("row", { query: { active: true } });
+    expect(del).to.have.been.calledOnce;
+    expect(del.firstCall.args[0]).to.match(/\/row$/);
+    expect(del.firstCall.args[1].query).to.deep.equal({ query: { active: true } });
   });
 });
