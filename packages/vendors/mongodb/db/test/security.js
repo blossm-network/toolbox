@@ -28,7 +28,9 @@ describe("MongoDB schema and update safety", () => {
       process.execPath,
       [
         "-e",
-        `const mongoose = require(${JSON.stringify(require.resolve("mongoose"))});
+        `const mongoose = require(${JSON.stringify(
+          require.resolve("mongoose")
+        )});
          const Model = mongoose.model("MixedPathSecurityCheck", new mongoose.Schema({meta: {}}));
          new Model(JSON.parse('{"meta.toString.call":1}'));
          console.log(JSON.stringify({callType: typeof Object.prototype.toString.call}));`,
