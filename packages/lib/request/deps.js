@@ -1,9 +1,10 @@
-import request from "request";
+import { openAsBlob } from "node:fs";
 import urlEncodeQueryData from "@blossm/url-encode-query-data";
-import union from "sorted-union-stream";
+import { construct } from "@blossm/errors";
 
 export default {
-  request,
+  fetch: (...args) => fetch(...args),
+  openAsBlob,
   urlEncodeQueryData,
-  union,
+  constructError: construct,
 };
