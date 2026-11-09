@@ -10,6 +10,7 @@ import {
   signalFor,
   timed,
 } from "./src/response.js";
+import jsonDecoder from "./src/json_decoder.js";
 
 const contextFor = ({ signal, timeout = 30000 } = {}) => {
   const controller = new AbortController();
@@ -145,4 +146,12 @@ const streamMany = async (requests, onDataFn, sortFn, options = {}) => {
   }
 };
 
-export default { post, put, del, get, stream, streamMany };
+export default {
+  post,
+  put,
+  del,
+  get,
+  stream,
+  streamMany,
+  jsonDecoder,
+};

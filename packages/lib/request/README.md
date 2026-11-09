@@ -36,3 +36,10 @@ The optional `decode` factory returns a per-source `{write,end}` decoder so
 framed records can be decoded before comparing/merging, without sharing parser
 state between sources. Without a decoder, values remain raw byte chunks.
 
+
+
+`jsonDecoder()` decodes concatenated JSON object/array records independently of
+HTTP chunk boundaries. Give each source its own decoder, call `write(chunk)` for
+each chunk and `end()` at completion. It retains UTF-8 bytes, nested records,
+quotes and escapes across chunks and rejects truncated final records. Binary or
+scalar streams should use raw mode. Only the current partial record is buffered.
