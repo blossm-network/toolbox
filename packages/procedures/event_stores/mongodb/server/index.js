@@ -323,11 +323,6 @@ export default async ({
       ...(pStore && { publicationsStore: pStore }),
       handlers,
     }),
-    queryFn: deps.query({
-      eventStore: eStore,
-      snapshotStore: sStore,
-      handlers,
-    }),
     reserveRootCountsFn: deps.reserveRootCounts({
       countsStore: cStore,
     }),
