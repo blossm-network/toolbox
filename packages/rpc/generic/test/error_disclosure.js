@@ -100,36 +100,45 @@ describe("RPC error disclosure boundary", () => {
       expect(logs).to.have.lengthOf(2);
     });
   }
-  it("keeps undeclared native diagnostics out of middleware responses and logs", () => {
-    const logs = [];
-    replace(logger, "error", (...args) => logs.push(args));
-    const error = new Error(
-      "Database URL: FAKE_PASSWORD\n    at FAKE_CURRENT_TOKEN:1:2"
-    );
-    error.info = { authorization: "FAKE_SERVICE_BEARER" };
-    error.cause = new Error("FAKE_CURRENT_TOKEN");
-    error.toJSON = () => {
-      throw new Error("Must not execute arbitrary toJSON");
-    };
-    let payload;
-    errorMiddleware(
-      error,
-      { body: { password: "FAKE_PASSWORD" } },
-      {
-        status: () => ({
-          send: (body) => {
-            payload = body;
-          },
-        }),
-      },
-      () => {}
-    );
-    expect(payload.message).to.equal("An internal server error occurred.");
-    expect(payload.info).to.deep.equal({});
-    expect(JSON.stringify([payload, logs])).not.to.match(/FAKE_/);
-    expect(payload).not.to.have.property("stack");
-    expect(payload).not.to.have.property("errorType");
-    expect(logs[0][1].errorType).to.equal("Error");
-    expect(logs[0][1].stack).to.include("error_disclosure.js:");
-  });
+  for (const statusCode of [400, 500]) {
+    it(`keeps native ${statusCode} diagnostics out of middleware responses and logs`, () => {
+      const logs = [];
+      replace(logger, statusCode >= 500 ? "error" : "info", (...args) =>
+        logs.push(args)
+      );
+      const error = new Error(
+        "Database URL: FAKE_PASSWORD\n    at FAKE_CURRENT_TOKEN:1:2"
+      );
+      error.statusCode = statusCode;
+      error.info = { authorization: "FAKE_SERVICE_BEARER" };
+      error.cause = new Error("FAKE_CURRENT_TOKEN");
+      error.toJSON = () => {
+        throw new Error("Must not execute arbitrary toJSON");
+      };
+      let payload;
+      errorMiddleware(
+        error,
+        { body: { password: "FAKE_PASSWORD" } },
+        {
+          status: () => ({
+            send: (body) => {
+              payload = body;
+            },
+          }),
+        },
+        () => {}
+      );
+      expect(payload.message).to.equal(
+        statusCode >= 500
+          ? "An internal server error occurred."
+          : "The request could not be processed."
+      );
+      expect(payload.info).to.deep.equal({});
+      expect(JSON.stringify([payload, logs])).not.to.match(/FAKE_/);
+      expect(payload).not.to.have.property("stack");
+      expect(payload).not.to.have.property("errorType");
+      expect(logs[0][1].errorType).to.equal("Error");
+      expect(logs[0][1].stack).to.include("error_disclosure.js:");
+    });
+  }
 });

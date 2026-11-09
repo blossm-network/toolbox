@@ -12,9 +12,11 @@ export default (error = {}) => {
     code: nativeServerError
       ? "InternalServer"
       : (error.body && error.body.code) || error.code,
-    message: nativeServerError
+    message: declared
+      ? error.message
+      : nativeServerError
       ? "An internal server error occurred."
-      : error.message,
+      : "The request could not be processed.",
     info: declared ? publicInfo.get(error) : {},
   };
 };
