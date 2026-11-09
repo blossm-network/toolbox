@@ -1,12 +1,15 @@
 import deps from "./deps.js";
 
-export default ({ publicationsStore, publishFn }) =>
-  async () => {
+export default ({ publicationsStore, publishFn, batchSize = 100 }) => {
+  if (!Number.isSafeInteger(batchSize) || batchSize < 1)
+    throw new RangeError("batchSize must be a positive safe integer.");
+
+  return async () => {
     const pending = await deps.db.find({
       store: publicationsStore,
       query: {},
       sort: { attempts: 1, created: 1, hash: 1 },
-      limit: 100,
+      limit: batchSize,
       options: { lean: true },
     });
     let failure;
@@ -33,3 +36,4 @@ export default ({ publicationsStore, publishFn }) =>
     }
     if (failure) throw failure;
   };
+};

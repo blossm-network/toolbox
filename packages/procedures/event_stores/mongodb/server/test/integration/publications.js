@@ -30,6 +30,7 @@ describe("MongoDB publication recovery", function () {
     });
     await server({
       schema: { amount: Number },
+      publicationBatchSize: 2,
       handlers: { set: (state, payload) => ({ ...state, ...payload }) },
       secretFn: async () => undefined,
       publishFn: async () => {
@@ -192,5 +193,21 @@ describe("MongoDB publication recovery", function () {
     expect(empty.headers.sCount).to.equal(0);
     expect(await publicationsStore.countDocuments()).to.equal(0);
     expect(delivered).to.equal(2);
+  });
+  it("drains one configured batch per invocation without skipping pending notices", async () => {
+    await composition.createTransactionFn(async (transaction) => {
+      for (let index = 0; index < 5; index++)
+        await append(`batch-${index}`, transaction);
+    });
+    expect(await publicationsStore.countDocuments()).to.equal(5);
+    await composition.publishPendingFn();
+    expect(delivered).to.equal(2);
+    expect(await publicationsStore.countDocuments()).to.equal(3);
+    await composition.publishPendingFn();
+    expect(delivered).to.equal(4);
+    expect(await publicationsStore.countDocuments()).to.equal(1);
+    await composition.publishPendingFn();
+    expect(delivered).to.equal(5);
+    expect(await publicationsStore.countDocuments()).to.equal(0);
   });
 });

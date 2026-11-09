@@ -136,6 +136,8 @@ describe("Mongodb event store", () => {
 
     const schema = { a: String };
     await mongodbEventStore({
+      publishFn,
+      publicationBatchSize: 2,
       schema,
       handlers,
       secretFn: secretFake,
@@ -380,6 +382,11 @@ describe("Mongodb event store", () => {
     });
     expect(secretFake).to.have.been.calledWith("mongodb-event-store");
 
+    expect(deps.publishPending).to.have.been.calledWith({
+      publicationsStore: pStore,
+      publishFn,
+      batchSize: 2,
+    });
     expect(saveEventsFake).to.have.been.calledWith({
       publicationsStore: pStore,
       eventStore: eStore,
