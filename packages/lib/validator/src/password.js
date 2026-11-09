@@ -70,7 +70,7 @@ export default (
         return `This ${title} should be less than ${maxPasswordLength} characters. Give this another try after cutting some characters.`;
       }
       if (!isFormattedCorrectly(password)) {
-        return `This ${password} should have a number, letter, and symbol. It’s safer that way.`;
+        return `This ${title} should have a number, letter, and symbol. It’s safer that way.`;
       }
     },
     optional,
