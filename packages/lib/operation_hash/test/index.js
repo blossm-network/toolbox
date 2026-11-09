@@ -22,7 +22,7 @@ describe("Service hash", () => {
 
     const result = operationHash(operation0, operation1, operation2);
     expect(hashFake).to.have.been.calledWith(
-      `${operation0}${operation1}${operation2}`
+      JSON.stringify([operation0, operation1, operation2].map((part) => [typeof part, part]))
     );
     expect(result).to.equal("12345");
   });

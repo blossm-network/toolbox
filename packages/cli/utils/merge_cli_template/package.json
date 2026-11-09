@@ -12,7 +12,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "test": "mocha --recursive"
   },
   "dependencies": {
     "@blossm/cli-root-dir": "^0.0.15",
@@ -24,6 +24,9 @@
     "yaml": "^2.8.0"
   },
   "devDependencies": {
-    "mocha": "^11.7.0"
+    "mocha": "^11.7.0",
+    "@blossm/rpc": "^0.0.268",
+    "@blossm/view-composite-rpc": "^0.0.165",
+    "@blossm/operation-short-name": "^0.0.1"
   }
 }
