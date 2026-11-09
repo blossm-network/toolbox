@@ -198,6 +198,7 @@ export default ({
           }),
           //Update the schedule if it's changed.
           updateScheduledJob({
+            region,
             name: `event-store-${service}-${domain}-create-block`,
             schedule: blockSchedule,
             project,

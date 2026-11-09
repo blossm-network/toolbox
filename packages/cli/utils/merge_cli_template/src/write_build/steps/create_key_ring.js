@@ -1,16 +1,22 @@
-import { oneLine } from "common-tags";
+import ensureResource from "./ensure_resource.js";
 
-export default ({ name, location, project }) => {
-  return {
-    name: "gcr.io/cloud-builders/gcloud",
-    entrypoint: "bash",
-    args: [
-      "-c",
-      oneLine`
-    gcloud kms keyrings create ${name}
-    --location=${location}
-    --project=${project} || exit 0
-    `,
+export default ({ name, location, project }) =>
+  ensureResource({
+    describe: [
+      "kms",
+      "keyrings",
+      "describe",
+      name,
+      `--location=${location}`,
+      `--project=${project}`,
     ],
-  };
-};
+    create: [
+      "kms",
+      "keyrings",
+      "create",
+      name,
+      `--location=${location}`,
+      `--project=${project}`,
+      "--quiet",
+    ],
+  });

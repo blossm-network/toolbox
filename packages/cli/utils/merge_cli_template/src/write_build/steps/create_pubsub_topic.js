@@ -1,15 +1,20 @@
-import { oneLine } from "common-tags";
+import ensureResource from "./ensure_resource.js";
 
-export default ({ action, domain, service, project }) => {
-  return {
-    name: "gcr.io/cloud-builders/gcloud",
-    entrypoint: "bash",
-    args: [
-      "-c",
-      oneLine`
-    gcloud pubsub topics create ${action}.${domain}.${service}
-    --project=${project} || exit 0
-    `,
+export default ({ action, domain, service, project }) =>
+  ensureResource({
+    describe: [
+      "pubsub",
+      "topics",
+      "describe",
+      `${action}.${domain}.${service}`,
+      `--project=${project}`,
     ],
-  };
-};
+    create: [
+      "pubsub",
+      "topics",
+      "create",
+      `${action}.${domain}.${service}`,
+      `--project=${project}`,
+      "--quiet",
+    ],
+  });
