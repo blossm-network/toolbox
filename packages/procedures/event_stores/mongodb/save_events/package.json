@@ -16,7 +16,8 @@
   },
   "dependencies": {
     "@blossm/errors": "^0.0.40",
-    "@blossm/mongodb-database": "^0.0.134"
+    "@blossm/mongodb-database": "^0.0.134",
+    "@blossm/event-store-create-publication": "^0.0.1"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",

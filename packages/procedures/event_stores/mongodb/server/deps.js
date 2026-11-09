@@ -1,4 +1,4 @@
-import publishPending from "./src/publish_pending.js";
+import publishPending from "@blossm/mongodb-event-store-publish-pending";
 import { store } from "@blossm/mongodb-database";
 import { string as dateString } from "@blossm/datetime";
 import eventStore from "@blossm/event-store";

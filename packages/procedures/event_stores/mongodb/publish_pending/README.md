@@ -1,0 +1,1 @@
+Publishes up to 100 pending event notifications, removing each only after acknowledgment. Failed notices remain for retry. Delivery is at least once. The server invokes this operation after event and scheduled block transactions commit.

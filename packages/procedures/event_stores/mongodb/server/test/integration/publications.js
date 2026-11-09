@@ -9,7 +9,7 @@ import postTransaction from "../../../../generic/post_transaction/index.js";
 import createBlock from "../../../../generic/create_block/index.js";
 import server from "../../index.js";
 import serverDeps from "../../deps.js";
-import publicationsDeps from "../../src/publications_deps.js";
+import publicationsDeps from "../../../publish_pending/deps.js";
 
 describe("MongoDB publication recovery", function () {
   this.timeout(30000);
