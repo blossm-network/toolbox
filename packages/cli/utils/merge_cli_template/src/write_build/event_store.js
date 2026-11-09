@@ -1,3 +1,4 @@
+import databaseName from "../database_name.js";
 import yarnInstall from "./steps/yarn_install.js";
 import unitTests from "./steps/unit_tests.js";
 import baseUnitTests from "./steps/base_unit_tests.js";
@@ -147,7 +148,7 @@ export default ({
             env: {
               DOMAIN: domain,
               SERVICE: service,
-              MONGODB_DATABASE: `${service}_${domain}`,
+              MONGODB_DATABASE: databaseName({ procedure: "event-store", service, domain }),
               MONGODB_USER: mongodbUser,
               MONGODB_HOST: mongodbHost,
               MONGODB_PROTOCOL: mongodbProtocol,
