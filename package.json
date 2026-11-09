@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/blossm-network/toolbox#readme",
   "engines": {
-    "node": ">= 20.19.0"
+    "node": ">= 24.22.1"
   },
   "scripts": {
     "preversion": "yarn test",
@@ -33,7 +33,10 @@
     "major": "lerna version major",
     "check-packages": "yarn clean && yarn compile && yarn test",
     "lerna-publish": "npx lerna publish -y from-package",
-    "format": "eslint --fix ."
+    "format": "eslint --fix .",
+    "runtime:check": "node tools/runtime.js",
+    "runtime:sync": "node tools/runtime.js --write",
+    "test:runtime": "node --test tools/test/runtime.js"
   },
   "devDependencies": {
     "auto-changelog": "^2.0.0",
