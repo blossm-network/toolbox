@@ -1,8 +1,7 @@
 import deps from "./deps.js";
 
 export default ({
-  findSnapshotsFn,
-  findEventsFn,
+  rootStreamFn,
   findOneSnapshotFn,
   eventStreamFn,
   handlers,
@@ -25,8 +24,7 @@ export default ({
     res.send(result);
   } else {
     const results = await deps.query({
-      findSnapshotsFn,
-      findEventsFn,
+      rootStreamFn,
       findOneSnapshotFn,
       eventStreamFn,
       handlers,
