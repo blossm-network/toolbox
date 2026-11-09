@@ -9,8 +9,8 @@
     "node": ">= 20.19.0"
   },
   "scripts": {
-    "test": "mocha --recursive",
-    "test:integration": "mocha --timeout 20000 integration/index.js"
+    "test": "mocha --recursive --ignore \"test/integration/**\"",
+    "test:integration": "mocha --timeout 20000 \"test/integration/*.js\""
   },
   "publishConfig": {
     "access": "public"

@@ -10,8 +10,8 @@ import aggregate from "@blossm/event-store-aggregate";
 import query from "@blossm/event-store-query";
 import createBlockTransaction from "@blossm/event-store-create-block-transaction";
 
-import eventStore from "../index.js";
-import deps from "../deps.js";
+import eventStore from "../../index.js";
+import deps from "../../deps.js";
 
 if (!process.env.TEST_POSTGRES_URL)
   throw new Error(
