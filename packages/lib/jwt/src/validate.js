@@ -3,6 +3,15 @@ import decode from "./decode.js";
 
 import deps from "../deps.js";
 
+const timeClaim = (value) => {
+  const timestamp = typeof value == "string" ? Date.parse(value) : NaN;
+  if (!Number.isFinite(timestamp))
+    throw deps.invalidCredentialsError.message(
+      "The token time claim is invalid."
+    );
+  return timestamp;
+};
+
 export default async ({ token, verifyFn, audience, algorithm }) => {
   const [header, payload, signature] = token.split(".");
 
@@ -25,14 +34,14 @@ export default async ({ token, verifyFn, audience, algorithm }) => {
     );
 
   //Throw if the token is expired.
-  const now = new Date();
+  const now = Date.now();
 
-  if (Date.parse(claims.exp) < now)
+  if (timeClaim(claims.exp) <= now)
     throw deps.invalidCredentialsError.message("The token is expired.", {
       info: { reason: "expired" },
     });
 
-  if (claims.nbf && Date.parse(claims.nbf) > now)
+  if (claims.nbf !== undefined && timeClaim(claims.nbf) > now)
     throw deps.invalidCredentialsError.message("The token isn't active yet.");
 
   return claims;
