@@ -15,7 +15,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/mongodb-database": "^0.0.134"
+    "@blossm/mongodb-database": "^0.0.134",
+    "@blossm/event-store-deliver-pending": "^0.0.1"
   },
   "devDependencies": {
     "mocha": "^11.6.0",
