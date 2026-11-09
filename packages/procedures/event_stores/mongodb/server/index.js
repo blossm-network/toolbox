@@ -381,10 +381,9 @@ export default async ({
     latestBlockFn: deps.latestBlock({
       blockchainStore: bStore,
     }),
-    publishFn,
-    ...(pStore && {
-      publishPendingFn: deps.publishPending({ publicationsStore: pStore, publishFn }),
-    }),
+    publishPendingFn: pStore
+      ? deps.publishPending({ publicationsStore: pStore, publishFn })
+      : undefined,
     encryptFn,
     createBlockFn,
     signFn,

@@ -16,7 +16,7 @@ const reserveRootCountsFn = "some-reserve-root-counts-fn";
 const rootStreamFn = "some-root-stream-fn";
 const countFn = "some-count-fn";
 const saveEventsFn = "some-save-events-fn";
-const publishFn = "some-publish-fn";
+const publishPendingFn = fake();
 const saveBlockFn = "some-save-block-fn";
 const createTransactionFn = "some-create-transaction-fn";
 const idempotencyConflictCheckFn = "some-idempotency-conflict-check-fn";
@@ -28,6 +28,7 @@ const signFn = "some-sign-fn";
 const blockPublisherPublicKeyFn = "some-block-publisher-public-key-fn";
 
 describe("Event store", () => {
+  afterEach(restore);
   it("should call with the correct params", async () => {
     const eventStore = (await import("../index.js")).default;
     const listenFake = fake();
@@ -82,7 +83,7 @@ describe("Event store", () => {
       handlers,
       reserveRootCountsFn,
       saveEventsFn,
-      publishFn,
+      publishPendingFn,
       rootStreamFn,
       createTransactionFn,
       latestBlockFn,
@@ -149,11 +150,12 @@ describe("Event store", () => {
       eventStreamFn,
       handlers,
       isPublic,
+      publishPendingFn,
     });
     expect(eventStorePostFake).to.have.been.calledWith({
       saveEventsFn,
       reserveRootCountsFn,
-      publishFn,
+      publishPendingFn,
       idempotencyConflictCheckFn,
       createTransactionFn,
       findOneSnapshotFn,

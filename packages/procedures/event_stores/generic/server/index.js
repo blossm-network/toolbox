@@ -3,7 +3,6 @@ import deps from "./deps.js";
 export default async ({
   saveEventsFn,
   reserveRootCountsFn,
-  publishFn,
   publishPendingFn,
   rootStreamFn,
   createTransactionFn,
@@ -23,6 +22,11 @@ export default async ({
   handlers,
   isPublic,
 } = {}) => {
+  if (process.env.NODE_ENV != "local" && typeof publishPendingFn != "function")
+    throw deps.internalServerError.message(
+      "Event stores require durable publication."
+    );
+
   deps
     .server()
     .get(
@@ -67,7 +71,7 @@ export default async ({
         eventStreamFn,
         handlers,
         isPublic,
-        ...(publishPendingFn && { publishPendingFn }),
+        publishPendingFn,
       }),
       { path: "/create-block" }
     )
@@ -75,8 +79,7 @@ export default async ({
       deps.post({
         saveEventsFn,
         reserveRootCountsFn,
-        publishFn,
-        ...(publishPendingFn && { publishPendingFn }),
+        publishPendingFn,
         createTransactionFn,
         idempotencyConflictCheckFn,
         findOneSnapshotFn,

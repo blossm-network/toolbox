@@ -18,4 +18,23 @@ describe("Scheduled publication recovery", () => {
     );
     expect(publishPendingFn.callCount).to.equal(1);
   });
+  it("does not dispatch in explicit local mode", async () => {
+    const nodeEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = "local";
+    replace(deps, "createBlockTransaction", () => async () => ({
+      block: {},
+      full: false,
+    }));
+    const publishPendingFn = fake.resolves();
+    try {
+      await createBlock({
+        createTransactionFn: (fn) => fn(),
+        publishPendingFn,
+      })({}, { send() {} });
+      expect(publishPendingFn.callCount).to.equal(0);
+    } finally {
+      if (nodeEnv == undefined) delete process.env.NODE_ENV;
+      else process.env.NODE_ENV = nodeEnv;
+    }
+  });
 });

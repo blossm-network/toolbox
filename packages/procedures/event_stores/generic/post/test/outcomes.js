@@ -46,7 +46,7 @@ const fixture = (initialCount = 0) => {
         throw error;
       }
     },
-    publishFn: async () => {},
+    publishPendingFn: async () => {},
   });
   const run = async (eventData, returnOutcomes = true) => {
     let result;

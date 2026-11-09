@@ -3,13 +3,11 @@ import deps from "./deps.js";
 export default ({
     saveEventsFn,
     reserveRootCountsFn,
-    publishFn,
     publishPendingFn,
     createTransactionFn,
     idempotencyConflictCheckFn,
   }) =>
   async (req, res) => {
-    const timestamp = deps.dateString();
     const conflicts = await Promise.all(
       req.body.eventData.map(({ event }) =>
         event.headers.idempotency == undefined
@@ -28,7 +26,7 @@ export default ({
       return !duplicate;
     });
 
-    const { receipt } = await createTransactionFn(
+    await createTransactionFn(
       deps.postTransaction({
         eventData: uniqueEventData,
         tx: req.body.tx,
@@ -37,24 +35,7 @@ export default ({
       })
     );
 
-    if (process.env.NODE_ENV != "local" && publishPendingFn)
-      await publishPendingFn();
-    else if (process.env.NODE_ENV != "local")
-      await Promise.all(
-        receipt.map((e) =>
-          publishFn(
-            {
-              root: e.root,
-              action: e.action,
-              domain: process.env.DOMAIN,
-              service: process.env.SERVICE,
-              network: process.env.NETWORK,
-              timestamp,
-            },
-            e.topic
-          )
-        )
-      );
+    if (process.env.NODE_ENV != "local") await publishPendingFn();
 
     if (req.body.returnOutcomes) res.send({ outcomes });
     else res.sendStatus(204);

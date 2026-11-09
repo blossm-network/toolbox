@@ -22,7 +22,8 @@
     "@blossm/event-store-post": "^0.0.156",
     "@blossm/event-store-root-stream": "^0.0.13",
     "@blossm/logger": "^0.0.13",
-    "@blossm/server": "^0.0.46"
+    "@blossm/server": "^0.0.46",
+    "@blossm/errors": "^0.0.40"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",
