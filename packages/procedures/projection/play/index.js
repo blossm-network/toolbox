@@ -18,7 +18,7 @@ export default ({
   mutedEvents = [],
   sessionFn,
 }) => async (req, res) => {
-  const { root, action, domain, service } = req.body.message
+  const { root, action, domain, service, hash } = req.body.message
     ? data(req)
     : { ...req.body, action: undefined };
 
@@ -40,8 +40,16 @@ export default ({
     });
   };
   if (sessionFn) {
+    if (
+      req.body.message &&
+      (typeof hash != "string" || !hash ||
+        typeof req.body.subscription != "string" || !req.body.subscription)
+    )
+      throw deps.badRequestError.message(
+        "A stable event hash and subscription are required."
+      );
     const playId = req.body.message
-      ? req.body.message.messageId && `pubsub:${req.body.subscription || ""}:${req.body.message.messageId}`
+      ? JSON.stringify(["pubsub", req.body.subscription, hash])
       : req.body.playId || (req.headers && req.headers["x-cloudtasks-taskname"]);
     await sessionFn({ playId, run });
   } else {

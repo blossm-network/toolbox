@@ -14,7 +14,9 @@ a Mongo replica set and majority transactions. Local mode preserves direct write
 and does not acquire leases, require stable play IDs or run batch transactions.
 Both modes share transform, query, mutation and metadata mapping owners.
 
-Pub/Sub subscription/message IDs identify live plays. RPC/CLI put a stable play ID
+Pub/Sub live plays use a JSON tuple of subscription scope and stable event hash,
+which remains the same when outbox republication gets a new transport message ID.
+The session-backed Pub/Sub path requires both fields. RPC/CLI put a stable play ID
 in the task before submission; replay derives stable child IDs from replay/source
 identity. A deliberate new replay has a new replay ID. Receipts are permanent;
 retain them with views/control state. Pruning requires an enforced retry window.

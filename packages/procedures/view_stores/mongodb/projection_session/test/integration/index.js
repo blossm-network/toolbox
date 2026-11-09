@@ -143,6 +143,7 @@ suite("Fenced projection sessions with a real Mongo replica set", function () {
           messageId: "live-message",
           data: Buffer.from(
             JSON.stringify({
+              hash: "live-event-hash",
               root: "source",
               domain: "test",
               service: "test",
@@ -167,6 +168,34 @@ suite("Fenced projection sessions with a real Mongo replica set", function () {
     await handler(liveRequest, res);
     assert.equal(reads, 4);
     assert.equal((await model.findOne({ "headers.id": "card" })).body.count, 2);
+  });
+
+  it("applies a republished event once despite distinct Pub/Sub message IDs", async () => {
+    await seed("republished-counter");
+    let transforms = 0;
+    const handler = play({
+      sessionFn: sessionFn(),
+      aggregateFn: async () => ({}),
+      mainFn: async ({ session }) => {
+        transforms++;
+        session.add(put("republished-counter", { $inc: { count: 1 } }));
+      },
+    });
+    const deliver = (hash, messageId, subscription = "projection-subscription") => handler({
+      body: { subscription, message: {
+        messageId,
+        data: Buffer.from(JSON.stringify({ hash, root: "source", domain: "test", service: "test", network: "test" })).toString("base64"),
+      } },
+    }, { sendStatus: () => {} });
+    await deliver("event-hash", "first-publish");
+    await deliver("event-hash", "ack-loss-republish");
+    assert.equal(transforms, 1);
+    assert.equal((await model.findOne({ "headers.id": "republished-counter" })).body.count, 1);
+    assert.equal(await connection.db.collection("projection_receipts").countDocuments({}), 1);
+    await deliver("different-event-hash", "new-event");
+    await deliver("event-hash", "other-projection", "other-subscription");
+    assert.equal(transforms, 3);
+    assert.equal((await model.findOne({ "headers.id": "republished-counter" })).body.count, 3);
   });
 
   it("commits an increment only once when the commit response is lost", async () => {

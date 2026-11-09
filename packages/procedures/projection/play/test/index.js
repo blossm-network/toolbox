@@ -14,20 +14,21 @@ const action = "some-action";
 const domain = "some-domain";
 const service = "some-service";
 const root = "some-root";
+const hash = "some-event-hash";
 
 const readFactFn = "some-read-fact-fn";
 
 const data = Buffer.from(
-  JSON.stringify({ timestamp, action, domain, service, root })
+  JSON.stringify({ timestamp, action, domain, service, root, hash })
 );
 
 describe("Command handler post", () => {
-  it("starts the durable session before reading any aggregate and retains the delivery ID", async () => {
+  it("starts the durable session before reading any aggregate and retains stable event identity", async () => {
     const order = [];
     const session = { add: () => {} };
     await play({
       sessionFn: async ({ playId, run }) => {
-        expect(playId).to.equal("pubsub:subscription:message");
+        expect(playId).to.equal(JSON.stringify(["pubsub", "subscription", hash]));
         order.push("lease");
         await run(session);
       },
@@ -41,6 +42,58 @@ describe("Command handler post", () => {
       { sendStatus: () => {} }
     );
     expect(order).to.deep.equal(["lease", "aggregate", "transform"]);
+  });
+
+  it("deduplicates a republished event across transport message IDs within its subscription", async () => {
+    const ids = [];
+    const handler = play({ sessionFn: async ({ playId }) => ids.push(playId) });
+    for (const [subscription, eventHash, messageId] of [
+      ["subscription", "hash", "first-message"],
+      ["subscription", "hash", "republished-message"],
+      ["subscription", "next-hash", "message"],
+      ["other-subscription", "hash", "message"],
+      ["scope:part", "hash", "message"],
+      ["scope", "part:hash", "message"],
+    ]) {
+      await handler({ body: {
+        subscription,
+        message: { messageId, data: Buffer.from(JSON.stringify({ root, hash: eventHash })) },
+      } }, { sendStatus: () => {} });
+    }
+    expect(ids[0]).to.equal(ids[1]);
+    expect(new Set([ids[0], ...ids.slice(2)]).size).to.equal(5);
+  });
+
+  it("requires stable event identity before starting a Pub/Sub session or reading state", async () => {
+    const aggregateFn = fake();
+    const sessionFn = fake();
+    const handler = play({ aggregateFn, sessionFn });
+    for (const [subscription, eventHash] of [
+      ["subscription", undefined],
+      ["subscription", ""],
+      ["subscription", null],
+      ["subscription", 123],
+      [undefined, "hash"],
+      ["", "hash"],
+    ]) {
+      let error;
+      try {
+        await handler({ body: { subscription, message: {
+          messageId: "transport-only", data: Buffer.from(JSON.stringify({ root, hash: eventHash })),
+        } } }, { sendStatus: () => {} });
+      } catch (caught) { error = caught; }
+      expect(error && error.statusCode).to.equal(400);
+    }
+    expect(sessionFn).not.to.have.been.called;
+    expect(aggregateFn).not.to.have.been.called;
+  });
+
+  it("retains explicit and queued direct play IDs", async () => {
+    const ids = [];
+    const handler = play({ sessionFn: async ({ playId }) => ids.push(playId) });
+    await handler({ body: { root, playId: "replay-child" } }, { sendStatus: () => {} });
+    await handler({ body: { root }, headers: { "x-cloudtasks-taskname": "queued-play" } }, { sendStatus: () => {} });
+    expect(ids).to.deep.equal(["replay-child", "queued-play"]);
   });
 
   it("a session covers the complete transform so a competing play rereads newer state", async () => {
