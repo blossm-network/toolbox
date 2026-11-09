@@ -17,6 +17,7 @@
   "dependencies": {
     "@blossm/errors": "^0.0.40",
     "@blossm/fact-rpc": "^0.0.209",
+    "@blossm/node-external-token": "^0.0.203",
     "@blossm/redis": "^0.0.16",
     "@blossm/role-permissions": "^0.0.30",
     "@blossm/uuid": "^0.0.9",
