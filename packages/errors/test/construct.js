@@ -157,3 +157,20 @@ describe("Construct", () => {
     });
   });
 });
+
+describe("Upstream status fallback", () => {
+  for (const statusCode of [418, 429, 502, 503, 504]) {
+    it(`constructs an Error for ${statusCode}`, () => {
+      const error = construct({ statusCode, message: "upstream failed" });
+      expect(error).to.be.instanceOf(Error);
+      expect(error.statusCode).to.equal(statusCode);
+      expect(error.message).to.equal("upstream failed");
+    });
+  }
+
+  it("turns an unexpected redirect into a gateway error", () => {
+    const error = construct({ statusCode: 302, message: "unexpected redirect" });
+    expect(error).to.be.instanceOf(Error);
+    expect(error.statusCode).to.equal(502);
+  });
+});

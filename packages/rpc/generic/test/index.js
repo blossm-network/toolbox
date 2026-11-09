@@ -1036,3 +1036,26 @@ describe("Operation", () => {
     }
   });
 });
+
+describe("RPC upstream error composition", () => {
+  afterEach(restore);
+
+  for (const parsed of [true, false]) {
+    it(`preserves a ${parsed ? "parsed" : "text"} JSON conflict response`, async () => {
+      const body = { code: "Conflict", message: "Expected revision does not match." };
+      replace(deps, "post", fake.resolves({ statusCode: 409, body: parsed ? body : JSON.stringify(body) }));
+      replace(deps, "operationToken", fake.resolves(null));
+      const { construct } = await import("../../../errors/index.js");
+      replace(deps, "constructError", construct);
+      let error;
+      try {
+        await operation({ region, operationNameComponents }).post({}).in({}).with();
+      } catch (err) {
+        error = err;
+      }
+      expect(error?.statusCode).to.equal(409);
+      expect(error?.body.code).to.equal("Conflict");
+      expect(error?.message).to.equal(body.message);
+    });
+  }
+});
