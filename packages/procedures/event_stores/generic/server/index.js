@@ -64,6 +64,7 @@ export default async ({
     })
     .get(
       deps.get({
+        rootStreamFn,
         findSnapshotsFn,
         findEventsFn,
         findOneSnapshotFn,
