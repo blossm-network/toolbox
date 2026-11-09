@@ -14,7 +14,9 @@ yarn lint
 yarn test
 ```
 
-`yarn check-packages` runs all three. Tests include root tooling regressions and
+`yarn workspace:check` also verifies every internal range selects its local source;
+registry fallback cannot silently replace a reviewed workspace package.
+`yarn check-packages` runs runtime, workspace, lint and test checks. Tests include root tooling regressions and
 package scripts through Lerna, with two packages running concurrently. Test
 results are not cached. A successful placeholder script is not test coverage.
 Root tooling checks prove that Lerna propagates a package failure even when
