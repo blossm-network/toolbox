@@ -165,6 +165,7 @@ export default ({
           }),
           updateQueue({
             name: `event-store-${service}-${domain}`,
+            project,
             maxDispatchPerSecond: 10,
             maxConcurrentDispatches: 100,
           }),
