@@ -11,7 +11,7 @@ export default ({ name, context, region = process.env.GCP_REGION }) => {
       //TODO this line is ugly. The generic rpc package needs love.
       .in({})
       .with({
-        ...(internalTokenFn && { internalFn: internalTokenFn }),
+        ...(internalTokenFn && { internalTokenFn }),
         ...(enqueueFn && {
           enqueueFn: enqueueFn({
             queue: `projection${context ? `-${context}` : ""}-${name}-play`,
