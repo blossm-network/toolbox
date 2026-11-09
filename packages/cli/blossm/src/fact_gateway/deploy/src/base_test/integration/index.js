@@ -6,8 +6,6 @@ import gcpPubsub from "@blossm/gcp-pubsub";
 import request from "@blossm/request";
 import config from "./../../config.json" with { type: "json" };
 
-chai.use(sinonChai);
-chai.use(chaiDatetime);
 const { expect } = chai;
 
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
