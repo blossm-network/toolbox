@@ -22,12 +22,12 @@ export default async ({
   handlers,
   isPublic,
 } = {}) => {
-  if (process.env.NODE_ENV != "local") {
-    if (typeof publishPendingFn != "function")
-      throw deps.internalServerError.message(
-        "Event stores require durable publication."
-      );
+  if (process.env.NODE_ENV != "local" && typeof publishPendingFn != "function")
+    throw deps.internalServerError.message(
+      "Event stores require durable publication."
+    );
 
+  const recoverPublications = async () => {
     try {
       await publishPendingFn();
     } catch (error) {
@@ -39,7 +39,9 @@ export default async ({
         }
       );
     }
-  }
+  };
+
+  if (process.env.NODE_ENV != "local") await recoverPublications();
 
   deps
     .server()
