@@ -98,7 +98,7 @@ export default ({ name, context = process.env.CONTEXT, region = process.env.GCP_
   } = {}) => (id, { query } = {}) =>
     deps
       .rpc({region, operationNameComponents: [name, ...(context ? [context] : []), "view-store"]})
-      .delete(id, {
+      .del(id, {
         ...(query && { query }),
       })
       .in({
