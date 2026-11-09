@@ -21,6 +21,7 @@ export const deployment = async ({
       removeSync: (target) => removed.push(target),
     },
     spawnSync,
+    execFileSync: () => {},
     rootDir: {
       config: () => ({
         vendors: { cloud: { gcp: { projects: { development: "test" } } } },
