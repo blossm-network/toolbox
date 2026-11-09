@@ -15,7 +15,7 @@ export default ({
       ...(req.query.timestamp && { timestamp: req.query.timestamp }),
     });
 
-    if (!aggregate) return;
+    if (!aggregate) return res.end();
 
     res.write(
       JSON.stringify({
