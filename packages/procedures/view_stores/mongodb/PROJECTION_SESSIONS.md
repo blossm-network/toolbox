@@ -34,7 +34,7 @@ that read; external delivery is not locked or durably ordered. A crash may lose 
 push, but receipts suppress repeated persistence. No notification outbox is added.
 
 The owning operation package has offline unit tests and an explicit
-`test:integration` Mocha suite under test/integration. Set TEST_MONGODB_URL to a
+`test:integration` Mocha suite under test/integration. Set BLOSSM_TEST_MONGODB_URI to a
 disposable replica-set URL; the suite creates and drops its own database. It checks
 stale-play serialization, fencing/takeover, rollback, stable retry receipts,
 ordered query operations, bounds, metadata and postcommit notification behavior.

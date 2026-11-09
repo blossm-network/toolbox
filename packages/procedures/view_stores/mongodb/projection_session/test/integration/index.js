@@ -7,7 +7,7 @@ import createProtocol from "../../index.js";
 import play from "../../../../../projection/play/index.js";
 import createSession from "../../../../../../cli/blossm/src/projection/deploy/src/session.js";
 
-const suite = process.env.TEST_MONGODB_URL ? describe : describe.skip;
+const suite = process.env.BLOSSM_TEST_MONGODB_URI ? describe : describe.skip;
 suite("Fenced projection sessions with a real Mongo replica set", function () {
   this.timeout(15000);
   let connection, model, protocol, persistence;
@@ -37,7 +37,7 @@ suite("Fenced projection sessions with a real Mongo replica set", function () {
   before(async () => {
     process.env.CONTEXT = "tenant";
     connection = await databaseDeps.mongoose
-      .createConnection(process.env.TEST_MONGODB_URL, {
+      .createConnection(process.env.BLOSSM_TEST_MONGODB_URI, {
         dbName: `blossm_audit_views_${randomUUID().replace(/-/g, "")}`,
       })
       .asPromise();
