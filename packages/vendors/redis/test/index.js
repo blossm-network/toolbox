@@ -81,4 +81,18 @@ describe("Redis cache", () => {
       clock.restore();
     }
   });
+  it("does not revive an expired fallback entry when setting its TTL", async () => {
+    client.isReady = false;
+    const clock = useFakeTimers({ now: 1000 });
+    try {
+      const cache = await load();
+      await cache.writeObject("key", value);
+      await cache.setExpiry("key", { seconds: 1 });
+      clock.tick(1000);
+      await cache.setExpiry("key", { seconds: 10 });
+      assert.equal(await cache.readObject("key"), undefined);
+    } finally {
+      clock.restore();
+    }
+  });
 });
