@@ -1,3 +1,3 @@
-import canonicalJson from "canonical-json";
+import stringify from "fast-json-stable-stringify";
 
-export default canonicalJson;
+export default stringify;

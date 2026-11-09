@@ -90,7 +90,7 @@ export default ({
           const context = event.context || {};
           const groupsAdded = event.groupsAdded;
           const groupsRemoved = event.groupsRemoved;
-          const payload = event.payload || {};
+          const payload = event.payload === undefined ? {} : event.payload;
           const tx = {
             ...(txClaims && { claims: txClaims }),
             ...(txId && { id: txId }),
