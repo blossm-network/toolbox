@@ -6,7 +6,9 @@ const buildDir = "utils/merge_cli_template/src/write_build";
 
 describe("Generated build steps", () => {
   it("writes environment data without shell or build-variable interpolation", async () => {
-    const writeEnv = await load(`${buildDir}/steps/write_env.js`);
+    const writeEnv = await load(`${buildDir}/steps/write_env.js`, {
+      nodeImage: "node:fixture",
+    });
     const literal =
       '$VAR $(touch marker) `touch marker` "quotes"\nEOM\nOTHER=value';
     const step = writeEnv({ custom: { LITERAL: literal } });
