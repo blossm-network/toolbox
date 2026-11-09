@@ -88,7 +88,7 @@ const sign = async ({
 const verify =
   ({ key, ring, location, version, project }) =>
   async ({ message, signature, format = "base64" }) => {
-    const instanceKey = __client.cryptoKeyVersionPath(
+    const instanceKey = getClient().cryptoKeyVersionPath(
       project,
       location,
       ring,

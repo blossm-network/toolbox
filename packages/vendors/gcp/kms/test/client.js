@@ -50,4 +50,34 @@ describe("KMS client initialization", function () {
       marker: "client",
     });
   });
+
+  it("verifies through the lazy client before accessing its public getter", () => {
+    run(`
+      import assert from "node:assert/strict";
+      const {default: deps} = await import(${JSON.stringify(dependency)});
+      let constructions = 0;
+      let retrievals = 0;
+      deps.Client = class {
+        constructor() { constructions++; this.marker = "client"; }
+        cryptoKeyVersionPath(...parts) {
+          assert.equal(this.marker, "client");
+          assert.deepEqual(parts, ["project", "global", "ring", "key", "2"]);
+          return parts.join("/");
+        }
+        async getPublicKey({name}) {
+          assert.equal(name, "project/global/ring/key/2");
+          retrievals++;
+          return [{pem: "public-key"}];
+        }
+      };
+      deps.crypto = {createVerify: () => ({update: () => ({verify: () => true})})};
+      const {default: kms} = await import(${JSON.stringify(entry)});
+      assert.equal(constructions, 0);
+      const verify = kms.verify({project: "project", location: "global", ring: "ring", key: "key", version: "2"});
+      assert.equal(await verify({message: "message", signature: "signature"}), true);
+      assert.equal(await verify({message: "message", signature: "signature"}), true);
+      assert.equal(constructions, 1);
+      assert.equal(retrievals, 1);
+    `);
+  });
 });

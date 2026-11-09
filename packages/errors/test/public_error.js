@@ -1,9 +1,12 @@
 import { expect } from "chai";
+import restifyErrors from "restify-errors";
+import createError from "../src/create_error.js";
 import {
   invalidArgument,
   internalServer,
   forbidden,
   publicError,
+  construct,
 } from "../index.js";
 
 describe("Public error contract", () => {
@@ -74,5 +77,46 @@ describe("Public error contract", () => {
       message: "An internal server error occurred.",
       info: {},
     });
+  });
+});
+
+describe("Public upstream fallback errors", () => {
+  for (const [statusCode, expectedStatus] of [
+    [503, 503],
+    [302, 502],
+  ]) {
+    it(`retains declared public metadata for fallback ${expectedStatus}`, () => {
+      const info = { traceId: "upstream-trace", resourceId: "resource-503" };
+      const error = construct({ statusCode, info });
+      expect(error.toJSON()).to.deep.equal({
+        statusCode: expectedStatus,
+        code: "UpstreamError",
+        message: "The upstream request failed.",
+        info,
+      });
+      expect(publicError(error).info).to.equal(info);
+      expect(error.toJSON()).not.to.have.property("cause");
+    });
+  }
+
+  it("keeps HttpError options and public info separate from a private cause", () => {
+    const cause = internalServer.message("FAKE_PASSWORD", {
+      info: { token: "FAKE_BEARER" },
+    });
+    const info = { traceId: "upstream-trace" };
+    const error = createError(restifyErrors.HttpError, "Unavailable.", {
+      statusCode: 503,
+      code: "Unavailable",
+      info,
+      cause,
+    });
+    expect(error.toJSON()).to.deep.equal({
+      statusCode: 503,
+      code: "Unavailable",
+      message: "Unavailable.",
+      info,
+    });
+    expect(error.cause()).to.equal(cause);
+    expect(JSON.stringify(error)).not.to.match(/FAKE_|cause|stack/);
   });
 });
