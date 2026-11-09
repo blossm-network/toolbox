@@ -23,6 +23,36 @@ const context = {
 const deletedCount = 3;
 
 describe("View store delete", () => {
+  it("should reject an empty selector without invoking persistence", async () => {
+    const removeFn = fake.resolves({ deletedCount: 1 });
+    let error;
+    try {
+      await del({ removeFn })(
+        { query: { context, query: {} }, params: {} },
+        { status: () => ({ send: () => {} }) }
+      );
+    } catch (caught) {
+      error = caught;
+    }
+    expect(error && error.statusCode).to.equal(400);
+    expect(removeFn).not.to.have.been.called;
+  });
+
+  it("should require the configured context before deleting", async () => {
+    const removeFn = fake.resolves({ deletedCount: 1 });
+    let error;
+    try {
+      await del({ removeFn })(
+        { query: { query }, params: {} },
+        { status: () => ({ send: () => {} }) }
+      );
+    } catch (caught) {
+      error = caught;
+    }
+    expect(error && error.statusCode).to.equal(403);
+    expect(removeFn).not.to.have.been.called;
+  });
+
   beforeEach(() => {
     process.env.CONTEXT = contextDomain;
   });
@@ -36,6 +66,7 @@ describe("View store delete", () => {
     const id = "some-id";
     const req = {
       query: {
+        context,
         query: {},
       },
       params: {
@@ -53,6 +84,12 @@ describe("View store delete", () => {
 
     await del({ removeFn: removeFake })(req, res);
     expect(removeFake).to.have.been.calledWith({
+      "headers.context": {
+        root: contextRoot,
+        domain: contextDomain,
+        service: contextService,
+        network: contextNetwork,
+      },
       "headers.id": id,
     });
     expect(statusFake).to.have.been.calledWith(200);
@@ -64,6 +101,7 @@ describe("View store delete", () => {
     const token = "some-token";
     const req = {
       query: {
+        context,
         query,
         token,
       },
@@ -82,6 +120,12 @@ describe("View store delete", () => {
       removeFn: removeFake,
     })(req, res);
     expect(removeFake).to.have.been.calledWith({
+      "headers.context": {
+        root: contextRoot,
+        domain: contextDomain,
+        service: contextService,
+        network: contextNetwork,
+      },
       "body.a": 1,
     });
     expect(statusFake).to.have.been.calledWith(200);
@@ -92,6 +136,7 @@ describe("View store delete", () => {
 
     const req = {
       query: {
+        context,
         query,
       },
       params: {},
@@ -107,6 +152,12 @@ describe("View store delete", () => {
 
     await del({ removeFn: removeFake })(req, res);
     expect(removeFake).to.have.been.calledWith({
+      "headers.context": {
+        root: contextRoot,
+        domain: contextDomain,
+        service: contextService,
+        network: contextNetwork,
+      },
       "body.a": 1,
     });
     expect(statusFake).to.have.been.calledWith(200);
