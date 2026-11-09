@@ -33,7 +33,7 @@ describe("Verify access token", () => {
       update: updateFake,
     });
 
-    replace(crypto, "createVerify", createVerifyFake);
+    replace(deps, "createVerify", createVerifyFake);
 
     const response = await verifyAccessToken({ url, algorithm })({
       message,
@@ -69,7 +69,7 @@ describe("Verify access token", () => {
       update: updateFake,
     });
 
-    replace(crypto, "createVerify", createVerifyFake);
+    replace(deps, "createVerify", createVerifyFake);
 
     const response = await verifyAccessToken({ url })({
       message,
