@@ -1,3 +1,5 @@
+import { nodeImage } from "../../../runtime.js";
+
 export default ({
   mainContainerName,
   procedure,
@@ -44,7 +46,7 @@ export default ({
           .map(([key, value]) => `${key}=${value}\n`)
           .join("");
   return {
-    name: "node:20.19.0",
+    name: nodeImage,
     entrypoint: "node",
     args: [
       "-e",

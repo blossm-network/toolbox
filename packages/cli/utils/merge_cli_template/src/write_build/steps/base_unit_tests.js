@@ -1,5 +1,7 @@
+import { nodeImage } from "../../../runtime.js";
+
 export default {
-  name: "node:20.19.0",
+  name: nodeImage,
   entrypoint: "yarn",
   args: ["test:base-unit"],
 };
