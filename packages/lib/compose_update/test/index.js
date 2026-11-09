@@ -2,6 +2,28 @@ import { expect } from "chai";
 import formatUpdate from "../index.js";
 
 describe("Format update", () => {
+  it("should select a parent by any matching existing nested child without bypassing its predicate", () => {
+    const result = formatUpdate(
+      {
+        things: [
+          { children: [{ id: "other" }, { id: "selected" }] },
+          { children: [{ id: "other" }] },
+          { children: [] },
+          { other: true },
+        ],
+        "things.$.name": "updated",
+      },
+      { "things.children.id": "selected" },
+      ".$."
+    );
+    expect(result.things).to.deep.equal([
+      { children: [{ id: "other" }, { id: "selected" }], name: "updated" },
+      { children: [{ id: "other" }] },
+      { children: [] },
+      { other: true },
+    ]);
+  });
+
   it("should honor dotted object selectors within array elements", () => {
     const result = formatUpdate(
       {
