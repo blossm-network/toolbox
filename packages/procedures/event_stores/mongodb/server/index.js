@@ -336,7 +336,7 @@ export default async ({
   const pStore =
     process.env.NODE_ENV == "local" ? undefined : await publicationsStore();
 
-  deps.eventStore({
+  return deps.eventStore({
     findSnapshotsFn: deps.findSnapshots({
       snapshotStore: sStore,
     }),

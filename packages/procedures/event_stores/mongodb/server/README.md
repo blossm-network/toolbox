@@ -7,6 +7,12 @@ Outside local mode, event writes also insert pending notices into the
 hashes identify notices. Event persistence rejects an enabled outbox without a
 transaction. An aborted batch leaves neither events nor notices.
 
+On startup, the server attempts one pending-publication batch before listening.
+This recovers notices left by a previous process without waiting for an event or
+block request. If publication fails, it logs the failure and still starts; notices
+remain available for subsequent recovery. This is one bounded attempt, not a
+drain-until-empty loop or a background retry worker.
+
 After commit, POST dispatches up to `publicationBatchSize` pending notices
 (default 100), including on an
 idempotent retry containing no new events. Scheduled `/create-block` calls also

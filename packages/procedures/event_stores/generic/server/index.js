@@ -22,10 +22,24 @@ export default async ({
   handlers,
   isPublic,
 } = {}) => {
-  if (process.env.NODE_ENV != "local" && typeof publishPendingFn != "function")
-    throw deps.internalServerError.message(
-      "Event stores require durable publication."
-    );
+  if (process.env.NODE_ENV != "local") {
+    if (typeof publishPendingFn != "function")
+      throw deps.internalServerError.message(
+        "Event stores require durable publication."
+      );
+
+    try {
+      await publishPendingFn();
+    } catch (error) {
+      deps.logger.error(
+        "Startup publication recovery failed; pending work remains for retry.",
+        {
+          name: error?.name,
+          code: error?.code,
+        }
+      );
+    }
+  }
 
   deps
     .server()

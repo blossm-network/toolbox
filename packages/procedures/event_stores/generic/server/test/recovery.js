@@ -19,6 +19,7 @@ describe("Required durable publication", () => {
       listen: fake(),
     };
     replace(deps, "server", fake.returns(builder));
+    replace(deps, "logger", { error: fake() });
     replace(deps, "post", fake());
     replace(deps, "createBlock", fake());
   });
@@ -50,5 +51,37 @@ describe("Required durable publication", () => {
     process.env.NODE_ENV = "local";
     await server();
     expect(deps.server.returnValues[0].listen.callCount).to.equal(1);
+    expect(deps.logger.error.callCount).to.equal(0);
+  });
+
+  it("attempts recovery once and waits for it before listening", async () => {
+    let finish;
+    const publishPendingFn = fake(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        })
+    );
+    const starting = server({ publishPendingFn });
+    expect(publishPendingFn.callCount).to.equal(1);
+    expect(deps.server.callCount).to.equal(0);
+    finish();
+    await starting;
+    expect(deps.server.returnValues[0].listen.callCount).to.equal(1);
+    expect(publishPendingFn.callCount).to.equal(1);
+  });
+
+  it("logs a failed recovery attempt and still starts listening", async () => {
+    const error = Object.assign(new Error("publisher unavailable"), {
+      code: "UNAVAILABLE",
+    });
+    const publishPendingFn = fake.rejects(error);
+    await server({ publishPendingFn });
+    expect(publishPendingFn.callCount).to.equal(1);
+    expect(deps.server.returnValues[0].listen.callCount).to.equal(1);
+    expect(deps.logger.error.firstCall.args).to.deep.equal([
+      "Startup publication recovery failed; pending work remains for retry.",
+      { name: "Error", code: "UNAVAILABLE" },
+    ]);
   });
 });

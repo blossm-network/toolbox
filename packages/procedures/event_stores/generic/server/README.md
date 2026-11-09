@@ -21,3 +21,9 @@ Recurring recovery calls remain required; no background worker is added.
 Custom adapters that previously supplied only `publishFn` must implement this
 contract before adopting this framework version. Do not substitute a no-op hook
 or wrap direct publication without transactional persistence.
+
+At startup, the non-local server awaits one recovery batch before listening.
+A failed attempt is logged and startup continues with notices retained for later
+POST/block recovery. Startup does not drain until empty or add a retry timer.
+The adapter must await/return server composition so its startup promise includes
+this recovery attempt. Explicit local mode skips startup publication as before.
