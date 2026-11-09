@@ -4,13 +4,11 @@ import { expect } from "chai";
 import { fake, replace, restore } from "sinon";
 import { connect, query as sql } from "@blossm/postgres-database";
 import prepareStores, { find } from "@blossm/postgres-event-store-storage";
-import post from "@blossm/event-store-post";
 import postTransaction from "@blossm/event-store-post-transaction";
 import aggregate from "@blossm/event-store-aggregate";
 import query from "@blossm/event-store-query";
 import createBlockTransaction from "@blossm/event-store-create-block-transaction";
 
-import createBlock from "@blossm/event-store-create-block";
 import publishDeps from "@blossm/postgres-event-store-publish-pending/deps.js";
 import genericDeps from "@blossm/event-store/deps.js";
 import eventStore from "../../index.js";
@@ -60,6 +58,8 @@ describe("Postgres event store integration", function () {
   let database;
   let stores;
   let api;
+  let postRoute;
+  let blockRoute;
   let published;
   let failPublish;
   let previousEnv;
@@ -90,7 +90,22 @@ describe("Postgres event store integration", function () {
       database = connect(config);
       return database;
     });
-    replace(deps, "eventStore", async (options) => options);
+    const compose = deps.eventStore;
+    replace(genericDeps, "server", () => ({
+      get() {
+        return this;
+      },
+      post(handler, options) {
+        if (options?.path === "/create-block") blockRoute = handler;
+        else postRoute = handler;
+        return this;
+      },
+      listen() {},
+    }));
+    replace(deps, "eventStore", async (options) => {
+      await compose(options);
+      return options;
+    });
     published = [];
     api = await eventStore({
       connection,
@@ -139,12 +154,12 @@ describe("Postgres event store integration", function () {
       body: { eventData: [{ event: first }], tx: { id: "tx", path: [] } },
     };
     let status;
-    await post(api)(req, {
+    await postRoute(req, {
       sendStatus: (value) => {
         status = value;
       },
     });
-    await post(api)(req, { sendStatus: () => {} });
+    await postRoute(req, { sendStatus: () => {} });
     expect(status).to.equal(204);
     expect(published.length).to.equal(1);
     expect(await api.countFn({ root: "bicycle" })).to.equal(1);
@@ -586,12 +601,12 @@ describe("Postgres event store integration", function () {
     const req = { body: { eventData: [{ event: event("retry") }] } };
     failPublish = true;
     expect(
-      (await failure(() => post(api)(req, { sendStatus() {} }))).message
+      (await failure(() => postRoute(req, { sendStatus() {} }))).message
     ).to.equal("publication unavailable");
     expect(await api.countFn({ root: "retry" })).to.equal(1);
     expect(await find({ store: stores.publicationsStore })).to.have.length(1);
     failPublish = false;
-    await post(api)(req, { sendStatus() {} });
+    await postRoute(req, { sendStatus() {} });
     expect(await api.countFn({ root: "retry" })).to.equal(1);
     expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
     expect(published).to.have.length(1);
@@ -601,7 +616,7 @@ describe("Postgres event store integration", function () {
     await append([{ event: event("committed-before-dispatch") }]);
     expect(published).to.have.length(0);
     expect(await find({ store: stores.publicationsStore })).to.have.length(1);
-    await createBlock(api)({}, { send() {} });
+    await blockRoute({}, { send() {} });
     expect(published).to.have.length(1);
     expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
   });
