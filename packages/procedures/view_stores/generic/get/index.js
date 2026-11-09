@@ -220,6 +220,7 @@ export default ({
             ...(req.query.sort && {
               sort: req.query.sort,
             }),
+            ...(req.query.text && { text: req.query.text }),
             skip: skip + limit,
             limit,
           })
