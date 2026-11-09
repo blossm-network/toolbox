@@ -64,4 +64,32 @@ describe("Mongodb event store create transaction", () => {
     expect(endSessionFake).to.not.have.been.called;
     expect(startSessionFake).to.not.have.been.called;
   });
+  for (const failure of ["callback", "transaction", "cleanup", "transaction and cleanup"]) {
+    it(`ends sessions after ${failure} failure and preserves the primary error`, async () => {
+      const primary = new Error("primary failure");
+      const cleanup = new Error("cleanup failure");
+      const session = {
+        withTransaction: async (fn) => {
+          if (failure.includes("transaction")) throw primary;
+          return await fn();
+        },
+        endSession: fake(async () => {
+          if (failure.includes("cleanup")) throw cleanup;
+        }),
+      };
+      replace(deps, "db", { startSession: fake.resolves(session) });
+      let actual;
+      try {
+        await createTransaction(async () => {
+          if (failure == "callback") throw primary;
+          return "result";
+        });
+      } catch (err) {
+        actual = err;
+      }
+      expect(actual).to.equal(failure == "cleanup" ? cleanup : primary);
+      expect(session.endSession).to.have.been.calledOnce;
+    });
+  }
+
 });
