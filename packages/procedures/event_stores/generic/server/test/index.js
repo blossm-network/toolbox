@@ -136,6 +136,8 @@ describe("Event store", () => {
     });
     expect(eventStoreRootStreamFake).to.have.been.calledWith({ rootStreamFn });
     expect(eventStoreCountFake).to.have.been.calledWith({ countFn });
+    const recoverPublications =
+      eventStorePostFake.firstCall.args[0].publishPendingFn;
     expect(eventStoreCreateBlockFake).to.have.been.calledWith({
       saveSnapshotFn,
       rootStreamFn,
@@ -150,12 +152,12 @@ describe("Event store", () => {
       eventStreamFn,
       handlers,
       isPublic,
-      publishPendingFn,
+      publishPendingFn: recoverPublications,
     });
     expect(eventStorePostFake).to.have.been.calledWith({
       saveEventsFn,
       reserveRootCountsFn,
-      publishPendingFn,
+      publishPendingFn: recoverPublications,
       idempotencyConflictCheckFn,
       createTransactionFn,
       findOneSnapshotFn,

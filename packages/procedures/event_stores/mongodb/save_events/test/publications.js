@@ -34,6 +34,7 @@ describe("Transactional publication persistence", () => {
           created: event.headers.committed,
           topic: "topic",
           data: {
+            hash: event.hash,
             root: "r",
             action: "set",
             domain: "d",

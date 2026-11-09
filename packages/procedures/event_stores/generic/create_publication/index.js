@@ -3,6 +3,7 @@ export default ({ hash, headers }) => ({
   topic: headers.topic,
   created: headers.committed,
   data: {
+    hash,
     root: headers.root,
     action: headers.action,
     domain: headers.domain,

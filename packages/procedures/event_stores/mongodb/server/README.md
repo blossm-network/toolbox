@@ -33,11 +33,11 @@ removal, or concurrent servers may publish the same notice. Subscribers must
 handle duplicates, as they already must with Pub/Sub. No lease or claim mechanism
 promises exactly-once external effects.
 
-A dispatch error still fails the HTTP request after the event or block has
-committed, preserving the existing response contract. A failed response does not
-prove rollback. Retry event requests with the same idempotency keys; Mongo event
-schemas require them. The next POST or scheduled block invocation also retries
-pending delivery.
+Once an event or block transaction commits, publication recovery is best effort:
+failures are logged and notices remain pending, while the committed request
+returns its successful result. Transaction failures still fail the request.
+Startup, POST and block routes share this failure policy. Each published notice
+includes the stable event `hash`, allowing subscribers to deduplicate retries.
 
 This protects future writes. It does not reconstruct historical missing notices
 or replay old side effects automatically. Audit existing read-model freshness
