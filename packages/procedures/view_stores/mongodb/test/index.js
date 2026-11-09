@@ -79,6 +79,24 @@ describe("View store", () => {
     expect(built.filter(([keys]) => keys["body.title"] === 1)).to.have.length(1);
   });
 
+  it("should disable positional upsert for both plain and operator update paths", async () => {
+    const write = fake.resolves(null);
+    replace(deps, "db", { store: fake.returns({}), write });
+    const server = fake();
+    replace(deps, "viewStore", server);
+    replace(deps, "formatSchema", fake.returns({}));
+    await mongodbViewStore({ schema: {}, secretFn: async () => "test-password" });
+    const { writeFn } = server.firstCall.args[0];
+    for (const data of [
+      { "body.things.$.name": "value" },
+      { $set: { "body.things.$.name": "value" } },
+      { $set: { "body.things.$[item].name": "value" } },
+    ]) {
+      await writeFn({ query: { "headers.id": "missing" }, data });
+      expect(write.lastCall.args[0].options.upsert).to.equal(false);
+    }
+  });
+
   beforeEach(async () => {
     __resetStoresForTest();
     mongodbViewStore = (await import("../index.js")).default;
