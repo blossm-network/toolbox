@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { rejects } from "node:assert/strict";
 import { replace, fake } from "sinon";
+import { COMMITTED, DUPLICATE } from "@blossm/event-outcome-consts";
 import setup from "./setup.js";
 import mongoose from "mongoose";
 import createEvent from "../../../../../../lib/create_event/index.js";
@@ -25,9 +26,11 @@ describe("MongoDB publication recovery", function () {
     blockHandler,
     serverOptions,
     start;
-  let delivered, failPublish;
+  let delivered, failPublish, failRoot;
+  const deliveredHashes = [];
 
   before(async () => {
+    replace(genericDeps, "logger", { error: fake() });
     replace(genericDeps, "server", () => ({
       get() {
         return this;
@@ -48,9 +51,11 @@ describe("MongoDB publication recovery", function () {
       publicationBatchSize: 2,
       handlers: { set: (state, payload) => ({ ...state, ...payload }) },
       secretFn: async () => undefined,
-      publishFn: async () => {
-        if (failPublish) throw new Error("pubsub unavailable");
+      publishFn: async (data) => {
+        if (failPublish || data.root === failRoot)
+          throw new Error("pubsub unavailable");
         delivered++;
+        deliveredHashes.push(data.hash);
       },
       signFn: async () => "signature",
       blockPublisherPublicKeyFn: async () => "public-key",
@@ -123,6 +128,8 @@ describe("MongoDB publication recovery", function () {
   beforeEach(async () => {
     delivered = 0;
     failPublish = false;
+    failRoot = undefined;
+    deliveredHashes.length = 0;
     await Promise.all(
       mongoose.modelNames().map((name) => mongoose.model(name).deleteMany({}))
     );
@@ -144,13 +151,20 @@ describe("MongoDB publication recovery", function () {
   it("recovers publication on a duplicate event retry", async () => {
     failPublish = true;
     const request = {
-      body: { eventData: [{ event: event("retry") }], tx: { id: "retry" } },
+      body: {
+        eventData: [{ event: event("retry") }],
+        tx: { id: "retry" },
+        returnOutcomes: true,
+      },
     };
-    await rejects(handler(request, { sendStatus() {} }), /pubsub unavailable/);
+    const send = fake();
+    await handler(request, { send });
+    expect(send.lastCall.args[0]).to.deep.equal({ outcomes: [COMMITTED] });
     expect(await eventStore.countDocuments()).to.equal(1);
     expect(await publicationsStore.countDocuments()).to.equal(1);
     failPublish = false;
-    await handler(request, { sendStatus() {} });
+    await handler(request, { send });
+    expect(send.lastCall.args[0]).to.deep.equal({ outcomes: [DUPLICATE] });
     expect(await eventStore.countDocuments()).to.equal(1);
     expect(
       await countsStore.findOne({ root: "retry" }).then(({ value }) => value)
@@ -222,7 +236,8 @@ describe("MongoDB publication recovery", function () {
       throw new Error("delete unavailable");
     };
     try {
-      await rejects(block(), /delete unavailable/);
+      const committed = await block();
+      expect(committed).to.have.property("headers");
     } finally {
       publicationsDeps.db.remove = remove;
     }
@@ -232,6 +247,10 @@ describe("MongoDB publication recovery", function () {
     expect(empty.headers.sCount).to.equal(0);
     expect(await publicationsStore.countDocuments()).to.equal(0);
     expect(delivered).to.equal(2);
+    const { hash } = await eventStore
+      .findOne({ "headers.root": "ack-before-delete" })
+      .lean();
+    expect(deliveredHashes).to.deep.equal([hash, hash]);
   });
   it("drains one configured batch per invocation without skipping pending notices", async () => {
     await composition.createTransactionFn(async (transaction) => {
@@ -282,5 +301,30 @@ describe("MongoDB publication recovery", function () {
     } finally {
       genericDeps.logger = logger;
     }
+  });
+
+  it("acknowledges a new write even when an older notice fails, then recovers the same notice hash", async () => {
+    await composition.createTransactionFn((transaction) =>
+      append("old-pending", transaction)
+    );
+    const oldEvent = await eventStore
+      .findOne({ "headers.root": "old-pending" })
+      .lean();
+    failRoot = "old-pending";
+    const sendStatus = fake();
+    await handler(
+      { body: { eventData: [{ event: event("unrelated") }] } },
+      { sendStatus }
+    );
+    expect(sendStatus.firstCall.args[0]).to.equal(204);
+    expect(await eventStore.countDocuments()).to.equal(2);
+    expect(await publicationsStore.countDocuments()).to.equal(1);
+    const pending = await publicationsStore.findOne().lean();
+    expect(pending.hash).to.equal(oldEvent.hash);
+    expect(pending.data.hash).to.equal(oldEvent.hash);
+    failRoot = undefined;
+    await block();
+    expect(deliveredHashes).to.include(oldEvent.hash);
+    expect(await publicationsStore.countDocuments()).to.equal(0);
   });
 });

@@ -27,3 +27,10 @@ A failed attempt is logged and startup continues with notices retained for later
 POST/block recovery. Startup does not drain until empty or add a retry timer.
 The adapter must await/return server composition so its startup promise includes
 this recovery attempt. Explicit local mode skips startup publication as before.
+
+The server supplies the same best-effort recovery function to startup, POST and
+block routes. Once an event/block transaction commits, a failed publication
+attempt is logged and cannot change its successful response. Transaction
+failures still propagate. Raw adapter dispatchers continue rejecting failures
+so callers inspecting delivery directly can observe them. Published notices
+include the stable event `hash` for subscriber deduplication across redelivery.

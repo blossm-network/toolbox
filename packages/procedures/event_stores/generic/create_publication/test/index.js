@@ -22,6 +22,7 @@ describe("Event publication", () => {
       topic: "topic",
       created: headers.committed,
       data: {
+        hash: "hash",
         root: "root",
         action: "set",
         domain: "domain",

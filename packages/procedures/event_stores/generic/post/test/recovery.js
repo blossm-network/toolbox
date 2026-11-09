@@ -75,7 +75,7 @@ describe("Durable publication recovery", () => {
     expect(sendStatus.callCount).to.equal(0);
   });
 
-  it("propagates a delivery failure after commitment without reporting success", async () => {
+  it("propagates errors from the supplied recovery hook", async () => {
     const failure = new Error("publication unavailable");
     const createTransactionFn = fake.resolves();
     const sendStatus = fake();

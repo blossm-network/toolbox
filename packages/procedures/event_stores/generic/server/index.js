@@ -32,7 +32,7 @@ export default async ({
       await publishPendingFn();
     } catch (error) {
       deps.logger.error(
-        "Startup publication recovery failed; pending work remains for retry.",
+        "Publication recovery failed; pending work remains for retry.",
         {
           name: error?.name,
           code: error?.code,
@@ -87,7 +87,7 @@ export default async ({
         eventStreamFn,
         handlers,
         isPublic,
-        publishPendingFn,
+        publishPendingFn: recoverPublications,
       }),
       { path: "/create-block" }
     )
@@ -95,7 +95,7 @@ export default async ({
       deps.post({
         saveEventsFn,
         reserveRootCountsFn,
-        publishPendingFn,
+        publishPendingFn: recoverPublications,
         createTransactionFn,
         idempotencyConflictCheckFn,
         findOneSnapshotFn,
