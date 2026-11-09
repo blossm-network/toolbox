@@ -14,7 +14,7 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@google-cloud/scheduler": "^5.2.0"
+    "@google-cloud/scheduler": "^5.4.0"
   },
   "devDependencies": {
     "mocha": "^11.6.0",
