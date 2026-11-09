@@ -728,3 +728,6 @@ generated builds use the Docker Compose plugin instead of retired Compose v1.
 After reviewing a runtime/image update, run `yarn runtime:sync` to update the
 checked copies, then `yarn runtime:check` and `yarn test:runtime`. Update image
 digests deliberately after verifying their official registry manifests.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the Lerna test and explicit release
+workflow, frozen installs, scoped checks and npm publication verification.

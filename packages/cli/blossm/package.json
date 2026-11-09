@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@blossm/event-outcome-consts": "^0.0.1",
-    "mocha": "^11.6.0",
+    "mocha": "^12.0.3",
     "chai": "^5.2.0",
     "arg": "^5.0.2",
     "sinon": "^21.0.0",
