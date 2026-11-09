@@ -6,12 +6,14 @@ const number = "bigint NOT NULL CHECK (number BETWEEN 0 AND 9007199254740991)";
 export default async ({ database, namespace = "public", indexes = [] }) => {
   const schema = identifier(namespace);
   const descriptors = Object.fromEntries(
-    ["events", "snapshots", "counts", "blockchain"].map((kind) => [
-      kind,
-      { database, table: `${schema}.${identifier(kind)}`, kind },
-    ])
+    ["events", "snapshots", "counts", "blockchain", "publications"].map(
+      (kind) => [
+        kind,
+        { database, table: `${schema}.${identifier(kind)}`, kind },
+      ]
+    )
   );
-  const { events, snapshots, counts, blockchain } = descriptors;
+  const { events, snapshots, counts, blockchain, publications } = descriptors;
 
   await deps.db.createTransaction({
     database,
@@ -58,6 +60,15 @@ export default async ({ database, namespace = "public", indexes = [] }) => {
         snapshots bytea NOT NULL,
         txs bytea NOT NULL
       )`);
+      await query(`CREATE TABLE IF NOT EXISTS ${publications.table} (
+        hash text PRIMARY KEY,
+        created timestamptz NOT NULL,
+        attempts bigint NOT NULL DEFAULT 0,
+        doc jsonb NOT NULL
+      )`);
+      await query(
+        `CREATE INDEX IF NOT EXISTS publications_pending ON ${publications.table} (attempts, created, hash)`
+      );
       await query(
         `CREATE INDEX IF NOT EXISTS events_created_number ON ${events.table} (created, number)`
       );
@@ -85,5 +96,6 @@ export default async ({ database, namespace = "public", indexes = [] }) => {
     snapshotStore: snapshots,
     countsStore: counts,
     blockchainStore: blockchain,
+    publicationsStore: publications,
   };
 };

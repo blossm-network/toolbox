@@ -1,3 +1,4 @@
+import publishPending from "@blossm/postgres-event-store-publish-pending";
 import { connect } from "@blossm/postgres-database";
 import stores from "@blossm/postgres-event-store-storage";
 import eventStore from "@blossm/event-store";
@@ -17,6 +18,7 @@ import saveSnapshot from "@blossm/postgres-event-store-save-snapshot";
 
 export default {
   db: { connect },
+  publishPending,
   stores,
   eventStore,
   count,

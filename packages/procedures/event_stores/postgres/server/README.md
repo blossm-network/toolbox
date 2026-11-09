@@ -3,7 +3,7 @@
 A PostgreSQL sibling to `@blossm/mongodb-event-store`. It supplies persistence
 functions to the existing `@blossm/event-store` server. The generic procedures
 still own event normalization, hashing, receipts, reducer replay, snapshots,
-block construction and publication. Application handlers do not change.
+block construction and durable publication dispatch. Application handlers do not change.
 
 ```js
 import eventStore from "@blossm/postgres-event-store";
@@ -38,7 +38,7 @@ connections are an example budget, not a capacity recommendation.
 
 Use a distinct database or namespace for each event store and environment. The
 namespace defaults to `public`; sharing one across unrelated event stores mixes
-their data. Startup creates its four tables and indexes transactionally. It
+their data. Startup creates its five tables and indexes transactionally. It
 requires DDL permission and does not migrate an existing layout. There is no
 process-wide store cache, so a different server cannot inherit another server's
 connection or tables.
@@ -77,10 +77,28 @@ The CLI still generates Mongo entrypoints/configuration. Selecting this adapter
 currently means composing it directly as above. No view-store adapter, historical
 migration, cloud deployment or npm publication is included.
 
-The generic POST still commits before publishing notifications. This adapter
-preserves that behavior and does not supply an outbox or repair missed
-notifications. Applications also retain the generic block builder's existing
-root/time selection rules; this adapter does not change them.
+## Durable publication
+
+This adapter supplies the framework-required `publishPendingFn`. Outside local
+mode, it inserts a pending notice into `publications` in the same transaction as
+the event and root counter. A failed transaction leaves neither event nor notice.
+The shared publication formatter and delivery loop come from PR133/PR151; this
+adapter must be used with that framework contract, not the older generic runtime.
+
+POST dispatches pending notices after commitment, including duplicate retries.
+Recurring `/create-block` requests also drive recovery when no new events arrive.
+Direct compositions must arrange those recurring calls; there is no background
+worker. Each call attempts up to 100 notices in attempts/created/hash order,
+retains failed notices and deletes only after publication acknowledges delivery.
+One failing topic does not prevent the remainder of the batch from being tried.
+
+Delivery is at least once. Concurrent dispatchers or a stop between publication
+and deletion can deliver duplicates; subscribers must tolerate them. A delivery
+failure still fails HTTP after event commitment, so retry with the same event
+idempotency key. This protects future writes and does not reconstruct historical
+missing notifications. Local mode keeps its existing no-publication behavior.
+Applications retain the generic block builder's existing root/time selection
+rules; this adapter does not change them.
 
 ## Verification
 
@@ -91,7 +109,9 @@ From the Toolbox root, run its package tests through the existing Lerna workflow
 ```
 
 The real database suite is separate and requires a disposable PostgreSQL database.
-It creates uniquely named schemas, drops only those schemas afterward, and uses
+The Mocha suites live under `test/integration`; ordinary `npm test` excludes
+them. The database suite creates uniquely named schemas, drops only those schemas
+afterward, and uses
 no cloud services. Do not point tests at a production database.
 
 ```sh
@@ -104,6 +124,8 @@ The suite exercises the actual generic POST, aggregate, query and block builder
 against PostgreSQL: publication/idempotency, canonical hashes, nested/array
 queries, replay beyond one cursor batch, concurrent writes, expected-number and
 uniqueness rollback, transaction snapshots, callback cleanup, binary snapshots,
-block round trips and concurrent initialization. See
-[CONTRIBUTING.md](../../../../../CONTRIBUTING.md) for the repository-wide test and
+block round trips, concurrent initialization, atomic event/notice rollback,
+duplicate retry recovery, scheduled delivery, acknowledgment-before-delete
+redelivery and failed-batch rotation. See
+[the pinned test and release guide](https://github.com/blossm-network/toolbox/blob/9057978728c833c7fa35ba7e6aed9eecd55f3521/CONTRIBUTING.md) for the repository-wide test and
 release workflow.

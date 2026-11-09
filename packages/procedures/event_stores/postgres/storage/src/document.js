@@ -19,11 +19,13 @@ export const fields = {
     "headers.number": "number",
     "headers.created": "created",
   },
+  publications: { hash: "hash", created: "created" },
   counts: { root: "root", value: "value", updated: "updated" },
 };
 
 export const binaryFields = {
   events: [],
+  publications: [],
   snapshots: ["events"],
   blockchain: ["events", "snapshots", "txs"],
 };

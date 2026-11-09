@@ -1,7 +1,15 @@
 import { expect } from "chai";
 import { fake, replace, restore } from "sinon";
 
-import stores, { find, stream, create, save } from "../index.js";
+import stores, {
+  find,
+  stream,
+  create,
+  save,
+  findPublications,
+  removePublication,
+  incrementPublicationAttempts,
+} from "../index.js";
 import deps from "../deps.js";
 
 const database = {};
@@ -52,6 +60,7 @@ describe("Postgres event store storage", () => {
       "snapshots",
       "counts",
       "blockchain",
+      "publications",
     ]);
     expect(result.eventStore.table).to.equal(
       '"scope""; DROP TABLE events; --"."events"'
@@ -61,6 +70,8 @@ describe("Postgres event store storage", () => {
       .map((call) => call.args[0].text)
       .join("\n");
     expect(ddl).to.include("idempotency text NOT NULL UNIQUE");
+    expect(ddl).to.include("attempts bigint NOT NULL DEFAULT 0");
+    expect(ddl).to.include("publications_pending");
     expect(ddl).to.include("nonce text NOT NULL UNIQUE");
     expect(ddl).to.include("UNIQUE (root, number)");
     expect(ddl).to.include("9007199254740991");
@@ -189,5 +200,51 @@ describe("Postgres event store storage", () => {
         expect(error).to.equal(failure);
       }
     }
+  });
+});
+
+describe("Postgres pending publication storage", () => {
+  afterEach(restore);
+  const store = {
+    database,
+    kind: "publications",
+    table: '"public"."publications"',
+  };
+
+  it("reads a bounded batch in retry order and decodes its notice", async () => {
+    const notice = {
+      hash: "notice",
+      created: headers.created,
+      topic: "topic",
+      data: { root: "root" },
+    };
+    const query = fake.resolves({ rows: [{ doc: notice }] });
+    replace(deps, "db", { query });
+    expect(await findPublications({ store, limit: 100 })).to.deep.equal([
+      notice,
+    ]);
+    expect(query.firstCall.args[0]).to.deep.equal({
+      database,
+      text: 'SELECT doc FROM "public"."publications" ORDER BY attempts, created, hash LIMIT $1',
+      values: [100],
+    });
+  });
+
+  it("deletes and increments failed attempts only by parameterized hash", async () => {
+    const query = fake.resolves({ rows: [] });
+    replace(deps, "db", { query });
+    const hash = "notice'; DROP TABLE events; --";
+    await removePublication({ store, query: { hash } });
+    await incrementPublicationAttempts({ store, query: { hash } });
+    expect(query.firstCall.args[0]).to.deep.equal({
+      database,
+      text: 'DELETE FROM "public"."publications" WHERE hash = $1',
+      values: [hash],
+    });
+    expect(query.secondCall.args[0]).to.deep.equal({
+      database,
+      text: 'UPDATE "public"."publications" SET attempts = attempts + 1 WHERE hash = $1',
+      values: [hash],
+    });
   });
 });

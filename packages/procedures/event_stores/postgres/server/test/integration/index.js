@@ -10,6 +10,8 @@ import aggregate from "@blossm/event-store-aggregate";
 import query from "@blossm/event-store-query";
 import createBlockTransaction from "@blossm/event-store-create-block-transaction";
 
+import createBlock from "@blossm/event-store-create-block";
+import publishDeps from "@blossm/postgres-event-store-publish-pending/deps.js";
 import eventStore from "../../index.js";
 import deps from "../../deps.js";
 
@@ -58,6 +60,7 @@ describe("Postgres event store integration", function () {
   let stores;
   let api;
   let published;
+  let failPublish;
   let previousEnv;
 
   const append = (eventData) =>
@@ -93,7 +96,10 @@ describe("Postgres event store integration", function () {
       namespace,
       indexes: ["label", "items.code"],
       handlers,
-      publishFn: async (...args) => published.push(args),
+      publishFn: async (...args) => {
+        if (failPublish) throw new Error("publication unavailable");
+        published.push(args);
+      },
       encryptFn: async (message) => message,
       signFn: async (hash) => `signed:${hash}`,
       blockPublisherPublicKeyFn: async () => Buffer.from("test-key"),
@@ -110,6 +116,7 @@ describe("Postgres event store integration", function () {
         .join(", ")}`
     );
     published.length = 0;
+    failPublish = false;
   });
 
   after(async () => {
@@ -495,8 +502,13 @@ describe("Postgres event store integration", function () {
       },
     };
     expect(
-      (await failure(() => api.saveEventsFn({ events: [duplicateHash] })))
-        .statusCode
+      (
+        await failure(() =>
+          api.createTransactionFn((transaction) =>
+            api.saveEventsFn({ events: [duplicateHash], transaction })
+          )
+        )
+      ).statusCode
     ).to.equal(412);
     const duplicateNonce = {
       ...duplicateHash,
@@ -504,8 +516,13 @@ describe("Postgres event store integration", function () {
       headers: { ...duplicateHash.headers, nonce: stored.headers.nonce },
     };
     expect(
-      (await failure(() => api.saveEventsFn({ events: [duplicateNonce] })))
-        .statusCode
+      (
+        await failure(() =>
+          api.createTransactionFn((transaction) =>
+            api.saveEventsFn({ events: [duplicateNonce], transaction })
+          )
+        )
+      ).statusCode
     ).to.equal(412);
     expect((await api.findEventsFn({ query: {} })).length).to.equal(1);
     const snapshot = {
@@ -543,5 +560,136 @@ describe("Postgres event store integration", function () {
       ).code
     ).to.equal("23505");
     expect((await api.latestBlockFn()).hash).to.equal("b");
+  });
+
+  afterEach(restore);
+
+  it("rolls back events, counts and notices in the same transaction", async () => {
+    const err = await failure(() =>
+      api.createTransactionFn(async (transaction) => {
+        await postTransaction({
+          ...api,
+          eventData: [{ event: event("aborted") }],
+          tx: { id: "aborted" },
+        })(transaction);
+        throw new Error("abort transaction");
+      })
+    );
+    expect(err.message).to.equal("abort transaction");
+    expect(await find({ store: stores.eventStore })).to.deep.equal([]);
+    expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+    expect(await api.countFn({ root: "aborted" })).to.equal(0);
+  });
+
+  it("recovers a failed notice on duplicate POST without another event", async () => {
+    const req = { body: { eventData: [{ event: event("retry") }] } };
+    failPublish = true;
+    expect(
+      (await failure(() => post(api)(req, { sendStatus() {} }))).message
+    ).to.equal("publication unavailable");
+    expect(await api.countFn({ root: "retry" })).to.equal(1);
+    expect(await find({ store: stores.publicationsStore })).to.have.length(1);
+    failPublish = false;
+    await post(api)(req, { sendStatus() {} });
+    expect(await api.countFn({ root: "retry" })).to.equal(1);
+    expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+    expect(published).to.have.length(1);
+  });
+
+  it("recovers a committed notice through scheduled block creation", async () => {
+    await append([{ event: event("committed-before-dispatch") }]);
+    expect(published).to.have.length(0);
+    expect(await find({ store: stores.publicationsStore })).to.have.length(1);
+    await createBlock(api)({}, { send() {} });
+    expect(published).to.have.length(1);
+    expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+  });
+
+  it("redelivers acknowledged publications when pending deletion fails", async () => {
+    await append([{ event: event("ack-before-delete") }]);
+    replace(publishDeps.db, "remove", async () => {
+      throw new Error("delete unavailable");
+    });
+    expect((await failure(() => api.publishPendingFn())).message).to.equal(
+      "delete unavailable"
+    );
+    expect(published).to.have.length(1);
+    expect(await find({ store: stores.publicationsStore })).to.have.length(1);
+    restore();
+    await api.publishPendingFn();
+    expect(published).to.have.length(2);
+    expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+  });
+
+  it("rolls back the event and root count if its notice conflicts", async () => {
+    await append([{ event: event("seed") }]);
+    const [seed] = await find({ store: stores.eventStore });
+    const collision = {
+      ...seed,
+      headers: {
+        ...seed.headers,
+        root: "collision",
+        nonce: "collision_0",
+        idempotency: "collision",
+      },
+    };
+    // Keep a notice with the candidate hash while the candidate event itself is absent.
+    await database.query(
+      `DELETE FROM ${stores.eventStore.table} WHERE hash = $1`,
+      [seed.hash]
+    );
+    const err = await failure(() =>
+      api.createTransactionFn(async (transaction) => {
+        await api.reserveRootCountsFn({
+          root: "collision",
+          amount: 1,
+          transaction,
+        });
+        await api.saveEventsFn({ events: [collision], transaction });
+      })
+    );
+    expect(err.statusCode).to.equal(412);
+    expect(
+      await find({
+        store: stores.eventStore,
+        query: { "headers.root": "collision" },
+      })
+    ).to.deep.equal([]);
+    expect(await api.countFn({ root: "collision" })).to.equal(0);
+    expect(await find({ store: stores.publicationsStore })).to.have.length(1);
+  });
+
+  it("rotates failed batches so later unattempted notices make progress", async () => {
+    await append(
+      Array.from({ length: 101 }, (_, index) => ({
+        event: event(`pending-${index}`),
+      }))
+    );
+    const originalPublish = published;
+    // Fail only the first hundred selected notices, then let a later notice through.
+    const pending = await database.query(
+      `SELECT hash FROM ${stores.publicationsStore.table} ORDER BY attempts, created, hash LIMIT 100`
+    );
+    const failed = new Set(pending.rows.map(({ hash }) => hash));
+    const { default: publishPending } = await import(
+      "@blossm/postgres-event-store-publish-pending"
+    );
+    const drain = publishPending({
+      publicationsStore: stores.publicationsStore,
+      publishFn: async (data) => {
+        const [stored] = await find({
+          store: stores.eventStore,
+          query: { "headers.root": data.root },
+        });
+        if (failed.has(stored.hash)) throw new Error("retired topic");
+        originalPublish.push(data);
+      },
+    });
+    await failure(drain);
+    await failure(drain);
+    expect(published).to.have.length(1);
+    expect(
+      await find({ store: stores.publicationsStore, limit: 101 })
+    ).to.have.length(100);
   });
 });

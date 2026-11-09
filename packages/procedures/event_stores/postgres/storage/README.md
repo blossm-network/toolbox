@@ -1,6 +1,6 @@
 # PostgreSQL event store storage
 
-Owns the four PostgreSQL event-store tables and the document/query mapping shared
+Owns the five PostgreSQL event-store tables and the document/query mapping shared
 by the procedure packages. Use the PostgreSQL event-store server for application
 setup; these functions are its persistence dependencies.
 
@@ -20,7 +20,7 @@ const events = await find({
 ```
 
 `database` is a pool from `@blossm/postgres-database`. An isolated namespace holds
-`events`, `snapshots`, `counts` and `blockchain`. Initialization uses a transaction
+`events`, `snapshots`, `counts`, `blockchain` and `publications`. Initialization uses a transaction
 and an advisory lock, creates missing tables/indexes, and never migrates or drops
 existing data. The database role must be allowed to create those objects. The
 same namespace must retain the same table layout across starts; this package is
@@ -60,3 +60,12 @@ to the vendor's bounded SQL cursor, with sequential callbacks unless `parallel`
 is supplied. Both accept a transaction; the vendor also binds reads inside its
 transaction callback. `create` inserts one complete event batch atomically;
 `save` upserts a snapshot or block by hash.
+
+Pending publication documents use the same transactional `create` operation as
+events. The publications table has a unique event hash, a committed timestamp,
+JSONB notice and a failed-attempt counter. `findPublications` reads a bounded
+batch in attempts/created/hash order; `removePublication` and
+`incrementPublicationAttempts` use parameterized hashes. The shared delivery
+loop owns acknowledgment-before-delete and retry policy; storage only executes
+its PostgreSQL operations. Initializing an existing namespace creates the new
+outbox table without reconstructing notices for historical events.

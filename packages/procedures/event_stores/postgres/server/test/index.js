@@ -14,6 +14,7 @@ describe("Postgres event store server", () => {
       snapshotStore: "snapshots",
       countsStore: "counts",
       blockchainStore: "blockchain",
+      publicationsStore: "publications",
     };
     replace(deps, "db", { connect: fake.returns(database) });
     replace(deps, "stores", fake.resolves(stores));
@@ -41,7 +42,14 @@ describe("Postgres event store server", () => {
       { database, namespace: "bicycle", indexes: ["color"] },
     ]);
     expect(deps.saveEvents.firstCall.args).to.deep.equal([
-      { eventStore: "events", handlers: options.handlers },
+      {
+        eventStore: "events",
+        publicationsStore: "publications",
+        handlers: options.handlers,
+      },
+    ]);
+    expect(deps.publishPending.firstCall.args).to.deep.equal([
+      { publicationsStore: "publications", publishFn: options.publishFn },
     ]);
     expect(deps.createTransaction.firstCall.args).to.deep.equal([{ database }]);
     for (const name of ["findSnapshots", "findOneSnapshot", "saveSnapshot"])
@@ -61,7 +69,6 @@ describe("Postgres event store server", () => {
       expect(composition[`${name}Fn`]).to.equal(name);
     for (const name of [
       "handlers",
-      "publishFn",
       "encryptFn",
       "createBlockFn",
       "signFn",
@@ -85,5 +92,38 @@ describe("Postgres event store server", () => {
     }
     expect(caught).to.equal(error);
     expect(database.end.calledOnce).to.equal(true);
+  });
+
+  it("retains local mode without writing or dispatching publications", async () => {
+    const nodeEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = "local";
+    try {
+      replace(deps, "db", { connect: fake.returns({ end: fake.resolves() }) });
+      replace(
+        deps,
+        "stores",
+        fake.resolves({
+          eventStore: {},
+          snapshotStore: {},
+          countsStore: {},
+          blockchainStore: {},
+          publicationsStore: {},
+        })
+      );
+      replace(deps, "saveEvents", fake.returns("save-events"));
+      replace(deps, "publishPending", fake());
+      replace(deps, "eventStore", fake.resolves());
+      await eventStore({ handlers: {} });
+      expect(deps.saveEvents.firstCall.args[0].publicationsStore).to.equal(
+        undefined
+      );
+      expect(deps.publishPending.called).to.equal(false);
+      expect(deps.eventStore.firstCall.args[0].publishPendingFn).to.equal(
+        undefined
+      );
+    } finally {
+      if (nodeEnv === undefined) delete process.env.NODE_ENV;
+      else process.env.NODE_ENV = nodeEnv;
+    }
   });
 });

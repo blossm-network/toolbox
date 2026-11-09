@@ -15,8 +15,16 @@ export default async ({
   const database = deps.db.connect(connection);
 
   try {
-    const { eventStore, snapshotStore, countsStore, blockchainStore } =
-      await deps.stores({ database, namespace, indexes });
+    const {
+      eventStore,
+      snapshotStore,
+      countsStore,
+      blockchainStore,
+      publicationsStore,
+    } = await deps.stores({ database, namespace, indexes });
+
+    const pStore =
+      process.env.NODE_ENV == "local" ? undefined : publicationsStore;
 
     return await deps.eventStore({
       findSnapshotsFn: deps.findSnapshots({ snapshotStore }),
@@ -24,7 +32,11 @@ export default async ({
       findOneSnapshotFn: deps.findOneSnapshot({ snapshotStore }),
       eventStreamFn: deps.eventStream({ eventStore }),
       handlers,
-      saveEventsFn: deps.saveEvents({ eventStore, handlers }),
+      saveEventsFn: deps.saveEvents({
+        eventStore,
+        publicationsStore: pStore,
+        handlers,
+      }),
       reserveRootCountsFn: deps.reserveRootCounts({ countsStore }),
       rootStreamFn: deps.rootStream({ countsStore }),
       countFn: deps.count({ countsStore }),
@@ -33,7 +45,8 @@ export default async ({
       saveSnapshotFn: deps.saveSnapshot({ snapshotStore }),
       saveBlockFn: deps.saveBlock({ blockchainStore }),
       latestBlockFn: deps.latestBlock({ blockchainStore }),
-      publishFn,
+      publishPendingFn:
+        pStore && deps.publishPending({ publicationsStore: pStore, publishFn }),
       encryptFn,
       createBlockFn,
       signFn,

@@ -81,3 +81,26 @@ export const save = async ({ store, data, transaction }) => {
   });
   return decode({ kind: store.kind, row: result.rows[0] });
 };
+
+export const findPublications = async ({ store, limit }) => {
+  const { rows } = await deps.db.query({
+    database: store.database,
+    text: `SELECT doc FROM ${store.table} ORDER BY attempts, created, hash LIMIT $1`,
+    values: [limit],
+  });
+  return rows.map((row) => decode({ kind: store.kind, row }));
+};
+
+export const removePublication = ({ store, query: { hash } }) =>
+  deps.db.query({
+    database: store.database,
+    text: `DELETE FROM ${store.table} WHERE hash = $1`,
+    values: [hash],
+  });
+
+export const incrementPublicationAttempts = ({ store, query: { hash } }) =>
+  deps.db.query({
+    database: store.database,
+    text: `UPDATE ${store.table} SET attempts = attempts + 1 WHERE hash = $1`,
+    values: [hash],
+  });
