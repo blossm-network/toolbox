@@ -39,14 +39,28 @@ nontransactional/no-publication behavior and does not create the outbox. Other
 adapters retain the generic direct-publication path unless they implement the
 optional `publishPendingFn` hook with equivalent durable persistence.
 
-## Local replica-set verification
+## Tests
 
-Use a temporary localhost MongoDB replica set, never production. Each script
-creates a uniquely named database and drops it in `finally`:
+`npm test` runs the package's ordinary Mocha tests without MongoDB.
+
+The Mocha suites in `test/integration/` verify transaction rollback, duplicate
+retry recovery, redelivery and actual unique-index creation against MongoDB.
+They call the composed procedures directly; they do not start HTTP or contact
+Pub/Sub. Publication failures are injected through the existing dependency seam.
+
+Start a disposable localhost MongoDB replica set, then run from this package:
 
 ```sh
-BLOSSM_TEST_MONGODB_URI='mongodb://127.0.0.1:27017/?replicaSet=test' node integration/publications.js
+BLOSSM_TEST_MONGODB_URI='mongodb://127.0.0.1:27017/?replicaSet=test' npm run test:integration
 ```
 
-Run from this package directory. The checks exercise durable publication
-rollback, idempotent retry and duplicate delivery through server composition.
+Or run from the Toolbox root through Lerna:
+
+```sh
+BLOSSM_TEST_MONGODB_URI='mongodb://127.0.0.1:27017/?replicaSet=test' ./node_modules/.bin/lerna run test:integration --scope @blossm/mongodb-event-store --npm-client npm --stream
+```
+
+Each suite creates and drops its own temporary database. Shared Mocha hooks
+restore environment, dependency replacements and cached models after the suite.
+The integration command requires the explicit URI and fails when it is missing;
+the regular test command never connects to MongoDB.

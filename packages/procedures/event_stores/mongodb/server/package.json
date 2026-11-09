@@ -9,7 +9,8 @@
     "node": ">= 20.19.0"
   },
   "scripts": {
-    "test": "mocha --recursive"
+    "test": "mocha --recursive --ignore \"test/integration/**\"",
+    "test:integration": "mocha \"test/integration/*.js\" --timeout 30000"
   },
   "publishConfig": {
     "access": "public"
@@ -40,6 +41,7 @@
     "chai-datetime": "^1.8.1",
     "mocha": "^11.6.0",
     "sinon": "^21.0.0",
-    "sinon-chai": "^4.0.0"
+    "sinon-chai": "^4.0.0",
+    "mongoose": "^8.15.1"
   }
 }
