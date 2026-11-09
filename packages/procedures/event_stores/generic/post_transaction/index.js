@@ -15,15 +15,16 @@ export default ({
 
   const eventNumberOffsets = {};
 
-  const [...updatedCountObjects] = await Promise.all(
-    Object.keys(eventRootCounts).map((root) =>
-      reserveRootCountsFn({
+  const updatedCountObjects = [];
+  for (const root of Object.keys(eventRootCounts).sort()) {
+    updatedCountObjects.push(
+      await reserveRootCountsFn({
         root,
         amount: eventRootCounts[root],
         ...(transaction && { transaction }),
       })
-    )
-  );
+    );
+  }
 
   const currentEventCounts = updatedCountObjects.reduce(
     (result, countObject) => {
