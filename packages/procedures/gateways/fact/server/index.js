@@ -83,12 +83,12 @@ export default async ({
       }),
     };
     server = server
-      .get(get({ stream: false }), {
-        path: `/${name}/:root?`,
-        ...preMiddleware,
-      })
       .get(get({ stream: true }), {
         path: `/${name}/stream/:root?`,
+        ...preMiddleware,
+      })
+      .get(get({ stream: false }), {
+        path: `/${name}/:root?`,
         ...preMiddleware,
       });
   }

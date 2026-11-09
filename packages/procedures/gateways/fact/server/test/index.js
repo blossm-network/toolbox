@@ -85,7 +85,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
-      stream: false,
+      stream: true,
       raw: false,
       root: false,
     });
@@ -96,7 +96,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
-      stream: true,
+      stream: false,
       raw: false,
       root: false,
     });
@@ -114,11 +114,11 @@ describe("Fact gateway", () => {
       }),
     });
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
-      path: `/${name}/:root?`,
+      path: `/${name}/stream/:root?`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
     expect(secondGetFake).to.have.been.calledWith(gatewayGetResult, {
-      path: `/${name}/stream/:root?`,
+      path: `/${name}/:root?`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
     expect(authenticationFake).to.have.been.calledWith({
@@ -210,11 +210,11 @@ describe("Fact gateway", () => {
       }),
     });
     expect(getFake).to.have.been.calledWith(nameService, {
-      path: `/${name}/:root?`,
+      path: `/${name}/stream/:root?`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
     expect(secondGetFake).to.have.been.calledWith(nameService, {
-      path: `/${name}/stream/:root?`,
+      path: `/${name}/:root?`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
     expect(serviceFake).to.have.been.calledWith({ internalTokenFn });
@@ -309,7 +309,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key,
-      stream: false,
+      stream: true,
       raw,
       root,
     });
@@ -321,7 +321,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key,
-      stream: true,
+      stream: false,
       raw,
       root,
     });
@@ -339,11 +339,11 @@ describe("Fact gateway", () => {
       }),
     });
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
-      path: `/${name}/:root?`,
+      path: `/${name}/stream/:root?`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
     expect(secondGetFake).to.have.been.calledWith(gatewayGetResult, {
-      path: `/${name}/stream/:root?`,
+      path: `/${name}/:root?`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
     expect(authenticationFake).to.have.been.calledWith({
@@ -495,7 +495,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
-      stream: false,
+      stream: true,
       raw: false,
       root: false,
     });
@@ -506,7 +506,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
-      stream: true,
+      stream: false,
       raw: false,
       root: false,
     });
@@ -517,7 +517,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
-      stream: false,
+      stream: true,
       raw: false,
       root: false,
     });
@@ -528,7 +528,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
-      stream: true,
+      stream: false,
       raw: false,
       root: false,
     });
@@ -539,7 +539,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
-      stream: false,
+      stream: true,
       raw: false,
       root: false,
     });
@@ -550,30 +550,30 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
-      stream: true,
+      stream: false,
       raw: false,
       root: false,
     });
     expect(getFake).to.have.been.calledWith(gatewayGetResult, {
-      path: `/${name1}/:root?`,
-    });
-    expect(secondGetFake).to.have.been.calledWith(gatewayGetResult, {
       path: `/${name1}/stream/:root?`,
     });
-    expect(thirdGetFake).to.have.been.calledWith(gatewayGetResult, {
-      path: `/${name2}/:root?`,
-      preMiddleware: [authenticationResult],
+    expect(secondGetFake).to.have.been.calledWith(gatewayGetResult, {
+      path: `/${name1}/:root?`,
     });
-    expect(fourthGetFake).to.have.been.calledWith(gatewayGetResult, {
+    expect(thirdGetFake).to.have.been.calledWith(gatewayGetResult, {
       path: `/${name2}/stream/:root?`,
       preMiddleware: [authenticationResult],
     });
+    expect(fourthGetFake).to.have.been.calledWith(gatewayGetResult, {
+      path: `/${name2}/:root?`,
+      preMiddleware: [authenticationResult],
+    });
     expect(fifthGetFake).to.have.been.calledWith(gatewayGetResult, {
-      path: `/${name3}/:root?`,
+      path: `/${name3}/stream/:root?`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
     expect(sixthGetFake).to.have.been.calledWith(gatewayGetResult, {
-      path: `/${name3}/stream/:root?`,
+      path: `/${name3}/:root?`,
       preMiddleware: [authenticationResult, authorizationResult],
     });
     expect(authenticationFake.getCall(0)).to.have.been.calledWith({
@@ -665,7 +665,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
-      stream: false,
+      stream: true,
       raw: false,
       root: false,
     });
@@ -676,7 +676,7 @@ describe("Fact gateway", () => {
       internalTokenFn,
       nodeExternalTokenFn,
       key: "access",
-      stream: true,
+      stream: false,
       raw: false,
       root: false,
     });
