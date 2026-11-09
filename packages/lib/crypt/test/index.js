@@ -2,7 +2,9 @@ import { expect } from "chai";
 
 import { hash, compare } from "../index.js";
 
-describe("Hash", () => {
+describe("Hash", function () {
+  // Real bcrypt work can exceed Mocha's default under concurrent CI load.
+  this.timeout(10000);
   it("it should create a unique hash and compare successfully", async () => {
     const someString = "some-string";
     const hashResult = await hash(someString);
