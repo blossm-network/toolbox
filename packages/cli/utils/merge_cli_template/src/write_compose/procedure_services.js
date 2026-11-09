@@ -187,7 +187,7 @@ export default ({
         {
           const operationHash = hash(
             dependency.name,
-            ...(dependency.context ? [dependency.context] : []),
+            dependency.context,
             dependency.procedure,
           );
 
