@@ -1,3 +1,4 @@
+import databaseName from "../database_name.js";
 import yarnInstall from "./steps/yarn_install.js";
 import unitTests from "./steps/unit_tests.js";
 import baseUnitTests from "./steps/base_unit_tests.js";
@@ -126,7 +127,7 @@ export default ({
               NAME: name,
               ...(context && { CONTEXT: context }),
               ...(bootstrapContext && { BOOTSTRAP_CONTEXT: bootstrapContext }),
-              MONGODB_DATABASE: `${context ? `${context}_` : ""}${name}`,
+              MONGODB_DATABASE: databaseName({ procedure: "view-store", context, name }),
               MONGODB_USER: mongodbUser,
               MONGODB_HOST: mongodbHost,
               MONGODB_PROTOCOL: mongodbProtocol,
