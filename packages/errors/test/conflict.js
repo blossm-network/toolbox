@@ -23,7 +23,6 @@ describe("Conflict", () => {
     expect(error.toJSON()).to.deep.equal({
       statusCode: 409,
       code: "Conflict",
-      cause,
       info,
       message,
     });

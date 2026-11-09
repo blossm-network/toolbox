@@ -24,7 +24,6 @@ describe("Internal server", () => {
       statusCode: 500,
       code: "InternalServer",
       info,
-      cause,
       message,
     });
   });
