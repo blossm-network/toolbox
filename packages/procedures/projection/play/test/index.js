@@ -22,6 +22,57 @@ const data = Buffer.from(
 );
 
 describe("Command handler post", () => {
+  it("starts the durable session before reading any aggregate and retains the delivery ID", async () => {
+    const order = [];
+    const session = { add: () => {} };
+    await play({
+      sessionFn: async ({ playId, run }) => {
+        expect(playId).to.equal("pubsub:subscription:message");
+        order.push("lease");
+        await run(session);
+      },
+      aggregateFn: async () => { order.push("aggregate"); return {}; },
+      mainFn: async (args) => {
+        expect(args.session).to.equal(session);
+        order.push("transform");
+      },
+    })(
+      { body: { subscription: "subscription", message: { data, messageId: "message" } } },
+      { sendStatus: () => {} }
+    );
+    expect(order).to.deep.equal(["lease", "aggregate", "transform"]);
+  });
+
+  it("a session covers the complete transform so a competing play rereads newer state", async () => {
+    let state = 1, view, release, entered, busy = false;
+    const gate = new Promise((resolve) => { release = resolve; });
+    const started = new Promise((resolve) => { entered = resolve; });
+    const handler = play({
+      sessionFn: async ({ run }) => {
+        if (busy) throw new Error("busy");
+        busy = true;
+        try { await run({}); } finally { busy = false; }
+      },
+      aggregateFn: async () => ({ state }),
+      mainFn: async ({ aggregate }) => {
+        if (aggregate.state === 1) { entered(); await gate; }
+        view = aggregate.state;
+      },
+    });
+    const req = { body: { root: "root", playId: "play" } };
+    const res = { sendStatus: () => {} };
+    const first = handler(req, res);
+    await started;
+    state = 2;
+    let error;
+    try { await handler(req, res); } catch (caught) { error = caught; }
+    expect(error && error.message).to.equal("busy");
+    release();
+    await first;
+    await handler(req, res);
+    expect(view).to.equal(2);
+  });
+
   afterEach(() => {
     restore();
   });

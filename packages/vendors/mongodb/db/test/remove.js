@@ -7,6 +7,12 @@ const { expect } = chai;
 const query = "some-query";
 
 describe("Remove", () => {
+  it("should pass the transaction session to the driver", async () => {
+    const options = { session: {} };
+    const deleteOne = fake.resolves({ deletedCount: 1 });
+    await remove({ store: { deleteOne }, query, options });
+    expect(deleteOne).to.have.been.calledWith(query, options);
+  });
   afterEach(() => {
     restore();
   });

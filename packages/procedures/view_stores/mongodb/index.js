@@ -303,7 +303,7 @@ export default async ({
     });
   };
 
-  const writeFn = async ({ query, data, arrayFilters }) => {
+  const writeFn = async ({ query, data, arrayFilters, session }) => {
     const update = {};
     const setKey = "$set";
     for (const key of Object.keys(data)) {
@@ -335,17 +335,22 @@ export default async ({
         new: true,
         runValidators: true,
         setDefaultsOnInsert: true,
+        ...(session && { session }),
         ...(arrayFilters && { arrayFilters }),
       },
     });
   };
-
-  const removeFn = (query) =>
+  const removeFn = (query, session) =>
     deps.db.remove({
       store,
       query,
+      ...(session && { options: { session } }),
     });
-
+  const projectionSession = process.env.NODE_ENV == "local"
+    ? undefined
+    : await deps.projectionSession({
+        store, writeFn, removeFn, formatFn, updateFn, updateKeys, queryFn,
+      });
   deps.viewStore({
     streamFn,
     findFn,
@@ -353,6 +358,9 @@ export default async ({
     removeFn,
     countFn,
     groupsLookupFn,
+    ...(projectionSession && projectionSession.handle && {
+      projectionSessionFn: projectionSession.handle,
+    }),
     ...(queryFn && { queryFn }),
     ...(formatCsv && { formatCsv }),
     ...(sortFn && { sortFn }),

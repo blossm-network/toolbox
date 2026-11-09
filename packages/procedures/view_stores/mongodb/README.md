@@ -12,3 +12,8 @@ Partial-word text matching treats punctuation literally, not as regular-expressi
 syntax. The full-text branch retains MongoDB text-search syntax. Search still
 depends on the configured indexes and database execution limits; escaping a
 pattern does not make an unanchored partial-word search constant-cost.
+
+Generated remote projections use [fenced projection plays](PROJECTION_SESSIONS.md).
+Direct internal PUT/DELETE retain their existing semantics and do not participate
+in the projection lease. Local mode keeps direct writes without replica-set or
+session infrastructure.

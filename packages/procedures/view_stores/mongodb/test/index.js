@@ -124,7 +124,41 @@ describe("View store", () => {
     }
   });
 
+  it("registers the remote session route with shared persistence owners", async () => {
+    const handle = () => {};
+    deps.projectionSession = fake.resolves({ handle });
+    replace(deps, "db", { store: fake.returns({}) });
+    const server = fake();
+    replace(deps, "viewStore", server);
+    replace(deps, "formatSchema", fake.returns({}));
+    await mongodbViewStore({ schema: {}, secretFn: async () => "test-password" });
+    const owners = deps.projectionSession.firstCall.args[0];
+    const handlers = server.firstCall.args[0];
+    expect(handlers.projectionSessionFn).to.equal(handle);
+    expect(owners.writeFn).to.equal(handlers.writeFn);
+    expect(owners.removeFn).to.equal(handlers.removeFn);
+  });
+
+  it("keeps local writes outside projection session infrastructure", async () => {
+    process.env.NODE_ENV = "local";
+    const write = fake.resolves(null);
+    const remove = fake.resolves({ deletedCount: 0 });
+    replace(deps, "db", { store: fake.returns({}), write, remove });
+    const server = fake();
+    replace(deps, "viewStore", server);
+    replace(deps, "formatSchema", fake.returns({}));
+    await mongodbViewStore({ schema: {} });
+    expect(deps.projectionSession).not.to.have.been.called;
+    const handlers = server.firstCall.args[0];
+    expect(handlers.projectionSessionFn).to.equal(undefined);
+    await handlers.writeFn({ query: { "headers.id": "local" }, data: { "body.count": 1 } });
+    await handlers.removeFn({ "headers.id": "local" });
+    expect(write.firstCall.args[0].options.session).to.equal(undefined);
+    expect(remove.firstCall.args[0].options).to.equal(undefined);
+  });
+
   beforeEach(async () => {
+    replace(deps, "projectionSession", fake.resolves({}));
     __resetStoresForTest();
     mongodbViewStore = (await import("../index.js")).default;
     process.env.NODE_ENV = "some-env";

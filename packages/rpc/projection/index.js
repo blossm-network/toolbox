@@ -4,10 +4,10 @@ export default ({ name, context, region = process.env.GCP_REGION }) => {
   const play = ({
     token: { internalFn: internalTokenFn } = {},
     enqueue: { fn: enqueueFn, wait: enqueueWait } = {},
-  } = {}) => ({ root, domain, service }) =>
+  } = {}) => ({ root, domain, service, playId = deps.uuid() }) =>
     deps
       .rpc({ region, operationNameComponents: [name, ...(context ? [context] : []), "projection"] })
-      .post({ root, domain, service })
+      .post({ root, domain, service, playId })
       //TODO this line is ugly. The generic rpc package needs love.
       .in({})
       .with({

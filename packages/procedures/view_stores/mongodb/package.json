@@ -21,7 +21,8 @@
     "@blossm/mongodb-database": "^0.0.134",
     "@blossm/uuid": "^0.0.9",
     "@blossm/uuid-validator": "^0.0.3",
-    "@blossm/view-store": "^0.0.359"
+    "@blossm/view-store": "^0.0.359",
+    "@blossm/mongodb-projection-session": "^0.0.1"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",
