@@ -93,3 +93,5 @@ Each suite creates and drops its own temporary database. Shared Mocha hooks
 restore environment, dependency replacements and cached models after the suite.
 The integration command requires the explicit URI and fails when it is missing;
 the regular test command never connects to MongoDB.
+
+Transactions are stored as opaque objects so hashed claims and trace metadata retain their original types and fields. Command and authentication boundaries own their meaning; persistence preserves the representation already committed by the transaction hash.
