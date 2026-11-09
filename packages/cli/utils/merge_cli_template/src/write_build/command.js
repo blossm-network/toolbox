@@ -140,6 +140,7 @@ export default ({
           }),
           updateQueue({
             name: `command-${service}-${domain}-${name}`,
+            project,
             maxDispatchPerSecond: 100,
             maxConcurrentDispatches: 100,
           }),
