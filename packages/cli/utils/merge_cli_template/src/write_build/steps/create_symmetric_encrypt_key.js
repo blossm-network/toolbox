@@ -1,20 +1,27 @@
-import { oneLine } from "common-tags";
+import ensureResource from "./ensure_resource.js";
 
-export default ({ name, ring, project, next, rotation }) => {
-  return {
-    name: "gcr.io/cloud-builders/gcloud",
-    entrypoint: "bash",
-    args: [
-      "-c",
-      oneLine`
-    gcloud kms keys create ${name}
-    --purpose=encryption
-    --keyring=${ring}
-    --location=global
-    --rotation-period=${rotation}
-    --next-rotation-time=${next}
-    --project=${project} || exit 0
-    `,
+export default ({ name, ring, project, next, rotation }) =>
+  ensureResource({
+    describe: [
+      "kms",
+      "keys",
+      "describe",
+      name,
+      `--keyring=${ring}`,
+      "--location=global",
+      `--project=${project}`,
     ],
-  };
-};
+    create: [
+      "kms",
+      "keys",
+      "create",
+      name,
+      `--keyring=${ring}`,
+      "--location=global",
+      `--project=${project}`,
+      "--purpose=encryption",
+      `--rotation-period=${rotation}`,
+      `--next-rotation-time=${next}`,
+      "--quiet",
+    ],
+  });
