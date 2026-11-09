@@ -17,3 +17,5 @@
 // export default (query) => {
 //   return { name: query.firstName + query.lastName };
 // };
+
+export default (query) => query;
