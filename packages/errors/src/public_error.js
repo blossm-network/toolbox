@@ -1,11 +1,8 @@
-// Preserve explicitly supplied public metadata independently of SDK cause merging.
-export const publicInfo = new WeakMap();
-
-// Only errors created by this package declare public application metadata.
+// The factory stores explicitly public metadata independently of SDK cause merging.
 // Native error properties, stacks and causes are not response fields.
 export default (error = {}) => {
   const statusCode = error.statusCode || 500;
-  const declared = publicInfo.has(error);
+  const declared = Object.hasOwn(error, "publicInfo");
   const nativeServerError = statusCode >= 500 && !declared;
   return {
     statusCode,
@@ -17,6 +14,6 @@ export default (error = {}) => {
       : nativeServerError
       ? "An internal server error occurred."
       : "The request could not be processed.",
-    info: declared ? publicInfo.get(error) : {},
+    info: declared ? error.publicInfo : {},
   };
 };
