@@ -15,11 +15,10 @@ const root = "some-root";
 const existingTopics = [];
 describe("Fact gateway integration tests", () => {
   before(async () => {
-    existingTopics.push(
-      ...config.testing.topics.filter(async (t) => {
-        return await gcpPubsub.exists(t);
-      })
+    const existence = await Promise.all(
+      config.testing.topics.map((topic) => gcpPubsub.exists(topic))
     );
+    existingTopics.push(...config.testing.topics.filter((_, i) => existence[i]));
     await Promise.all(config.testing.topics.map((t) => gcpPubsub.create(t)));
   });
   after(
@@ -71,18 +70,17 @@ describe("Fact gateway integration tests", () => {
           body: {
             root,
           },
-          ...(fact.protection === undefined ||
-            (fact.protection === "strict" && {
+          ...(needsToken && {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
-            })),
+            }),
         });
         expect(response0.statusCode).to.not.equal(401);
         expect(response0.statusCode).to.be.lessThan(500);
       });
 
-      if (fact.privileges == "none") continue;
+      if (!needsToken) continue;
 
       parallelFns.push(async () => {
         const response1 = await request.get(`${url}/${fact.name}`, {
@@ -108,6 +106,6 @@ describe("Fact gateway integration tests", () => {
       });
     }
 
-    await Promise.all(parallelFns);
+    await Promise.all(parallelFns.map((fn) => fn()));
   });
 });
