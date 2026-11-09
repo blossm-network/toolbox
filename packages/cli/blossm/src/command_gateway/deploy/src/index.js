@@ -1,3 +1,4 @@
+import optionalImport from "./optional_import.js";
 import gateway from "@blossm/command-gateway";
 import gcpKms from "@blossm/gcp-kms";
 import verify from "@blossm/verify-access-token";
@@ -11,12 +12,7 @@ import gcpStorage from "@blossm/gcp-storage";
 
 import config from "./config.json" with { type: "json" };
 
-let services;
-try {
-  services = (await import("./services.js")).default;
-} catch (e) {
-  // services.js does not exist, services remains undefined
-}
+const services = await optionalImport(new URL("./services.js", import.meta.url));
 
 export default gateway({
   commands: config.commands.map((command) => ({
