@@ -23,6 +23,7 @@ describe("Public error contract", () => {
       }),
       info,
     });
+    expect(error.publicInfo).to.equal(info);
     expect(error.toJSON()).to.deep.equal({
       statusCode: 409,
       code: "InvalidArgument",
@@ -32,6 +33,18 @@ describe("Public error contract", () => {
     expect(JSON.stringify(error)).not.to.match(/FAKE_|stack|cause/);
     expect(error.cause().message).to.equal("FAKE_PASSWORD");
     expect(error.info().token).to.equal("FAKE_TOKEN");
+  });
+  it("does not treat inherited metadata as explicitly public", () => {
+    const error = Object.create({
+      publicInfo: { token: "FAKE_TOKEN" },
+      message: "FAKE_PASSWORD",
+    });
+    expect(publicError(error)).to.deep.equal({
+      statusCode: 500,
+      code: "InternalServer",
+      message: "An internal server error occurred.",
+      info: {},
+    });
   });
   it("preserves conflict arrays supplied as public info", () => {
     const info = [
