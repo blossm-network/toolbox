@@ -19,7 +19,7 @@
     "@blossm/logger": "^0.0.13",
     "@blossm/url-encode-query-data": "^0.0.10",
     "mongoose": "^8.24.8",
-    "restify-errors": "^8.0.2"
+    "restify-errors": "^8.1.0"
   },
   "devDependencies": {
     "chai-as-promised": "^7.1.1",

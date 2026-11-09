@@ -15,7 +15,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@google-cloud/kms": "^5.0.1"
+    "@google-cloud/kms": "^5.7.0"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
