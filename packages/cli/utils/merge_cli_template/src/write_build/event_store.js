@@ -93,25 +93,29 @@ export default ({
         ...dependencyKeyEnvironmentVariables,
       },
     }),
-    createKeyRing({
-      name: `${serviceName}-blockchain`,
-      location: "global",
-      project,
-    }),
-    createSymmetricEncryptKey({
-      name: "private",
-      ring: `${serviceName}-blockchain`,
-      location: "global",
-      rotation: "90d",
-      next: "+p90d",
-      project,
-    }),
-    createAsymmetricSignKey({
-      name: "producer",
-      ring: `${serviceName}-blockchain`,
-      location: "global",
-      project,
-    }),
+    ...(strict
+      ? [
+          createKeyRing({
+            name: `${serviceName}-blockchain`,
+            location: "global",
+            project,
+          }),
+          createSymmetricEncryptKey({
+            name: "private",
+            ring: `${serviceName}-blockchain`,
+            location: "global",
+            rotation: "90d",
+            next: "+p90d",
+            project,
+          }),
+          createAsymmetricSignKey({
+            name: "producer",
+            ring: `${serviceName}-blockchain`,
+            location: "global",
+            project,
+          }),
+        ]
+      : []),
     dockerComposeUp,
     dockerComposeProcesses,
     ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
