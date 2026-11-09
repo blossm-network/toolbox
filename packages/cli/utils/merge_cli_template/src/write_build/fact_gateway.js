@@ -1,3 +1,4 @@
+import ensureDnsRecord from "./steps/ensure_dns_record.js";
 import yarnInstall from "./steps/yarn_install.js";
 import buildImage from "./steps/build_image.js";
 import unitTests from "./steps/unit_tests.js";
@@ -9,11 +10,7 @@ import integrationTests from "./steps/integration_tests.js";
 import dockerComposeLogs from "./steps/docker_compose_logs.js";
 import dockerPush from "./steps/docker_push.js";
 import deployRun from "./steps/deploy_run.js";
-import startDnsTransaction from "./steps/start_dns_transaction.js";
 import scheduleJob from "./steps/schedule_job.js";
-import addDnsTransaction from "./steps/add_dns_transaction.js";
-import executeDnsTransaction from "./steps/execute_dns_transaction.js";
-import abortDnsTransaction from "./steps/abort_dns_transaction.js";
 import mapDomain from "./steps/map_domain.js";
 import writeEnv from "./steps/write_env.js";
 
@@ -128,10 +125,7 @@ export default ({
             },
             labels: { ...(domain && { domain }), ...(service && { service }) },
           }),
-          startDnsTransaction({ dnsZone, project }),
-          addDnsTransaction({ uri: authUri, dnsZone, project }),
-          executeDnsTransaction({ dnsZone, project }),
-          abortDnsTransaction({ dnsZone, project }),
+          ensureDnsRecord({ uri: authUri, dnsZone, project }),
           mapDomain({
             uri: authUri,
             project,
