@@ -48,17 +48,21 @@ const composeUpdate = (update, query, matchDelimiter) => {
     const [first, ...rest] = key.split(".");
     // A descendant array is selected by its own positional operation. It may
     // be supplied by a sibling operation before it exists in this element.
-    if (
-      rest.length > 0 &&
-      (Array.isArray(element[first]) ||
+    if (rest.length > 0) {
+      if (
         matchUpdates.some(
           (other) =>
             other.root == root &&
             other.key == first &&
             Array.isArray(other.value)
-        ))
-    )
-      return true;
+        )
+      )
+        return true;
+      if (Array.isArray(element[first]))
+        return element[first].some((child) =>
+          matches(child, rest.join("."), value, `${root}.${first}`)
+        );
+    }
     return getValue(element, key) == value;
   };
 
