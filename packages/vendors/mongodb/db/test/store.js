@@ -29,7 +29,7 @@ describe("Store", () => {
     const schemaFake = fake.returns(schemaObj);
     replace(deps.mongoose, "Schema", schemaFake);
 
-    const modelObject = "some-model-object";
+    const modelObject = { init: fake.resolves() };
     const modelFake = fake.returns(modelObject);
     replace(deps.mongoose, "model", modelFake);
 
@@ -65,7 +65,7 @@ describe("Store", () => {
     const schemaFake = fake.returns(schemaObj);
     replace(deps.mongoose, "Schema", schemaFake);
 
-    const modelObject = "some-model-object";
+    const modelObject = { init: fake.resolves() };
     const modelFake = fake.returns(modelObject);
     replace(deps.mongoose, "model", modelFake);
 
@@ -95,7 +95,7 @@ describe("Store", () => {
     const schemaFake = fake.returns(schemaObj);
     replace(deps.mongoose, "Schema", schemaFake);
 
-    const modelObject = "some-model-object";
+    const modelObject = { init: fake.resolves() };
     const modelFake = fake.returns(modelObject);
     replace(deps.mongoose, "model", modelFake);
 
@@ -173,4 +173,49 @@ describe("Store", () => {
       expect(e).to.equal(error);
     }
   });
+  it("waits for connection and index initialization before returning its model", async () => {
+    let connected;
+    let indexed;
+    const connecting = new Promise((resolve) => { connected = resolve; });
+    const indexing = new Promise((resolve) => { indexed = resolve; });
+    const model = { init: fake.returns(indexing) };
+    const modelFake = fake.returns(model);
+    replace(deps.mongoose, "model", modelFake);
+    replace(deps.mongoose, "connect", fake.returns(connecting));
+    const pending = store({ name, connection: { protocol: "mongodb", user: "u", password: "p", host: "h", database: "d" } });
+    await Promise.resolve();
+    expect(modelFake).to.not.have.been.called;
+    connected();
+    await new Promise((resolve) => setImmediate(resolve));
+    expect(model.init).to.have.been.calledOnce;
+    let ready = false;
+    pending.then(() => { ready = true; });
+    await Promise.resolve();
+    expect(ready).to.equal(false);
+    indexed();
+    expect(await pending).to.equal(model);
+  });
+
+  for (const failure of ["connection", "indexes"]) {
+    it(`rejects startup when ${failure} fails`, async () => {
+      const error = new Error("startup failure");
+      const model = { init: fake.rejects(error) };
+      const modelFake = fake.returns(model);
+      const connectFake = failure == "connection" ? fake.rejects(error) : fake.resolves();
+      replace(deps.mongoose, "model", modelFake);
+      replace(deps.mongoose, "connect", connectFake);
+      let actual;
+      try {
+        await store({ name, connection: { protocol: "mongodb", user: "u", password: "p", host: "h", database: "d" } });
+      } catch (err) {
+        actual = err;
+      }
+      expect(actual).to.equal(error);
+      if (failure == "connection") {
+        expect(connectFake.callCount).to.equal(10);
+        expect(modelFake).to.not.have.been.called;
+      }
+    });
+  }
+
 });
