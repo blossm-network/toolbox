@@ -1,6 +1,6 @@
 import deps from "./deps.js";
 
-export default ({ snapshotStore }) => async ({ query, sort, select }) =>
+export default ({ snapshotStore }) => async ({ query, sort, select, transaction }) =>
   deps.db.findOne({
     store: snapshotStore,
     query,
@@ -8,5 +8,6 @@ export default ({ snapshotStore }) => async ({ query, sort, select }) =>
     ...(select && { select }),
     options: {
       lean: true,
+      ...(transaction && { session: transaction }),
     },
   });

@@ -15,7 +15,9 @@ export default ({
   isPublic,
   blockLimit,
 }) => async (transaction) => {
-  const previousBlock = await latestBlockFn();
+  const previousBlock = await latestBlockFn({
+    ...(transaction && { transaction }),
+  });
 
   const genesisPrevious = "~";
 
@@ -80,8 +82,9 @@ export default ({
     handlers,
   });
 
-  let lastRootEnd;
-  let end = deps.dateString();
+  // Snapshot lastEventNumber owns progress; timestamps are block metadata only.
+  // ponytail: scan all roots, use a durable pending-root queue if scan cost warrants it.
+  const end = deps.dateString();
 
   let count = 0;
   let full = false;
@@ -89,16 +92,18 @@ export default ({
   const increment = Math.round(blockLimit * 0.1);
 
   await rootStreamFn({
-    updatedOnOrAfter: previousBlock.headers.end,
-    updatedBefore: end,
+    ...(transaction && { transaction }),
     reverse: true,
-    fn: async ({ root, updated }) => {
+    fn: async ({ root }) => {
       if (count >= blockLimit - increment) {
         full = true;
         return;
       }
 
-      const aggregate = await aggregateFn(root, { includeEvents: true });
+      const aggregate = await aggregateFn(root, {
+        includeEvents: true,
+        ...(transaction && { transaction }),
+      });
 
       if (aggregate.events.length == 0) return;
 
@@ -183,11 +188,6 @@ export default ({
         context: snapshot.context,
         state: snapshot.state,
       });
-
-      lastRootEnd =
-        lastRootEnd == undefined || updated > lastRootEnd
-          ? updated
-          : lastRootEnd;
     },
     parallel: transaction ? 1 : increment,
   });
@@ -239,7 +239,7 @@ export default ({
     created: deps.dateString(),
     number: previousBlock.headers.number + 1,
     start: previousBlock.headers.end,
-    end: lastRootEnd || end,
+    end,
     eCount: allStringifiedEventPairs.length,
     sCount,
     tCount: stringifiedTxPairs.length,

@@ -37,8 +37,10 @@ describe("Mongodb event store root stream", () => {
     const updatedBefore = "some-updated-before";
     const reverse = true;
     const limit = "some-limit";
+    const transaction = {};
     const result = await stream({ countsStore })({
       parallel,
+      transaction,
       updatedOnOrAfter,
       updatedBefore,
       limit,
@@ -60,6 +62,7 @@ describe("Mongodb event store root stream", () => {
       limit,
       options: {
         lean: true,
+        session: transaction,
       },
     });
     expect(cursorFake).to.have.been.calledWith();
