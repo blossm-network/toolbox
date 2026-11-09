@@ -35,4 +35,3 @@ An empty request list completes without callbacks. Failure cancels all sources.
 The optional `decode` factory returns a per-source `{write,end}` decoder so
 framed records can be decoded before comparing/merging, without sharing parser
 state between sources. Without a decoder, values remain raw byte chunks.
-
