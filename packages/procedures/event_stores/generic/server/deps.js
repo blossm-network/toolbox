@@ -1,3 +1,4 @@
+import logger from "@blossm/logger";
 import { internalServer } from "@blossm/errors";
 import server from "@blossm/server";
 import { store } from "@blossm/mongodb-database";
@@ -9,6 +10,7 @@ import post from "@blossm/event-store-post";
 import createBlock from "@blossm/event-store-create-block";
 
 export default {
+  logger,
   internalServerError: internalServer,
   store,
   server,
