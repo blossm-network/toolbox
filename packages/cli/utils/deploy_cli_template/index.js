@@ -3,7 +3,7 @@ import roboSay from "@blossm/robo-say";
 import mergeCliTemplate from "@blossm/merge-cli-template";
 import testCliTemplate from "@blossm/test-cli-template";
 import fs from "fs-extra";
-import { spawnSync } from "child_process";
+import { execFileSync } from "child_process";
 import rootDir from "@blossm/cli-root-dir";
 import path from "path";
 import chalk from "chalk";
@@ -29,23 +29,20 @@ const envProject = ({ env, config }) => {
 const build = async ({ workingDir, env }) => {
   const blossmConfig = rootDir.config();
 
-  await new Promise(function (resolve, reject) {
-    const { error } = spawnSync(
-      "gcloud",
-      [
-        "builds",
-        "submit",
-        ".",
-        "--config=build.yaml",
-        `--project=${envProject({ config: blossmConfig, env })}`
-      ],
-      {
-        stdio: [process.stdin, process.stdout, process.stderr],
-        cwd: workingDir,
-      }
-    );
-    return error ? reject(error) : resolve();
-  });
+  execFileSync(
+    "gcloud",
+    [
+      "builds",
+      "submit",
+      ".",
+      "--config=build.yaml",
+      `--project=${envProject({ config: blossmConfig, env })}`,
+    ],
+    {
+      stdio: [process.stdin, process.stdout, process.stderr],
+      cwd: workingDir,
+    }
+  );
 };
 
 export default ({ domain, dir }) => async (args, configFn) => {
@@ -135,6 +132,7 @@ export default ({ domain, dir }) => async (args, configFn) => {
         fs.removeSync(workingDir);
         //eslint-disable-next-line no-console
         console.log(roboSay("Something went wrong"), red.bold("error"));
+        throw e;
       }
     })
   );
