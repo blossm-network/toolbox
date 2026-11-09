@@ -44,13 +44,30 @@ const composeUpdate = (update, query, matchDelimiter) => {
     }
   }
 
+  const matches = (element, key, value, root) => {
+    const [first, ...rest] = key.split(".");
+    // A descendant array is selected by its own positional operation. It may
+    // be supplied by a sibling operation before it exists in this element.
+    if (
+      rest.length > 0 &&
+      (Array.isArray(element[first]) ||
+        matchUpdates.some(
+          (other) =>
+            other.root == root &&
+            other.key == first &&
+            Array.isArray(other.value)
+        ))
+    )
+      return true;
+    return getValue(element, key) == value;
+  };
+
   for (const matchUpdate of matchUpdates) {
     let relevantQueryParams = [];
     for (const queryKey in query) {
       const prefix = `${matchUpdate.root}.`;
       const key = queryKey.slice(prefix.length);
-      // Descendant-array predicates belong to that array's positional update.
-      if (queryKey.startsWith(prefix) && !key.includes(".")) {
+      if (queryKey.startsWith(prefix)) {
         relevantQueryParams.push({
           key,
           value: query[queryKey],
@@ -63,7 +80,8 @@ const composeUpdate = (update, query, matchDelimiter) => {
     if (result[matchUpdate.root] != undefined) {
       result[matchUpdate.root] = result[matchUpdate.root].map((element) => {
         for (const param of relevantQueryParams) {
-          if (element[param.key] != param.value) return element;
+          if (!matches(element, param.key, param.value, matchUpdate.root))
+            return element;
         }
 
         return {
@@ -85,8 +103,12 @@ const composeUpdate = (update, query, matchDelimiter) => {
             if (
               queryKey.startsWith(prefix) &&
               !queryKey.startsWith(`${matchUpdate.root}.`) &&
-              getValue(outerElement, queryKey.slice(prefix.length)) !=
-                query[queryKey]
+              !matches(
+                outerElement,
+                queryKey.slice(prefix.length),
+                query[queryKey],
+                propertySplit[0]
+              )
             )
               return outerElement;
           }
@@ -96,7 +118,10 @@ const composeUpdate = (update, query, matchDelimiter) => {
             [propertySplit[1]]: outerElement[propertySplit[1]].map(
               (element) => {
                 for (const param of relevantQueryParams)
-                  if (element[param.key] != param.value) return element;
+                  if (
+                    !matches(element, param.key, param.value, matchUpdate.root)
+                  )
+                    return element;
                 return {
                   ...element,
                   [matchUpdate.key]: matchUpdate.value,
@@ -111,7 +136,8 @@ const composeUpdate = (update, query, matchDelimiter) => {
       result[matchUpdate.root] = getValue(result, matchUpdate.root).map(
         (element) => {
           for (const param of relevantQueryParams) {
-            if (element[param.key] != param.value) return element;
+            if (!matches(element, param.key, param.value, matchUpdate.root))
+              return element;
           }
 
           return {
@@ -126,7 +152,8 @@ const composeUpdate = (update, query, matchDelimiter) => {
     if (result[matchUpdate.root] instanceof Array) {
       result[matchUpdate.root] = result[matchUpdate.root].map((element) => {
         for (const param of relevantQueryParams)
-          if (element[param.key] != param.value) return element;
+          if (!matches(element, param.key, param.value, matchUpdate.root))
+            return element;
 
         return {
           ...element,
@@ -150,7 +177,8 @@ const composeUpdate = (update, query, matchDelimiter) => {
       const key = `${propertySplit[0]}${matchDelimiter}${propertySplit[1]}`;
       result[key] = result[key].map((element) => {
         for (const param of relevantQueryParams)
-          if (element[param.key] != param.value) return element;
+          if (!matches(element, param.key, param.value, matchUpdate.root))
+            return element;
 
         return {
           ...element,
