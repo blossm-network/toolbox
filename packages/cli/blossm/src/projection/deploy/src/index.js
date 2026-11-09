@@ -161,7 +161,7 @@ const saveId = async ({
       }),
     });
 
-  if (!push) return;
+  if (!push || updateResponse.statusCode === 204) return;
 
   // If push is true, body.view and body.keys should exist.
   const { view: newView, keys } = updateResponse.body;
@@ -174,7 +174,7 @@ const saveId = async ({
     view: newView,
     keys,
     id: newView.headers.id,
-    trace: newView.trace,
+    trace: newView.headers.trace,
     type:
       newView.headers.created == newView.headers.modified ? "create" : "update",
   });
