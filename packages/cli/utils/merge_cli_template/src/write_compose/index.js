@@ -5,17 +5,9 @@ import path from "path";
 import mainService from "./main_service.js";
 import procedureServices from "./procedure_services.js";
 import databaseService from "./database_service.js";
+import databaseName from "../database_name.js";
 
 const databaseServiceKey = "db";
-
-const includeDatabase = (config) => {
-  switch (config.procedure) {
-    case "view-store":
-    case "event-store":
-      return true;
-  }
-  return false;
-};
 
 export default ({
   config,
@@ -50,10 +42,16 @@ export default ({
   const mongodbUserPassword = "password";
   const mongodbProtocol = "mongodb";
   const mongodbHost = "mongodb";
-  const mongodbDatabase = "testing";
   const mongodbAdminDatabase = "admin";
 
-  const _includeDatabase = includeDatabase(config);
+  const databases = [
+    ...new Set(
+      [
+        databaseName({ procedure, service, domain, context, name }),
+        ...config.testing.dependencies.map(databaseName),
+      ].filter(Boolean)
+    ),
+  ];
 
   const serviceName = `${region}-${operationName}-${operationHash}`;
 
@@ -75,8 +73,6 @@ export default ({
     secretBucket,
     secretBucketKeyLocation,
     secretBucketKeyRing,
-    mongodbAdminDatabase,
-    mongodbDatabase,
     mongodbUser,
     mongodbUserPassword,
     mongodbHost,
@@ -107,7 +103,6 @@ export default ({
     mongodbUser,
     mongodbHost,
     mongodbUserPassword,
-    mongodbDatabase,
     mongodbProtocol,
     envVars,
     devEnvVars,
@@ -120,17 +115,15 @@ export default ({
       main: {
         ...main,
         depends_on: [
-          ...(_includeDatabase ? [databaseServiceKey] : []),
+          ...(databases.length ? [databaseServiceKey] : []),
           ...Object.keys(_procedureServices),
-        ].filter((value, index, self) => {
-          return self.indexOf(value) === index;
-        }),
+        ].filter((value, index, self) => self.indexOf(value) === index),
       },
       ..._procedureServices,
-      ...(_includeDatabase && {
+      ...(databases.length > 0 && {
         [databaseServiceKey]: databaseService({
           adminDatabase: mongodbAdminDatabase,
-          database: mongodbDatabase,
+          databases,
           user: mongodbUser,
           userPassword: mongodbUserPassword,
         }),
