@@ -38,22 +38,24 @@ export default ({
       ...(req.claims && { claims: req.claims }),
     });
   if (stream) {
-    await procedure.stream(
-      (data) =>
-        res.write(
-          typeof data === "object" && !Buffer.isBuffer(data) && data !== null
-            ? JSON.stringify(data)
-            : data
-        ),
-      {
-        query: req.query,
-        ...(req.params.root && { root: req.params.root }),
-        onResponseFn: (response) =>
-          res.writeHead(response.statusCode, response.headers),
-        raw: true,
-      }
-    );
-    res.end();
+    const controller = new AbortController();
+    const disconnected = () => controller.abort(new DOMException("The client disconnected.", "AbortError"));
+    res.once("close", disconnected);
+    try {
+      await procedure.stream(
+        (data) => deps.write(res, data),
+        {
+          query: req.query,
+          ...(req.params.root && { root: req.params.root }),
+          onResponseFn: (response) => res.writeHead(response.statusCode, deps.forwardHeaders(response.headers)),
+          signal: controller.signal,
+          raw: true,
+        }
+      );
+      res.end();
+    } finally {
+      res.removeListener("close", disconnected);
+    }
   } else {
     const { body: response, headers = {} } = await procedure.read({
       query: req.query,
@@ -61,6 +63,6 @@ export default ({
       ...(raw && { raw }),
     });
 
-    res.set(headers).status(200).send(response);
+    res.set(deps.forwardHeaders(headers)).status(200).send(response);
   }
 };

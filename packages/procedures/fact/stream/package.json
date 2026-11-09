@@ -15,7 +15,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.40"
+    "@blossm/errors": "^0.0.40",
+    "@blossm/server": "^0.0.46"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",

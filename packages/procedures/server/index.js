@@ -65,3 +65,6 @@ export default ({ prehook, posthook } = {}) => {
 
   return methods;
 };
+
+export { default as write } from "./src/write.js";
+export { default as forwardHeaders } from "./src/forward_headers.js";

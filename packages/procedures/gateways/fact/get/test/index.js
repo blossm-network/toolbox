@@ -111,6 +111,8 @@ describe("Fact gateway get", () => {
       end: endFake,
       write: writeFake,
       writeHead: writeHeadFake,
+      once: fake(),
+      removeListener: fake(),
     };
     const nodeExternalTokenResult = "some-node-external-token-result";
     const nodeExternalTokenFnFake = fake.returns(nodeExternalTokenResult);
@@ -155,7 +157,7 @@ describe("Fact gateway get", () => {
         root,
         onResponseFn: match((fn) => {
           const statusCode = "some-status-code";
-          const headers = "some-headers";
+          const headers = { "x-example": "some-headers" };
           fn({ statusCode, headers });
           return writeHeadFake.calledWith(statusCode, headers);
         }),
@@ -163,7 +165,7 @@ describe("Fact gateway get", () => {
     expect(endFake).to.have.been.calledOnceWith();
   });
   it("should call with the correct params when headers are passed back and token, claims, context in req, raw, service and network passed in", async () => {
-    const headers = "some-headers";
+    const headers = { "x-example": "some-headers" };
     const readFake = fake.returns({ body: results, headers });
     const setFake = fake.returns({
       read: readFake,
