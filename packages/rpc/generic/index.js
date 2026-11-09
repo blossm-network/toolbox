@@ -127,12 +127,10 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
 
           if (response?.statusCode >= 300) {
             logger.info("response errored: ", {
-              response,
-              url,
-              data: requestData,
-              context,
-              network,
-              token,
+              statusCode: response.statusCode,
+              operationNameComponents,
+              region,
+              ...(network && { network }),
             });
             const {
               parsedData: [parsedBody],
@@ -140,14 +138,7 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
             throw deps.constructError({
               statusCode: response.statusCode,
               message: (parsedBody && parsedBody.message) || "Not specified",
-              info: {
-                ...(parsedBody && parsedBody.info),
-                url,
-                data: requestData,
-                context,
-                network,
-                token,
-              },
+              ...(parsedBody && parsedBody.info && { info: parsedBody.info }),
               ...(parsedBody && parsedBody.code && { code: parsedBody.code }),
             });
           }

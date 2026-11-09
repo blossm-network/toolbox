@@ -24,7 +24,6 @@ describe("Invalid credentials", () => {
       statusCode: 401,
       code: "InvalidCredentials",
       info,
-      cause,
       message,
     });
   });
