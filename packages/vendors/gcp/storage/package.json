@@ -6,7 +6,7 @@
   "type": "module",
   "author": "blossm.network",
   "engines": {
-    "node": ">= 20.19.0"
+    "node": ">= 24.22.1"
   },
   "scripts": {
     "test": "mocha --recursive --timeout=10000"

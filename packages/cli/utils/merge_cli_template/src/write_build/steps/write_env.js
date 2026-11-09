@@ -1,3 +1,5 @@
+import { nodeImage } from "../../../runtime.js";
+
 import { stripIndents } from "common-tags";
 
 export default ({
@@ -15,7 +17,7 @@ export default ({
   custom = {},
 } = {}) => {
   return {
-    name: "node:20.19.0",
+    name: nodeImage,
     entrypoint: "bash",
     args: [
       "-c",
