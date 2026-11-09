@@ -1,5 +1,5 @@
 import roboSay from "@blossm/robo-say";
-import { spawnSync } from "child_process";
+import deps from "./deps.js";
 import path from "path";
 import fs from "fs-extra";
 import chalk from "chalk";
@@ -13,15 +13,10 @@ const installDependenciesIfNeeded = async (workingDir, input) => {
 
   if (fs.existsSync(lock)) return;
 
-  const spawnInstall = spawnSync("yarn", {
+  deps.execFileSync("yarn", [], {
     stdio: [process.stdin, process.stdout, process.stderr],
     cwd: workingDir,
   });
-
-  if (spawnInstall.stderr) {
-    process.exitCode = 1;
-    throw "Couldn't install packages";
-  }
 
   const srcDir = path.resolve(process.cwd(), input.path);
 
@@ -53,29 +48,20 @@ export default async ({ workingDir, input }) => {
         red.bold("internal error")
       )
     );
+    throw err;
   }
 
   if (fs.existsSync(path.resolve(workingDir, "base_test/unit"))) {
-    const spawnBaseTest = spawnSync("yarn", ["test:base-unit"], {
+    deps.execFileSync("yarn", ["test:base-unit"], {
       stdio: [process.stdin, process.stdout, process.stderr],
       cwd: workingDir,
     });
-
-    if (spawnBaseTest.stderr) {
-      process.exitCode = 1;
-      throw "Tests failed";
-    }
   }
 
   if (fs.existsSync(path.resolve(workingDir, "test/unit"))) {
-    const spawnTest = spawnSync("yarn", ["test:unit"], {
+    deps.execFileSync("yarn", ["test:unit"], {
       stdio: [process.stdin, process.stdout, process.stderr],
       cwd: workingDir,
     });
-
-    if (spawnTest.stderr) {
-      process.exitCode = 1;
-      throw "Tests failed";
-    }
   }
 };

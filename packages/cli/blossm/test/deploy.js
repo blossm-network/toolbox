@@ -9,6 +9,7 @@ const chalk = { green: { bold: identity }, red: { bold: identity } };
 export const deployment = async ({
   input = {},
   execFileSync = () => {},
+  testCliTemplate = async () => {},
 } = {}) => {
   const removed = [];
   const logs = [];
@@ -16,7 +17,7 @@ export const deployment = async ({
     normalize: async () => ({ env: "development", path: ".", ...input }),
     roboSay: identity,
     mergeCliTemplate: async () => {},
-    testCliTemplate: async () => {},
+    testCliTemplate,
     fs: {
       mkdtempSync: () => "/fixture/build",
       removeSync: (target) => removed.push(target),
