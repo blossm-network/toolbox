@@ -85,6 +85,11 @@ the event and root counter. A failed transaction leaves neither event nor notice
 The shared publication formatter and delivery loop come from PR133/PR151; this
 adapter must be used with that framework contract, not the older generic runtime.
 
+The generic server attempts one configured batch during startup before listening.
+A publication failure is logged without failing startup, and its notices remain
+pending. This uses the same dispatcher as request-driven recovery; startup does
+not drain an entire backlog or start a background worker.
+
 POST dispatches pending notices after commitment, including duplicate retries.
 Recurring `/create-block` requests also drive recovery when no new events arrive.
 Direct compositions must arrange those recurring calls; there is no background

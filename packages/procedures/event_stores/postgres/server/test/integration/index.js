@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import hash from "@blossm/hash";
 import { expect } from "chai";
-import { replace, restore } from "sinon";
+import { fake, replace, restore } from "sinon";
 import { connect, query as sql } from "@blossm/postgres-database";
 import prepareStores, { find } from "@blossm/postgres-event-store-storage";
 import post from "@blossm/event-store-post";
@@ -12,6 +12,7 @@ import createBlockTransaction from "@blossm/event-store-create-block-transaction
 
 import createBlock from "@blossm/event-store-create-block";
 import publishDeps from "@blossm/postgres-event-store-publish-pending/deps.js";
+import genericDeps from "@blossm/event-store/deps.js";
 import eventStore from "../../index.js";
 import deps from "../../deps.js";
 
@@ -717,5 +718,96 @@ describe("Postgres event store integration", function () {
     expect(published).to.have.length(4);
     expect(new Set(published.map(([notice]) => notice.root)).size).to.equal(4);
     expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+  });
+
+  it("recovers a bounded persisted batch during fresh server startup before listening", async () => {
+    await append(
+      Array.from({ length: 4 }, (_, index) => ({
+        event: event(`startup-${index}`),
+      }))
+    );
+    let restartedDatabase;
+    replace(deps.db, "connect", (connection) => {
+      restartedDatabase = connect(connection);
+      return restartedDatabase;
+    });
+    const listen = fake(() => {
+      expect(published).to.have.length(2);
+    });
+    const http = {
+      get() {
+        return this;
+      },
+      post() {
+        return this;
+      },
+      listen,
+    };
+    replace(genericDeps, "server", () => http);
+    try {
+      await eventStore({
+        connection: { connectionString: process.env.TEST_POSTGRES_URL },
+        namespace,
+        handlers,
+        publicationBatchSize: 2,
+        publishFn: async (...args) => published.push(args),
+      });
+      expect(listen.calledOnce).to.equal(true);
+      expect(published).to.have.length(2);
+      expect(await find({ store: stores.publicationsStore })).to.have.length(2);
+    } finally {
+      if (restartedDatabase) await restartedDatabase.end();
+    }
+  });
+
+  it("retains failed startup notices while the fresh server still listens", async () => {
+    await append(
+      Array.from({ length: 4 }, (_, index) => ({
+        event: event(`startup-failed-${index}`),
+      }))
+    );
+    let restartedDatabase;
+    replace(deps.db, "connect", (connection) => {
+      restartedDatabase = connect(connection);
+      return restartedDatabase;
+    });
+    const publishFn = fake.rejects(
+      Object.assign(new Error("private publication data"), {
+        code: "PUBLISH_DOWN",
+      })
+    );
+    const listen = fake(() => {
+      expect(publishFn.callCount).to.equal(2);
+    });
+    const http = {
+      get() {
+        return this;
+      },
+      post() {
+        return this;
+      },
+      listen,
+    };
+    replace(genericDeps, "server", () => http);
+    const errorLog = fake();
+    replace(genericDeps.logger, "error", errorLog);
+    try {
+      await eventStore({
+        connection: { connectionString: process.env.TEST_POSTGRES_URL },
+        namespace,
+        handlers,
+        publicationBatchSize: 2,
+        publishFn,
+      });
+      expect(listen.calledOnce).to.equal(true);
+      expect(publishFn.callCount).to.equal(2);
+      expect(await find({ store: stores.publicationsStore })).to.have.length(4);
+      expect(errorLog.calledOnce).to.equal(true);
+      expect(JSON.stringify(errorLog.firstCall.args)).not.to.include(
+        "private publication data"
+      );
+    } finally {
+      if (restartedDatabase) await restartedDatabase.end();
+    }
   });
 });
