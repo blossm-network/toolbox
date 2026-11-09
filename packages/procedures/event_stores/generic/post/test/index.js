@@ -1,6 +1,6 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
-import { restore, fake, stub, replace, useFakeTimers } from "sinon";
+import { restore, fake, stub, replace } from "sinon";
 
 import post from "../index.js";
 import deps from "../deps.js";
@@ -14,28 +14,11 @@ const eventData = [
 ];
 const tx = "some-tx";
 
-const savedEventHeadersTopic = "some-saved-event-headers-topic";
-const savedEventHeadersAction = "some-saved-event-headers-action";
-const savedEventHeadersRoot = "some-saved-event-headers-root";
-
-const domain = "some-domain";
-const service = "some-service";
-const network = "some-network";
-
-process.env.DOMAIN = domain;
-process.env.SERVICE = service;
-process.env.NETWORK = network;
-
-let clock;
-const now = new Date();
-
 describe("Event store post", () => {
   beforeEach(() => {
-    clock = useFakeTimers(now.getTime());
     process.env.NODE_ENV = "not-local";
   });
   afterEach(() => {
-    clock.restore();
     restore();
   });
 
@@ -59,27 +42,14 @@ describe("Event store post", () => {
     const saveEventsFn = "some-save-events-fn";
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
 
-    const publishFnFake = fake();
+    const publishPendingFnFake = fake();
 
-    const createTransactionFnFake = fake.returns({
-      receipt: [
-        {
-          topic: savedEventHeadersTopic,
-          action: savedEventHeadersAction,
-          root: savedEventHeadersRoot,
-        },
-        {
-          topic: savedEventHeadersTopic,
-          action: savedEventHeadersAction,
-          root: savedEventHeadersRoot,
-        },
-      ],
-    });
+    const createTransactionFnFake = fake.resolves();
     const idempotencyConflictCheckFnFake = fake();
     await post({
       saveEventsFn,
       reserveRootCountsFn,
-      publishFn: publishFnFake,
+      publishPendingFn: publishPendingFnFake,
       createTransactionFn: createTransactionFnFake,
       idempotencyConflictCheckFn: idempotencyConflictCheckFnFake,
     })(req, res);
@@ -94,18 +64,7 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
     });
-    expect(publishFnFake).to.have.been.calledWith(
-      {
-        domain: process.env.DOMAIN,
-        service: process.env.SERVICE,
-        network: process.env.NETWORK,
-        action: savedEventHeadersAction,
-        root: savedEventHeadersRoot,
-        timestamp: deps.dateString(),
-      },
-      savedEventHeadersTopic
-    );
-    expect(publishFnFake).to.have.been.calledTwice;
+    expect(publishPendingFnFake).to.have.been.calledOnce;
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with event idempotency conflict passed in", async () => {
@@ -132,22 +91,14 @@ describe("Event store post", () => {
     const saveEventsFn = "some-save-events-fn";
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
 
-    const publishFnFake = fake();
-    const createTransactionFnFake = fake.returns({
-      receipt: [
-        {
-          topic: savedEventHeadersTopic,
-          action: savedEventHeadersAction,
-          root: savedEventHeadersRoot,
-        },
-      ],
-    });
+    const publishPendingFnFake = fake();
+    const createTransactionFnFake = fake.resolves();
     const idempotencyConflictCheckFnFake = fake.returns(false);
 
     await post({
       saveEventsFn,
       reserveRootCountsFn,
-      publishFn: publishFnFake,
+      publishPendingFn: publishPendingFnFake,
       createTransactionFn: createTransactionFnFake,
       idempotencyConflictCheckFn: idempotencyConflictCheckFnFake,
     })(req, res);
@@ -168,17 +119,7 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
     });
-    expect(publishFnFake).to.have.been.calledWith(
-      {
-        domain: process.env.DOMAIN,
-        service: process.env.SERVICE,
-        network: process.env.NETWORK,
-        action: savedEventHeadersAction,
-        root: savedEventHeadersRoot,
-        timestamp: deps.dateString(),
-      },
-      savedEventHeadersTopic
-    );
+    expect(publishPendingFnFake).to.have.been.calledOnce;
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params and not publish in local", async () => {
@@ -201,29 +142,16 @@ describe("Event store post", () => {
     const saveEventsFn = "some-save-events-fn";
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
 
-    const publishFnFake = fake();
+    const publishPendingFnFake = fake();
 
-    const createTransactionFnFake = fake.returns({
-      receipt: [
-        {
-          topic: savedEventHeadersTopic,
-          action: savedEventHeadersAction,
-          root: savedEventHeadersRoot,
-        },
-        {
-          topic: savedEventHeadersTopic,
-          action: savedEventHeadersAction,
-          root: savedEventHeadersRoot,
-        },
-      ],
-    });
+    const createTransactionFnFake = fake.resolves();
     const idempotencyConflictCheckFnFake = fake();
 
     process.env.NODE_ENV = "local";
     await post({
       saveEventsFn,
       reserveRootCountsFn,
-      publishFn: publishFnFake,
+      publishPendingFn: publishPendingFnFake,
       createTransactionFn: createTransactionFnFake,
       idempotencyConflictCheckFn: idempotencyConflictCheckFnFake,
     })(req, res);
@@ -238,7 +166,7 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
     });
-    expect(publishFnFake).to.not.have.been.called;
+    expect(publishPendingFnFake).to.not.have.been.called;
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with event no idempotency passed in", async () => {
@@ -266,22 +194,14 @@ describe("Event store post", () => {
     const saveEventsFn = "some-save-events-fn";
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
 
-    const publishFnFake = fake();
-    const createTransactionFnFake = fake.returns({
-      receipt: [
-        {
-          topic: savedEventHeadersTopic,
-          action: savedEventHeadersAction,
-          root: savedEventHeadersRoot,
-        },
-      ],
-    });
+    const publishPendingFnFake = fake();
+    const createTransactionFnFake = fake.resolves();
     const idempotencyConflictCheckFnFake = fake.returns(false);
 
     await post({
       saveEventsFn,
       reserveRootCountsFn,
-      publishFn: publishFnFake,
+      publishPendingFn: publishPendingFnFake,
       createTransactionFn: createTransactionFnFake,
       idempotencyConflictCheckFn: idempotencyConflictCheckFnFake,
     })(req, res);
@@ -305,17 +225,7 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
     });
-    expect(publishFnFake).to.have.been.calledWith(
-      {
-        domain: process.env.DOMAIN,
-        service: process.env.SERVICE,
-        network: process.env.NETWORK,
-        action: savedEventHeadersAction,
-        root: savedEventHeadersRoot,
-        timestamp: deps.dateString(),
-      },
-      savedEventHeadersTopic
-    );
+    expect(publishPendingFnFake).to.have.been.calledOnce;
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
   it("should call with the correct params with idempotency fn conflict", async () => {
@@ -343,16 +253,8 @@ describe("Event store post", () => {
     const saveEventsFn = "some-save-events-fn";
     const reserveRootCountsFn = "some-reserve-root-counts-fn";
 
-    const publishFnFake = fake();
-    const createTransactionFnFake = fake.returns({
-      receipt: [
-        {
-          topic: savedEventHeadersTopic,
-          action: savedEventHeadersAction,
-          root: savedEventHeadersRoot,
-        },
-      ],
-    });
+    const publishPendingFnFake = fake();
+    const createTransactionFnFake = fake.resolves();
     const idempotencyConflictCheckFnFake = stub()
       .onFirstCall()
       .returns(false)
@@ -362,7 +264,7 @@ describe("Event store post", () => {
     await post({
       saveEventsFn,
       reserveRootCountsFn,
-      publishFn: publishFnFake,
+      publishPendingFn: publishPendingFnFake,
       createTransactionFn: createTransactionFnFake,
       idempotencyConflictCheckFn: idempotencyConflictCheckFnFake,
     })(req, res);
@@ -383,17 +285,7 @@ describe("Event store post", () => {
       saveEventsFn,
       reserveRootCountsFn,
     });
-    expect(publishFnFake).to.have.been.calledWith(
-      {
-        domain: process.env.DOMAIN,
-        service: process.env.SERVICE,
-        network: process.env.NETWORK,
-        action: savedEventHeadersAction,
-        root: savedEventHeadersRoot,
-        timestamp: deps.dateString(),
-      },
-      savedEventHeadersTopic
-    );
+    expect(publishPendingFnFake).to.have.been.calledOnce;
     expect(sendStatusFake).to.have.been.calledWith(204);
   });
 });

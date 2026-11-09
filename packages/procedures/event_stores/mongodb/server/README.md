@@ -35,9 +35,10 @@ pending delivery.
 This protects future writes. It does not reconstruct historical missing notices
 or replay old side effects automatically. Audit existing read-model freshness
 and choose any historical repair separately. Local mode retains its existing
-nontransactional/no-publication behavior and does not create the outbox. Other
-adapters retain the generic direct-publication path unless they implement the
-optional `publishPendingFn` hook with equivalent durable persistence.
+nontransactional/no-publication behavior and does not create the outbox. Every non-local adapter must provide durable publication. The generic server
+rejects a missing `publishPendingFn` before constructing routes or listening;
+there is no direct-publication fallback. Mongo supplies its dispatcher through
+`@blossm/mongodb-event-store-publish-pending`, a sibling operation package.
 
 ## Tests
 

@@ -24,6 +24,7 @@ describe("Event batch ordering", () => {
             })
           : Promise.resolve(false),
       createTransactionFn: (fn) => fn(),
+      publishPendingFn: async () => {},
     })({ body: { eventData } }, { sendStatus() {} });
     await Promise.resolve();
     releaseFirst(false);

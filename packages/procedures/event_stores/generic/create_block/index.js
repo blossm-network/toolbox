@@ -38,7 +38,7 @@ export default ({
   //Create another block if the one just created was full.
   if (full) await createBlockFn();
 
-  if (process.env.NODE_ENV != "local" && publishPendingFn)
+  if (process.env.NODE_ENV != "local")
     await publishPendingFn();
 
   res.send(block);

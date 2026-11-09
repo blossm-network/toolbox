@@ -12,12 +12,23 @@ describe("Event publication", () => {
       topic: "topic",
       committed: "2026-11-09T12:00:00.000Z",
     });
-    const event = Object.freeze({ hash: "hash", headers, payload: { private: true } });
+    const event = Object.freeze({
+      hash: "hash",
+      headers,
+      payload: { private: true },
+    });
     expect(createPublication(event)).to.deep.equal({
       hash: "hash",
       topic: "topic",
       created: headers.committed,
-      data: { root: "root", action: "set", domain: "domain", service: "service", network: "network", timestamp: headers.committed },
+      data: {
+        root: "root",
+        action: "set",
+        domain: "domain",
+        service: "service",
+        network: "network",
+        timestamp: headers.committed,
+      },
     });
   });
 });

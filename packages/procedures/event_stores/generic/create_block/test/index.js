@@ -60,6 +60,7 @@ describe("Event store post", () => {
       createBlockFn: createBlockFnFake,
       handlers,
       isPublic,
+      publishPendingFn: fake.resolves(),
     })(req, res);
 
     expect(createTransactionFnFake).to.have.been.calledWith(
@@ -128,6 +129,7 @@ describe("Event store post", () => {
       createBlockFn: createBlockFnFake,
       handlers,
       isPublic,
+      publishPendingFn: fake.resolves(),
     })(req, res);
 
     expect(createTransactionFnFake).to.have.been.calledWith(
