@@ -1,3 +1,3 @@
-import { Parser } from "@json2csv/plainjs";
+import deps from "./deps.js";
 
-export default ({ data, fields }) => new Parser({ fields }).parse(data);
+export default ({ data, fields }) => new deps.Parser({ fields }).parse(data);
