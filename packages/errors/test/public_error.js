@@ -30,6 +30,9 @@ describe("Public error contract", () => {
       message: "Some information is invalid.",
       info,
     });
+    expect(JSON.parse(JSON.stringify({ error })).error).to.deep.equal(
+      error.toJSON()
+    );
     expect(JSON.stringify(error)).not.to.match(/FAKE_|stack|cause/);
     expect(error.cause().message).to.equal("FAKE_PASSWORD");
     expect(error.info().token).to.equal("FAKE_TOKEN");
