@@ -50,6 +50,35 @@ process.env.MONGODB_DATABASE = database;
 
 let mongodbViewStore;
 describe("View store", () => {
+  it("should preserve custom index options without duplicating partial-word indexes", async () => {
+    const store = fake.returns({});
+    replace(deps, "db", { store });
+    replace(deps, "viewStore", fake());
+    replace(deps, "formatSchema", fake.returns({}));
+    const options = {
+      unique: true,
+      partialFilterExpression: { "body.enabled": true },
+    };
+    await mongodbViewStore({
+      schema: {},
+      indexes: [
+        [{ email: 1 }, options],
+        [{ title: "text" }, { name: "custom-search", weights: { title: 3 } }],
+        [{ optional: 1 }, { sparse: true }],
+        [{ other: 1 }],
+      ],
+      secretFn: async () => "test-password",
+    });
+    const built = store.firstCall.args[0].indexes;
+    expect(built).to.deep.include([{ "body.email": 1 }, options]);
+    expect(built).to.deep.include([{ "body.optional": 1 }, { sparse: true }]);
+    expect(built).to.deep.include([
+      { "body.title": "text", "headers.id": "text" },
+      { name: "custom-search", weights: { "body.title": 3 } },
+    ]);
+    expect(built.filter(([keys]) => keys["body.title"] === 1)).to.have.length(1);
+  });
+
   it("should preserve ID-only creation and disable guarded or positional upserts", async () => {
     const write = fake.resolves(null);
     replace(deps, "db", { store: fake.returns({}), write });
