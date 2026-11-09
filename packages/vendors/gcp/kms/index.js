@@ -1,14 +1,14 @@
-import kms from "@google-cloud/kms";
-
 import deps from "./deps.js";
 
 const publicKeys = {};
 
-export const __client = new kms.KeyManagementServiceClient();
+let client;
+// Construct on use: recent compatible SDKs start credential discovery in the constructor.
+const getClient = () => (client ||= new deps.Client());
 
 const createKey = async ({ id, ring, project, location }) => {
-  const parent = __client.keyRingPath(project, location, ring);
-  await __client.createCryptoKey({
+  const parent = getClient().keyRingPath(project, location, ring);
+  await getClient().createCryptoKey({
     parent,
     cryptoKeyId: id,
     cryptoKey: {
@@ -18,8 +18,8 @@ const createKey = async ({ id, ring, project, location }) => {
 };
 
 const decrypt = async ({ message, key, ring, location, project }) => {
-  const name = __client.cryptoKeyPath(project, location, ring, key);
-  const [result] = await __client.decrypt({
+  const name = getClient().cryptoKeyPath(project, location, ring, key);
+  const [result] = await getClient().decrypt({
     name,
     ciphertext: Buffer.from(message, "base64"),
   });
@@ -34,8 +34,8 @@ const encrypt = async ({
   project,
   format = "base64",
 }) => {
-  const name = __client.cryptoKeyPath(project, location, ring, key);
-  const [result] = await __client.encrypt({
+  const name = getClient().cryptoKeyPath(project, location, ring, key);
+  const [result] = await getClient().encrypt({
     name,
     plaintext: Buffer.from(message),
   });
@@ -43,7 +43,7 @@ const encrypt = async ({
 };
 
 const publicKey = async ({ key, ring, location, version, project }) => {
-  const versionPath = __client.cryptoKeyVersionPath(
+  const versionPath = getClient().cryptoKeyVersionPath(
     project,
     location,
     ring,
@@ -51,7 +51,7 @@ const publicKey = async ({ key, ring, location, version, project }) => {
     version
   );
 
-  const [{ pem }] = await __client.getPublicKey({
+  const [{ pem }] = await getClient().getPublicKey({
     name: versionPath,
   });
 
@@ -69,7 +69,7 @@ const sign = async ({
 }) => {
   const digest = deps.crypto.createHash("SHA256").update(message).digest();
 
-  const versionPath = __client.cryptoKeyVersionPath(
+  const versionPath = getClient().cryptoKeyVersionPath(
     project,
     location,
     ring,
@@ -77,7 +77,7 @@ const sign = async ({
     version
   );
 
-  const [{ signature }] = await __client.asymmetricSign({
+  const [{ signature }] = await getClient().asymmetricSign({
     name: versionPath,
     digest: { sha256: digest },
   });
@@ -110,7 +110,9 @@ const verify = ({ key, ring, location, version, project }) => async ({
 };
 
 export default {
-  __client,
+  get __client() {
+    return getClient();
+  },
   createKey,
   decrypt,
   encrypt,
