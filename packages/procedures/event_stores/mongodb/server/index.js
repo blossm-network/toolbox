@@ -307,6 +307,7 @@ export default async ({
   handlers,
   secretFn,
   publishFn,
+  publicationBatchSize,
   encryptFn,
   createBlockFn,
   signFn,
@@ -382,7 +383,11 @@ export default async ({
       blockchainStore: bStore,
     }),
     publishPendingFn: pStore
-      ? deps.publishPending({ publicationsStore: pStore, publishFn })
+      ? deps.publishPending({
+          publicationsStore: pStore,
+          publishFn,
+          batchSize: publicationBatchSize,
+        })
       : undefined,
     encryptFn,
     createBlockFn,

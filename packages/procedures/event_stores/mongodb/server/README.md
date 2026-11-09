@@ -7,7 +7,8 @@ Outside local mode, event writes also insert pending notices into the
 hashes identify notices. Event persistence rejects an enabled outbox without a
 transaction. An aborted batch leaves neither events nor notices.
 
-After commit, POST dispatches up to 100 pending notices, including on an
+After commit, POST dispatches up to `publicationBatchSize` pending notices
+(default 100), including on an
 idempotent retry containing no new events. Scheduled `/create-block` calls also
 dispatch pending notices after their block commits, including genesis and empty
 blocks. Generated deployments already schedule that route. Direct compositions
@@ -18,7 +19,7 @@ A notice is removed only after the publisher acknowledges it. Failed notices
 remain durable and their attempt counter advances, so an older failing batch
 does not indefinitely hide unattempted notices. One failed topic does not prevent
 attempting the remainder of the selected batch. The query and work per invocation
-are bounded to 100 notices; backlog throughput depends on POST and block-call
+are bounded to the configured batch size; backlog throughput depends on POST and block-call
 frequency and must be monitored operationally.
 
 Delivery is at least once. A process may stop after acknowledgement but before
@@ -39,6 +40,27 @@ nontransactional/no-publication behavior and does not create the outbox. Every n
 rejects a missing `publishPendingFn` before constructing routes or listening;
 there is no direct-publication fallback. Mongo supplies its dispatcher through
 `@blossm/mongodb-event-store-publish-pending`, a sibling operation package.
+
+## Publication batch size
+
+Set `publicationBatchSize` in server composition to tune work per recovery call:
+
+```js
+mongodbEventStore({
+  schema,
+  handlers,
+  secretFn,
+  publishFn,
+  publicationBatchSize: 50,
+});
+```
+
+The default is 100. The value must be a positive safe integer; invalid values
+fail while composing the dispatcher. Each invocation processes one batch.
+Acknowledged notices are removed, failed attempts rotate, and the next invocation
+queries remaining work. No cursor or offset is needed. Larger batches increase
+potential throughput and request work; this does not establish a time budget.
+Local mode retains its existing publication bypass.
 
 ## Tests
 
