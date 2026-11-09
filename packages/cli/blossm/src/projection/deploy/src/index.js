@@ -435,13 +435,16 @@ export default projection({
             ? await deleteId({
                 context: aggregateContext,
                 id,
+                query: composedIdQuery,
                 push,
               })
             : await saveId({
                 aggregate,
                 context: aggregateContext,
                 id,
+                query: composedIdQuery,
                 update: composedUpdate,
+                ...(arrayFilters && { arrayFilters }),
                 push,
               });
         } else if (Object.keys(composedIdQuery).length > 0) {
