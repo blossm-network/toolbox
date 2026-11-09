@@ -4,11 +4,9 @@ import { replace, fake } from "sinon";
 import setup from "./setup.js";
 import mongoose from "mongoose";
 import createEvent from "../../../../../../lib/create_event/index.js";
-import post from "../../../../generic/post/index.js";
 import eventStoreServer from "../../../../generic/server/index.js";
 import genericDeps from "../../../../generic/server/deps.js";
 import postTransaction from "../../../../generic/post_transaction/index.js";
-import createBlock from "../../../../generic/create_block/index.js";
 import server from "../../index.js";
 import serverDeps from "../../deps.js";
 import publicationsDeps from "../../../publish_pending/deps.js";
@@ -24,13 +22,26 @@ describe("MongoDB publication recovery", function () {
     append,
     handler,
     block,
+    blockHandler,
     serverOptions,
     start;
   let delivered, failPublish;
 
   before(async () => {
+    replace(genericDeps, "server", () => ({
+      get() {
+        return this;
+      },
+      post(fn, options) {
+        if (options?.path === "/create-block") blockHandler = fn;
+        else handler = fn;
+        return this;
+      },
+      listen() {},
+    }));
     replace(serverDeps, "eventStore", (options) => {
       composition = options;
+      return eventStoreServer(options);
     });
     serverOptions = {
       schema: { amount: Number },
@@ -95,10 +106,9 @@ describe("MongoDB publication recovery", function () {
         serverDeps.eventStore = compose;
       }
     };
-    handler = post(composition);
     block = async () => {
       let result;
-      await createBlock(composition)(
+      await blockHandler(
         {},
         {
           send(value) {
