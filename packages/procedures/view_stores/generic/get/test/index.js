@@ -79,6 +79,52 @@ describe("View store get", () => {
     expect(received["body.array"]).to.deep.equal([]);
   });
 
+  it("should reject unsafe pagination before querying persistence", async () => {
+    const findFn = fake.resolves([]);
+    const countFn = fake.resolves(0);
+    for (const pagination of [
+      { limit: "0" },
+      { limit: "101" },
+      { limit: null },
+      { limit: true },
+      { limit: [1] },
+      { limit: "-1" },
+      { limit: "1.5" },
+      { limit: "not-a-number" },
+      { skip: "-1" },
+      { skip: "9007199254740992" },
+    ]) {
+      let error;
+      try {
+        await get({ findFn, countFn })(
+          { query: { context, ...pagination }, params: {} },
+          { send: () => {} }
+        );
+      } catch (caught) {
+        error = caught;
+      }
+      expect(error && error.statusCode).to.equal(400);
+    }
+    expect(findFn).not.to.have.been.called;
+    expect(countFn).not.to.have.been.called;
+  });
+
+  it("should forward accepted pagination bounds and defaults", async () => {
+    const findFn = fake.resolves([]);
+    const countFn = fake.resolves(0);
+    for (const [pagination, limit, skip] of [
+      [{}, 50, 0],
+      [{ limit: "1", skip: "0" }, 1, 0],
+      [{ limit: 100, skip: 9007199254740991 }, 100, 9007199254740991],
+    ]) {
+      await get({ findFn, countFn })(
+        { query: { context, ...pagination }, params: {} },
+        { send: () => {} }
+      );
+      expect(findFn.lastCall.args[0]).to.include({ limit, skip });
+    }
+  });
+
   beforeEach(() => {
     process.env.CONTEXT = envContext;
   });
