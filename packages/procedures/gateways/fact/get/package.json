@@ -16,7 +16,8 @@
   },
   "dependencies": {
     "@blossm/errors": "^0.0.40",
-    "@blossm/fact-rpc": "^0.0.209"
+    "@blossm/fact-rpc": "^0.0.209",
+    "@blossm/server": "^0.0.46"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",
