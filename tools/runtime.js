@@ -17,14 +17,14 @@ const update = (file, expected) => {
   if (current === expected) return;
   if (!write)
     throw new Error(
-      `${file} differs from the runtime owner. Run yarn runtime:sync.`
+      `${file} differs from the runtime owner. Run yarn runtime:sync.`,
     );
   writeFileSync(root + file, expected);
 };
 
 update(".nvmrc", `${nodeVersion}\n`);
 for (const file of files.filter(
-  (file) => file === "package.json" || file.endsWith("/package.json")
+  (file) => file === "package.json" || file.endsWith("/package.json"),
 )) {
   const content = readFileSync(root + file, "utf8");
   const manifest = JSON.parse(content);
@@ -32,15 +32,15 @@ for (const file of files.filter(
   // Generated copies of the runtime policy stay checked, including packed templates.
   update(
     file,
-    content.replace(/"node": "[^"]*"/, `"node": ">= ${nodeVersion}"`)
+    content.replace(/"node": "[^"]*"/, `"node": ">= ${nodeVersion}"`),
   );
 }
 update(
   "build.yaml",
   readFileSync(root + "build.yaml", "utf8").replace(
     /_NODE_IMAGE: node:[^\s]+/,
-    `_NODE_IMAGE: ${nodeImage}`
-  )
+    `_NODE_IMAGE: ${nodeImage}`,
+  ),
 );
 for (const file of [
   "packages/cli/utils/merge_cli_template/template/Dockerfile",
@@ -50,7 +50,7 @@ for (const file of [
     file,
     readFileSync(root + file, "utf8").replace(
       /^FROM node:[^\s]+/m,
-      `FROM ${nodeSlimImage}`
-    )
+      `FROM ${nodeSlimImage}`,
+    ),
   );
 }

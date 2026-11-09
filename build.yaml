@@ -1,17 +1,11 @@
 steps:
   - name: $_NODE_IMAGE
     entrypoint: yarn
-    args: ["install"]
+    args: ["install", "--frozen-lockfile"]
+    env: ["HUSKY=0"]
   - name: $_NODE_IMAGE
     entrypoint: yarn
     args: ["check-packages"]
-  - name: $_NODE_IMAGE
-    entrypoint: yarn
-    args: ["lerna-publish"]
 
 substitutions:
   _NODE_IMAGE: node:24.22.1@sha256:d862bb5d082c5ae0210ac07e8c0344cb8cf7bef6d78e9b8c50c179da923108ea
-
-options:
-  env:
-    - "NPM_TOKEN=${_NPM_TOKEN}"

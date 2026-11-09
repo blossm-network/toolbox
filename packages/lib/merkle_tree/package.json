@@ -18,6 +18,6 @@
     "merkle-patricia-tree": "^4.2.4"
   },
   "devDependencies": {
-    "mocha": "^11.7.0"
+    "mocha": "^12.0.3"
   }
 }

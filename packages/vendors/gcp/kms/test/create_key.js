@@ -19,7 +19,7 @@ describe("Kms create", () => {
   it("should create correctly", async () => { 
     const path = "some-path";
     const pathFake = fake.returns(path);
-    const createCryptoKeyFake = fake.returns();
+    const createCryptoKeyFake = fake();
     replace(kms.__client, "keyRingPath", pathFake);
     replace(kms.__client, "createCryptoKey", createCryptoKeyFake);
     const result = await kms.createKey({ id, ring, location, project });
