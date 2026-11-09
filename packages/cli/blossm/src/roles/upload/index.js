@@ -110,5 +110,5 @@ export default async (args) => {
     input.env = env;
   }
 
-  upload(input);
+  return upload(input);
 };
