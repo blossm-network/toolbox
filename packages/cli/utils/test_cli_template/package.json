@@ -16,7 +16,8 @@
   },
   "dependencies": {
     "chalk": "^5.4.1",
-    "fs-extra": "^11.3.0"
+    "fs-extra": "^11.3.0",
+    "@blossm/robo-say": "^0.0.11"
   },
   "devDependencies": {
     "mocha": "^11.7.0"

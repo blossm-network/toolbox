@@ -11,6 +11,7 @@
     "sinon-chai": "^4.0.0",
     "chai-datetime": "^1.8.1",
     "@blossm/view-store-rpc": "*",
-    "@blossm/request": "*"
+    "@blossm/request": "*",
+    "localenv": "^0.2.2"
   }
 }
