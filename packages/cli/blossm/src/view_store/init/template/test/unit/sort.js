@@ -1,25 +1,16 @@
 import fs from "fs";
-import path from "path";
 import * as chai from "chai";
-import sinonChai from "sinon-chai";
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-chai.use(sinonChai);
 const { expect } = chai;
-
-const sort =
-  fs.existsSync(path.resolve(__dirname, "../../sort.js")) &&
-  import("../../sort");
+const filename = new URL("../../sort.js", import.meta.url);
+const hook = fs.existsSync(filename)
+  ? (await import(filename.href)).default
+  : undefined;
 
 describe("View store sort tests", () => {
-  if (!sort) return;
-  it("should convert correctly", async () => {
-    const sort = { some: "sort" };
-    const result = sort(sort);
-    expect(result).to.deep.equal(sort);
+  if (!fs.existsSync(filename)) return;
+  it("converts the example correctly", () => {
+    const sort = { some: 1 };
+    expect(hook(sort)).to.deep.equal(sort);
   });
 });
