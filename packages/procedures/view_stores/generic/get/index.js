@@ -16,23 +16,19 @@ const getValue = (object, key) => {
     : object[keyParts[0]];
 };
 
-const parseSpecialValues = (obj) => {
-  const result = {};
-  const array = [];
-  for (const key in obj) {
-    const parsedInt = parseInt(key);
-    if ((parsedInt === 0 || parsedInt) && array.length == parsedInt)
-      array.push(obj[key]);
-    if (typeof obj[key] == "object") result[key] = parseSpecialValues(obj[key]);
-    else if (typeof obj[key] == "string" && obj[key].charAt(0) == "#")
-      result[key] = parseInt(obj[key].substring(1));
-    else if (typeof obj[key] == "string" && obj[key].charAt(0) == "@")
-      result[key] = new Date(obj[key].substring(1));
-    else result[key] = obj[key];
-  }
+const parseSpecialValues = (value) => {
+  if (typeof value == "string" && value.charAt(0) == "#")
+    return parseInt(value.substring(1));
+  if (typeof value == "string" && value.charAt(0) == "@")
+    return new Date(value.substring(1));
+  if (value === null || typeof value != "object") return value;
+  if (Array.isArray(value)) return value.map(parseSpecialValues);
 
-  if (Object.keys(obj).length == array.length) return array;
-  return result;
+  const keys = Object.keys(value);
+  const entries = keys.map((key) => [key, parseSpecialValues(value[key])]);
+  return keys.length > 0 && keys.every((key, index) => key === String(index))
+    ? entries.map((entry) => entry[1])
+    : Object.fromEntries(entries);
 };
 
 export default ({

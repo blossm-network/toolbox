@@ -44,6 +44,41 @@ process.env.NETWORK = envNetwork;
 process.env.CORE_NETWORK = coreNetwork;
 
 describe("View store get", () => {
+  it("should preserve null and empty objects and parse markers recursively in query arrays", async () => {
+    let received;
+    const handler = get({
+      findFn: async ({ query }) => {
+        received = query;
+        return [];
+      },
+      countFn: async () => 0,
+    });
+    await handler(
+      {
+        query: {
+          context,
+          query: {
+            number: { $in: ["#2", "#3"] },
+            nested: { $in: { 0: { created: "@2020-12-09T02:50:59.076Z" } } },
+            nullable: null,
+            object: {},
+            array: [],
+          },
+        },
+        params: {},
+      },
+      { send: () => {} }
+    );
+    expect(received).to.include.keys("body.nullable");
+    expect(received["body.number"]).to.deep.equal({ $in: [2, 3] });
+    expect(received["body.nested"]).to.deep.equal({
+      $in: [{ created: new Date("2020-12-09T02:50:59.076Z") }],
+    });
+    expect(received["body.nullable"]).to.equal(null);
+    expect(received["body.object"]).to.deep.equal({});
+    expect(received["body.array"]).to.deep.equal([]);
+  });
+
   beforeEach(() => {
     process.env.CONTEXT = envContext;
   });
