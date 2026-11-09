@@ -1,1 +1,17 @@
 .blossm-cloud-run-env.json
+node_modules
+.git
+.env
+.env.*
+.aws
+.gcloud
+.config/gcloud
+*.pem
+*.key
+*.p12
+test
+base_test
+build.yaml
+docker-compose.yaml
+npm-debug.log*
+yarn-error.log*
