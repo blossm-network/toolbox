@@ -11,7 +11,9 @@ and `location` return an error directly when invalid and `undefined` on success.
 Existing policies are explicit:
 
 - `string` permits empty strings by default. Set `shouldAllowEmptyString: false`
-  to require content. `optional` permits null and undefined.
+  to require content. `optional` permits null and undefined. Maximum-length and
+  nonempty constraints still apply when a custom `fn` returns null or undefined
+  without throwing.
 - Number ranges include both endpoints and do not require integers.
   `positiveNumber` accepts 0 through 1,000,000, `percentRange` accepts 0 through
   10,000, and `yearRange` accepts 1950 through 2100.
