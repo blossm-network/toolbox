@@ -11,33 +11,6 @@ const formatResponse = (data) => {
   }
 };
 
-const jsonString = (string) => {
-  let objectOpenIndex;
-  let objectCloseIndex;
-  let openCount = 0;
-  const parsedData = [];
-  for (let i = 0; i < string.length; i++) {
-    const char = string.charAt(i);
-    if (char == "{") {
-      if (objectOpenIndex == undefined) objectOpenIndex = i;
-      openCount++;
-    } else if (char == "}" && openCount > 0) {
-      openCount--;
-      if (openCount == 0) {
-        parsedData.push(
-          JSON.parse(string.substr(objectOpenIndex, i - objectOpenIndex + 1))
-        );
-        objectOpenIndex = null;
-        objectCloseIndex = i + 1;
-      }
-    }
-  }
-  return {
-    parsedData,
-    leftover: objectCloseIndex ? string.substr(objectCloseIndex) : "",
-  };
-};
-
 const common = ({ method, dataParam, region, operationNameComponents, id, data, raw, onDataFn }) => {
   return {
     in: ({ context, network, host = process.env.HOST }) => {
@@ -205,20 +178,19 @@ export default ({region, operationNameComponents}) => ({
   stream: (fn, query, { raw } = {}) => {
     const id = query.id;
     delete query.id;
-    let progress = "";
+    const decoder = raw ? null : deps.jsonDecoder();
     return common({
       method: async (url, data) => {
-        return await deps.stream(
+        const response = await deps.stream(
           url,
           async (data) => {
             if (raw) return await fn(data);
-            const string = data.toString();
-            let { parsedData, leftover } = jsonString(progress + string);
-            progress = leftover;
-            for (const d of parsedData) await fn(d);
+            for (const value of decoder.write(data)) await fn(value);
           },
           data
         );
+        if (decoder) for (const value of decoder.end()) await fn(value);
+        return response;
       },
       dataParam: "query",
       region,

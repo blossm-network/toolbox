@@ -38,3 +38,9 @@ An empty request list completes without callbacks. Failure cancels all sources.
 The optional `decode` factory returns a per-source `{write,end}` decoder so
 framed records can be decoded before comparing/merging, without sharing parser
 state between sources. Without a decoder, values remain raw byte chunks.
+
+`jsonDecoder()` creates independent UTF-8 framing state for consecutive JSON
+objects/arrays. Feed chunks with `write(chunk)` and flush with `end()`. Quoted
+braces, nesting, escapes and byte-split code points are retained. Malformed or
+truncated records reject the stream. Raw HTTP streams are not implicitly parsed;
+RPC explicitly opts into this decoder.
