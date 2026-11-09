@@ -7,6 +7,8 @@ import gcpPubsub from "@blossm/gcp-pubsub";
 import request from "@blossm/request";
 import config from "./../../config.json" with { type: "json" };
 
+const { expect } = chai;
+
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const root = "some-root";
