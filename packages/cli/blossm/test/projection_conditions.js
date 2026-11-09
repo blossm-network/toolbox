@@ -8,7 +8,7 @@ const fixture = async ({ handler, response = { body: {} } }) => {
   const projection = await load("blossm/src/projection/deploy/src/index.js", {
     projection: (options) => options,
     config: { name: "cards" },
-    process: { env: {} },
+    process: { env: { NODE_ENV: "local" } },
     handlers: { animals: { bird: handler } },
     viewStore: () => ({
       set: () => ({
