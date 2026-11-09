@@ -1,3 +1,5 @@
+import { nodeImage } from "../../../runtime.js";
+
 export default ({
   mainContainerName,
   procedure,
@@ -13,7 +15,7 @@ export default ({
   custom = {},
 } = {}) => {
   return {
-    name: "node:20.19.0",
+    name: nodeImage,
     entrypoint: "node",
     args: [
       "-e",
