@@ -51,7 +51,7 @@ describe("Keccak Hash string", () => {
 
     expect(n1).to.exist;
     expect(n2).to.exist;
-    expect(n1).to.equal(n2);
+    expect(n1).to.not.equal(n2);
     expect(n2).to.not.equal(n3);
   });
 });

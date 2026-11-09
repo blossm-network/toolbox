@@ -1,1 +1,3 @@
-Creates a string of an object that is the same regardless of object property order.
+Creates stable JSON bytes independent of object property insertion order. The serializer is pinned to fast-json-stable-stringify 2.1.0: object keys sort lexically, Boolean values and own keys survive, and native JSON string escaping preserves lone UTF-16 surrogates. JSON omission/null rules apply to undefined values; cycles and BigInt are unsupported. Fixed byte vectors in test/ pin this representation.
+
+This is the single representation used by new event identities, commitments, snapshots and block exports. There are no format options or historical-reader modes. Changing serialization requires updating all cooperating producers, persistence and verification consumers together.
