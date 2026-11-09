@@ -15,3 +15,20 @@ describe("Difference", () => {
     }
   });
 });
+
+describe("Secure random integers", () => {
+  it("does not use Math.random", () => {
+    const original = Math.random;
+    Math.random = () => {
+      throw new Error("ordinary randomness is not credential entropy");
+    };
+    try {
+      expect(randomInt({ min: 1, max: 10 })).to.be.within(1, 9);
+    } finally {
+      Math.random = original;
+    }
+  });
+  it("retains the empty-range result", () => {
+    expect(randomInt({ min: 1, max: 1 })).to.equal(null);
+  });
+});
