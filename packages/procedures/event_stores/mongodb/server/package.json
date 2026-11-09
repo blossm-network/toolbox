@@ -35,7 +35,8 @@
     "@blossm/mongodb-event-store-save-block": "^0.0.65",
     "@blossm/mongodb-event-store-save-events": "^0.0.140",
     "@blossm/mongodb-event-store-save-snapshot": "^0.0.71",
-    "@blossm/uuid": "^0.0.9"
+    "@blossm/uuid": "^0.0.9",
+    "@blossm/mongodb-event-store-publish-pending": "^0.0.1"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",

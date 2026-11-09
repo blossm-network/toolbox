@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { fake, replace, restore } from "sinon";
-import publishPending from "../src/publish_pending.js";
-import deps from "../src/publications_deps.js";
+import publishPending from "../index.js";
+import deps from "../deps.js";
 
 describe("Pending event publications", () => {
   afterEach(restore);

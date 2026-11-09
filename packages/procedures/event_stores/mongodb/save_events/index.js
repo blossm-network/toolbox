@@ -29,19 +29,7 @@ export default ({ eventStore, publicationsStore, handlers }) => async ({
     if (publicationsStore && events.length)
       await deps.db.create({
         store: publicationsStore,
-        data: events.map(({ hash, headers }) => ({
-          hash,
-          topic: headers.topic,
-          created: headers.committed,
-          data: {
-            root: headers.root,
-            action: headers.action,
-            domain: headers.domain,
-            service: headers.service,
-            network: headers.network,
-            timestamp: headers.committed,
-          },
-        })),
+        data: events.map(deps.createPublication),
         options: { session: transaction },
       });
   } catch (err) {

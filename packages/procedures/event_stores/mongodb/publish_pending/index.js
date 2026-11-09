@@ -1,4 +1,4 @@
-import deps from "./publications_deps.js";
+import deps from "./deps.js";
 
 export default ({ publicationsStore, publishFn }) =>
   async () => {
