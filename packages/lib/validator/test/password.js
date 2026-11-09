@@ -44,3 +44,19 @@ describe("Invalid passwords", () => {
     expect(response.errors).to.have.lengthOf(1);
   });
 });
+
+describe("Password error messages", () => {
+  for (const password of [
+    "password123",
+    "password!!!",
+    "12345678!!!",
+    "Password1;",
+  ]) {
+    it(`should describe the requirement without disclosing ${password}`, () => {
+      const response = validator.password(password);
+      expect(response.errors).to.have.lengthOf(1);
+      expect(response.errors[0].message).not.to.include(password);
+      expect(response.errors[0].message).to.include("This password should");
+    });
+  }
+});
