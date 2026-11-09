@@ -9,8 +9,17 @@ import { spawnSync } from "child_process";
 const require = createRequire(import.meta.url);
 const sourceDir = fileURLToPath(new URL("../src/", import.meta.url));
 const mocha = require.resolve("mocha/bin/mocha.js");
-const modules = path.dirname(
-  path.dirname(require.resolve("chai/package.json"))
+const packages = ["chai", "chai-datetime", "sinon", "sinon-chai"].map(
+  (name) => {
+    let directory = path.dirname(require.resolve(name));
+    while (
+      !fs.existsSync(path.join(directory, "package.json")) ||
+      JSON.parse(fs.readFileSync(path.join(directory, "package.json"), "utf8"))
+        .name !== name
+    )
+      directory = path.dirname(directory);
+    return [name, directory];
+  }
 );
 
 const runFixture = ({ source, enabled = false, count }) => {
@@ -18,7 +27,14 @@ const runFixture = ({ source, enabled = false, count }) => {
   try {
     fs.cpSync(path.join(sourceDir, source), fixture, { recursive: true });
     fs.writeFileSync(path.join(fixture, "package.json"), '{"type":"module"}');
-    fs.symlinkSync(modules, path.join(fixture, "node_modules"), "dir");
+    fs.mkdirSync(path.join(fixture, "node_modules"));
+    for (const [name, directory] of packages) {
+      fs.symlinkSync(
+        directory,
+        path.join(fixture, "node_modules", name),
+        "dir"
+      );
+    }
     // The fact's test must replace this seam before its sample RPC executes.
     if (source === "fact/init/template") {
       fs.writeFileSync(
