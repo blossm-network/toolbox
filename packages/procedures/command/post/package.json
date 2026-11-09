@@ -1,7 +1,7 @@
 {
   "name": "@blossm/command-post",
   "description": "A command handler server POST handler.",
-  "version": "0.0.308",
+  "version": "0.0.310",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -19,7 +19,7 @@
     "@blossm/datetime": "^0.0.18",
     "@blossm/errors": "^0.0.40",
     "@blossm/event-outcome-consts": "^0.0.1",
-    "@blossm/event-store-rpc": "^0.0.310",
+    "@blossm/event-store-rpc": "^0.0.311",
     "@blossm/rpc-delivery-consts": "^0.0.1",
     "@blossm/uuid": "^0.0.9"
   },
