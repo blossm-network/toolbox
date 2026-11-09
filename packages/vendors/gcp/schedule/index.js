@@ -20,6 +20,7 @@ const create = async ({
     httpTarget: {
       uri: url,
       httpMethod: "POST",
+      headers: { "content-type": "application/json" },
       oauthToken: token,
       body,
     },
