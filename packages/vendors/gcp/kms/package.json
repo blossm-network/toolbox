@@ -18,9 +18,9 @@
     "@google-cloud/kms": "^5.7.0"
   },
   "devDependencies": {
-    "dotenv": "^8.2.0",
-    "mocha": "^11.6.0",
-    "sinon": "^21.0.0",
-    "sinon-chai": "^4.0.0"
+    "dotenv": "^18.0.9",
+    "mocha": "^12.0.3",
+    "sinon": "^22.1.0",
+    "sinon-chai": "^4.0.1"
   }
 }
