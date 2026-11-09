@@ -197,28 +197,29 @@ export default async ({
     secretFn,
   });
 
-  const streamFn = async ({ query, text, sort, select, parallel, fn }) => {
+  const searchQuery = (query, text) => {
     const textIdUuid = deps.uuidValidator(text);
+    return {
+      ...query,
+      ...(text && {
+        $or: [
+          { $text: { $search: textIdUuid ? `"${text}"` : text } },
+          ...(!textIdUuid
+            ? partialWordTextIndexes.map((index) => ({
+                [index]: { $regex: text, $options: "i" },
+              }))
+            : []),
+        ],
+      }),
+    };
+  };
+
+  const streamFn = async ({ query, text, sort, select, parallel, fn }) => {
     const cursor = text
       ? deps.db
           .aggregate({
             store,
-            query: {
-              ...query,
-              $or: [
-                {
-                  $text: { $search: textIdUuid ? `"${text}"` : text },
-                },
-                ...(!textIdUuid
-                  ? partialWordTextIndexes.map((index) => ({
-                      [index]: {
-                        $regex: text,
-                        $options: "i",
-                      },
-                    }))
-                  : []),
-              ],
-            },
+            query: searchQuery(query, text),
             ...((select || text) && {
               select: {
                 ...select,
@@ -257,26 +258,10 @@ export default async ({
   };
 
   const findFn = ({ query, text, limit, select, skip, sort }) => {
-    const textIdUuid = deps.uuidValidator(text);
     return text
       ? deps.db.aggregate({
           store,
-          query: {
-            ...query,
-            $or: [
-              {
-                $text: { $search: textIdUuid ? `"${text}"` : text },
-              },
-              ...(!textIdUuid
-                ? partialWordTextIndexes.map((index) => ({
-                    [index]: {
-                      $regex: text,
-                      $options: "i",
-                    },
-                  }))
-                : []),
-            ],
-          },
+          query: searchQuery(query, text),
           select: {
             ...select,
             ...(select &&
@@ -312,27 +297,9 @@ export default async ({
   };
 
   const countFn = async ({ query, text }) => {
-    const textIdUuid = deps.uuidValidator(text);
     return await deps.db.count({
       store,
-      query: {
-        ...query,
-        ...(text && {
-          $or: [
-            {
-              $text: { $search: textIdUuid ? `"${text}"` : text },
-            },
-            ...(!textIdUuid
-              ? partialWordTextIndexes.map((index) => ({
-                  [index]: {
-                    $regex: text,
-                    $options: "i",
-                  },
-                }))
-              : []),
-          ],
-        }),
-      },
+      query: searchQuery(query, text),
     });
   };
 
