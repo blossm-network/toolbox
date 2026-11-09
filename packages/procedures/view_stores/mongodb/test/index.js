@@ -260,7 +260,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "headers.id": 1 }],
         [
           {
             "headers.context": 1,
@@ -520,7 +519,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "headers.id": 1 }],
         [
           {
             "headers.context": 1,
@@ -829,7 +827,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "headers.id": 1 }],
         [
           {
             "headers.context": 1,
@@ -1102,7 +1099,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "headers.id": 1 }],
         [
           {
             "headers.context": 1,
@@ -1257,7 +1253,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "headers.id": 1 }],
         [
           {
             "headers.groups": 1,
@@ -1518,7 +1513,6 @@ describe("View store", () => {
       },
       typeKey: "$type",
       indexes: [
-        [{ "headers.id": 1 }],
         [
           {
             "headers.context": 1,
