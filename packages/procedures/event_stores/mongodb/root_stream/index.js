@@ -3,6 +3,7 @@ import deps from "./deps.js";
 export default ({ countsStore, snapshotStore }) =>
   async ({
     parallel = 1,
+    transaction,
     updatedOnOrAfter,
     updatedBefore,
     limit,
@@ -30,7 +31,7 @@ export default ({ countsStore, snapshotStore }) =>
               let: { root: "$root" },
               pipeline: [
                 { $match: { $expr: { $eq: ["$headers.root", "$$root"] } } },
-                { $sort: { "headers.created": -1 } },
+                { $sort: { "headers.number": -1, "headers.created": -1 } },
                 { $limit: 1 },
                 { $project: { "headers.lastEventNumber": 1, _id: 0 } },
               ],
@@ -66,7 +67,7 @@ export default ({ countsStore, snapshotStore }) =>
           { $sort: { updated: reverse ? 1 : -1, root: 1 } },
           ...(limit ? [{ $limit: limit }] : []),
           { $project: { root: 1, value: 1, updated: 1, _id: 0 } },
-        ])
+        ], { ...(transaction && { session: transaction }) })
         .cursor();
       return await cursor.eachAsync(fn, { parallel });
     }
@@ -86,7 +87,7 @@ export default ({ countsStore, snapshotStore }) =>
           root: 1,
         },
         ...(limit && { limit }),
-        options: { lean: true },
+        options: { lean: true, ...(transaction && { session: transaction }) },
       })
       .cursor();
 

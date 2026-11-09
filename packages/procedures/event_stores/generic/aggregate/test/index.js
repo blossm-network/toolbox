@@ -125,6 +125,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.root": root,
       },
       sort: {
+        "headers.number": -1,
         "headers.created": -1,
       },
       select: {
@@ -212,6 +213,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.root": root,
       },
       sort: {
+        "headers.number": -1,
         "headers.created": -1,
       },
       select: {
@@ -329,6 +331,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.root": root,
       },
       sort: {
+        "headers.number": -1,
         "headers.created": -1,
       },
       select: {
@@ -418,6 +421,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.created": { $lte: timestamp },
       },
       sort: {
+        "headers.number": -1,
         "headers.created": -1,
       },
       select: {
@@ -500,6 +504,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.root": root,
       },
       sort: {
+        "headers.number": -1,
         "headers.created": -1,
       },
       select: {
@@ -555,6 +560,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.root": root,
       },
       sort: {
+        "headers.number": -1,
         "headers.created": -1,
       },
       select: {
@@ -612,6 +618,7 @@ describe("Mongodb event store aggregate", () => {
         "headers.root": root,
       },
       sort: {
+        "headers.number": -1,
         "headers.created": -1,
       },
       select: {
