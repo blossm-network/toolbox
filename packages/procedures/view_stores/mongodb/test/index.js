@@ -50,6 +50,33 @@ process.env.MONGODB_DATABASE = database;
 
 let mongodbViewStore;
 describe("View store", () => {
+  it("should search literal punctuation consistently in find, count and stream", async () => {
+    const aggregate = fake.returns({ cursor: () => ({ eachAsync: async () => {} }) });
+    const count = fake.resolves(0);
+    replace(deps, "db", { store: fake.returns({}), aggregate, count });
+    const server = fake();
+    replace(deps, "viewStore", server);
+    replace(deps, "formatSchema", fake.returns({}));
+    await mongodbViewStore({
+      schema: {},
+      indexes: [[{ name: "text" }]],
+      secretFn: async () => "test-password",
+    });
+    const handlers = server.firstCall.args[0];
+    const text = "a.*[b](c)+?^$|\\";
+    handlers.findFn({ query: {}, text });
+    await handlers.countFn({ query: {}, text });
+    await handlers.streamFn({ query: {}, text, fn: () => {} });
+    for (const call of [...aggregate.getCalls(), ...count.getCalls()]) {
+      const { $or } = call.args[0].query;
+      expect($or[0]).to.deep.equal({ $text: { $search: text } });
+      const pattern = new RegExp($or[1]["body.name"].$regex, "i");
+      expect(pattern.test(text)).to.equal(true);
+      expect(pattern.test("anything else")).to.equal(false);
+      expect($or[1]["body.name"].$regex).to.equal("a\\.\\*\\[b\\]\\(c\\)\\+\\?\\^\\$\\|\\\\");
+    }
+  });
+
   it("should preserve custom index options without duplicating partial-word indexes", async () => {
     const store = fake.returns({});
     replace(deps, "db", { store });

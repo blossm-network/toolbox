@@ -205,6 +205,7 @@ export default async ({
 
   const searchQuery = (query, text) => {
     const textIdUuid = deps.uuidValidator(text);
+    const partialText = text && text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     return {
       ...query,
       ...(text && {
@@ -212,7 +213,7 @@ export default async ({
           { $text: { $search: textIdUuid ? `"${text}"` : text } },
           ...(!textIdUuid
             ? partialWordTextIndexes.map((index) => ({
-                [index]: { $regex: text, $options: "i" },
+                [index]: { $regex: partialText, $options: "i" },
               }))
             : []),
         ],
