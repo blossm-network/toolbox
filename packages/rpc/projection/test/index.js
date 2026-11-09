@@ -71,7 +71,7 @@ describe("Replay projection", () => {
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
-      internalFn: internalTokenFn,
+      internalTokenFn,
       enqueueFn: enqueueFnResult,
     });
     expect(enqueueFnFake).to.have.been.calledWith({
@@ -109,5 +109,26 @@ describe("Replay projection", () => {
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
+  });
+});
+
+describe("Projection token composition", () => {
+  afterEach(restore);
+
+  it("passes its token producer through the generic RPC boundary", async () => {
+    const { default: rpc } = await import("../../generic/index.js");
+    const { default: rpcDeps } = await import("../../generic/deps.js");
+    replace(deps, "rpc", rpc);
+    const post = fake.resolves({ statusCode: 204 });
+    replace(rpcDeps, "post", post);
+    const tokenFn = fake.resolves({ token: "fake-identity", type: "Bearer" });
+
+    await projection({ name: "example" })
+      .set({ token: { internalFn: tokenFn } })
+      .play({ root: "root", domain: "domain", service: "service" });
+    expect(tokenFn).to.have.been.calledOnce;
+    expect(post.firstCall.args[1].headers).to.deep.equal({
+      authorization: "Bearer fake-identity",
+    });
   });
 });
