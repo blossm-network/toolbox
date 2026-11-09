@@ -1,4 +1,3 @@
-import crypto from "crypto";
 import deps from "./deps.js";
 
 const publicKeys = new Map();
@@ -22,7 +21,7 @@ export default ({
       publicKeys.set(url, cached);
     }
 
-    return crypto
+    return deps
       .createVerify(algorithm)
       .update(message)
       .verify(cached.key, signature, "base64");

@@ -1,11 +1,10 @@
-import logger from "@blossm/logger";
-import { publicError } from "@blossm/errors";
+import deps from "./deps.js";
 
 export default (err, req, res, next) => {
   if (res.headersSent) return next(err);
 
-  const error = publicError(err);
-  const log = error.statusCode >= 500 ? logger.error : logger.info;
+  const error = deps.publicError(err);
+  const log = error.statusCode >= 500 ? deps.logger.error : deps.logger.info;
   // Native messages can echo credentials. Keep their call sites, not the
   // complete message prefix (which may itself span multiple lines).
   const label = err.message ? `${err.name}: ${err.message}` : err.name;
