@@ -6,7 +6,7 @@
   "type": "module",
   "author": "blossm.network",
   "engines": {
-    "node": ">=24.22.1"
+    "node": ">= 24.22.1"
   },
   "scripts": {
     "test": "mocha test/index.js",
