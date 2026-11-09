@@ -1,3 +1,4 @@
+import assertResponse from "../assert_response.js";
 import "localenv";
 import * as chai from "chai";
 import { string as dateString } from "@blossm/datetime";
@@ -17,36 +18,9 @@ const { expect } = chai;
 const url = `http://${process.env.MAIN_CONTAINER_NAME}`;
 
 const checkResponse = ({ data, expected, tokens, revokeKeys }) => {
-  for (const property in {
-    ...expected,
-    ...(tokens && { _tokens: tokens }),
-    ...(revokeKeys && { _revokeKeys: revokeKeys }),
-  }) {
-    expect(data[property]).to.exist;
-    if (expected[property]) {
-      if (
-        typeof expected[property] == "object" &&
-        !(expected[property] instanceof Array)
-      ) {
-        checkResponse({
-          data: data[property],
-          expected: expected[property],
-        });
-      } else if (expected[property] instanceof Array) {
-        expect(data[property]).to.be.an("array");
-        let i = 0;
-        for (const expectedValue of expected[property]) {
-          checkResponse({
-            data: data[property][i],
-            expected: expectedValue[i],
-          });
-          i++;
-        }
-      } else {
-        expect(data[property]).to.deep.equal(expected[property]);
-      }
-    }
-  }
+  assertResponse({ data, expected });
+  if (tokens) expect(data._tokens).to.exist;
+  if (revokeKeys) expect(data._revokeKeys).to.exist;
 };
 
 const formattedPayload = async (payload) => {
