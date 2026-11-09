@@ -24,6 +24,7 @@ const topic = `some-topic`;
 const transaction = "some-transaction";
 
 const payload = { a: 1 };
+const context = { trace: "some-context" };
 const idempotency = "some-idempotency";
 const action = "some-action";
 const version = "some-version";
@@ -585,12 +586,12 @@ describe("Event store post", () => {
       ],
       transaction,
     });
-    expect(reserveRootCountsFnFake.getCall(0)).to.have.been.calledWith({
+    expect(reserveRootCountsFnFake.getCall(1)).to.have.been.calledWith({
       root,
       amount: 2,
       transaction,
     });
-    expect(reserveRootCountsFnFake.getCall(1)).to.have.been.calledWith({
+    expect(reserveRootCountsFnFake.getCall(0)).to.have.been.calledWith({
       root: "some-other-root",
       amount: 1,
       transaction,
