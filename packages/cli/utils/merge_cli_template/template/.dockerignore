@@ -14,3 +14,4 @@ build.yaml
 docker-compose.yaml
 npm-debug.log*
 yarn-error.log*
+.blossm-cloud-run-env.json
