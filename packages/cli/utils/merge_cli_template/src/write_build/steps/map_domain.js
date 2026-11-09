@@ -1,19 +1,27 @@
-import { oneLine } from "common-tags";
+import ensureResource from "./ensure_resource.js";
 
-export default ({ serviceName, uri, project, region }) => {
-  return {
-    name: "gcr.io/cloud-builders/gcloud",
-    entrypoint: "bash",
-    args: [
-      "-c",
-      oneLine`
-      gcloud beta run domain-mappings create
-      --platform=managed
-      --service=${serviceName}
-      --domain=${uri}
-      --project=${project}
-      --region=${region} || exit 0
-      `,
+export default ({ serviceName, uri, project, region }) =>
+  ensureResource({
+    describe: [
+      "beta",
+      "run",
+      "domain-mappings",
+      "describe",
+      `--domain=${uri}`,
+      `--project=${project}`,
+      `--region=${region}`,
+      "--format=value(spec.routeName)",
     ],
-  };
-};
+    create: [
+      "beta",
+      "run",
+      "domain-mappings",
+      "create",
+      `--service=${serviceName}`,
+      `--domain=${uri}`,
+      `--project=${project}`,
+      `--region=${region}`,
+      "--quiet",
+    ],
+    expected: serviceName,
+  });
