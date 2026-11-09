@@ -332,7 +332,6 @@ export default async ({
   const writeFn = async ({ query, data, arrayFilters }) => {
     const update = {};
     const setKey = "$set";
-    let containsMatcher = false;
     for (const key of Object.keys(data)) {
       if (key.charAt(0) == "$") {
         update[key] = {
@@ -340,13 +339,16 @@ export default async ({
           ...data[key],
         };
       } else {
-        if (key.includes(".$")) containsMatcher = true;
         update[setKey] = {
           ...update[setKey],
           [key]: data[key],
         };
       }
     }
+
+    const containsMatcher = Object.values(update).some((fields) =>
+      Object.keys(fields).some((key) => key.includes(".$"))
+    );
 
     return await deps.db.write({
       store,
