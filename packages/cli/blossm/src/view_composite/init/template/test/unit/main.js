@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import chaiDatetime from "chai-datetime";
 import sinonChai from "sinon-chai";
-import { restore, useFakeTimers } from "sinon";
+import { fake, restore, useFakeTimers } from "sinon";
 
 import main from "../../main.js";
 
@@ -24,7 +24,14 @@ describe("Composite unit tests", () => {
   it("should return successfully", async () => {
     const query = "some-query";
 
-    const result = await main({ query });
+    const viewsFn = fake.resolves([]);
+    const result = await main({ query, viewsFn });
+    expect(viewsFn).to.have.been.calledOnceWithExactly({
+      name: "some-view-store-name",
+      context: "some-view-store-context",
+      query: { some: "query" },
+      sort: { some: 1 },
+    });
     expect(result).to.deep.equal({ some: "response" });
   });
 });
