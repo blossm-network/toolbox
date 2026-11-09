@@ -102,9 +102,12 @@ Successful notices are deleted, so the next call selects the outstanding batch
 without a cursor or offset; this option does not change action delivery.
 
 Delivery is at least once. Concurrent dispatchers or a stop between publication
-and deletion can deliver duplicates; subscribers must tolerate them. A delivery
-failure still fails HTTP after event commitment, so retry with the same event
-idempotency key. This protects future writes and does not reconstruct historical
+and deletion can deliver duplicates; subscribers must tolerate them. Committed POST and block responses acknowledge persistence even when
+publication or pending-record deletion fails. The generic server logs safe error
+metadata and retains notices for retry; storage and transaction failures still
+reject the request. Explicit calls to the raw adapter dispatcher still reject
+on delivery errors. Every published notice carries its committed event hash as
+`hash` in its metadata, unchanged across retries, so subscribers can identify duplicates. This protects future writes and does not reconstruct historical
 missing notifications. Local mode keeps its existing no-publication behavior.
 Applications retain the generic block builder's existing root/time selection
 rules; this adapter does not change them.

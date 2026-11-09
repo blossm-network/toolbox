@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import hash from "@blossm/hash";
 import { expect } from "chai";
+import { COMMITTED, DUPLICATE } from "@blossm/event-outcome-consts";
 import { fake, replace, restore } from "sinon";
 import { connect, query as sql } from "@blossm/postgres-database";
 import prepareStores, { find } from "@blossm/postgres-event-store-storage";
@@ -61,6 +62,7 @@ describe("Postgres event store integration", function () {
   let postRoute;
   let blockRoute;
   let published;
+  let publicationAttempts;
   let failPublish;
   let previousEnv;
 
@@ -107,12 +109,14 @@ describe("Postgres event store integration", function () {
       return options;
     });
     published = [];
+    publicationAttempts = [];
     api = await eventStore({
       connection,
       namespace,
       indexes: ["label", "items.code"],
       handlers,
       publishFn: async (...args) => {
+        publicationAttempts.push(args);
         if (failPublish) throw new Error("publication unavailable");
         published.push(args);
       },
@@ -132,6 +136,7 @@ describe("Postgres event store integration", function () {
         .join(", ")}`
     );
     published.length = 0;
+    publicationAttempts.length = 0;
     failPublish = false;
   });
 
@@ -600,16 +605,22 @@ describe("Postgres event store integration", function () {
   it("recovers a failed notice on duplicate POST without another event", async () => {
     const req = { body: { eventData: [{ event: event("retry") }] } };
     failPublish = true;
-    expect(
-      (await failure(() => postRoute(req, { sendStatus() {} }))).message
-    ).to.equal("publication unavailable");
+    const sendStatus = fake();
+    await postRoute(req, { sendStatus });
+    expect(sendStatus.firstCall.args).to.deep.equal([204]);
     expect(await api.countFn({ root: "retry" })).to.equal(1);
-    expect(await find({ store: stores.publicationsStore })).to.have.length(1);
+    const [notice] = await find({ store: stores.publicationsStore });
+    expect(notice.data.hash).to.equal(notice.hash);
+    expect(publicationAttempts[0][0].hash).to.equal(notice.hash);
     failPublish = false;
     await postRoute(req, { sendStatus() {} });
     expect(await api.countFn({ root: "retry" })).to.equal(1);
     expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
     expect(published).to.have.length(1);
+    expect(publicationAttempts.map(([data]) => data.hash)).to.deep.equal([
+      notice.hash,
+      notice.hash,
+    ]);
   });
 
   it("recovers a committed notice through scheduled block creation", async () => {
@@ -824,5 +835,115 @@ describe("Postgres event store integration", function () {
     } finally {
       if (restartedDatabase) await restartedDatabase.end();
     }
+  });
+
+  it("returns committed outcomes despite pending deletion failure, then recovers the same notice on retry", async () => {
+    const req = {
+      body: {
+        eventData: [{ event: event("outcome-delete-failure") }],
+        returnOutcomes: true,
+      },
+    };
+    replace(publishDeps.db, "remove", async () => {
+      throw new Error("delete unavailable");
+    });
+    const send = fake();
+    await postRoute(req, { send });
+    expect(send.firstCall.args[0]).to.deep.equal({ outcomes: [COMMITTED] });
+    expect(await api.countFn({ root: "outcome-delete-failure" })).to.equal(1);
+    const [notice] = await find({ store: stores.publicationsStore });
+    expect(published[0][0].hash).to.equal(notice.hash);
+
+    restore();
+    await postRoute(req, { send });
+    expect(send.secondCall.args[0]).to.deep.equal({ outcomes: [DUPLICATE] });
+    expect(await api.countFn({ root: "outcome-delete-failure" })).to.equal(1);
+    expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+    expect(published.map(([data]) => data.hash)).to.deep.equal([
+      notice.hash,
+      notice.hash,
+    ]);
+  });
+
+  for (const deletionFails of [false, true]) {
+    it(`returns the committed block despite ${
+      deletionFails ? "deletion" : "publication"
+    } failure and later delivers the same notice`, async () => {
+      await append([{ event: event("committed-block") }]);
+      const [notice] = await find({ store: stores.publicationsStore });
+      if (deletionFails)
+        replace(publishDeps.db, "remove", async () => {
+          throw new Error("delete unavailable");
+        });
+      else failPublish = true;
+      const send = fake();
+      await blockRoute({}, { send });
+      expect(send.calledOnce).to.equal(true);
+      expect((await api.latestBlockFn()).hash).to.equal(
+        send.firstCall.args[0].hash
+      );
+      expect(await find({ store: stores.publicationsStore })).to.have.length(1);
+
+      restore();
+      failPublish = false;
+      await blockRoute({}, { send });
+      expect(send.calledTwice).to.equal(true);
+      expect((await api.latestBlockFn()).hash).to.equal(
+        send.secondCall.args[0].hash
+      );
+      expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+      expect(publicationAttempts.map(([data]) => data.hash)).to.deep.equal([
+        notice.hash,
+        notice.hash,
+      ]);
+    });
+  }
+
+  it("propagates a real outbox storage constraint failure and rolls back without a committed response", async () => {
+    await database.query(
+      `ALTER TABLE ${stores.publicationsStore.table} ADD CONSTRAINT integration_reject_notice CHECK (false)`
+    );
+    try {
+      const send = fake();
+      const err = await failure(() =>
+        postRoute(
+          {
+            body: {
+              eventData: [{ event: event("invalid-storage") }],
+              returnOutcomes: true,
+            },
+          },
+          { send }
+        )
+      );
+      expect(err.code).to.equal("23514");
+      expect(send.called).to.equal(false);
+      expect(await api.countFn({ root: "invalid-storage" })).to.equal(0);
+      expect(await find({ store: stores.eventStore })).to.deep.equal([]);
+      expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+      expect(publicationAttempts).to.have.length(0);
+    } finally {
+      await database.query(
+        `ALTER TABLE ${stores.publicationsStore.table} DROP CONSTRAINT integration_reject_notice`
+      );
+    }
+  });
+
+  it("propagates expected-number transaction failure without acknowledging commitment", async () => {
+    const sendStatus = fake();
+    const err = await failure(() =>
+      postRoute(
+        {
+          body: { eventData: [{ event: event("stale-number"), number: 1 }] },
+        },
+        { sendStatus }
+      )
+    );
+    expect(err.statusCode).to.equal(412);
+    expect(sendStatus.called).to.equal(false);
+    expect(await api.countFn({ root: "stale-number" })).to.equal(0);
+    expect(await find({ store: stores.eventStore })).to.deep.equal([]);
+    expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+    expect(publicationAttempts).to.have.length(0);
   });
 });

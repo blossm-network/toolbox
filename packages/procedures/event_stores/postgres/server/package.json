@@ -44,6 +44,7 @@
     "@blossm/event-store-query": "^0.0.33",
     "@blossm/event-store-create-block-transaction": "^0.0.97",
     "@blossm/hash": "^0.0.13",
-    "@blossm/event-store-create-block": "^0.0.100"
+    "@blossm/event-store-create-block": "^0.0.100",
+    "@blossm/event-outcome-consts": "^0.0.1"
   }
 }
