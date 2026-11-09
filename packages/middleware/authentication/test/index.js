@@ -459,3 +459,39 @@ describe("Authentication middleware", () => {
     expect(nextFake).to.have.been.calledWith(error);
   });
 });
+
+describe("Required context authentication", () => {
+  for (const headers of [
+    {},
+    { authorization: "Bearer invalid.invalid.invalid" },
+  ]) {
+    it(`rejects ${
+      headers.authorization ? "invalid" : "missing"
+    } credentials before checking context`, async () => {
+      const next = fake();
+      await authenticationMiddleware({
+        protection: {
+          scene: [
+            { root: "allowed", service: "core", network: "example.test" },
+          ],
+        },
+        audience: "example.test",
+        algorithm: "ES256",
+        verifyFn: () => false,
+      })({ headers }, null, next);
+      expect(next).to.have.been.calledOnce;
+      expect(next.firstCall.args[0]).to.be.instanceOf(Error);
+    });
+  }
+});
+
+
+describe("Optional context authentication", () => {
+  it("continues anonymously when optional context credentials are absent", async () => {
+    const next = fake();
+    const req = { headers: {} };
+    await authenticationMiddleware({ protection: "context" })(req, null, next);
+    expect(next).to.have.been.calledOnceWithExactly();
+    expect(req.context).to.equal(undefined);
+  });
+});
