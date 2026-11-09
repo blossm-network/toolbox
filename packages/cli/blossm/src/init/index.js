@@ -57,5 +57,5 @@ export default async (args) => {
     args,
   });
 
-  create(input);
+  return create(input);
 };

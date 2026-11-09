@@ -23,10 +23,9 @@ import viewComposite from "./view_composite/index.js";
 const { red } = chalk;
 
 const domains = [
-  "begin",
-  "config",
   "init",
-  "set",
+  "secret",
+  "queue",
   "command",
   "roles",
   "projection",
@@ -36,7 +35,6 @@ const domains = [
   "view-gateway",
   "fact-gateway",
   "job",
-  "function",
   "fact",
   "view-composite",
 ];
@@ -120,7 +118,7 @@ const forward = (input) => {
       return viewComposite(input.args);
     default: {
       try {
-        tryShortcuts(input);
+        return tryShortcuts(input);
       } catch (e) {
         //eslint-disable-next-line no-console
         console.error(
@@ -131,6 +129,7 @@ const forward = (input) => {
           ),
           red.bold("error")
         );
+        throw e;
       }
     }
   }
@@ -142,5 +141,5 @@ export const cli = async (rawArgs) => {
     args: rawArgs.slice(2),
   });
 
-  forward(input);
+  return forward(input);
 };
