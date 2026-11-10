@@ -670,29 +670,40 @@ describe("Mongodb event store aggregate", () => {
     }
   });
   const identity = { root: "a", service: "s", network: "n" };
-  for (const [values, expected] of [
+  const transitions = [
     [[null, identity], false],
     [[identity, null], false],
     [[null, null], null],
     [["scalar", null], false],
     [[null, "scalar"], false],
     [["scalar", "scalar"], "scalar"],
+    [["scalar", "other"], false],
     [[identity, { ...identity }], identity],
+    [[identity, { ...identity, service: "other" }], false],
+    [[identity, { ...identity, network: "other" }], false],
     [[identity, { ...identity, root: "b" }, identity], false],
-  ]) {
-    it(`replays context values ${JSON.stringify(values)} without losing conflict semantics`, async () => {
-      const result = await aggregate({
-        findOneSnapshotFn: async () => undefined,
-        eventStreamFn: async ({ fn }) => {
-          for (const [number, value] of values.entries()) fn({
-            headers: { action: "set", number, created: "2026-10-22" },
-            payload: {}, context: { value }, tx: {},
-          });
-        },
-        handlers: { set: () => ({}) },
-      })("root");
-      expect(result.context.value).to.deep.equal(expected);
-    });
-  }
-
+    [[identity, null, identity], false],
+  ];
+  for (const mode of ["events", "snapshot"])
+    for (const [values, expected] of transitions) {
+      it(`replays context values ${JSON.stringify(values)} from ${mode} without losing conflict semantics`, async () => {
+        const result = await aggregate({
+          findOneSnapshotFn: async () => mode === "snapshot" ? {
+            hash: "snapshot",
+            headers: { root: "root", nonce: "root_0", number: 0, lastEventNumber: 0, created: "2026-10-22" },
+            state: {}, context: { value: values[0] }, groups: [], txIds: [],
+          } : undefined,
+          eventStreamFn: async ({ query, fn }) => {
+            const after = query["headers.number"]?.$gt ?? -1;
+            for (const [number, value] of values.entries())
+              if (number > after) await fn({
+                headers: { action: "set", number, created: "2026-10-22" },
+                payload: {}, context: { value }, tx: {},
+              });
+          },
+          handlers: { set: () => ({}) },
+        })("root");
+        expect(result.context.value).to.deep.equal(expected);
+      });
+    }
 });
