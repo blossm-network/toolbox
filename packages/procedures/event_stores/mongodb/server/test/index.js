@@ -426,6 +426,7 @@ describe("Mongodb event store", () => {
     });
     expect(rootStreamFake).to.have.been.calledWith({
       countsStore: cStore,
+      snapshotStore: sStore,
     });
     expect(countFake).to.have.been.calledWith({
       countsStore: cStore,

@@ -9,6 +9,7 @@ const event = (payload, number) => ({
 });
 const create = (stateEvents) =>
   query({
+    findSnapshotsFn: async () => [],
     rootStreamFn: async ({ fn }) => {
       for (const root of Object.keys(stateEvents)) await fn({ root });
     },
@@ -20,6 +21,20 @@ const create = (stateEvents) =>
   });
 
 describe("Complete aggregate queries", () => {
+  it("does not traverse string implementation properties as JSON fields", async () => {
+    expect(
+      await create({ r: [event({ text: "abc" }, 0)] })([
+        { key: "text.length", value: 3 },
+      ]),
+    ).to.deep.equal([]);
+  });
+  it("does not match inherited JavaScript properties as persisted state", async () => {
+    expect(
+      await create({ r: [event({ a: 1 }, 0)] })([
+        { key: "constructor.name", value: "Object" },
+      ]),
+    ).to.deep.equal([]);
+  });
   it("matches fields assembled across separate events", async () => {
     const result = await create({
       r: [event({ a: 1 }, 0), event({ b: 2 }, 1)],
@@ -39,7 +54,7 @@ describe("Complete aggregate queries", () => {
             empty: "",
             items: [{ child: { code: "no" } }, { child: { code: "yes" } }],
           },
-          0
+          0,
         ),
       ],
     })([
@@ -52,7 +67,7 @@ describe("Complete aggregate queries", () => {
   });
   it("returns every matching root beyond 100 historical matches", async () => {
     const roots = Object.fromEntries(
-      Array.from({ length: 120 }, (_, i) => [String(i), [event({ a: 1 }, 0)]])
+      Array.from({ length: 120 }, (_, i) => [String(i), [event({ a: 1 }, 0)]]),
     );
     expect(await create(roots)([{ key: "a", value: 1 }])).to.have.length(120);
   });

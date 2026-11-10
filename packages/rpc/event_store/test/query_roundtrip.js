@@ -12,6 +12,7 @@ const states = [...values.map((value) => ({ value })), {}];
 
 const run = async (pairs) => {
   const route = get({
+    findSnapshotsFn: async () => [],
     rootStreamFn: async ({ fn }) => {
       for (let i = 0; i < states.length; i++) await fn({ root: String(i) });
     },

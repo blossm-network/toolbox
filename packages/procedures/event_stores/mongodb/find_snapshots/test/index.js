@@ -16,11 +16,26 @@ describe("Mongodb event store find snapshot store", () => {
   afterEach(() => {
     restore();
   });
+  it("allows exhaustive root-only candidate lookup without changing the default limit", async () => {
+    const findFake = fake.returns(snapshots);
+    replace(deps, "db", { aggregate: findFake });
+    const query = { "state.a": 1 };
+    const select = { "headers.root": 1 };
+    expect(
+      await findSnapshot({ snapshotStore })({ query, select, limit: null }),
+    ).to.equal(snapshots);
+    expect(findFake).to.have.been.calledWith({
+      store: snapshotStore,
+      query,
+      select,
+      limit: null,
+    });
+  });
   it("should call with the correct params", async () => {
     const findFake = fake.returns(snapshots);
 
     const db = {
-      find: findFake,
+      aggregate: findFake,
     };
 
     replace(deps, "db", db);
@@ -37,9 +52,6 @@ describe("Mongodb event store find snapshot store", () => {
       query,
       sort,
       limit: 100,
-      options: {
-        lean: true,
-      },
     });
     expect(result).to.deep.equal(snapshots);
   });
@@ -47,7 +59,7 @@ describe("Mongodb event store find snapshot store", () => {
     const findFake = fake.returns(snapshots);
 
     const db = {
-      find: findFake,
+      aggregate: findFake,
     };
 
     replace(deps, "db", db);
@@ -61,9 +73,6 @@ describe("Mongodb event store find snapshot store", () => {
       store: snapshotStore,
       query,
       limit: 100,
-      options: {
-        lean: true,
-      },
     });
     expect(result).to.deep.equal(snapshots);
   });

@@ -16,10 +16,11 @@ const handlers = {
   }),
 };
 
-describe("Complete persisted aggregate queries", function () {
+describe("Snapshot-assisted persisted aggregate queries", function () {
   this.timeout(30000);
   setup();
   let composition;
+  let replayed;
   const append = (entries) =>
     postTransaction({
       normalizeTransactionFn: composition.normalizeTransactionFn,
@@ -39,6 +40,36 @@ describe("Complete persisted aggregate queries", function () {
       saveEventsFn: composition.saveEventsFn,
       tx: { id: "query-data" },
     });
+  const snapshot = (root, state, lastEventNumber = 0, number = 0) =>
+    composition.saveSnapshotFn({
+      snapshot: {
+        hash: `${root}-${number}`,
+        headers: {
+          root,
+          nonce: `${root}_${number}`,
+          block: 0,
+          number,
+          cHash: "context",
+          gHash: "groups",
+          sHash: "state",
+          pHash: "previous",
+          created: new Date(number),
+          isPublic: true,
+          domain: "test",
+          service: "events",
+          network: "local",
+          lastEventNumber,
+          eCount: lastEventNumber + 1,
+          eRoot: "events",
+          eSize: 1,
+        },
+        state,
+        context: {},
+        groups: [],
+        events: Buffer.alloc(0),
+        txIds: [],
+      },
+    });
   before(async () => {
     replace(deps, "eventStore", (options) => {
       composition = options;
@@ -51,7 +82,7 @@ describe("Complete persisted aggregate queries", function () {
         amount: Number,
         group: String,
       },
-      indexes: ["a", "b"],
+      indexes: ["a", "b", "group"],
       handlers,
       secretFn: async () => undefined,
     });
@@ -61,6 +92,11 @@ describe("Complete persisted aggregate queries", function () {
       { root: "derived", action: "add", payload: { amount: 1 } },
       { root: "derived", action: "add", payload: { amount: 2 } },
       { root: "snapshotted", action: "add", payload: { amount: 1 } },
+      { root: "stale", action: "set", payload: { a: 1, b: 2 } },
+      { root: "fresh", action: "set", payload: { a: 1, b: 2 } },
+      { root: "unrelated", action: "set", payload: { a: 7, b: 8 } },
+      { root: "latest", action: "set", payload: { a: 1, b: 2 } },
+      { root: "latest", action: "set", payload: { a: 7, b: 8 } },
       ...Array.from({ length: 120 }, (_, i) => ({
         root: `root-${i}`,
         action: "set",
@@ -70,47 +106,37 @@ describe("Complete persisted aggregate queries", function () {
     const session = await mongoose.startSession();
     try {
       await session.withTransaction(() => append(entries)(session));
-      await composition.saveSnapshotFn({
-        snapshot: {
-          hash: "query-snapshot",
-          headers: {
-            root: "snapshotted",
-            nonce: "snapshotted_0",
-            block: 0,
-            number: 0,
-            cHash: "context",
-            gHash: "groups",
-            sHash: "state",
-            pHash: "previous",
-            created: new Date(0),
-            isPublic: true,
-            domain: "test",
-            service: "events",
-            network: "local",
-            lastEventNumber: 0,
-            eCount: 1,
-            eRoot: "events",
-            eSize: 1,
-          },
-          state: { total: 1 },
-          context: {},
-          groups: [],
-          events: Buffer.alloc(0),
-          txIds: [],
-        },
-      });
+      await snapshot("snapshotted", { total: 1 });
+      await snapshot("stale", { a: 1, b: 2 });
+      await snapshot("fresh", { a: 1, b: 2 });
+      await snapshot("unrelated", { a: 7, b: 8 });
+      await snapshot("latest", { a: 1, b: 2 });
+      await snapshot("latest", { a: 7, b: 8 }, 1, 1);
+      for (let i = 0; i < 120; i++)
+        await snapshot(`root-${i}`, { group: "candidate" });
       await session.withTransaction(() =>
         append([
           { root: "snapshotted", action: "add", payload: { amount: 2 } },
+          { root: "stale", action: "set", payload: { a: 9 } },
         ])(session),
       );
+      await mongoose.connection
+        .collection("counts")
+        .insertOne({ root: "zero", value: 0 });
     } finally {
       await session.endSession();
     }
   });
   const query = async (pairs) => {
+    replayed = [];
     let result;
-    await get(composition)(
+    await get({
+      ...composition,
+      eventStreamFn: (options) => {
+        replayed.push(options.query["headers.root"]);
+        return composition.eventStreamFn(options);
+      },
+    })(
       { params: {}, query: { pairs: JSON.stringify(pairs) } },
       {
         send: (value) => {
@@ -120,29 +146,59 @@ describe("Complete persisted aggregate queries", function () {
     );
     return result;
   };
-  it("matches current state assembled across separate events", async () => {
-    assert.deepEqual(
-      (
-        await query([
-          { key: "a", value: 1 },
-          { key: "b", value: 2 },
-        ])
-      ).map(({ headers }) => headers.root),
-      ["assembled"],
-    );
+  it("finds split-event state and fresh snapshot matches without replaying unrelated fresh roots", async () => {
+    const results = await query([
+      { key: "a", value: 1 },
+      { key: "b", value: 2 },
+    ]);
+    assert.deepEqual(results.map(({ headers }) => headers.root).sort(), [
+      "assembled",
+      "fresh",
+    ]);
+    assert.ok(!replayed.includes("unrelated"));
+    assert.ok(!replayed.some((root) => root.startsWith("root-")));
+    assert.equal(replayed.filter((root) => root === "stale").length, 1);
   });
-  it("matches reducer-derived state and replays events after a snapshot", async () => {
+  it("matches reducer-derived state from dirty and unsnapshotted roots", async () => {
     const results = await query([{ key: "total", value: 3 }]);
     assert.deepEqual(results.map(({ headers }) => headers.root).sort(), [
       "derived",
       "snapshotted",
     ]);
+    assert.ok(!replayed.includes("fresh"));
+    assert.ok(!replayed.includes("latest"));
+    assert.ok(!replayed.includes("unrelated"));
   });
-  it("enumerates beyond100 matches and returns all roots for an empty query", async () => {
+  it("streams only counts beyond the latest snapshot's zero-based event number", async () => {
+    const roots = [];
+    await composition.rootStreamFn({
+      unsnapshottedOnly: true,
+      fn: async ({ root }) => roots.push(root),
+    });
+    assert.deepEqual(roots.sort(), [
+      "assembled",
+      "derived",
+      "snapshotted",
+      "stale",
+    ]);
+  });
+  it("returns more than100 fresh snapshot matches without relying on dirty roots", async () => {
     assert.equal(
       (await query([{ key: "group", value: "candidate" }])).length,
       120,
     );
-    assert.equal((await query([])).length, 123);
+    assert.equal(
+      replayed.filter((root) => root.startsWith("root-")).length,
+      120,
+    );
+    assert.ok(!replayed.includes("unrelated"));
+  });
+  it("returns all existing aggregates for an empty query", async () => {
+    assert.equal((await query([])).length, 127);
+    assert.ok(replayed.includes("unrelated"));
+  });
+  it("compares typed scalar predicates strictly even when the schema could cast them", async () => {
+    assert.deepEqual(await query([{ key: "a", value: "1" }]), []);
+    assert.deepEqual(await query([{ key: "a", value: "not-a-number" }]), []);
   });
 });
