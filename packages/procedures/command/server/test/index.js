@@ -169,16 +169,69 @@ describe("Command root policy composition", () => {
         return { listen: () => undefined };
       },
     }));
-    const main = fake();
-    await command({ mainFn: main, requiresRoot: true });
+    const main = fake.rejects(new Error("Application must not be reached"));
+    await command({
+      mainFn: main,
+      requiresRoot: true,
+      aggregateFn: () => undefined,
+      queryAggregatesFn: () => undefined,
+      readFactFn: () => undefined,
+      streamFactFn: () => undefined,
+      commandFn: () => undefined,
+      countFn: () => undefined,
+    });
     let error;
     try {
-      await handler({ body: {} }, {});
+      await handler({ body: { headers: {} } }, {});
     } catch (err) {
       error = err;
     }
     expect(error?.statusCode).to.equal(400);
     expect(error?.message).to.equal("A root is required.");
     expect(main).not.to.have.been.called;
+  });
+});
+
+describe("Command root policy allowed requests", () => {
+  afterEach(restore);
+
+  it("allows a supplied required root and commands with no root requirement", async () => {
+    const { default: post } = await import("../../post/index.js");
+    let handler;
+    replace(deps, "post", post);
+    replace(deps, "server", () => ({
+      post: (fn) => {
+        handler = fn;
+        return { listen: () => undefined };
+      },
+    }));
+    for (const [requiresRoot, root] of [
+      [true, "existing-root"],
+      [undefined, undefined],
+      [false, undefined],
+    ]) {
+      // Stop at the application boundary so no event/RPC side effect is needed.
+      const reachedMain = new Error("Application reached");
+      const mainFn = fake.rejects(reachedMain);
+      await command({
+        mainFn,
+        requiresRoot,
+        aggregateFn: () => undefined,
+        queryAggregatesFn: () => undefined,
+        readFactFn: () => undefined,
+        streamFactFn: () => undefined,
+        commandFn: () => undefined,
+        countFn: () => undefined,
+      });
+      let error;
+      try {
+        await handler({ body: { headers: {}, ...(root && { root }) } }, {});
+      } catch (caught) {
+        error = caught;
+      }
+      expect(error).to.equal(reachedMain);
+      expect(mainFn).to.have.been.calledOnce;
+      expect(mainFn.firstCall.args[0].root).to.equal(root);
+    }
   });
 });
