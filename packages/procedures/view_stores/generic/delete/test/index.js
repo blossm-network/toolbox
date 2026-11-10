@@ -53,6 +53,16 @@ describe("View store delete", () => {
     expect(removeFn).not.to.have.been.called;
   });
 
+  it("allows a nonempty body query without context on a noncontextual store", async () => {
+    delete process.env.CONTEXT;
+    const removeFn = fake.resolves({ deletedCount: 1 });
+    await del({ removeFn })(
+      { query: { query: { a: 1 } }, params: {} },
+      { status: () => ({ send: () => {} }) }
+    );
+    expect(removeFn).to.have.been.calledWithExactly({ "body.a": 1 });
+  });
+
   beforeEach(() => {
     process.env.CONTEXT = contextDomain;
   });
