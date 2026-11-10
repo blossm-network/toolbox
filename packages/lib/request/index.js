@@ -1,5 +1,5 @@
 import deps from "./deps.js";
-import formDataBody from "./src/form_data.js";
+import formDataBody, { closeInputs } from "./src/form_data.js";
 import {
   chunks,
   failure,
@@ -26,8 +26,10 @@ const common = async ({
   timeout,
 }) => {
   const context = contextFor({ signal, timeout });
+  const closeFormInputs = () => closeInputs(formData);
+  context.signal.addEventListener("abort", closeFormInputs, { once: true });
   try {
-    if (formData === undefined) context.signal.throwIfAborted();
+    context.signal.throwIfAborted();
     const requestHeaders = new Headers(headers);
     if (formData !== undefined && body !== undefined)
       throw new TypeError("Use either body or formData for an HTTP request.");
@@ -36,7 +38,7 @@ const common = async ({
       requestBody = await timed(
         () => formDataBody(formData, context.signal),
         context.controller,
-        context.timeout
+        context.timeout,
       );
     else if (body !== undefined) {
       requestBody = JSON.stringify(body);
@@ -59,6 +61,8 @@ const common = async ({
     };
   } finally {
     context.controller.abort();
+    context.signal.removeEventListener("abort", closeFormInputs);
+    closeFormInputs();
   }
 };
 
@@ -79,7 +83,7 @@ const get = (url, { query, ...options } = {}) =>
 
 async function* records(
   { url, query, headers, onResponseFn, decode },
-  context
+  context,
 ) {
   const response = await open({
     url: deps.urlEncodeQueryData(url, query),
@@ -117,12 +121,12 @@ const streamMany = async (requests, onDataFn, sortFn, options = {}) => {
         ...context,
         timeout: request.timeout ?? context.timeout,
         signal: signalFor(context.controller, request.signal, options.signal),
-      }
-    )
+      },
+    ),
   );
   try {
     const heads = await Promise.all(
-      iterators.map((iterator) => iterator.next())
+      iterators.map((iterator) => iterator.next()),
     );
     while (true) {
       context.signal.throwIfAborted();

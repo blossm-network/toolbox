@@ -8,8 +8,9 @@ Repeated Set-Cookie headers remain an array. Native fetch decodes supported
 compression, so metadata removes the stale Content-Encoding/Content-Length for
 those decoded representations.
 `formData` accepts scalar fields, Buffers, Blobs and `{value, options}` fields
-with `filename` and `contentType`. File streams use native file-backed Blobs;
-other multipart streams are buffered with cancellation. File-stream byte ranges
+with `filename` and `contentType`. Unopened path-backed file streams use native
+file-backed Blobs; already-open, descriptor-backed and other multipart streams
+are buffered with cancellation. Multipart buffering has no byte limit. File-stream byte ranges
 and existing descriptors are respected. Passing formData hands its Node input
 streams to the adapter: they are consumed during preparation or destroyed on
 failure/cancellation, including a signal that was already aborted. Successfully

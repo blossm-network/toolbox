@@ -28,16 +28,18 @@ const run = async (pairs) => {
   });
   const parse = serverDeps.express().get("query parser fn");
   replace(rpcDeps, "operationToken", fake.resolves(null));
-  replace(requestDeps, "request", (options, callback) => {
-    const url = new URL(options.url);
-    route(
-      { params: {}, query: parse(url.search.slice(1)) },
-      {
-        send: (body) =>
-          callback(null, { statusCode: 200 }, JSON.stringify(body)),
-      },
-    ).catch(callback);
-  });
+  replace(
+    requestDeps,
+    "fetch",
+    (target) =>
+      new Promise((resolve, reject) => {
+        const url = new URL(target);
+        route(
+          { params: {}, query: parse(url.search.slice(1)) },
+          { send: (body) => resolve(new Response(JSON.stringify(body))) },
+        ).catch(reject);
+      }),
+  );
   return (await eventStore({ domain: "test", service: "test" }).query(pairs))
     .body;
 };
