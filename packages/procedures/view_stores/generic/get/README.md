@@ -10,7 +10,7 @@ These rules apply to parsed query values. The existing query-string encoder
 omits empty containers and encodes null as an empty string; this handler cannot
 restore values already lost in that transport.
 
-List reads default to 50 rows and accept a limit from 1 through 100. Skip must
+List reads default to 50 rows and accept a limit from 1 through 10000. Skip must
 be a nonnegative safe integer. Invalid pagination returns a bad request rather
 than being partially parsed or passed to persistence. Single-record and
 bootstrap reads always use a limit of 1 and skip of 0. JSON list responses

@@ -32,7 +32,7 @@ describe("View pagination wire bounds", () => {
     for (const search of [
       "limit=",
       "limit=0",
-      "limit=101",
+      "limit=10001",
       "limit=-2",
       "limit=2oops",
       "limit=1.5",
@@ -67,7 +67,7 @@ describe("View pagination wire bounds", () => {
     for (const [search, limit, skip] of [
       ["", 50, 0],
       ["limit=1&skip=0", 1, 0],
-      ["limit=100&skip=2", 100, 2],
+      ["limit=10000&skip=2", 10000, 2],
     ]) {
       const [call] = await run(search);
       assert.equal(call.limit, limit);
@@ -76,14 +76,14 @@ describe("View pagination wire bounds", () => {
   });
 
   it("keeps single-record and bootstrap reads fixed at one record", async () => {
-    const [one] = await run("limit=101&skip=-1", { one: true });
+    const [one] = await run("limit=10001&skip=-1", { one: true });
     assert.equal(one.limit, 1);
     assert.equal(one.skip, 0);
     const previous = process.env.BOOTSTRAP_CONTEXT;
     process.env.BOOTSTRAP_CONTEXT = "principal";
     try {
       const [bootstrap] = await run(
-        "bootstrap=true&context[principal][root]=one&limit=101&skip=-1",
+        "bootstrap=true&context[principal][root]=one&limit=10001&skip=-1",
       );
       assert.equal(bootstrap.limit, 1);
       assert.equal(bootstrap.skip, 0);
