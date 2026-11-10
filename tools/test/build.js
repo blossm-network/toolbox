@@ -14,7 +14,7 @@ test("ordinary CI verifies frozen dependencies without release authority", () =>
   const { scripts } = JSON.parse(readFileSync(manifest, "utf8"));
   assert.equal(
     scripts["check-packages"],
-    "yarn runtime:check && yarn lint && yarn test",
+    "yarn runtime:check && yarn workspace:check && yarn lint && yarn test",
   );
   assert.equal(scripts["lerna-publish"], "lerna publish -y from-package");
 });

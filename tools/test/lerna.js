@@ -34,7 +34,7 @@ test("Lerna reports failing packages even when continuing other tests", () => {
         name: `@audit/${name}`,
         version: "0.0.0",
         scripts: {
-          test: `node -e "require('fs').writeFileSync('executed','yes'); process.exit(${name === "fail" ? 9 : 0})"`,
+          test: `node -e "require('fs').writeFileSync('executed',process.version); process.exit(${name === "fail" ? 9 : 0})"`,
         },
       });
     }
@@ -58,7 +58,7 @@ test("Lerna reports failing packages even when continuing other tests", () => {
     for (const name of ["fail", "pass"]) {
       assert.equal(
         readFileSync(join(dir, "packages", name, "executed"), "utf8"),
-        "yes",
+        process.version,
         result.stdout + result.stderr,
       );
     }
