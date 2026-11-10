@@ -475,9 +475,49 @@ describe("View delete RPC composition", () => {
     const del = fake.resolves({ statusCode: 204 });
     replace(rpcDeps, "del", del);
 
-    await viewStore({ name: "example" }).delete("row", { query: { active: true } });
+    await viewStore({ name: "example" }).delete("row", {
+      query: { active: true },
+    });
     expect(del).to.have.been.calledOnce;
     expect(del.firstCall.args[0]).to.match(/\/row$/);
-    expect(del.firstCall.args[1].query).to.deep.equal({ query: { active: true } });
+    expect(del.firstCall.args[1].query).to.deep.equal({
+      query: { active: true },
+    });
+  });
+
+  it("encodes conditional query and context in an authenticated DELETE request", async () => {
+    const { default: rpc } = await import("../../generic/index.js");
+    const { default: rpcDeps } = await import("../../generic/deps.js");
+    const { default: request } = await import("../../../lib/request/index.js");
+    const { default: requestDeps } = await import(
+      "../../../lib/request/deps.js"
+    );
+    replace(deps, "rpc", rpc);
+    replace(rpcDeps, "del", request.del);
+    replace(
+      rpcDeps,
+      "operationToken",
+      fake.resolves({ token: "internal-token", type: "Bearer" })
+    );
+    const transport = fake((options, callback) =>
+      callback(null, { statusCode: 204 })
+    );
+    replace(requestDeps, "request", transport);
+    const context = {
+      tenant: { root: "A", service: "core", network: "local" },
+    };
+    await viewStore({ name: "example", context: "tenant" })
+      .set({ context, token: { internalFn: () => {} } })
+      .delete("row", { query: { active: true } });
+    expect(transport).to.have.been.calledOnce;
+    const options = transport.firstCall.args[0];
+    expect(options.method).to.equal("DELETE");
+    expect(options.headers.authorization).to.equal("Bearer internal-token");
+    const url = new URL(options.url);
+    expect(url.pathname).to.equal("/row");
+    expect(url.searchParams.get("query[active]")).to.equal("true");
+    expect(url.searchParams.get("context[tenant][root]")).to.equal("A");
+    expect(url.searchParams.get("context[tenant][service]")).to.equal("core");
+    expect(url.searchParams.get("context[tenant][network]")).to.equal("local");
   });
 });
