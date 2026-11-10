@@ -23,12 +23,18 @@ export default ({
 
     res.send(result);
   } else {
+    let pairs;
+    try {
+      pairs = JSON.parse(req.query.pairs);
+    } catch {
+      throw deps.badRequestError.message("The query is not valid JSON.");
+    }
     const results = await deps.query({
       rootStreamFn,
       findOneSnapshotFn,
       eventStreamFn,
       handlers,
-    })(req.query.pairs);
+    })(pairs);
     res.send(results);
   }
 };

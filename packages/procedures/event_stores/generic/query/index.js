@@ -1,8 +1,7 @@
 import deps from "./deps.js";
 
 const matches = (value, parts, expected) => {
-  if (parts.length === 0)
-    return expected === null ? value === null : value == expected;
+  if (parts.length === 0) return value === expected;
   if (Array.isArray(value))
     return value.some((item) => matches(item, parts, expected));
   if (value == undefined) return false;
@@ -16,11 +15,17 @@ export default ({ rootStreamFn, findOneSnapshotFn, eventStreamFn, handlers }) =>
       throw deps.badRequestError.message("The query is not an array.", {
         info: { queryPairs },
       });
-    for (const { key, value } of queryPairs) {
-      if (!key || value === undefined)
+    for (const pair of queryPairs) {
+      const { key, value } = pair || {};
+      if (
+        typeof key !== "string" ||
+        key.length === 0 ||
+        (value !== null &&
+          !["string", "number", "boolean"].includes(typeof value))
+      )
         throw deps.badRequestError.message(
           "A query pair is missing a key or value.",
-          { info: { key, value } }
+          { info: { key, value } },
         );
     }
 
@@ -37,7 +42,7 @@ export default ({ rootStreamFn, findOneSnapshotFn, eventStreamFn, handlers }) =>
         if (
           aggregate &&
           queryPairs.every(({ key, value }) =>
-            matches(aggregate.state, key.split("."), value)
+            matches(aggregate.state, key.split("."), value),
           )
         )
           results.push(aggregate);

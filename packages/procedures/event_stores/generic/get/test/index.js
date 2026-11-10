@@ -63,7 +63,7 @@ describe("Event store get", () => {
     const req = {
       params,
       query: {
-        pairs: query,
+        pairs: JSON.stringify(query),
       },
     };
     const sendFake = fake();
@@ -95,7 +95,7 @@ describe("Event store get", () => {
     const req = {
       params,
       query: {
-        pairs: [],
+        pairs: "[]",
       },
     };
     const res = {};
@@ -154,4 +154,15 @@ describe("Event store get", () => {
 
     expect(sendFake).to.have.been.calledWith();
   });
+  it("rejects malformed JSON before constructing the query", async () => {
+    const query = fake();
+    replace(deps, "query", query);
+    let error;
+    try {
+      await get({})({ params: {}, query: { pairs: "[" } }, {});
+    } catch (caught) { error = caught; }
+    expect(error.statusCode).to.equal(400);
+    expect(query).not.to.have.been.called;
+  });
+
 });

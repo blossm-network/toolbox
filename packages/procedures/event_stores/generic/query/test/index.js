@@ -2,7 +2,14 @@ import { expect } from "chai";
 import query from "../index.js";
 
 describe("Aggregate query contract", () => {
-  for (const pairs of [{}, [{ value: 1 }], [{ key: "a" }]]) {
+  for (const pairs of [
+    {},
+    [null],
+    [{ value: 1 }],
+    [{ key: "a" }],
+    [{ key: 1, value: 2 }],
+    [{ key: "a", value: {} }],
+  ]) {
     it(`rejects missing query structure ${JSON.stringify(pairs)}`, async () => {
       try {
         await query({})(pairs);
