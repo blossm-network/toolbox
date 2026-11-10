@@ -12,6 +12,7 @@ const { expect } = chai;
 const found = "some-objs";
 const root = "some-root";
 const rootStreamFn = "some-root-stream-fn";
+const findSnapshotsFn = "some-find-snapshots-fn";
 const findOneSnapshotFn = "some-find-one-snapshot-fn";
 const eventStreamFn = "some-event-stream-fn";
 const handlers = "some-handlers";
@@ -36,6 +37,7 @@ describe("Event store get", () => {
     };
     await get({
       rootStreamFn,
+      findSnapshotsFn,
       findOneSnapshotFn,
       eventStreamFn,
       handlers,
@@ -72,12 +74,14 @@ describe("Event store get", () => {
     };
     await get({
       rootStreamFn,
+      findSnapshotsFn,
       findOneSnapshotFn,
       eventStreamFn,
       handlers,
     })(req, res);
     expect(queryOuterFnFake).to.have.been.calledWith({
       rootStreamFn,
+      findSnapshotsFn,
       findOneSnapshotFn,
       eventStreamFn,
       handlers,
@@ -109,6 +113,7 @@ describe("Event store get", () => {
     try {
       await get({
         rootStreamFn,
+        findSnapshotsFn,
         findOneSnapshotFn,
         eventStreamFn,
         handlers,
@@ -147,6 +152,7 @@ describe("Event store get", () => {
 
     await get({
       rootStreamFn,
+      findSnapshotsFn,
       findOneSnapshotFn,
       eventStreamFn,
       handlers,

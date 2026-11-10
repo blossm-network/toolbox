@@ -17,6 +17,76 @@ describe("Mongodb event store root stream", () => {
   afterEach(() => {
     restore();
   });
+  it("streams dirty counts using only the latest snapshot number and retains stream options", async () => {
+    const eachAsync = fake.resolves("stream-result");
+    const cursor = fake.returns({ eachAsync });
+    const aggregate = fake.returns({ cursor });
+    const updatedOnOrAfter = "2026-01-01T00:00:00.000Z";
+    const updatedBefore = "2026-01-02T00:00:00.000Z";
+    const result = await stream({
+      countsStore: { aggregate },
+      snapshotStore: { collection: { name: "snapshots" } },
+    })({
+      unsnapshottedOnly: true,
+      fn,
+      parallel: 2,
+      reverse: true,
+      limit: 3,
+      updatedOnOrAfter,
+      updatedBefore,
+    });
+    expect(aggregate.firstCall.args[0]).to.deep.equal([
+      {
+        $match: {
+          updated: {
+            $gte: new Date(updatedOnOrAfter),
+            $lt: new Date(updatedBefore),
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "snapshots",
+          let: { root: "$root" },
+          pipeline: [
+            { $match: { $expr: { $eq: ["$headers.root", "$$root"] } } },
+            { $sort: { "headers.created": -1 } },
+            { $limit: 1 },
+            { $project: { "headers.lastEventNumber": 1, _id: 0 } },
+          ],
+          as: "snapshot",
+        },
+      },
+      {
+        $match: {
+          $expr: {
+            $gt: [
+              "$value",
+              {
+                $add: [
+                  {
+                    $ifNull: [
+                      {
+                        $arrayElemAt: ["$snapshot.headers.lastEventNumber", 0],
+                      },
+                      -1,
+                    ],
+                  },
+                  1,
+                ],
+              },
+            ],
+          },
+        },
+      },
+      { $sort: { updated: 1, root: 1 } },
+      { $limit: 3 },
+      { $project: { root: 1, value: 1, updated: 1, _id: 0 } },
+    ]);
+    expect(cursor).to.have.been.calledWith();
+    expect(eachAsync).to.have.been.calledWith(fn, { parallel: 2 });
+    expect(result).to.equal("stream-result");
+  });
   it("should call with the correct params", async () => {
     const streamResult = "stream-result";
     const eachAsyncFake = fake.returns(streamResult);

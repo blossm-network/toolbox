@@ -371,6 +371,7 @@ export default async ({
     }),
     rootStreamFn: deps.rootStream({
       countsStore: cStore,
+      snapshotStore: sStore,
     }),
     countFn: deps.count({
       countsStore: cStore,

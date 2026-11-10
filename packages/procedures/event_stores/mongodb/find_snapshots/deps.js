@@ -1,5 +1,5 @@
-import { find } from "@blossm/mongodb-database";
+import { aggregate } from "@blossm/mongodb-database";
 
 export default {
-  db: { find },
+  db: { aggregate },
 };

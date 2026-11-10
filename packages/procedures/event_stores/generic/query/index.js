@@ -4,12 +4,19 @@ const matches = (value, parts, expected) => {
   if (parts.length === 0) return value === expected;
   if (Array.isArray(value))
     return value.some((item) => matches(item, parts, expected));
-  if (value == undefined) return false;
+  if (value === null || typeof value !== "object") return false;
   const [key, ...rest] = parts;
+  if (!Object.hasOwn(value, key)) return false;
   return matches(value[key], rest, expected);
 };
 
-export default ({ rootStreamFn, findOneSnapshotFn, eventStreamFn, handlers }) =>
+export default ({
+    rootStreamFn,
+    findSnapshotsFn,
+    findOneSnapshotFn,
+    eventStreamFn,
+    handlers,
+  }) =>
   async (queryPairs) => {
     if (!Array.isArray(queryPairs))
       throw deps.badRequestError.message("The query is not an array.", {
@@ -34,19 +41,36 @@ export default ({ rootStreamFn, findOneSnapshotFn, eventStreamFn, handlers }) =>
       eventStreamFn,
       handlers,
     });
-    const results = [];
+    const roots = new Set();
+    if (queryPairs.length) {
+      const snapshots = await findSnapshotsFn({
+        query: {
+          $and: queryPairs.map(({ key, value }) => ({
+            [`state.${key}`]: value,
+          })),
+        },
+        select: { "headers.root": 1 },
+        limit: null,
+      });
+      for (const snapshot of snapshots) roots.add(snapshot.headers.root);
+    }
     await rootStreamFn({
       parallel: 1,
+      ...(queryPairs.length && { unsnapshottedOnly: true }),
       fn: async ({ root }) => {
-        const aggregate = await aggregateFn(root);
-        if (
-          aggregate &&
-          queryPairs.every(({ key, value }) =>
-            matches(aggregate.state, key.split("."), value),
-          )
-        )
-          results.push(aggregate);
+        roots.add(root);
       },
     });
+    const results = [];
+    for (const root of roots) {
+      const aggregate = await aggregateFn(root);
+      if (
+        aggregate &&
+        queryPairs.every(({ key, value }) =>
+          matches(aggregate.state, key.split("."), value),
+        )
+      )
+        results.push(aggregate);
+    }
     return results;
   };
