@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import hash from "@blossm/hash";
 import sinonChai from "sinon-chai";
 import chaiDatetime from "chai-datetime";
-import { restore, replace, fake, stub, useFakeTimers } from "sinon";
+import { restore, replace, fake, stub, useFakeTimers, match } from "sinon";
 
 import deps from "../deps.js";
 import { __resetStoresForTest } from "../index.js";
@@ -72,7 +72,7 @@ describe("Mongodb event store", () => {
           aud: ["one", "two"],
           custom: { role: "reader" },
         },
-        path: [{ name: "command", extra: "trace" }],
+        path: [{ name: "command", extra: "trace", network: "local", host: "localhost", procedure: "command", hash: "trace" }],
       };
       const stored = new model({ tx }).toObject().tx;
       expect(stored).to.deep.equal(tx);
@@ -254,7 +254,7 @@ describe("Mongodb event store", () => {
           ],
           default: undefined,
         },
-        tx: { $type: Object },
+        tx: { $type: match.instanceOf(mongoose.Schema) },
         payload: formattedSchemaWithOptions,
       },
       typeKey: "$type",
@@ -430,6 +430,7 @@ describe("Mongodb event store", () => {
       blockchainStore: bStore,
     });
     expect(eventStoreFake).to.have.been.calledWith({
+      normalizeTransactionFn: match.func,
       publishPendingFn: "some-pending-publish-fn",
       findOneSnapshotFn: findOneSnapshotResult,
       findSnapshotsFn: findSnapshotsResult,
@@ -627,7 +628,7 @@ describe("Mongodb event store", () => {
           ],
           default: undefined,
         },
-        tx: { $type: Object },
+        tx: { $type: match.instanceOf(mongoose.Schema) },
         payload: formattedSchemaWithOptions,
       },
       typeKey: "$type",
@@ -755,6 +756,7 @@ describe("Mongodb event store", () => {
       indexes: [],
     });
     expect(eventStoreFake).to.have.been.calledWith({
+      normalizeTransactionFn: match.func,
       publishPendingFn: undefined,
       findOneSnapshotFn: findOneSnapshotResult,
       findSnapshotsFn: findSnapshotsResult,
@@ -936,7 +938,7 @@ describe("Mongodb event store", () => {
           ],
           default: undefined,
         },
-        tx: { $type: Object },
+        tx: { $type: match.instanceOf(mongoose.Schema) },
         payload: formattedSchemaWithOptions,
       },
       typeKey: "$type",

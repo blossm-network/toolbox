@@ -1,3 +1,6 @@
+import mongoose from "mongoose";
+import { badRequest as badRequestError } from "@blossm/errors";
+import normalizeTransaction from "./normalize_transaction.js";
 import publishPending from "@blossm/mongodb-event-store-publish-pending";
 import { store } from "@blossm/mongodb-database";
 import { string as dateString } from "@blossm/datetime";
@@ -20,6 +23,9 @@ import idempotencyConflictCheck from "@blossm/mongodb-event-store-idempotency-co
 import uuid from "@blossm/uuid";
 
 export default {
+  Schema: mongoose.Schema,
+  badRequestError,
+  normalizeTransaction,
   dateString,
   publishPending,
   eventStore,

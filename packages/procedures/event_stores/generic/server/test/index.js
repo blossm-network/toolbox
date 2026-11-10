@@ -4,6 +4,8 @@ import { restore, replace, fake } from "sinon";
 
 import deps from "../deps.js";
 
+const normalizeTransactionFn = (tx) => tx;
+
 chai.use(sinonChai);
 const { expect } = chai;
 
@@ -76,6 +78,7 @@ describe("Event store", () => {
     replace(deps, "post", eventStorePostFake);
     const isPublic = "some-public";
     await eventStore({
+      normalizeTransactionFn,
       findSnapshotsFn,
       findEventsFn,
       findOneSnapshotFn,
@@ -155,6 +158,7 @@ describe("Event store", () => {
       publishPendingFn: recoverPublications,
     });
     expect(eventStorePostFake).to.have.been.calledWith({
+      normalizeTransactionFn,
       saveEventsFn,
       reserveRootCountsFn,
       publishPendingFn: recoverPublications,

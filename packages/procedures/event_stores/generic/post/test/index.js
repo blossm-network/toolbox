@@ -5,6 +5,8 @@ import { restore, fake, stub, replace } from "sinon";
 import post from "../index.js";
 import deps from "../deps.js";
 
+const normalizeTransactionFn = (tx) => tx;
+
 chai.use(sinonChai);
 const { expect } = chai;
 
@@ -47,6 +49,7 @@ describe("Event store post", () => {
     const createTransactionFnFake = fake.resolves();
     const idempotencyConflictCheckFnFake = fake();
     await post({
+      normalizeTransactionFn,
       saveEventsFn,
       reserveRootCountsFn,
       publishPendingFn: publishPendingFnFake,
@@ -59,6 +62,7 @@ describe("Event store post", () => {
       postTransactionResult
     );
     expect(postTransactionFake).to.have.been.calledWith({
+      normalizeTransactionFn,
       eventData,
       tx,
       saveEventsFn,
@@ -96,6 +100,7 @@ describe("Event store post", () => {
     const idempotencyConflictCheckFnFake = fake.returns(false);
 
     await post({
+      normalizeTransactionFn,
       saveEventsFn,
       reserveRootCountsFn,
       publishPendingFn: publishPendingFnFake,
@@ -114,6 +119,7 @@ describe("Event store post", () => {
       postTransactionResult
     );
     expect(postTransactionFake).to.have.been.calledWith({
+      normalizeTransactionFn,
       eventData: [{ event: { headers: { idempotency } } }],
       tx,
       saveEventsFn,
@@ -149,6 +155,7 @@ describe("Event store post", () => {
 
     process.env.NODE_ENV = "local";
     await post({
+      normalizeTransactionFn,
       saveEventsFn,
       reserveRootCountsFn,
       publishPendingFn: publishPendingFnFake,
@@ -161,6 +168,7 @@ describe("Event store post", () => {
       postTransactionResult
     );
     expect(postTransactionFake).to.have.been.calledWith({
+      normalizeTransactionFn,
       eventData,
       tx,
       saveEventsFn,
@@ -199,6 +207,7 @@ describe("Event store post", () => {
     const idempotencyConflictCheckFnFake = fake.returns(false);
 
     await post({
+      normalizeTransactionFn,
       saveEventsFn,
       reserveRootCountsFn,
       publishPendingFn: publishPendingFnFake,
@@ -217,6 +226,7 @@ describe("Event store post", () => {
       postTransactionResult
     );
     expect(postTransactionFake).to.have.been.calledWith({
+      normalizeTransactionFn,
       eventData: [
         { event: { headers: { idempotency: idempotency1 } } },
         { event: { headers: { idempotency: idempotency2 } } },
@@ -262,6 +272,7 @@ describe("Event store post", () => {
       .returns(true);
 
     await post({
+      normalizeTransactionFn,
       saveEventsFn,
       reserveRootCountsFn,
       publishPendingFn: publishPendingFnFake,
@@ -280,6 +291,7 @@ describe("Event store post", () => {
       postTransactionResult
     );
     expect(postTransactionFake).to.have.been.calledWith({
+      normalizeTransactionFn,
       eventData: [{ event: { headers: { idempotency: idempotency1 } } }],
       tx,
       saveEventsFn,

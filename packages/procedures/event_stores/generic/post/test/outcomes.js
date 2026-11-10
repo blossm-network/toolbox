@@ -2,6 +2,8 @@ import { COMMITTED, DUPLICATE } from "@blossm/event-outcome-consts";
 import assert from "node:assert/strict";
 import post from "../index.js";
 
+const normalizeTransactionFn = (tx) => tx;
+
 const root = "some-root";
 const event = (key, eventRoot = root) => ({
   headers: {
@@ -24,6 +26,7 @@ const fixture = (initialCount = 0) => {
   const counts = new Map([[root, initialCount]]);
   const saved = [];
   const handler = post({
+    normalizeTransactionFn,
     idempotencyConflictCheckFn: async (key) =>
       saved.some((e) => e.headers.idempotency === key),
     reserveRootCountsFn: async ({ root, amount }) => {

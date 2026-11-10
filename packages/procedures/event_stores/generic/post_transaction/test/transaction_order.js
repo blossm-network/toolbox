@@ -1,12 +1,15 @@
 import { expect } from "chai";
 import post from "../index.js";
 
+const normalizeTransactionFn = (tx) => tx;
+
 describe("Transactional counter ordering", () => {
   it("serializes roots in stable order within one transaction", async () => {
     let active = 0;
     let maximum = 0;
     const roots = [];
     await post({
+      normalizeTransactionFn,
       eventData: ["z", "a"].map((root) => ({
         event: {
           headers: {
@@ -37,6 +40,7 @@ describe("Transactional counter ordering", () => {
     let saved = false;
     try {
       await post({
+        normalizeTransactionFn,
         eventData: ["z", "a"].map((root) => ({
           event: {
             headers: {

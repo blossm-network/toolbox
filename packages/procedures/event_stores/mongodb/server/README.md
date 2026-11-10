@@ -94,4 +94,10 @@ restore environment, dependency replacements and cached models after the suite.
 The integration command requires the explicit URI and fails when it is missing;
 the regular test command never connects to MongoDB.
 
-Transactions are stored as opaque objects so hashed claims and trace metadata retain their original types and fields. Command and authentication boundaries own their meaning; persistence preserves the representation already committed by the transaction hash.
+Transaction metadata retains an explicit Mongo schema. Before hashing, the
+adapter casts and validates `tx` using that same event model. JWT times are
+numbers, audiences accept a string or string array, and trace dates normalize to
+ISO strings. Required trace fields remain required; custom claims and trace
+fields are preserved. The normalized object is hashed and persisted, so Mongo
+readback reproduces `headers.tHash`. Authentication remains at its existing
+boundary; schema normalization does not authenticate a claim.

@@ -7,6 +7,8 @@ import createBlock from "../../create_block/index.js";
 import { COMMITTED } from "@blossm/event-outcome-consts";
 import deps from "../deps.js";
 
+const normalizeTransactionFn = (tx) => tx;
+
 describe("Required durable publication", () => {
   let nodeEnv;
   beforeEach(() => {
@@ -34,7 +36,7 @@ describe("Required durable publication", () => {
 
   it("supplies the required dispatcher to event and scheduled block routes", async () => {
     const publishPendingFn = fake.resolves();
-    await server({ publishPendingFn });
+    await server({ normalizeTransactionFn, publishPendingFn });
     const recover = deps.post.firstCall.args[0].publishPendingFn;
     expect(recover).not.to.equal(publishPendingFn);
     expect(deps.createBlock.firstCall.args[0].publishPendingFn).to.equal(
@@ -49,9 +51,17 @@ describe("Required durable publication", () => {
     expect(deps.createBlock.callCount).to.equal(0);
   });
 
+  it("rejects a missing transaction normalizer before starting", async () => {
+    await rejects(
+      server({ publishPendingFn: fake.resolves() }),
+      /require transaction normalization/
+    );
+    expect(deps.server.callCount).to.equal(0);
+  });
+
   it("allows the explicit local mode without publication", async () => {
     process.env.NODE_ENV = "local";
-    await server();
+    await server({ normalizeTransactionFn });
     expect(deps.server.returnValues[0].listen.callCount).to.equal(1);
     expect(deps.logger.error.callCount).to.equal(0);
   });
@@ -64,7 +74,7 @@ describe("Required durable publication", () => {
           finish = resolve;
         })
     );
-    const starting = server({ publishPendingFn });
+    const starting = server({ normalizeTransactionFn, publishPendingFn });
     expect(publishPendingFn.callCount).to.equal(1);
     expect(deps.server.callCount).to.equal(0);
     finish();
@@ -78,7 +88,7 @@ describe("Required durable publication", () => {
       code: "UNAVAILABLE",
     });
     const publishPendingFn = fake.rejects(error);
-    await server({ publishPendingFn });
+    await server({ normalizeTransactionFn, publishPendingFn });
     expect(publishPendingFn.callCount).to.equal(1);
     expect(deps.server.returnValues[0].listen.callCount).to.equal(1);
     expect(deps.logger.error.firstCall.args).to.deep.equal([
@@ -93,6 +103,7 @@ describe("Required durable publication", () => {
       const publishPendingFn = fake.rejects(new Error("publisher unavailable"));
       const createTransactionFn = fake.resolves();
       await server({
+        normalizeTransactionFn,
         publishPendingFn,
         createTransactionFn,
         idempotencyConflictCheckFn: fake.resolves(false),
@@ -123,6 +134,7 @@ describe("Required durable publication", () => {
     const block = { hash: "committed-block" };
     const publishPendingFn = fake.rejects(new Error("publisher unavailable"));
     await server({
+      normalizeTransactionFn,
       publishPendingFn,
       createTransactionFn: fake.resolves({ block, full: false }),
     });

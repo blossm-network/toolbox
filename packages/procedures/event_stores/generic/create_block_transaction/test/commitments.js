@@ -10,6 +10,7 @@ describe("Block canonical commitments", () => {
     it(`preserves Boolean event exports and snapshots, public=${isPublic}`, async () => {
       let events;
       await post({
+        normalizeTransactionFn: (tx) => tx,
         eventData: [true, false].map((enabled) => ({
           event: {
             headers: {

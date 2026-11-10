@@ -2,6 +2,7 @@ import deps from "./deps.js";
 
 export default ({
     saveEventsFn,
+    normalizeTransactionFn,
     reserveRootCountsFn,
     publishPendingFn,
     createTransactionFn,
@@ -28,6 +29,7 @@ export default ({
 
     await createTransactionFn(
       deps.postTransaction({
+        normalizeTransactionFn,
         eventData: uniqueEventData,
         tx: req.body.tx,
         saveEventsFn,

@@ -3,6 +3,8 @@ import { replace, restore } from "sinon";
 import post from "../index.js";
 import deps from "../deps.js";
 
+const normalizeTransactionFn = (tx) => tx;
+
 describe("Event batch ordering", () => {
   afterEach(restore);
 
@@ -17,6 +19,7 @@ describe("Event batch ordering", () => {
       event: { headers: { root: "root", idempotency } },
     }));
     const pending = post({
+      normalizeTransactionFn,
       idempotencyConflictCheckFn: (id) =>
         id === "first"
           ? new Promise((resolve) => {
