@@ -45,13 +45,13 @@ describe("Request", () => {
     replace(deps, "fetch", async () => response("plain reply"));
     assert.equal(
       (await request.put("https://example.invalid", { body: {} })).body,
-      "plain reply"
+      "plain reply",
     );
   });
 
   it("returns upstream failure status and parsed JSON without throwing for ordinary writes", async () => {
     replace(deps, "fetch", async () =>
-      response('{"message":"conflict"}', { status: 409 })
+      response('{"message":"conflict"}', { status: 409 }),
     );
     const result = await request.post("https://example.invalid", { body: {} });
     assert.equal(result.statusCode, 409);
@@ -65,7 +65,7 @@ describe("Request", () => {
     });
     await assert.rejects(
       request.get("https://example.invalid"),
-      (err) => err === failure
+      (err) => err === failure,
     );
   });
 
@@ -73,7 +73,7 @@ describe("Request", () => {
     replace(deps, "fetch", async (_, options) => {
       assert.equal(
         options.headers.get("content-type"),
-        "application/custom+json"
+        "application/custom+json",
       );
       return new Response(null, { status: 204 });
     });
@@ -84,7 +84,7 @@ describe("Request", () => {
           headers: { "Content-Type": "application/custom+json" },
         })
       ).body,
-      ""
+      "",
     );
   });
 
@@ -105,20 +105,20 @@ describe("Request", () => {
     });
     await assert.rejects(
       request.post("https://example.invalid", { body: {}, formData: {} }),
-      TypeError
+      TypeError,
     );
   });
 
   it("rejects streaming HTTP errors before invoking metadata or data callbacks", async () => {
     replace(deps, "fetch", async () =>
-      response('{"message":"busy"}', { status: 429 })
+      response('{"message":"busy"}', { status: 429 }),
     );
     let calls = 0;
     await assert.rejects(
       request.stream("https://example.invalid", () => calls++, {
         onResponseFn: () => calls++,
       }),
-      (err) => err.statusCode === 429 && err.message === "busy"
+      (err) => err.statusCode === 429 && err.message === "busy",
     );
     assert.equal(calls, 0);
   });
@@ -160,7 +160,7 @@ describe("Merged HTTP streams", () => {
             for (const part of parts) controller.enqueue(Buffer.from(part));
             controller.close();
           },
-        })
+        }),
       );
     });
     const output = [];
@@ -171,7 +171,7 @@ describe("Merged HTTP streams", () => {
       ],
       (record) => output.push(record.n),
       (a, b) => a.n - b.n,
-      { decode: lineDecoder }
+      { decode: lineDecoder },
     );
     assert.deepEqual(output, [1, 2, 3, 4]);
   });
@@ -187,8 +187,8 @@ describe("Merged HTTP streams", () => {
           cancel() {
             cancelled++;
           },
-        })
-      )
+        }),
+      ),
     );
     const failure = new Error("stop processing");
     await assert.rejects(
@@ -199,9 +199,9 @@ describe("Merged HTTP streams", () => {
         ],
         () => {
           throw failure;
-        }
+        },
       ),
-      (err) => err === failure
+      (err) => err === failure,
     );
     assert.equal(cancelled, 2);
   });
@@ -217,7 +217,7 @@ describe("Merged HTTP streams", () => {
             cancelled = true;
             reject(signal.reason);
           },
-          { once: true }
+          { once: true },
         );
       });
     });
@@ -227,9 +227,9 @@ describe("Merged HTTP streams", () => {
           { url: "https://example.invalid/a" },
           { url: "https://example.invalid/b" },
         ],
-        () => undefined
+        () => undefined,
       ),
-      /source unavailable/
+      /source unavailable/,
     );
     assert.ok(cancelled);
   });
@@ -248,7 +248,7 @@ describe("Native transport compatibility", () => {
             ["set-cookie", "access=a; Path=/"],
             ["set-cookie", "challenge=b; Path=/"],
           ],
-        })
+        }),
     );
     const result = await request.get("https://example.invalid");
     assert.deepEqual(result.headers["set-cookie"], [
@@ -265,7 +265,7 @@ describe("Native transport compatibility", () => {
     replace(deps, "fetch", async (_, options) => {
       assert.deepEqual(
         Buffer.from(await options.body.get("file").arrayBuffer()),
-        bytes.subarray(3, 9)
+        bytes.subarray(3, 9),
       );
       return response();
     });
@@ -284,7 +284,7 @@ describe("Native transport compatibility", () => {
       replace(deps, "fetch", async (_, options) => {
         assert.deepEqual(
           Buffer.from(await options.body.get("file").arrayBuffer()),
-          bytes.subarray(2, 7)
+          bytes.subarray(2, 7),
         );
         return response();
       });
@@ -327,7 +327,7 @@ describe("Native transport compatibility", () => {
     input.destroy();
     assert.ok(
       destroyed,
-      "cancelled uploads relinquish handed-off input streams"
+      "cancelled uploads relinquish handed-off input streams",
     );
     assert.notEqual(outcome, stalled);
     assert.equal(outcome, failure);
@@ -366,7 +366,7 @@ describe("Merged cancellation signals", () => {
           signal.addEventListener("abort", () => reject(signal.reason), {
             once: true,
           });
-        })
+        }),
     );
     const global = new AbortController();
     const source = new AbortController();
@@ -376,7 +376,7 @@ describe("Merged cancellation signals", () => {
         [{ url: "https://example.invalid", signal: source.signal }],
         () => undefined,
         undefined,
-        { signal: global.signal }
+        { signal: global.signal },
       )
       .catch((error) => error);
     global.abort(failure);
@@ -405,5 +405,35 @@ describe("Multipart inferred filenames", () => {
     await request.post("https://example.invalid", {
       formData: { file: input },
     });
+  });
+});
+
+describe("Multipart input ownership", () => {
+  afterEach(restore);
+
+  it("closes all handed-off inputs when options fail before preparation", async () => {
+    const { Readable } = await import("node:stream");
+    let calls = 0;
+    replace(deps, "fetch", async () => {
+      calls++;
+      return response();
+    });
+    for (const options of [
+      { body: {} },
+      { headers: { "invalid header name": "value" } },
+    ]) {
+      const first = new Readable({ read() {} });
+      const second = new Readable({ read() {} });
+      await assert.rejects(
+        request.post("https://example.invalid", {
+          ...options,
+          formData: { first, second: { value: second } },
+        }),
+        TypeError,
+      );
+      assert.equal(first.destroyed, true);
+      assert.equal(second.destroyed, true);
+    }
+    assert.equal(calls, 0);
   });
 });

@@ -499,10 +499,8 @@ describe("View delete RPC composition", () => {
       "operationToken",
       fake.resolves({ token: "internal-token", type: "Bearer" })
     );
-    const transport = fake((options, callback) =>
-      callback(null, { statusCode: 204 })
-    );
-    replace(requestDeps, "request", transport);
+    const transport = fake.resolves(new Response(null, { status: 204 }));
+    replace(requestDeps, "fetch", transport);
     const context = {
       tenant: { root: "A", service: "core", network: "local" },
     };
@@ -510,10 +508,10 @@ describe("View delete RPC composition", () => {
       .set({ context, token: { internalFn: () => {} } })
       .delete("row", { query: { active: true } });
     expect(transport).to.have.been.calledOnce;
-    const options = transport.firstCall.args[0];
+    const [target, options] = transport.firstCall.args;
     expect(options.method).to.equal("DELETE");
-    expect(options.headers.authorization).to.equal("Bearer internal-token");
-    const url = new URL(options.url);
+    expect(options.headers.get("authorization")).to.equal("Bearer internal-token");
+    const url = new URL(target);
     expect(url.pathname).to.equal("/row");
     expect(url.searchParams.get("query[active]")).to.equal("true");
     expect(url.searchParams.get("context[tenant][root]")).to.equal("A");
