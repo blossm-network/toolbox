@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import hash from "@blossm/hash";
 import { replace } from "sinon";
 import mongoose from "mongoose";
 import setup from "./setup.js";
@@ -64,7 +65,7 @@ describe("MongoDB transaction operation serialization", function () {
     await session.endSession();
   });
 
-  const append = (names) =>
+  const append = (names, tx = { id: "multi-root" }) =>
     postTransaction({
       eventData: names.map((root, index) => ({
         event: createEvent({
@@ -80,7 +81,7 @@ describe("MongoDB transaction operation serialization", function () {
       })),
       reserveRootCountsFn: composition.reserveRootCountsFn,
       saveEventsFn: composition.saveEventsFn,
-      tx: { id: "multi-root" },
+      tx,
     })(session);
 
   it("serializes real session counter writes in sorted order and commits per-root event numbers", async () => {
@@ -110,6 +111,35 @@ describe("MongoDB transaction operation serialization", function () {
       ]
     );
     assert.equal(await publications.countDocuments(), 3);
+  });
+
+  it("preserves transaction metadata and its committed hash after Mongo readback", async () => {
+    const tx = {
+      id: "metadata-roundtrip",
+      ip: "127.0.0.1",
+      claims: {
+        exp: 1700000000,
+        iat: 1600000000,
+        aud: "one",
+        custom: { role: "reader" },
+      },
+      path: [
+        {
+          name: "command",
+          network: "local",
+          host: "localhost",
+          procedure: "command",
+          hash: "trace-hash",
+          issued: "2026-11-10T00:00:00.000Z",
+          extra: "trace",
+        },
+      ],
+    };
+    await session.withTransaction(() => append(["metadata"], tx));
+    const saved = await events.findOne({ "tx.id": tx.id }).lean();
+    assert.deepEqual(saved.tx, tx);
+    assert.equal(saved.headers.tHash, hash(tx).create());
+    assert.equal(hash(saved.tx).create(), saved.headers.tHash);
   });
 
   it("rolls back every root's counter, event and notice after a multi-root append", async () => {

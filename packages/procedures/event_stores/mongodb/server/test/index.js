@@ -59,13 +59,27 @@ describe("Mongodb event store", () => {
     replace(deps, "eventStore", fake());
     await server({ schema: {}, secretFn: fake.resolves("secret") });
     const { schema, typeKey } = store.firstCall.args[0];
-    const model = mongoose.model("TransactionRoundTrip", new mongoose.Schema(schema, { typeKey }));
+    const model = mongoose.model(
+      "TransactionRoundTrip",
+      new mongoose.Schema(schema, { typeKey })
+    );
     try {
-      const tx = { id: "transaction", claims: { exp: 1700000000, iat: 1600000000, aud: ["one", "two"], custom: { role: "reader" } }, path: [{ name: "command", extra: "trace" }] };
+      const tx = {
+        id: "transaction",
+        claims: {
+          exp: 1700000000,
+          iat: 1600000000,
+          aud: ["one", "two"],
+          custom: { role: "reader" },
+        },
+        path: [{ name: "command", extra: "trace" }],
+      };
       const stored = new model({ tx }).toObject().tx;
       expect(stored).to.deep.equal(tx);
       expect(hash(stored).create()).to.equal(hash(tx).create());
-    } finally { mongoose.deleteModel("TransactionRoundTrip"); }
+    } finally {
+      mongoose.deleteModel("TransactionRoundTrip");
+    }
   });
   it("should call with the correct params", async () => {
     const mongodbEventStore = (await import("../index.js")).default; 
