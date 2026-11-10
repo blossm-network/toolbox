@@ -13,7 +13,6 @@ const schema = {};
 const schemaValue = "some-schema-value";
 schema[commonKey] = { type: String, default: schemaValue };
 
-
 describe("Store", () => {
   afterEach(() => {
     restore();
@@ -176,20 +175,35 @@ describe("Store", () => {
   it("waits for connection and index initialization before returning its model", async () => {
     let connected;
     let indexed;
-    const connecting = new Promise((resolve) => { connected = resolve; });
-    const indexing = new Promise((resolve) => { indexed = resolve; });
+    const connecting = new Promise((resolve) => {
+      connected = resolve;
+    });
+    const indexing = new Promise((resolve) => {
+      indexed = resolve;
+    });
     const model = { init: fake.returns(indexing) };
     const modelFake = fake.returns(model);
     replace(deps.mongoose, "model", modelFake);
     replace(deps.mongoose, "connect", fake.returns(connecting));
-    const pending = store({ name, connection: { protocol: "mongodb", user: "u", password: "p", host: "h", database: "d" } });
+    const pending = store({
+      name,
+      connection: {
+        protocol: "mongodb",
+        user: "u",
+        password: "p",
+        host: "h",
+        database: "d",
+      },
+    });
     await Promise.resolve();
     expect(modelFake).to.not.have.been.called;
     connected();
     await new Promise((resolve) => setImmediate(resolve));
     expect(model.init).to.have.been.calledOnce;
     let ready = false;
-    pending.then(() => { ready = true; });
+    pending.then(() => {
+      ready = true;
+    });
     await Promise.resolve();
     expect(ready).to.equal(false);
     indexed();
@@ -201,12 +215,22 @@ describe("Store", () => {
       const error = new Error("startup failure");
       const model = { init: fake.rejects(error) };
       const modelFake = fake.returns(model);
-      const connectFake = failure == "connection" ? fake.rejects(error) : fake.resolves();
+      const connectFake =
+        failure == "connection" ? fake.rejects(error) : fake.resolves();
       replace(deps.mongoose, "model", modelFake);
       replace(deps.mongoose, "connect", connectFake);
       let actual;
       try {
-        await store({ name, connection: { protocol: "mongodb", user: "u", password: "p", host: "h", database: "d" } });
+        await store({
+          name,
+          connection: {
+            protocol: "mongodb",
+            user: "u",
+            password: "p",
+            host: "h",
+            database: "d",
+          },
+        });
       } catch (err) {
         actual = err;
       }
@@ -217,5 +241,4 @@ describe("Store", () => {
       }
     });
   }
-
 });

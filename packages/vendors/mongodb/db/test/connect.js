@@ -84,12 +84,24 @@ describe("Connects", () => {
     const onOpen = fake();
     const onError = fake();
     replaceGetter(deps.mongoose, "connection", fake.returns(connection));
-    replace(deps.mongoose, "connect", fake(async () => {
-      expect(connection.listenerCount("error")).to.equal(1);
-      connection.emit("open");
-      expect(onOpen.callCount).to.equal(1);
-    }));
-    await connect({ protocol, user, password, host, database, onOpen, onError });
+    replace(
+      deps.mongoose,
+      "connect",
+      fake(async () => {
+        expect(connection.listenerCount("error")).to.equal(1);
+        connection.emit("open");
+        expect(onOpen.callCount).to.equal(1);
+      })
+    );
+    await connect({
+      protocol,
+      user,
+      password,
+      host,
+      database,
+      onOpen,
+      onError,
+    });
   });
 
   it("it pass along the onError callback", async () => {

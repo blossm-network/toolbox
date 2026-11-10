@@ -19,9 +19,6 @@ describe("MongoDB event store indexes", function () {
       handlers: { set() {} },
       secretFn: async () => undefined,
     });
-    await Promise.all(
-      mongoose.modelNames().map((name) => mongoose.model(name).init())
-    );
     expect(typeof composition.saveEventsFn).to.equal("function");
     for (const [collection, field] of [
       ["events", "hash"],

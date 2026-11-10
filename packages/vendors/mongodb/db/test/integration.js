@@ -21,7 +21,7 @@ integration("MongoDB adapter integration", function () {
       serverSelectionTimeoutMS: 5000,
     });
     connected = true;
-    store = db.store({
+    store = await db.store({
       name: "adapter_integration",
       schema: {
         key: { type: String, required: true },
@@ -31,7 +31,6 @@ integration("MongoDB adapter integration", function () {
       },
       indexes: [[{ key: 1 }, { unique: true }]],
     });
-    await store.init();
   });
 
   after(async () => {
