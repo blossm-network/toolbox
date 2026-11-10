@@ -1,8 +1,4 @@
-import eventStore from "@blossm/event-store-rpc";
-import command from "@blossm/command-rpc";
-import uuid from "@blossm/uuid";
-import createEvent from "@blossm/create-event";
-import { hash } from "@blossm/crypt";
+import deps from "./deps.js";
 
 export default async ({
   permissions = [],
@@ -10,20 +6,20 @@ export default async ({
   password = "asdfasdfasdf",
   email,
 } = {}) => {
-  const accountRoot = uuid();
-  const roleRoot = uuid();
-  const roleId = uuid();
-  const principalRoot = uuid();
-  const sessionRoot = uuid();
+  const accountRoot = deps.uuid();
+  const roleRoot = deps.uuid();
+  const roleId = deps.uuid();
+  const principalRoot = deps.uuid();
+  const sessionRoot = deps.uuid();
 
   // Create the account for the token.
-  await eventStore({
+  await deps.eventStore({
     domain: "account",
     service: "core",
   }).add({
     eventData: [
       {
-        event: createEvent({
+        event: deps.createEvent({
           root: accountRoot,
           payload: {
             principal: {
@@ -31,7 +27,7 @@ export default async ({
               service: process.env.SERVICE,
               network: process.env.NETWORK,
             },
-            password: await hash(password),
+            password: await deps.hash(password),
             email,
           },
           action: "register",
@@ -46,13 +42,13 @@ export default async ({
   // Add permissions to the role
   // and add role to the principal.
   await Promise.all([
-    eventStore({
+    deps.eventStore({
       domain: "role",
       service: "core",
     }).add({
       eventData: [
         {
-          event: createEvent({
+          event: deps.createEvent({
             root: roleRoot,
             payload: {
               id: roleId,
@@ -66,13 +62,13 @@ export default async ({
         },
       ],
     }),
-    eventStore({
+    deps.eventStore({
       domain: "principal",
       service: "core",
     }).add({
       eventData: [
         {
-          event: createEvent({
+          event: deps.createEvent({
             root: principalRoot,
             payload: {
               roles: [
@@ -94,13 +90,13 @@ export default async ({
   ]);
 
   // Add a session.
-  await eventStore({
+  await deps.eventStore({
     domain: "session",
     service: "core",
   }).add({
     eventData: [
       {
-        event: createEvent({
+        event: deps.createEvent({
           root: sessionRoot,
           payload: {},
           action: "start",
@@ -114,7 +110,7 @@ export default async ({
 
   const {
     body: { _tokens },
-  } = await command({
+  } = await deps.command({
     name: "upgrade",
     domain: "session",
     service: "core",
