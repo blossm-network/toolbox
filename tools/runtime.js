@@ -38,7 +38,7 @@ for (const file of files.filter(
 update(
   "build.yaml",
   readFileSync(root + "build.yaml", "utf8").replace(
-    /_NODE_IMAGE: node:[^\s]+/,
+    /_NODE_IMAGE: [^\s]+/,
     `_NODE_IMAGE: ${nodeImage}`
   )
 );
@@ -49,7 +49,7 @@ for (const file of [
   update(
     file,
     readFileSync(root + file, "utf8").replace(
-      /^FROM node:[^\s]+/m,
+      /^FROM [^\s]+/m,
       `FROM ${nodeSlimImage}`
     )
   );

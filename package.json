@@ -27,7 +27,7 @@
     "bootstrap": "lerna bootstrap --use-workspaces",
     "compile": "lerna run compile",
     "clean": "lerna run clean",
-    "test": "lerna run test",
+    "test": "node --test tools/test/runtime.js && lerna run test",
     "patch": "lerna version patch",
     "minor": "lerna version minor",
     "major": "lerna version major",
