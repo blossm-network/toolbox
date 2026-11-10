@@ -41,7 +41,7 @@ describe("Mongodb event store save snapshot", () => {
         lean: true,
         omitUndefined: true,
         upsert: true,
-        new: true,
+        returnDocument: "after",
         runValidators: true,
         session: transaction,
       },
@@ -68,7 +68,7 @@ describe("Mongodb event store save snapshot", () => {
         lean: true,
         omitUndefined: true,
         upsert: true,
-        new: true,
+        returnDocument: "after",
         runValidators: true,
       },
     });

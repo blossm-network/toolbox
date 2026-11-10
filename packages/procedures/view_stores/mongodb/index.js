@@ -356,7 +356,7 @@ export default async ({
         lean: true,
         omitUndefined: true,
         upsert: !containsMatcher,
-        new: true,
+        returnDocument: "after",
         runValidators: true,
         setDefaultsOnInsert: true,
         ...(arrayFilters && { arrayFilters }),

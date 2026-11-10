@@ -14,7 +14,7 @@ export default ({ countsStore }) => ({ root, amount, transaction }) =>
       lean: true,
       omitUndefined: true,
       upsert: true,
-      new: true,
+      returnDocument: "after",
       runValidators: true,
       setDefaultsOnInsert: true,
       ...(transaction && { session: transaction }),
