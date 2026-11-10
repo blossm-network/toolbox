@@ -50,7 +50,7 @@ process.env.MONGODB_DATABASE = database;
 
 let mongodbViewStore;
 describe("View store", () => {
-  it("should disable positional upsert for both plain and operator update paths", async () => {
+  it("should preserve ID-only creation and disable guarded or positional upserts", async () => {
     const write = fake.resolves(null);
     replace(deps, "db", { store: fake.returns({}), write });
     const server = fake();
@@ -66,6 +66,13 @@ describe("View store", () => {
       await writeFn({ query: { "headers.id": "missing" }, data });
       expect(write.lastCall.args[0].options.upsert).to.equal(false);
     }
+    await writeFn({
+      query: { "headers.id": "missing", "body.status": "active" },
+      data: { "body.status": "inactive" },
+    });
+    expect(write.lastCall.args[0].options.upsert).to.equal(false);
+    await writeFn({ query: { "headers.id": "new" }, data: { "body.status": "active" } });
+    expect(write.lastCall.args[0].options.upsert).to.equal(true);
   });
 
   beforeEach(async () => {

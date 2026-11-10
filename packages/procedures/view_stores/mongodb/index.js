@@ -349,6 +349,8 @@ export default async ({
       Object.keys(fields).some((key) => key.includes(".$"))
     );
 
+    const hasCondition = Object.keys(query).some((key) => key.startsWith("body."));
+
     return await deps.db.write({
       store,
       query,
@@ -356,7 +358,7 @@ export default async ({
       options: {
         lean: true,
         omitUndefined: true,
-        upsert: !containsMatcher,
+        upsert: !containsMatcher && !hasCondition,
         returnDocument: "after",
         runValidators: true,
         setDefaultsOnInsert: true,
