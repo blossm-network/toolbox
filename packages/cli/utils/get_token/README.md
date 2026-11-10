@@ -24,8 +24,8 @@ behavior, not successful execution of every application operation.
 
 View channel discovery receives explicit query context and does not use Bearer
 authentication. The generated suite retains successful channel requests and
-checks missing configured context as403 where discovery supports contextless
-requests. It does not assume that every channel request without context is401.
+checks missing configured context as 403 where discovery supports contextless
+requests. It does not assume that every channel request without context is 401.
 Strict routes with explicit empty permission lists deny access. The existing
 contextless strict-channel behavior with truthy permissions is outside these
 fixture repairs; gateway security policy is unchanged.
