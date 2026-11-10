@@ -36,8 +36,10 @@ describe("Block canonical commitments", () => {
           hash: "previous-block",
           headers: { number: 3, end: "2026-01-01T00:00:00.000Z" },
         }),
-        rootStreamFn: async ({ fn }) =>
-          fn({ root: "r", updated: "2026-01-02T00:00:00.000Z" }),
+        rootStreamFn: async ({ fn, parallel }) => {
+          assert.equal(parallel, 10);
+          return fn({ root: "r", updated: "2026-01-02T00:00:00.000Z" });
+        },
         findOneSnapshotFn: async () => null,
         eventStreamFn: async ({ fn }) => {
           for (const event of events) await fn(event);
