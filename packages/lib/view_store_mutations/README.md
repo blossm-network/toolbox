@@ -7,3 +7,5 @@ Internal view write and removal operations shared by HTTP and transaction adapte
 `remove({ removeFn })({ id, query, context })` calls `removeFn(query)` with the mapped selector and returns `{ deletedCount }` from persistence.
 
 Mongo connection, transaction/session, index and conditional upsert policy stay in the persistence adapter. This library does not send HTTP responses: PUT maps no result to 204 and a result to 200, while DELETE sends its count with 200. Persistence and application callback errors propagate unchanged.
+
+`formatView({ formatFn, updateKeys }, persistedView)` returns the same `{ view, keys? }` shape used by `write`, without performing persistence. Transaction notifications can reload a current view and use this shared mutation-result formatter.
