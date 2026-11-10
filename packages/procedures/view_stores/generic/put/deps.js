@@ -1,8 +1,3 @@
-import { string as dateString } from "@blossm/datetime";
-import { badRequest, forbidden } from "@blossm/errors";
+import { write } from "@blossm/view-store-mutations";
 
-export default {
-  dateString,
-  badRequestError: badRequest,
-  forbiddenError: forbidden,
-};
+export default { write };

@@ -1,0 +1,154 @@
+import deps from "./deps.js";
+
+const defaultFn = (update) => update;
+
+//Returns the value, or values, of a given key in an object.
+const getValue = (object, key) => {
+  const keyParts = key.split(".");
+  return keyParts.length > 1
+    ? object[keyParts[0]] instanceof Array
+      ? object[keyParts[0]].map((element) =>
+          getValue(element, keyParts.slice(1).join(".")),
+        )
+      : getValue(object[keyParts[0]], keyParts.slice(1).join("."))
+    : object[keyParts[0]];
+};
+
+const formatBody = (value) => {
+  const formattedBody = {};
+
+  for (const key in value) {
+    if (key.startsWith("$") && typeof value[key] == "object") {
+      formattedBody[key] = formatBody(value[key]);
+    } else {
+      formattedBody[`body.${key}`] = value[key];
+    }
+  }
+
+  return formattedBody;
+};
+
+// Internal callers own authorization; writes map a supplied context without requiring one.
+export const write =
+  ({ writeFn, formatFn, updateFn = defaultFn, updateKeys }) =>
+  async ({ id, body }) => {
+    const customUpdate = updateFn(body.update);
+
+    const context = body.context &&
+      process.env.CONTEXT &&
+      body.context[process.env.CONTEXT] && {
+        root: body.context[process.env.CONTEXT].root,
+        domain: process.env.CONTEXT,
+        service: body.context[process.env.CONTEXT].service,
+        network: body.context[process.env.CONTEXT].network,
+      };
+
+    const groups =
+      body.groups &&
+      body.groups.map((group) => ({
+        root: group.root,
+        service: group.service,
+        network: group.network,
+      }));
+
+    const formattedBody = formatBody(customUpdate);
+
+    const data = {
+      "headers.id": id,
+      "headers.modified": deps.dateString(),
+      ...formattedBody,
+      ...(body.trace && {
+        [`trace.${body.trace.service}.${body.trace.domain}`]: body.trace.txIds,
+      }),
+      ...(context && { "headers.context": context }),
+      ...(groups && { "headers.groups": groups }),
+    };
+
+    let formattedQuery;
+
+    if (body.query) {
+      if (!formattedQuery) formattedQuery = {};
+      for (const key in body.query) {
+        formattedQuery[`body.${key}`] = body.query[key];
+      }
+    }
+
+    const newView = await writeFn({
+      query: {
+        "headers.id": id,
+        ...formattedQuery,
+      },
+      data,
+      ...(body.arrayFilters && { arrayFilters: body.arrayFilters }),
+    });
+
+    if (!newView) return;
+
+    //TODO this function is duplicated in /get. Refactor.
+    const formattedTrace = [];
+    for (const service in newView.trace) {
+      for (const domain in newView.trace[service]) {
+        for (const txId of newView.trace[service][domain])
+          if (!formattedTrace.includes(txId)) formattedTrace.push(txId);
+      }
+    }
+
+    const values =
+      updateKeys && updateKeys.map((key) => getValue(newView.body, key));
+
+    return {
+      view: {
+        body: formatFn({
+          body: newView.body,
+          id: newView.headers.id,
+          created: newView.headers.created,
+          modified: newView.headers.modified,
+        }),
+        headers: {
+          id: newView.headers.id,
+          context: newView.headers.context,
+          ...(newView.headers.groups && { groups: newView.headers.groups }),
+          trace: formattedTrace,
+          created: newView.headers.created,
+          modified: newView.headers.modified,
+        },
+      },
+      ...(values && {
+        // Fallback for .flat().
+        keys: [].concat(...values),
+      }),
+    };
+  };
+
+export const remove =
+  ({ removeFn }) =>
+  async ({ id, query, context: requestContext }) => {
+    if (!id && Object.keys(query || {}).length === 0)
+      throw deps.badRequestError.message("Missing query.");
+
+    const context =
+      process.env.CONTEXT &&
+      requestContext &&
+      requestContext[process.env.CONTEXT];
+    if (process.env.CONTEXT && !context)
+      throw deps.forbiddenError.message("This context is forbidden.");
+
+    const formattedQueryBody = {};
+    for (const key in query || {})
+      formattedQueryBody[`body.${key}`] = query[key];
+
+    const { deletedCount } = await removeFn({
+      ...formattedQueryBody,
+      ...(id && { "headers.id": id }),
+      ...(context && {
+        "headers.context": {
+          root: context.root,
+          domain: process.env.CONTEXT,
+          service: context.service,
+          network: context.network,
+        },
+      }),
+    });
+
+    return { deletedCount };
+  };

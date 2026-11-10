@@ -15,11 +15,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/datetime": "^0.0.18",
-    "@blossm/errors": "^0.0.40"
+    "@blossm/view-store-mutations": "^0.0.1"
   },
   "devDependencies": {
-    "chai-datetime": "^1.8.1",
     "mocha": "^12.0.3",
     "sinon": "^22.1.0",
     "sinon-chai": "^4.0.1"

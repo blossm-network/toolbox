@@ -1,6 +1,3 @@
-import { badRequest, forbidden } from "@blossm/errors";
+import { remove } from "@blossm/view-store-mutations";
 
-export default {
-  badRequestError: badRequest,
-  forbiddenError: forbidden,
-};
+export default { remove };
