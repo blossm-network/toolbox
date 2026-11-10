@@ -155,7 +155,7 @@ export default async ({
             !indexes.some(
               ([keys]) =>
                 Object.keys(keys).length === 1 &&
-                keys[field.slice("body.".length)] === 1
+                keys[field.slice("body.".length)] === 1,
             )
           )
             customIndexes.push([{ [field]: 1 }]);
@@ -342,7 +342,7 @@ export default async ({
     });
   };
 
-  const writeFn = async ({ query, data, arrayFilters }) => {
+  const writeFn = async ({ query, data, arrayFilters, session }) => {
     const update = {};
     const setKey = "$set";
     for (const key of Object.keys(data)) {
@@ -360,10 +360,12 @@ export default async ({
     }
 
     const containsMatcher = Object.values(update).some((fields) =>
-      Object.keys(fields).some((key) => key.includes(".$"))
+      Object.keys(fields).some((key) => key.includes(".$")),
     );
 
-    const hasCondition = Object.keys(query).some((key) => key.startsWith("body."));
+    const hasCondition = Object.keys(query).some((key) =>
+      key.startsWith("body."),
+    );
 
     return await deps.db.write({
       store,
@@ -376,17 +378,33 @@ export default async ({
         returnDocument: "after",
         runValidators: true,
         setDefaultsOnInsert: true,
+        ...(session && { session }),
         ...(arrayFilters && { arrayFilters }),
       },
     });
   };
-
-  const removeFn = (query) =>
+  const removeFn = (query, session) =>
     deps.db.remove({
       store,
       query,
+      ...(session && { options: { session } }),
     });
-
+  const local = process.env.NODE_ENV == "local";
+  const projectionSession = local
+    ? undefined
+    : await deps.projectionSession({
+        store,
+        writeFn,
+        removeFn,
+        formatFn,
+        updateFn,
+        updateKeys,
+        queryFn,
+      });
+  if (!local && typeof projectionSession?.handle != "function")
+    throw deps.internalServerError.message(
+      "Remote view stores require projection sessions.",
+    );
   deps.viewStore({
     streamFn,
     findFn,
@@ -394,6 +412,9 @@ export default async ({
     removeFn,
     countFn,
     groupsLookupFn,
+    ...(!local && {
+      projectionSessionFn: projectionSession.handle,
+    }),
     ...(queryFn && { queryFn }),
     ...(formatCsv && { formatCsv }),
     ...(sortFn && { sortFn }),

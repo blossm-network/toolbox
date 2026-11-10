@@ -48,8 +48,48 @@ process.env.MONGODB_USER_PASSWORD = userPassword;
 process.env.MONGODB_HOST = host;
 process.env.MONGODB_DATABASE = database;
 
+const projectionSessionHandle = () => {};
 let mongodbViewStore;
 describe("View store", () => {
+  it("registers the remote session route with shared persistence owners", async () => {
+    const handle = () => {};
+    deps.projectionSession = fake.resolves({ handle });
+    replace(deps, "db", { store: fake.returns({}) });
+    const server = fake();
+    replace(deps, "viewStore", server);
+    replace(deps, "formatSchema", fake.returns({}));
+    await mongodbViewStore({
+      schema: {},
+      secretFn: async () => "test-password",
+    });
+    const owners = deps.projectionSession.firstCall.args[0];
+    const handlers = server.firstCall.args[0];
+    expect(handlers.projectionSessionFn).to.equal(handle);
+    expect(owners.writeFn).to.equal(handlers.writeFn);
+    expect(owners.removeFn).to.equal(handlers.removeFn);
+  });
+
+  it("keeps local writes outside projection session infrastructure", async () => {
+    process.env.NODE_ENV = "local";
+    const write = fake.resolves(null);
+    const remove = fake.resolves({ deletedCount: 0 });
+    replace(deps, "db", { store: fake.returns({}), write, remove });
+    const server = fake();
+    replace(deps, "viewStore", server);
+    replace(deps, "formatSchema", fake.returns({}));
+    await mongodbViewStore({ schema: {} });
+    expect(deps.projectionSession).not.to.have.been.called;
+    const handlers = server.firstCall.args[0];
+    expect(handlers.projectionSessionFn).to.equal(undefined);
+    await handlers.writeFn({
+      query: { "headers.id": "local" },
+      data: { "body.count": 1 },
+    });
+    await handlers.removeFn({ "headers.id": "local" });
+    expect(write.firstCall.args[0].options.session).to.equal(undefined);
+    expect(remove.firstCall.args[0].options).to.equal(undefined);
+  });
+
   it("should preserve custom index options without duplicating partial-word indexes", async () => {
     const store = fake.returns({});
     replace(deps, "db", { store });
@@ -77,7 +117,9 @@ describe("View store", () => {
       { "body.title": "text", "headers.id": "text" },
       { name: "custom-search", weights: { "body.title": 3 } },
     ]);
-    expect(built.filter(([keys]) => keys["body.title"] === 1)).to.have.length(1);
+    expect(built.filter(([keys]) => keys["body.title"] === 1)).to.have.length(
+      1,
+    );
     expect(built).to.deep.include([
       { "body.title": 1 },
       { unique: true, sparse: true },
@@ -90,7 +132,10 @@ describe("View store", () => {
     const server = fake();
     replace(deps, "viewStore", server);
     replace(deps, "formatSchema", fake.returns({}));
-    await mongodbViewStore({ schema: {}, secretFn: async () => "test-password" });
+    await mongodbViewStore({
+      schema: {},
+      secretFn: async () => "test-password",
+    });
     const { writeFn } = server.firstCall.args[0];
     for (const data of [
       { "body.things.$.name": "value" },
@@ -105,11 +150,42 @@ describe("View store", () => {
       data: { "body.status": "inactive" },
     });
     expect(write.lastCall.args[0].options.upsert).to.equal(false);
-    await writeFn({ query: { "headers.id": "new" }, data: { "body.status": "active" } });
+    await writeFn({
+      query: { "headers.id": "new" },
+      data: { "body.status": "active" },
+    });
     expect(write.lastCall.args[0].options.upsert).to.equal(true);
   });
 
+  for (const result of [undefined, {}])
+    it("rejects remote startup without a projection session handler", async () => {
+      deps.projectionSession = fake.resolves(result);
+      replace(deps, "db", { store: fake.returns({}) });
+      const server = fake();
+      replace(deps, "viewStore", server);
+      replace(deps, "formatSchema", fake.returns({}));
+      let caught;
+      try {
+        await mongodbViewStore({
+          schema: {},
+          secretFn: async () => "test-password",
+        });
+      } catch (error) {
+        caught = error;
+      }
+      expect(caught.statusCode).to.equal(500);
+      expect(caught.message).to.equal(
+        "Remote view stores require projection sessions.",
+      );
+      expect(server).not.to.have.been.called;
+    });
+
   beforeEach(async () => {
+    replace(
+      deps,
+      "projectionSession",
+      fake.resolves({ handle: projectionSessionHandle }),
+    );
     __resetStoresForTest();
     mongodbViewStore = (await import("../index.js")).default;
     process.env.NODE_ENV = "some-env";
@@ -357,8 +433,11 @@ describe("View store", () => {
     expect(removeFnResult).to.equal(removeResult);
 
     expect(viewStoreFake).to.have.been.calledWith({
+      ...(process.env.NODE_ENV != "local" && {
+        projectionSessionFn: projectionSessionHandle,
+      }),
       streamFn: match(
-        (fn) => expect(fn({ query, sort, parallel, fn: fnFake })).to.exist
+        (fn) => expect(fn({ query, sort, parallel, fn: fnFake })).to.exist,
       ),
       findFn: match((fn) => expect(fn({ query, sort })).to.exist),
       countFn: match((fn) => expect(fn({ query })).to.exist),
@@ -1385,8 +1464,12 @@ describe("View store", () => {
     expect(removeFnResult).to.equal(removeResult);
 
     expect(viewStoreFake).to.have.been.calledWith({
+      ...(process.env.NODE_ENV != "local" && {
+        projectionSessionFn: projectionSessionHandle,
+      }),
       streamFn: match(
-        (fn) => expect(fn({ query, text, sort, parallel, fn: fnFake })).to.exist
+        (fn) =>
+          expect(fn({ query, text, sort, parallel, fn: fnFake })).to.exist,
       ),
       findFn: match((fn) => expect(fn({ query, text, sort })).to.exist),
       countFn: match((fn) => expect(fn({ query, sort })).to.exist),

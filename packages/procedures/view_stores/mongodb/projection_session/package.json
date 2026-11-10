@@ -1,0 +1,28 @@
+{
+  "name": "@blossm/mongodb-projection-session",
+  "description": "Fenced atomic batches for cooperating projection plays.",
+  "version": "0.0.1",
+  "main": "index.js",
+  "type": "module",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 24.22.1"
+  },
+  "scripts": {
+    "test": "mocha test/index.js",
+    "test:integration": "mocha test/integration/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@blossm/errors": "^0.0.40",
+    "@blossm/view-store-id-stream": "^0.0.6",
+    "@blossm/uuid": "^0.0.9",
+    "@blossm/view-store-mutations": "^0.0.1"
+  },
+  "devDependencies": {
+    "mocha": "^12.0.3",
+    "@blossm/mongodb-database": "^0.0.134"
+  }
+}

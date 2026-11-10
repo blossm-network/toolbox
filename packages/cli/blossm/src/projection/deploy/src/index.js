@@ -11,6 +11,7 @@ import logger from "@blossm/logger";
 import gcpSecret from "@blossm/gcp-secret";
 import gcpQueue from "@blossm/gcp-queue";
 import composeUpdate from "@blossm/compose-update";
+import projectionSession from "./session.js";
 
 import handlers from "./handlers.js";
 
@@ -114,9 +115,9 @@ const pushToChannels = async ({
             query: {
               parallel: 100,
             },
-          }
-        )
-    )
+          },
+        ),
+    ),
   );
 };
 
@@ -128,7 +129,31 @@ const saveId = async ({
   arrayFilters,
   push,
   context,
+  session,
 }) => {
+  if (session) {
+    session.add({
+      type: id ? "put" : "put-query",
+      id,
+      query,
+      push,
+      body: {
+        update,
+        ...(query && { query }),
+        ...(arrayFilters && { arrayFilters }),
+        ...(context && { context: { [process.env.CONTEXT]: context } }),
+        ...(aggregate.groups && { groups: aggregate.groups }),
+        ...(aggregate.txIds && {
+          trace: {
+            domain: aggregate.headers.domain,
+            service: aggregate.headers.service,
+            txIds: aggregate.txIds,
+          },
+        }),
+      },
+    });
+    return;
+  }
   const updateResponse = await viewStore({
     name: config.name,
     context: config.context,
@@ -180,8 +205,17 @@ const saveId = async ({
   });
 };
 
-const deleteId = ({ id, query, push, context }) =>
-  viewStore({
+const deleteId = ({ id, query, push, context, session }) => {
+  if (session) {
+    session.add({
+      type: id ? "delete" : "delete-query",
+      id,
+      query,
+      ...(context && { context: { [process.env.CONTEXT]: context } }),
+    });
+    return;
+  }
+  return viewStore({
     name: config.name,
     context: config.context,
   })
@@ -201,6 +235,7 @@ const deleteId = ({ id, query, push, context }) =>
     .delete(id, {
       query,
     });
+};
 
 const replayIfNeeded = async ({
   replay,
@@ -273,16 +308,16 @@ const replayIfNeeded = async ({
           ...result,
           ...op.update,
         }),
-        recursiveFullUpdate
+        recursiveFullUpdate,
       ),
       replayOps.reduce(
         (result, op) => ({
           ...result,
           ...op.query,
         }),
-        recursiveFullQuery
+        recursiveFullQuery,
       ),
-      matchDelimiter
+      matchDelimiter,
     );
 
     if (recursiveId || replayId) id = recursiveId || replayId;
@@ -309,7 +344,7 @@ const cleanIdQuery = (query) => {
           k != key &&
           k.endsWith(".id") &&
           k.startsWith(`${key.split(".")[0]}.`) &&
-          k.split(".").length < key.split(".").length
+          k.split(".").length < key.split(".").length,
       )
     )
       newQuery[key] = query[key];
@@ -324,17 +359,17 @@ const getValue = (object, key) => {
   if (keyParts.length <= 1) return object[keyParts[0]];
   return object[keyParts[0]] instanceof Array
     ? object[keyParts[0]].map((element) =>
-        getValue(element, keyParts.slice(1).join("."))
+        getValue(element, keyParts.slice(1).join(".")),
       )[0]
     : object[`${keyParts[0]}.${keyParts[1]}`] instanceof Array
-    ? object[`${keyParts[0]}.${keyParts[1]}`].map((element) =>
-        getValue(element, keyParts.slice(2).join("."))
-      )[0]
-    : getValue(object[keyParts[0]], keyParts.slice(1).join(".")) ||
-      getValue(
-        object[`${keyParts[0]}.${keyParts[1]}`],
-        keyParts.slice(2).join(".")
-      );
+      ? object[`${keyParts[0]}.${keyParts[1]}`].map((element) =>
+          getValue(element, keyParts.slice(2).join(".")),
+        )[0]
+      : getValue(object[keyParts[0]], keyParts.slice(1).join(".")) ||
+        getValue(
+          object[`${keyParts[0]}.${keyParts[1]}`],
+          keyParts.slice(2).join("."),
+        );
 };
 
 // prevents queries like
@@ -353,7 +388,14 @@ const cleanQuery = (query, update) => {
 };
 
 export default projection({
-  mainFn: async ({ aggregate, action, push, aggregateFn, readFactFn }) => {
+  mainFn: async ({
+    aggregate,
+    action,
+    push,
+    aggregateFn,
+    readFactFn,
+    session,
+  }) => {
     //Must be able to handle this aggregate.
     if (
       !handlers[aggregate.headers.service] ||
@@ -407,83 +449,105 @@ export default projection({
       del: del || replayDel,
     });
 
-    await Promise.all(
-      ops.map(async ({ id, query, update, arrayFilters, del }) => {
-        if (!query && !id) return;
+    const apply = async ({ id, query, update, arrayFilters, del }) => {
+      if (!query && !id) return;
 
-        const composedQuery = query && cleanQuery(query, update);
+      const composedQuery = query && cleanQuery(query, update);
 
-        const composedUpdate = composeUpdate(update, query, matchDelimiter);
+      const composedUpdate = composeUpdate(update, query, matchDelimiter);
 
-        const aggregateContext =
-          process.env.CONTEXT &&
-          (context ||
-            (aggregate.context && aggregate.context[process.env.CONTEXT]));
+      const aggregateContext =
+        process.env.CONTEXT &&
+        (context ||
+          (aggregate.context && aggregate.context[process.env.CONTEXT]));
 
-        if (process.env.CONTEXT && !aggregateContext) return;
+      if (process.env.CONTEXT && !aggregateContext) return;
 
-        const composedIdQuery = cleanIdQuery(composedQuery);
+      const composedIdQuery = cleanIdQuery(composedQuery);
 
-        if (id) {
-          del
-            ? await deleteId({
-                context: aggregateContext,
-                id,
-                query,
-                push,
-              })
-            : await saveId({
-                aggregate,
-                context: aggregateContext,
-                id,
-                query,
-                update: composedUpdate,
-                ...(arrayFilters && { arrayFilters }),
-                push,
-              });
-        } else if (Object.keys(composedIdQuery).length > 0) {
-          await viewStore({
-            name: config.name,
-            context: config.context,
-          })
-            .set({
-              token: { internalFn: gcpToken },
-              ...(aggregateContext && {
-                context: {
-                  [process.env.CONTEXT]: {
-                    root: aggregateContext.root,
-                    service: aggregateContext.service,
-                    network: aggregateContext.network,
-                  },
-                },
-              }),
+      if (id) {
+        del
+          ? await deleteId({
+              context: aggregateContext,
+              id,
+              query,
+              push,
+              session,
             })
-            .idStream(
-              ({ id }) =>
-                del
-                  ? deleteId({
-                      context: aggregateContext,
-                      id,
-                      query: composedIdQuery,
-                      push,
-                    })
-                  : saveId({
-                      aggregate,
-                      context: aggregateContext,
-                      id,
-                      query: composedIdQuery,
-                      update: composedUpdate,
-                      ...(arrayFilters && { arrayFilters }),
-                      push,
-                    }),
-              {
-                parallel: 10,
-                query: composedIdQuery,
-              }
-            );
+          : await saveId({
+              aggregate,
+              context: aggregateContext,
+              id,
+              query,
+              update: composedUpdate,
+              ...(arrayFilters && { arrayFilters }),
+              push,
+              session,
+            });
+      } else if (Object.keys(composedIdQuery).length > 0) {
+        if (session) {
+          if (del)
+            await deleteId({
+              context: aggregateContext,
+              query: composedIdQuery,
+              session,
+            });
+          else
+            await saveId({
+              aggregate,
+              context: aggregateContext,
+              query: composedIdQuery,
+              update: composedUpdate,
+              arrayFilters,
+              push,
+              session,
+            });
+          return;
         }
-      })
-    );
+        await viewStore({
+          name: config.name,
+          context: config.context,
+        })
+          .set({
+            token: { internalFn: gcpToken },
+            ...(aggregateContext && {
+              context: {
+                [process.env.CONTEXT]: {
+                  root: aggregateContext.root,
+                  service: aggregateContext.service,
+                  network: aggregateContext.network,
+                },
+              },
+            }),
+          })
+          .idStream(
+            ({ id }) =>
+              del
+                ? deleteId({
+                    context: aggregateContext,
+                    id,
+                    query: composedIdQuery,
+                    push,
+                    session,
+                  })
+                : saveId({
+                    aggregate,
+                    context: aggregateContext,
+                    id,
+                    query: composedIdQuery,
+                    update: composedUpdate,
+                    ...(arrayFilters && { arrayFilters }),
+                    push,
+                    session,
+                  }),
+            {
+              parallel: 10,
+              query: composedIdQuery,
+            },
+          );
+      }
+    };
+    for (const operation of ops) await apply(operation);
   },
   aggregateFn: async ({ root, domain, service, notFoundThrows = true }) => {
     const { body: aggregate } = await eventStore({ domain, service })
@@ -508,7 +572,7 @@ export default projection({
       .read({ query, ...(root && { root }) });
     return body;
   },
-  playFn: ({ root, domain, service }) =>
+  playFn: ({ root, domain, service, playId }) =>
     projectionRpc({
       name: config.name,
       context: config.context,
@@ -517,7 +581,7 @@ export default projection({
         token: { internalFn: gcpToken },
         enqueue: { fn: gcpQueue.enqueue },
       })
-      .play({ root, domain, service }),
+      .play({ root, domain, service, ...(playId && { playId }) }),
   rootStreamFn: ({ fn, domain, service }) =>
     eventStore({ domain, service })
       .set({
@@ -529,4 +593,23 @@ export default projection({
   replayStores: config.replay || config.events,
   secretFn: gcpSecret.get,
   mutedEvents: config.muted || [],
+  ...(process.env.NODE_ENV != "local" && {
+    sessionFn: projectionSession({
+      request: (params) =>
+        viewStore({ name: config.name, context: config.context })
+          .set({ token: { internalFn: gcpToken } })
+          .projectionSession(params),
+      pushFn: ({ view, keys }) =>
+        pushToChannels({
+          ...(view.headers.context && { context: view.headers.context }),
+          ...(view.headers.groups && { groups: view.headers.groups }),
+          view,
+          keys,
+          id: view.headers.id,
+          trace: view.headers.trace,
+          type:
+            view.headers.created == view.headers.modified ? "create" : "update",
+        }),
+    }),
+  }),
 });

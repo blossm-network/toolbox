@@ -7,6 +7,7 @@ describe("Generated projection positional selection", () => {
     let submitted;
     const adapter = await load("blossm/src/projection/deploy/src/index.js", {
       projection: (options) => options,
+      process: { env: { NODE_ENV: "local" } },
       composeUpdate,
       handlers: {
         core: {

@@ -14,3 +14,8 @@ once the configured indexes initialize.
 An explicit single-field ascending index takes precedence over an automatically
 generated partial-word search helper on the same field. Its configured constraints
 and options are retained.
+
+Generated remote projections use [fenced projection plays](PROJECTION_SESSIONS.md).
+Direct internal PUT/DELETE retain their existing semantics and do not participate
+in the projection lease. Local mode keeps direct writes without replica-set or
+session infrastructure.

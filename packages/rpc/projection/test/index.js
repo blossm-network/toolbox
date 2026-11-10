@@ -23,6 +23,9 @@ const internalTokenFn = "some-internal-token-fn";
 const root = "some-root";
 
 describe("Replay projection", () => {
+  beforeEach(() => {
+    replace(deps, "uuid", fake.returns("generated-play-id"));
+  });
   afterEach(() => {
     restore();
   });
@@ -61,17 +64,18 @@ describe("Replay projection", () => {
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith({
       region,
-      operationNameComponents: [name, context, "projection"]
+      operationNameComponents: [name, context, "projection"],
     });
 
     expect(postFake).to.have.been.calledWith({
+      playId: "generated-play-id",
       root,
       domain,
       service,
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({
-      internalFn: internalTokenFn,
+      internalTokenFn,
       enqueueFn: enqueueFnResult,
     });
     expect(enqueueFnFake).to.have.been.calledWith({
@@ -100,14 +104,55 @@ describe("Replay projection", () => {
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith({
       region: envRegion,
-      operationNameComponents: [name, "projection"]
+      operationNameComponents: [name, "projection"],
     });
     expect(postFake).to.have.been.calledWith({
+      playId: "generated-play-id",
       root,
       domain,
       service,
     });
     expect(inFake).to.have.been.calledWith({});
     expect(withFake).to.have.been.calledWith({});
+  });
+});
+
+describe("Projection play ID composition", () => {
+  afterEach(restore);
+
+  it("preserves an explicit play ID across task submission", async () => {
+    const { default: rpc } = await import("../../generic/index.js");
+    const { default: rpcDeps } = await import("../../generic/deps.js");
+    replace(deps, "rpc", rpc);
+    replace(rpcDeps, "operationToken", fake.resolves(null));
+    const post = fake.resolves({ statusCode: 204 });
+    replace(rpcDeps, "post", post);
+    await projection({ name: "example" }).play({
+      root,
+      domain,
+      service,
+      playId: "stable-task",
+    });
+    expect(post.firstCall.args[1].body.playId).to.equal("stable-task");
+  });
+});
+
+describe("Direct projection authentication", () => {
+  afterEach(restore);
+  it("passes the token callback through actual generic RPC and sends authorization", async () => {
+    const { default: rpc } = await import("../../generic/index.js");
+    const { default: rpcDeps } = await import("../../generic/deps.js");
+    replace(deps, "rpc", rpc);
+    const post = fake.resolves({ statusCode: 204 });
+    replace(rpcDeps, "post", post);
+    const internalFn = fake.resolves({ token: "internal", type: "Bearer" });
+    await projection({ name: "example" })
+      .set({ token: { internalFn } })
+      .play({ root, domain, service, playId: "stable-direct" });
+    expect(internalFn).to.have.been.calledOnce;
+    expect(post.firstCall.args[1].headers.authorization).to.equal(
+      "Bearer internal",
+    );
+    expect(post.firstCall.args[1].body.playId).to.equal("stable-direct");
   });
 });

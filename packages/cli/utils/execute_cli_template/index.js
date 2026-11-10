@@ -5,6 +5,7 @@ import rootDir from "@blossm/cli-root-dir";
 import path from "path";
 import yaml from "yaml";
 import gcpQueue from "@blossm/gcp-queue";
+import uuid from "@blossm/uuid";
 
 const envProject = ({ env, config }) => {
   switch (env) {
@@ -71,7 +72,7 @@ const execute = async (input, configFn) => {
   const functionPath = path.resolve(
     process.cwd(),
     input.path || "",
-    "blossm.yaml"
+    "blossm.yaml",
   );
   const blossmConfig = yaml.parse(fs.readFileSync(functionPath, "utf8"));
 
@@ -89,6 +90,13 @@ const execute = async (input, configFn) => {
       config: rootConfig,
       env: input.env,
     });
+    const data = input.data && JSON.parse(input.data);
+    const executionData =
+      blossmConfig.procedure === "projection"
+        ? input.data
+          ? { ...data, playId: data.playId || uuid() }
+          : { replayId: uuid() }
+        : data;
 
     await gcpQueue.enqueue({
       queue:
@@ -97,13 +105,15 @@ const execute = async (input, configFn) => {
       computeUrlId,
       project,
     })({
-      url: `https://${input.region}-${operationName}-${operationHash}-${computeUrlId}.${input.region}.run.app/${urlPath({
-        config: blossmConfig,
-        data: input.data,
-      })}`,
+      url: `https://${input.region}-${operationName}-${operationHash}-${computeUrlId}.${input.region}.run.app/${urlPath(
+        {
+          config: blossmConfig,
+          data: input.data,
+        },
+      )}`,
       name: operationName,
       hash: operationHash,
-      ...(input.data && { data: JSON.parse(input.data) }),
+      ...(executionData && { data: executionData }),
     });
   } catch (err) {
     process.exitCode = 1;
@@ -111,60 +121,60 @@ const execute = async (input, configFn) => {
   }
 };
 
-export default ({ domain }) => async (args, configFn) => {
-  const blossmConfig = rootDir.config();
-  const input = await normalize({
-    entrypointType: "path",
-    entrypointDefault: ".",
-    args,
-    flags: [
-      {
-        name: "env",
-        type: String,
-        short: "e",
-        choices: ["production", "sandbox", "staging", "development"],
-        default: blossmConfig.defaultEnv || "development",
-      },
-      {
-        name: "data",
-        type: String,
-        short: "d",
-      },
-      {
-        name: "region",
-        type: String,
-        short: "r",
-        choices: [
-          "asia-east1",
-          "asia-east2",
-          "asia-northeast1",
-          "asia-northeast2",
-          "asia-northeast3",
-          "asia-south1",
-          "asia-southeast1",
-          "australia-southeast1",
-          "europe-north1",
-          "europe-west1",
-          "europe-west2",
-          "europe-west3",
-          "europe-west4",
-          "europe-west6",
-          "northamerica-northeast1",
-          "southamerica-east1",
-          "us-central1",
-          "us-east1",
-          "us-east4",
-          "us-west1",
-          "us-west2",
-          "us-west3",
-          "us-west4",
-        ],
-        default: "us-central1",
-      },
-    ],
-  });
+export default ({ domain }) =>
+  async (args, configFn) => {
+    const blossmConfig = rootDir.config();
+    const input = await normalize({
+      entrypointType: "path",
+      entrypointDefault: ".",
+      args,
+      flags: [
+        {
+          name: "env",
+          type: String,
+          short: "e",
+          choices: ["production", "sandbox", "staging", "development"],
+          default: blossmConfig.defaultEnv || "development",
+        },
+        {
+          name: "data",
+          type: String,
+          short: "d",
+        },
+        {
+          name: "region",
+          type: String,
+          short: "r",
+          choices: [
+            "asia-east1",
+            "asia-east2",
+            "asia-northeast1",
+            "asia-northeast2",
+            "asia-northeast3",
+            "asia-south1",
+            "asia-southeast1",
+            "australia-southeast1",
+            "europe-north1",
+            "europe-west1",
+            "europe-west2",
+            "europe-west3",
+            "europe-west4",
+            "europe-west6",
+            "northamerica-northeast1",
+            "southamerica-east1",
+            "us-central1",
+            "us-east1",
+            "us-east4",
+            "us-west1",
+            "us-west2",
+            "us-west3",
+            "us-west4",
+          ],
+          default: "us-central1",
+        },
+      ],
+    });
 
-  //eslint-disable-next-line no-console
-  console.log(roboSay(`Executing your ${domain.split("-").join(" ")}.`));
-  await execute(input, configFn);
-};
+    console.log(roboSay(`Executing your ${domain.split("-").join(" ")}.`));
+    await execute(input, configFn);
+  };

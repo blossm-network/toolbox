@@ -11,6 +11,8 @@ import viewStore from "@blossm/view-store";
 import formatSchema from "@blossm/format-mongodb-schema";
 import uuid from "@blossm/uuid";
 import uuidValidator from "@blossm/uuid-validator";
+import projectionSession from "@blossm/mongodb-projection-session";
+import { internalServer as internalServerError } from "@blossm/errors";
 
 export default {
   dateString,
@@ -18,5 +20,7 @@ export default {
   formatSchema,
   uuid,
   uuidValidator,
+  projectionSession,
+  internalServerError,
   db: { store, find, count, write, remove, aggregate },
 };

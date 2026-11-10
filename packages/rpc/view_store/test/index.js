@@ -74,7 +74,7 @@ describe("Get views", () => {
 
     expect(rpcFake).to.have.been.calledWith({
       region,
-      operationNameComponents: [name, context, "view-store"]
+      operationNameComponents: [name, context, "view-store"],
     });
     expect(getFake).to.have.been.calledWith({
       query,
@@ -112,7 +112,7 @@ describe("Get views", () => {
 
     expect(rpcFake).to.have.been.calledWith({
       region: envRegion,
-      operationNameComponents: [name, envContext, "view-store"]
+      operationNameComponents: [name, envContext, "view-store"],
     });
     expect(getFake).to.have.been.calledWith();
     expect(inFake).to.have.been.calledWith({});
@@ -144,7 +144,7 @@ describe("Get views", () => {
 
     expect(rpcFake).to.have.been.calledWith({
       region: envRegion,
-      operationNameComponents: [name, "view-store"]
+      operationNameComponents: [name, "view-store"],
     });
     expect(getFake).to.have.been.calledWith({ query, sort });
     expect(inFake).to.have.been.calledWith({
@@ -192,7 +192,7 @@ describe("Get views", () => {
 
     expect(rpcFake).to.have.been.calledWith({
       region,
-      operationNameComponents: [name, context, "view-store"]
+      operationNameComponents: [name, context, "view-store"],
     });
     expect(streamFake).to.have.been.calledWith(fn, { query, sort, parallel });
     expect(inFake).to.have.been.calledWith({ context: contexts });
@@ -225,7 +225,7 @@ describe("Get views", () => {
 
     expect(rpcFake).to.have.been.calledWith({
       region: envRegion,
-      operationNameComponents: [name, envContext, "view-store"]
+      operationNameComponents: [name, envContext, "view-store"],
     });
     expect(streamFake).to.have.been.calledWith(fn, { query });
     expect(inFake).to.have.been.calledWith({});
@@ -262,7 +262,7 @@ describe("Get views", () => {
 
     expect(rpcFake).to.have.been.calledWith({
       region: otherRegion,
-      operationNameComponents: [name, "view-store"]
+      operationNameComponents: [name, "view-store"],
     });
     expect(streamFake).to.have.been.calledWith(fn, { query, sort });
     expect(inFake).to.have.been.calledWith({
@@ -313,7 +313,7 @@ describe("Get views", () => {
 
     expect(rpcFake).to.have.been.calledWith({
       region: envRegion,
-      operationNameComponents: [name, context, "view-store"]
+      operationNameComponents: [name, context, "view-store"],
     });
     expect(putFake).to.have.been.calledWith(id, {
       update,
@@ -350,7 +350,7 @@ describe("Get views", () => {
 
     expect(rpcFake).to.have.been.calledWith({
       region: envRegion,
-      operationNameComponents: [name, envContext, "view-store"]
+      operationNameComponents: [name, envContext, "view-store"],
     });
     expect(putFake).to.have.been.calledWith(id, { update });
     expect(inFake).to.have.been.calledWith({});
@@ -375,7 +375,7 @@ describe("Get views", () => {
 
     expect(rpcFake).to.have.been.calledWith({
       region: envRegion,
-      operationNameComponents: [name, "view-store"]
+      operationNameComponents: [name, "view-store"],
     });
     expect(putFake).to.have.been.calledWith(id, { update });
     expect(inFake).to.have.been.calledWith({});
@@ -405,7 +405,7 @@ describe("Get views", () => {
 
     expect(rpcFake).to.have.been.calledWith({
       region: envRegion,
-      operationNameComponents: [name, context, "view-store"]
+      operationNameComponents: [name, context, "view-store"],
     });
     expect(deleteFake).to.have.been.calledWith(id, {
       query,
@@ -432,7 +432,7 @@ describe("Get views", () => {
 
     expect(rpcFake).to.have.been.calledWith({
       region: envRegion,
-      operationNameComponents: [name, envContext, "view-store"]
+      operationNameComponents: [name, envContext, "view-store"],
     });
     expect(deleteFake).to.have.been.calledWith(id);
     expect(inFake).to.have.been.calledWith({});
@@ -456,7 +456,7 @@ describe("Get views", () => {
 
     expect(rpcFake).to.have.been.calledWith({
       region: envRegion,
-      operationNameComponents: [name, "view-store"]
+      operationNameComponents: [name, "view-store"],
     });
     expect(deleteFake).to.have.been.calledWith(query);
     expect(inFake).to.have.been.calledWith({});
@@ -489,18 +489,17 @@ describe("View delete RPC composition", () => {
     const { default: rpc } = await import("../../generic/index.js");
     const { default: rpcDeps } = await import("../../generic/deps.js");
     const { default: request } = await import("../../../lib/request/index.js");
-    const { default: requestDeps } = await import(
-      "../../../lib/request/deps.js"
-    );
+    const { default: requestDeps } =
+      await import("../../../lib/request/deps.js");
     replace(deps, "rpc", rpc);
     replace(rpcDeps, "del", request.del);
     replace(
       rpcDeps,
       "operationToken",
-      fake.resolves({ token: "internal-token", type: "Bearer" })
+      fake.resolves({ token: "internal-token", type: "Bearer" }),
     );
     const transport = fake((options, callback) =>
-      callback(null, { statusCode: 204 })
+      callback(null, { statusCode: 204 }),
     );
     replace(requestDeps, "request", transport);
     const context = {
@@ -519,5 +518,28 @@ describe("View delete RPC composition", () => {
     expect(url.searchParams.get("context[tenant][root]")).to.equal("A");
     expect(url.searchParams.get("context[tenant][service]")).to.equal("core");
     expect(url.searchParams.get("context[tenant][network]")).to.equal("local");
+  });
+});
+
+describe("Projection session RPC composition", () => {
+  afterEach(restore);
+
+  it("sends session operations synchronously to the internal session route", async () => {
+    const { default: rpc } = await import("../../generic/index.js");
+    const { default: rpcDeps } = await import("../../generic/deps.js");
+    replace(deps, "rpc", rpc);
+    replace(rpcDeps, "operationToken", fake.resolves(null));
+    const post = fake.resolves({ statusCode: 200, body: {} });
+    replace(rpcDeps, "post", post);
+    await viewStore({ name: "example" }).projectionSession({
+      action: "begin",
+      playId: "stable",
+    });
+    expect(post).to.have.been.calledOnce;
+    expect(post.firstCall.args[0]).to.match(/\/projection-session$/);
+    expect(post.firstCall.args[1].body).to.deep.equal({
+      action: "begin",
+      playId: "stable",
+    });
   });
 });

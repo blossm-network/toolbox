@@ -18,9 +18,12 @@ export default async ({
   one,
   group,
   updateKeys,
+  projectionSessionFn,
 } = {}) => {
-  deps
-    .server()
+  let server = deps.server();
+  if (projectionSessionFn)
+    server = server.post(projectionSessionFn, { path: "/projection-session" });
+  server
     .get(deps.idStream({ streamFn, ...(queryFn && { queryFn }) }), {
       path: "/stream-ids",
     })
@@ -40,7 +43,7 @@ export default async ({
       }),
       {
         path: "/:id?",
-      }
+      },
     )
     .put(
       deps.put(
@@ -52,16 +55,16 @@ export default async ({
         },
         {
           path: "/:id",
-        }
-      )
+        },
+      ),
     )
     .delete(
       deps.del(
         { removeFn, groupsLookupFn, ...(group && { group }) },
         {
           path: "/:id?",
-        }
-      )
+        },
+      ),
     )
     .listen();
 };
