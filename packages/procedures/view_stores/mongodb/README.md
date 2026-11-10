@@ -10,3 +10,7 @@ options are preserved. Field paths inside other native options, such as
 partialFilterExpression or wildcardProjection, refer to the stored document and
 therefore include body. where appropriate. MongoDB enforces these constraints
 once the configured indexes initialize.
+
+An explicit single-field ascending index takes precedence over an automatically
+generated partial-word search helper on the same field. Its configured constraints
+and options are retained.
