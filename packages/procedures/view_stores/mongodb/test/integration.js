@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import mongoose from "mongoose";
 import server, { __resetStoresForTest } from "../index.js";
 import deps from "../deps.js";
+import del from "../../generic/delete/index.js";
 
 const uri = process.env.BLOSSM_TEST_MONGODB_URI;
 const integration = uri ? describe : describe.skip;
@@ -11,6 +12,7 @@ integration("MongoDB view store startup", function () {
   const environment = { ...process.env };
   const viewStore = deps.viewStore;
   let connected = false;
+  let composition;
 
   before(async () => {
     assert.match(
@@ -49,7 +51,8 @@ integration("MongoDB view store startup", function () {
 
   it("starts with one unique view-ID index and rejects duplicate IDs", async () => {
     let serving = false;
-    deps.viewStore = () => {
+    deps.viewStore = (options) => {
+      composition = options;
       serving = true;
     };
     await server({
@@ -77,5 +80,68 @@ integration("MongoDB view store startup", function () {
     };
     await model.create(view);
     await assert.rejects(model.create(view), (error) => error.code === 11000);
+  });
+
+  it("deletes only the selected tenant's row and rejects unsafe selectors", async () => {
+    const model = mongoose.model("views");
+    const context = (root) => ({
+      root,
+      domain: "tenant",
+      service: "core",
+      network: "local",
+    });
+    await model.insertMany([
+      {
+        headers: { id: "tenant-b", context: context("B") },
+        body: { value: 2 },
+      },
+      {
+        headers: { id: "tenant-a", context: context("A") },
+        body: { value: 2 },
+      },
+    ]);
+    let result;
+    const response = {
+      status: (code) => {
+        assert.equal(code, 200);
+        return {
+          send: (body) => {
+            result = body;
+          },
+        };
+      },
+    };
+    const handler = del({ removeFn: composition.removeFn });
+    await handler(
+      {
+        params: {},
+        query: {
+          query: { value: 2 },
+          context: { tenant: context("A") },
+        },
+      },
+      response
+    );
+    assert.deepEqual(result, { deletedCount: 1 });
+    assert.equal(await model.countDocuments({ "headers.id": "tenant-a" }), 0);
+    assert.equal(await model.countDocuments({ "headers.id": "tenant-b" }), 1);
+    await assert.rejects(
+      handler(
+        {
+          params: {},
+          query: {
+            query: {},
+            context: { tenant: context("B") },
+          },
+        },
+        response
+      ),
+      (error) => error.statusCode === 400
+    );
+    await assert.rejects(
+      handler({ params: { id: "tenant-b" }, query: {} }, response),
+      (error) => error.statusCode === 403
+    );
+    assert.equal(await model.countDocuments({ "headers.id": "tenant-b" }), 1);
   });
 });
