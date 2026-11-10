@@ -1,15 +1,11 @@
 import { expect } from "chai";
-import { replace, restore } from "sinon";
 import post from "../index.js";
-import deps from "../deps.js";
 
 describe("Transactional counter ordering", () => {
-  afterEach(restore);
   it("serializes roots in stable order within one transaction", async () => {
     let active = 0;
     let maximum = 0;
     const roots = [];
-    replace(deps, "hash", () => ({ create: () => "hash" }));
     await post({
       eventData: ["z", "a"].map((root) => ({
         event: {
@@ -34,5 +30,36 @@ describe("Transactional counter ordering", () => {
     })("session");
     expect(maximum).to.equal(1);
     expect(roots).to.deep.equal(["a", "z"]);
+  });
+  it("stops reserving roots and does not save events after a reservation fails", async () => {
+    const failure = new Error("reservation failed");
+    const roots = [];
+    let saved = false;
+    try {
+      await post({
+        eventData: ["z", "a"].map((root) => ({
+          event: {
+            headers: {
+              root,
+              domain: process.env.DOMAIN,
+              service: process.env.SERVICE,
+              network: process.env.NETWORK,
+            },
+          },
+        })),
+        reserveRootCountsFn: async ({ root }) => {
+          roots.push(root);
+          throw failure;
+        },
+        saveEventsFn: async () => {
+          saved = true;
+        },
+      })("session");
+      expect.fail("a failed reservation must reject");
+    } catch (error) {
+      expect(error).to.equal(failure);
+    }
+    expect(roots).to.deep.equal(["a"]);
+    expect(saved).to.equal(false);
   });
 });
