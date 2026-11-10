@@ -150,8 +150,15 @@ export default async ({
       }
 
       if (newPartialWordIndexes.length > 0)
-        for (const index of newPartialWordIndexes)
-          customIndexes.push([{ [index]: 1 }]);
+        for (const field of newPartialWordIndexes)
+          if (
+            !indexes.some(
+              ([keys]) =>
+                Object.keys(keys).length === 1 &&
+                keys[field.slice("body.".length)] === 1
+            )
+          )
+            customIndexes.push([{ [field]: 1 }]);
 
       const customOptions = { ...index[1] };
 

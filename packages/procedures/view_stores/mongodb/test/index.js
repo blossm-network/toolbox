@@ -64,6 +64,7 @@ describe("View store", () => {
       indexes: [
         [{ email: 1 }, options],
         [{ title: "text" }, { name: "custom-search", weights: { title: 3 } }],
+        [{ title: 1 }, { unique: true, sparse: true }],
         [{ optional: 1 }, { sparse: true }],
         [{ other: 1 }],
       ],
@@ -77,6 +78,10 @@ describe("View store", () => {
       { name: "custom-search", weights: { "body.title": 3 } },
     ]);
     expect(built.filter(([keys]) => keys["body.title"] === 1)).to.have.length(1);
+    expect(built).to.deep.include([
+      { "body.title": 1 },
+      { unique: true, sparse: true },
+    ]);
   });
 
   it("should preserve ID-only creation and disable guarded or positional upserts", async () => {

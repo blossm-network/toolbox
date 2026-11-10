@@ -42,9 +42,22 @@ integration("MongoDB view store startup", function () {
     await server({
       schema: {
         value: Number,
+        email: String,
+        enabled: Boolean,
+        optional: String,
+        title: String,
         status: String,
         items: [{ id: String, label: String }],
       },
+      indexes: [
+        [
+          { email: 1 },
+          { unique: true, partialFilterExpression: { "body.enabled": true } },
+        ],
+        [{ optional: 1 }, { sparse: true }],
+        [{ title: "text" }, { name: "custom-search", weights: { title: 3 } }],
+        [{ title: 1 }, { unique: true, sparse: true }],
+      ],
       secretFn: async () => undefined,
     });
   });
@@ -271,5 +284,54 @@ integration("MongoDB view store startup", function () {
     assert.equal(await model.countDocuments({ "headers.id": "guarded" }), 1);
     await run({ id: "guarded", query: { status: "active" }, del: true });
     assert.equal(await model.countDocuments({ "headers.id": "guarded" }), 0);
+  });
+
+  it("enforces configured partial uniqueness and retains sparse/text index options", async () => {
+    const model = mongoose.model("views");
+    const indexes = await model.collection.indexes();
+    const email = indexes.find(({ key }) => key["body.email"] === 1);
+    assert.equal(email.unique, true);
+    assert.deepEqual(email.partialFilterExpression, { "body.enabled": true });
+    assert.equal(
+      indexes.find(({ key }) => key["body.optional"] === 1).sparse,
+      true
+    );
+    assert.equal(
+      indexes.find(({ name }) => name === "custom-search").weights[
+        "body.title"
+      ],
+      3
+    );
+    const title = indexes.filter(({ key }) => key["body.title"] === 1);
+    assert.equal(title.length, 1);
+    assert.equal(title[0].unique, true);
+    assert.equal(title[0].sparse, true);
+    const row = (id, enabled, title) => ({
+      headers: {
+        id,
+        context: {
+          root: "A",
+          domain: "tenant",
+          service: "core",
+          network: "local",
+        },
+      },
+      body: { email: "same@example.invalid", enabled, title },
+    });
+    await model.create(row("index-one", true, "alpha"));
+    await assert.rejects(
+      model.create(row("index-two", true, "beta")),
+      (error) => error.code === 11000 && error.keyPattern["body.email"] === 1
+    );
+    await model.create(row("index-three", false, "gamma"));
+    await model.create(row("index-four", false, "delta"));
+    await assert.rejects(
+      model.create(row("index-five", false, "alpha")),
+      (error) => error.code === 11000 && error.keyPattern["body.title"] === 1
+    );
+    assert.equal(
+      await model.countDocuments({ $text: { $search: "alpha" } }),
+      1
+    );
   });
 });
