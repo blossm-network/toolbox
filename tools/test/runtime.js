@@ -8,6 +8,12 @@ import {
   dockerImage,
 } from "../../packages/cli/utils/merge_cli_template/runtime.js";
 import install from "../../packages/cli/utils/merge_cli_template/src/write_build/steps/yarn_install.js";
+import unitTests from "../../packages/cli/utils/merge_cli_template/src/write_build/steps/unit_tests.js";
+import baseUnitTests from "../../packages/cli/utils/merge_cli_template/src/write_build/steps/base_unit_tests.js";
+import integrationTests from "../../packages/cli/utils/merge_cli_template/src/write_build/steps/integration_tests.js";
+import baseIntegrationTests from "../../packages/cli/utils/merge_cli_template/src/write_build/steps/base_integration_tests.js";
+import writeEnv from "../../packages/cli/utils/merge_cli_template/src/write_build/steps/write_env.js";
+
 import database from "../../packages/cli/utils/merge_cli_template/src/write_compose/database_service.js";
 import composeUp from "../../packages/cli/utils/merge_cli_template/src/write_build/steps/docker_compose_up.js";
 import composePs from "../../packages/cli/utils/merge_cli_template/src/write_build/steps/docker_compose_processes.js";
@@ -20,7 +26,17 @@ test("generated runtime copies match the single version owner", () => {
 });
 
 test("generated services select pinned supported runtime images", () => {
-  assert.equal(install.name, nodeImage);
+  for (const step of [
+    install,
+    unitTests,
+    baseUnitTests,
+    integrationTests(),
+    baseIntegrationTests(),
+    writeEnv(),
+  ]) {
+    assert.equal(step.name, nodeImage);
+  }
+  assert.equal(writeEnv().entrypoint, "node");
   assert.equal(database({}).image, mongoImage);
   for (const step of [composeUp, composePs, composeLogs]) {
     assert.equal(step.name, dockerImage);
