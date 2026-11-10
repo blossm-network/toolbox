@@ -3,6 +3,7 @@ import deps from "./deps.js";
 export default async ({
   permissions = [],
   context = {},
+  subject,
   password = "asdfasdfasdf",
   email,
 } = {}) => {
@@ -13,115 +14,129 @@ export default async ({
   const sessionRoot = deps.uuid();
 
   // Create the account for the token.
-  await deps.eventStore({
-    domain: "account",
-    service: "core",
-  }).add({
-    eventData: [
-      {
-        event: deps.createEvent({
-          root: accountRoot,
-          payload: {
-            principal: {
-              root: principalRoot,
-              service: process.env.SERVICE,
-              network: process.env.NETWORK,
+  await deps
+    .eventStore({
+      domain: "account",
+      service: "core",
+    })
+    .add({
+      eventData: [
+        {
+          event: deps.createEvent({
+            root: accountRoot,
+            payload: {
+              principal: {
+                root: principalRoot,
+                service: "core",
+                network: process.env.NETWORK,
+              },
+              password: await deps.hash(password),
+              email,
             },
-            password: await deps.hash(password),
-            email,
-          },
-          action: "register",
-          domain: "account",
-          service: "core",
-          network: process.env.NETWORK,
-        }),
-      },
-    ],
-  });
+            action: "register",
+            domain: "account",
+            service: "core",
+            network: process.env.NETWORK,
+          }),
+        },
+      ],
+    });
 
   // Add permissions to the role
   // and add role to the principal.
   await Promise.all([
-    deps.eventStore({
-      domain: "role",
-      service: "core",
-    }).add({
-      eventData: [
-        {
-          event: deps.createEvent({
-            root: roleRoot,
-            payload: {
-              id: roleId,
-              permissions,
-            },
-            action: "create",
-            domain: "role",
-            service: "core",
-            network: process.env.NETWORK,
-          }),
-        },
-      ],
-    }),
-    deps.eventStore({
-      domain: "principal",
-      service: "core",
-    }).add({
-      eventData: [
-        {
-          event: deps.createEvent({
-            root: principalRoot,
-            payload: {
-              roles: [
-                {
-                  id: roleId,
-                  service: process.env.SERVICE,
-                  network: process.env.NETWORK,
-                },
-              ],
-            },
-            action: "add-roles",
-            domain: "principal",
-            service: "core",
-            network: process.env.NETWORK,
-          }),
-        },
-      ],
-    }),
+    deps
+      .eventStore({
+        domain: "role",
+        service: "core",
+      })
+      .add({
+        eventData: [
+          {
+            event: deps.createEvent({
+              root: roleRoot,
+              payload: {
+                id: roleId,
+                network: process.env.NETWORK,
+                permissions,
+              },
+              action: "create",
+              domain: "role",
+              service: "core",
+              network: process.env.NETWORK,
+            }),
+          },
+        ],
+      }),
+    deps
+      .eventStore({
+        domain: "principal",
+        service: "core",
+      })
+      .add({
+        eventData: [
+          {
+            event: deps.createEvent({
+              root: principalRoot,
+              payload: {
+                roles: [
+                  {
+                    id: roleId,
+                    subject: subject || {
+                      root: principalRoot,
+                      domain: "principal",
+                      service: "core",
+                      network: process.env.NETWORK,
+                    },
+                  },
+                ],
+              },
+              action: "add-roles",
+              domain: "principal",
+              service: "core",
+              network: process.env.NETWORK,
+            }),
+          },
+        ],
+      }),
   ]);
 
   // Add a session.
-  await deps.eventStore({
-    domain: "session",
-    service: "core",
-  }).add({
-    eventData: [
-      {
-        event: deps.createEvent({
-          root: sessionRoot,
-          payload: {},
-          action: "start",
-          domain: "session",
-          service: "core",
-          network: process.env.NETWORK,
-        }),
-      },
-    ],
-  });
+  await deps
+    .eventStore({
+      domain: "session",
+      service: "core",
+    })
+    .add({
+      eventData: [
+        {
+          event: deps.createEvent({
+            root: sessionRoot,
+            payload: {},
+            action: "start",
+            domain: "session",
+            service: "core",
+            network: process.env.NETWORK,
+          }),
+        },
+      ],
+    });
 
   const {
     body: { _tokens },
-  } = await deps.command({
-    name: "upgrade",
-    domain: "session",
-    service: "core",
-  })
+  } = await deps
+    .command({
+      name: "upgrade",
+      domain: "session",
+      service: "core",
+    })
     .set({
       context: {
         network: process.env.NETWORK,
         ...context,
         session: {
           root: sessionRoot,
-          service: process.env.SERVICE,
+          service: "core",
           network: process.env.NETWORK,
         },
       },
@@ -139,8 +154,45 @@ export default async ({
           network: process.env.NETWORK,
         },
       },
-      { root: sessionRoot }
+      { root: sessionRoot },
     );
 
   return { token: _tokens[0].value };
+};
+
+// Shared by generated gateway integration suites; route protection and grants
+// must agree before a valid fixture token can exercise the HTTP boundary.
+export const gatewayTokenOptions = (
+  { protection = "strict", privileges, permissions, context: routeContext },
+  {
+    context = {},
+    contextName,
+    domain = process.env.DOMAIN,
+    service = process.env.SERVICE,
+  } = {},
+) => {
+  if (protection !== "strict" && typeof protection !== "object") return;
+  const tokenContext = {
+    ...context,
+    ...(typeof protection === "object" &&
+      Object.fromEntries(
+        Object.entries(protection).map(([key, values]) => [key, values[0]]),
+      )),
+  };
+  const subjectName = routeContext || contextName;
+  const grants = permissions === undefined ? privileges : permissions;
+  return {
+    permissions: !Array.isArray(grants)
+      ? []
+      : grants.map((grant) => {
+          if (permissions === undefined)
+            return { privilege: grant, domain, service };
+          const [grantService, grantDomain, privilege] = grant.split(":");
+          return { service: grantService, domain: grantDomain, privilege };
+        }),
+    context: tokenContext,
+    ...(tokenContext[subjectName] && {
+      subject: { ...tokenContext[subjectName], domain: subjectName },
+    }),
+  };
 };

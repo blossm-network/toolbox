@@ -1,7 +1,7 @@
 import "localenv";
 import * as chai from "chai";
 import { string as dateString } from "@blossm/datetime";
-import getToken from "@blossm/get-token";
+import getToken, { gatewayTokenOptions } from "@blossm/get-token";
 import gcpPubsub from "@blossm/gcp-pubsub";
 
 import request from "@blossm/request";
@@ -15,57 +15,31 @@ const existingTopics = [];
 describe("Command gateway integration tests", () => {
   before(async () => {
     const existence = await Promise.all(
-      config.testing.topics.map((topic) => gcpPubsub.exists(topic))
+      config.testing.topics.map((topic) => gcpPubsub.exists(topic)),
     );
-    existingTopics.push(...config.testing.topics.filter((_, i) => existence[i]));
+    existingTopics.push(
+      ...config.testing.topics.filter((_, i) => existence[i]),
+    );
     await Promise.all(config.testing.topics.map((t) => gcpPubsub.create(t)));
   });
   after(
     async () =>
       await Promise.all(
-        [...config.testing.topics].map((t) => !existingTopics.includes(t) && gcpPubsub.del(t))
-      )
+        [...config.testing.topics].map(
+          (t) => !existingTopics.includes(t) && gcpPubsub.del(t),
+        ),
+      ),
   );
   it("should return successfully", async () => {
-    const requiredPermissions = config.commands.reduce((permissions, command) => {
-      return command.privileges == "none"
-        ? permissions
-        : [
-            ...new Set([
-              ...permissions,
-              ...(command.privileges
-                ? command.privileges.map((privilege) => {
-                    return {
-                      privilege,
-                      domain: process.env.DOMAIN,
-                      service: process.env.SERVICE,
-                    };
-                  })
-                : []),
-            ]),
-          ];
-    }, []);
-
     const parallelFns = [];
     for (const command of config.commands) {
+      const tokenOptions = gatewayTokenOptions(command, {
+        context: config.testing.context,
+        contextName: config.context,
+      });
+      const needsToken = tokenOptions !== undefined;
+      const { token } = needsToken ? await getToken(tokenOptions) : {};
       parallelFns.push(async () => {
-        const needsToken =
-          command.protection == undefined ||
-          command.protection == "strict" ||
-          typeof command.protection == "object";
-
-        const { token } = needsToken
-          ? await getToken({
-              permissions: requiredPermissions,
-              ...(typeof command.protection == "object" && {
-                ...Object.keys(command.protection).reduce((result, key) => {
-                  result[key] = command.protection[key][0];
-                  return result;
-                }, {}),
-              }),
-            })
-          : {};
-
         const response0 = await request.post(`${url}/${command.name}`, {
           body: {
             headers: {
@@ -75,17 +49,17 @@ describe("Command gateway integration tests", () => {
             payload: {},
           },
           ...(needsToken && {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }),
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
         });
 
         expect(response0.statusCode).to.not.equal(401);
         expect(response0.statusCode).to.be.lessThan(500);
       });
 
-      if (!(command.protection == undefined || command.protection == "strict" || typeof command.protection == "object")) continue;
+      if (!needsToken) continue;
 
       parallelFns.push(async () => {
         const response1 = await request.post(`${url}/${command.name}`, {

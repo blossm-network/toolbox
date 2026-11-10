@@ -1,6 +1,6 @@
 import "localenv";
 import * as chai from "chai";
-import getToken from "@blossm/get-token";
+import getToken, { gatewayTokenOptions } from "@blossm/get-token";
 import { decode } from "@blossm/jwt";
 import gcpPubsub from "@blossm/gcp-pubsub";
 
@@ -17,82 +17,80 @@ const existingTopics = [];
 describe("View gateway integration tests", () => {
   before(async () => {
     const existence = await Promise.all(
-      config.testing.topics.map((topic) => gcpPubsub.exists(topic))
+      config.testing.topics.map((topic) => gcpPubsub.exists(topic)),
     );
-    existingTopics.push(...config.testing.topics.filter((_, i) => existence[i]));
+    existingTopics.push(
+      ...config.testing.topics.filter((_, i) => existence[i]),
+    );
     await Promise.all(config.testing.topics.map((t) => gcpPubsub.create(t)));
   });
   after(
     async () =>
       await Promise.all(
-        [...config.testing.topics].map((t) => !existingTopics.includes(t) && gcpPubsub.del(t))
-      )
+        [...config.testing.topics].map(
+          (t) => !existingTopics.includes(t) && gcpPubsub.del(t),
+        ),
+      ),
   );
   it("should return successfully", async () => {
-    const requiredPermissions = config.views.reduce((permissions, view) => {
-      return !view.permissions || view.permissions == "none"
-        ? permissions
-        : [...new Set([...permissions, ...view.permissions])];
-    }, []);
-
     const parallelFns = [];
     for (const view of config.views) {
-      const needsToken =
-        view.protection == undefined ||
-        view.protection == "strict" ||
-        typeof view.protection == "object";
-
-      const { token } = needsToken
-        ? await getToken({
-            permissions: requiredPermissions,
-            ...(typeof view.protection == "object" && {
-              ...Object.keys(view.protection).reduce((result, key) => {
-                result[key] = view.protection[key][0];
-                return result;
-              }, {}),
-            }),
-          })
-        : {};
+      const tokenOptions = gatewayTokenOptions(view, {
+        context: config.testing.context,
+        contextName: config.context,
+      });
+      const needsToken = tokenOptions !== undefined;
+      const { token } = needsToken ? await getToken(tokenOptions) : {};
+      const tokenContext = token ? decode(token).claims.context : {};
+      const missingContext = config.context && !tokenContext[config.context];
+      const strict =
+        view.protection === undefined || view.protection === "strict";
+      const emptyPermissions =
+        Array.isArray(view.permissions) && view.permissions.length === 0;
       parallelFns.push(async () => {
-        //Channels are only available to contexts.
-        if (!token) return;
-
-        const {
-          claims: { context: tokenContext },
-        } = decode(token);
-
-        //Test channel getting.
-        const response = await request.get(`${url}`, {
-          body: {
-            query: {
-              name: view.name,
-            },
-            context: tokenContext,
-          },
+        // Channel discovery uses explicit query context, not Bearer authentication.
+        const response = await request.get(url, {
+          query: { name: view.name, context: tokenContext },
         });
-        expect(response.statusCode).to.equal(200);
+        expect(response.statusCode).to.equal(
+          strict && emptyPermissions ? 401 : missingContext ? 403 : 200,
+        );
       });
       parallelFns.push(async () => {
         const response0 = await request.get(`${url}/${view.name}`, {
-          body: {
+          query: {
             root,
           },
           ...(needsToken && {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }),
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
         });
-        expect(response0.statusCode).to.equal(200);
-        expect(response0.statusCode).to.not.equal(401);
-        expect(response0.statusCode).to.be.lessThan(500);
+        expect(response0.statusCode).to.equal(
+          strict && emptyPermissions ? 401 : missingContext ? 403 : 200,
+        );
       });
+
+      // A strict permission policy needs a principal in the supplied context.
+      // Omitted permissions and non-strict discovery support contextless calls.
+      if (
+        !view.permissions ||
+        (view.protection && view.protection !== "strict")
+      ) {
+        parallelFns.push(async () => {
+          const response = await request.get(url, {
+            query: { name: view.name },
+          });
+          expect(response.statusCode).to.equal(config.context ? 403 : 200);
+        });
+      }
 
       if (!needsToken) continue;
 
       parallelFns.push(async () => {
         const response1 = await request.get(`${url}/${view.name}`, {
-          body: {
+          query: {
             root,
           },
         });
@@ -102,7 +100,7 @@ describe("View gateway integration tests", () => {
 
       parallelFns.push(async () => {
         const response2 = await request.get(`${url}/${view.name}`, {
-          body: {
+          query: {
             root,
           },
           headers: {
@@ -111,19 +109,6 @@ describe("View gateway integration tests", () => {
         });
 
         expect(response2.statusCode).to.equal(401);
-      });
-
-      if (view.protection == "none") continue;
-
-      parallelFns.push(async () => {
-        const response3 = await request.get(`${url}`, {
-          body: {
-            query: {
-              name: view.name,
-            },
-          },
-        });
-        expect(response3.statusCode).to.equal(401);
       });
     }
 

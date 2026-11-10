@@ -1,6 +1,6 @@
 import "localenv";
 import * as chai from "chai";
-import getToken from "@blossm/get-token";
+import getToken, { gatewayTokenOptions } from "@blossm/get-token";
 import gcpPubsub from "@blossm/gcp-pubsub";
 
 import request from "@blossm/request";
@@ -16,65 +16,40 @@ const existingTopics = [];
 describe("Fact gateway integration tests", () => {
   before(async () => {
     const existence = await Promise.all(
-      config.testing.topics.map((topic) => gcpPubsub.exists(topic))
+      config.testing.topics.map((topic) => gcpPubsub.exists(topic)),
     );
-    existingTopics.push(...config.testing.topics.filter((_, i) => existence[i]));
+    existingTopics.push(
+      ...config.testing.topics.filter((_, i) => existence[i]),
+    );
     await Promise.all(config.testing.topics.map((t) => gcpPubsub.create(t)));
   });
   after(
     async () =>
       await Promise.all(
-        [...config.testing.topics].map((t) => !existingTopics.includes(t) && gcpPubsub.del(t))
-      )
+        [...config.testing.topics].map(
+          (t) => !existingTopics.includes(t) && gcpPubsub.del(t),
+        ),
+      ),
   );
   it("should return successfully", async () => {
-    const requiredPermissions = config.facts.reduce((permissions, command) => {
-      return command.privileges == "none"
-        ? permissions
-        : [
-            ...new Set([
-              ...permissions,
-              ...(command.privileges
-                ? command.privileges.map((privilege) => {
-                    return {
-                      privilege,
-                      domain: process.env.DOMAIN,
-                      service: process.env.SERVICE,
-                    };
-                  })
-                : []),
-            ]),
-          ];
-    }, []);
-
     const parallelFns = [];
     for (const fact of config.facts) {
-      const needsToken =
-        fact.protection == undefined ||
-        fact.protection == "strict" ||
-        typeof fact.protection == "object";
-
-      const { token } = needsToken
-        ? await getToken({
-            permissions: requiredPermissions,
-            ...(typeof fact.protection == "object" && {
-              ...Object.keys(fact.protection).reduce((result, key) => {
-                result[key] = fact.protection[key][0];
-                return result;
-              }, {}),
-            }),
-          })
-        : {};
+      const tokenOptions = gatewayTokenOptions(fact, {
+        context: config.testing.context,
+        contextName: config.context,
+      });
+      const needsToken = tokenOptions !== undefined;
+      const { token } = needsToken ? await getToken(tokenOptions) : {};
       parallelFns.push(async () => {
         const response0 = await request.get(`${url}/${fact.name}`, {
-          body: {
+          query: {
             root,
           },
           ...(needsToken && {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }),
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
         });
         expect(response0.statusCode).to.not.equal(401);
         expect(response0.statusCode).to.be.lessThan(500);
@@ -84,7 +59,7 @@ describe("Fact gateway integration tests", () => {
 
       parallelFns.push(async () => {
         const response1 = await request.get(`${url}/${fact.name}`, {
-          body: {
+          query: {
             root,
           },
         });
@@ -94,7 +69,7 @@ describe("Fact gateway integration tests", () => {
 
       parallelFns.push(async () => {
         const response2 = await request.get(`${url}/${fact.name}`, {
-          body: {
+          query: {
             root,
           },
           headers: {
