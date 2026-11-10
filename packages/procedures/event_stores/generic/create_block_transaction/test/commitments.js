@@ -1,36 +1,34 @@
 import { strict as assert } from "node:assert";
-import { replace, restore } from "sinon";
 import { decode } from "@blossm/rlp";
 import hash from "@blossm/hash";
 import createBlock from "../index.js";
-import deps from "../deps.js";
+import post from "@blossm/event-store-post-transaction";
+import { root as merkleRoot, verify } from "@blossm/merkle-tree";
 
 describe("Block canonical commitments", () => {
-  afterEach(restore);
   for (const isPublic of [true, false])
     it(`preserves Boolean event exports and snapshots, public=${isPublic}`, async () => {
-      const events = [
-        {
-          hash: "old",
-          headers: { number: 0 },
-          payload: { enabled: true },
-          tx: { id: "tx" },
+      let events;
+      await post({
+        eventData: [true, false].map((enabled) => ({
+          event: {
+            headers: {
+              root: "r",
+              action: "set",
+              created: "2026-01-02T00:00:00.000Z",
+              domain: process.env.DOMAIN,
+              service: process.env.SERVICE,
+              network: process.env.NETWORK,
+            },
+            payload: { enabled },
+          },
+        })),
+        tx: { id: "tx" },
+        reserveRootCountsFn: async () => ({ root: "r", value: 2 }),
+        saveEventsFn: async ({ events: saved }) => {
+          events = saved;
         },
-        {
-          hash: "new",
-          headers: { number: 1 },
-          payload: { enabled: false },
-          tx: { id: "tx" },
-        },
-      ];
-      replace(deps, "aggregate", () => async () => ({
-        headers: { lastEventNumber: 1 },
-        events,
-        context: {},
-        groups: [],
-        state: { enabled: false },
-        txIds: ["tx"],
-      }));
+      })();
       let snapshot;
       const encrypted = [];
       const { block } = await createBlock({
@@ -40,6 +38,11 @@ describe("Block canonical commitments", () => {
         }),
         rootStreamFn: async ({ fn }) =>
           fn({ root: "r", updated: "2026-01-02T00:00:00.000Z" }),
+        findOneSnapshotFn: async () => null,
+        eventStreamFn: async ({ fn }) => {
+          for (const event of events) await fn(event);
+        },
+        handlers: { set: (_, payload) => payload },
         saveSnapshotFn: async ({ snapshot: s }) => {
           snapshot = s;
           return s;
@@ -59,17 +62,41 @@ describe("Block canonical commitments", () => {
         snapshot.headers.sHash,
         "c5d6675dd3e3782f9edc5d568b0db07d6f64a9f23075e2f2c9406084f619d7f0"
       );
-      assert.equal(
-        snapshot.hash,
-        hash(snapshot.headers).create()
-      );
-      assert.equal(
-        block.hash,
-        hash(block.headers).create()
-      );
+      assert.equal(snapshot.hash, hash(snapshot.headers).create());
+      assert.equal(block.hash, hash(block.headers).create());
+      for (const [field, rootField] of [
+        ["events", "eRoot"],
+        ["snapshots", "sRoot"],
+        ["txs", "tRoot"],
+      ]) {
+        const pairs = decode(block[field]).map((pair) =>
+          pair.map((value) => Buffer.from(value).toString())
+        );
+        assert.equal(
+          (await merkleRoot(pairs)).toString("base64"),
+          block.headers[rootField]
+        );
+        for (const [key, value] of pairs)
+          assert.equal(
+            await verify({
+              pairs,
+              key,
+              value,
+              root: Buffer.from(block.headers[rootField], "base64"),
+            }),
+            true
+          );
+      }
       const exported = decode(block.events).map(([, value]) =>
         JSON.parse(Buffer.from(value).toString())
       );
+      for (const event of exported) {
+        const payload = isPublic
+          ? event.payload
+          : JSON.parse(event.payload.slice("encrypted:".length));
+        assert.equal(hash(payload).create(), event.headers.pHash);
+        assert.equal(hash(event.headers).create(), event.hash);
+      }
       if (isPublic)
         assert.deepEqual(
           exported.map((e) => e.payload),

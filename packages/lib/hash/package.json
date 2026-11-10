@@ -1,7 +1,7 @@
 {
   "name": "@blossm/hash",
   "version": "0.0.13",
-  "description": "SHA 256 hash.",
+  "description": "Keccak-256 hash of canonical JSON values.",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",

@@ -23,6 +23,7 @@
     "@blossm/rlp": "^0.0.4"
   },
   "devDependencies": {
+    "@blossm/event-store-post-transaction": "^0.0.47",
     "chai-datetime": "^1.8.1",
     "mocha": "^11.6.0",
     "sinon": "^21.0.0",
