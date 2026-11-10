@@ -1,6 +1,8 @@
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, replace, fake, stub, match } from "sinon";
+import { PassThrough } from "node:stream";
+import { finished } from "node:stream/promises";
 
 import deps from "../deps.js";
 import aggregateStream from "../index.js";
@@ -24,6 +26,24 @@ const aggregateContext = "some-aggragate-context";
 describe("Event store aggregate stream", () => {
   afterEach(() => {
     restore();
+  });
+  it("finishes an empty Node stream with real aggregation for an absent root", async () => {
+    const res = new PassThrough();
+    const chunks = [];
+    res.on("data", (chunk) => chunks.push(chunk));
+    try {
+      await aggregateStream({
+        findOneSnapshotFn: async () => undefined,
+        eventStreamFn: async () => {},
+        handlers: {},
+      })({ query: { root: "missing" } }, res);
+      expect(res.writableEnded).to.equal(true);
+      await finished(res);
+      expect(res.readableEnded).to.equal(true);
+      expect(chunks).to.deep.equal([]);
+    } finally {
+      res.destroy();
+    }
   });
   it("ends the response without writing when a requested root does not exist", async () => {
     replace(deps, "aggregate", fake.returns(fake.resolves(undefined)));
