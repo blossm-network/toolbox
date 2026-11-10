@@ -49,6 +49,7 @@ describe("Callbacks after committed event outcomes", () => {
     const outcomes = [];
     const upgrade = fake.resolves({ response: { upgraded: true } });
     const store = eventPost({
+      normalizeTransactionFn: (tx) => tx,
       idempotencyConflictCheckFn: async (key) => {
         if (delayDuplicateLookup && ++checks > 1) await firstCommit;
         return written.some((event) => event.headers.idempotency === key);
