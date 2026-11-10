@@ -64,7 +64,13 @@ describe("Mongodb event store create transaction", () => {
     expect(endSessionFake).to.not.have.been.called;
     expect(startSessionFake).to.not.have.been.called;
   });
-  for (const failure of ["callback", "transaction", "cleanup", "transaction and cleanup"]) {
+  for (const failure of [
+    "callback",
+    "transaction",
+    "cleanup",
+    "callback and cleanup",
+    "transaction and cleanup",
+  ]) {
     it(`ends sessions after ${failure} failure and preserves the primary error`, async () => {
       const primary = new Error("primary failure");
       const cleanup = new Error("cleanup failure");
@@ -81,7 +87,7 @@ describe("Mongodb event store create transaction", () => {
       let actual;
       try {
         await createTransaction(async () => {
-          if (failure == "callback") throw primary;
+          if (failure.includes("callback")) throw primary;
           return "result";
         });
       } catch (err) {
@@ -91,5 +97,25 @@ describe("Mongodb event store create transaction", () => {
       expect(session.endSession).to.have.been.calledOnce;
     });
   }
-
+  it("waits for session cleanup before returning the transaction result", async () => {
+    let finishCleanup;
+    const cleanup = new Promise((resolve) => {
+      finishCleanup = resolve;
+    });
+    const session = {
+      withTransaction: async (fn) => fn(),
+      endSession: fake(() => cleanup),
+    };
+    replace(deps, "db", { startSession: fake.resolves(session) });
+    let completed = false;
+    const pending = createTransaction(async () => "result").then((result) => {
+      completed = true;
+      return result;
+    });
+    await new Promise((resolve) => setImmediate(resolve));
+    expect(session.endSession).to.have.been.calledOnce;
+    expect(completed).to.equal(false);
+    finishCleanup();
+    expect(await pending).to.equal("result");
+  });
 });
