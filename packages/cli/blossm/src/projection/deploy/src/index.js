@@ -413,11 +413,7 @@ export default projection({
 
         const composedQuery = query && cleanQuery(query, update);
 
-        const composedUpdate = composeUpdate(
-          update,
-          composedQuery,
-          matchDelimiter
-        );
+        const composedUpdate = composeUpdate(update, query, matchDelimiter);
 
         const aggregateContext =
           process.env.CONTEXT &&
