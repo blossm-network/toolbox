@@ -1,232 +1,84 @@
-import * as chai from "chai";
+import { expect } from "chai";
 import sinonChai from "sinon-chai";
-import { restore, replace, fake } from "sinon";
-
-import del from "../index.js";
+import * as chai from "chai";
+import { fake, replace, restore } from "sinon";
+import * as api from "../index.js";
 import deps from "../deps.js";
 
 chai.use(sinonChai);
-const { expect } = chai;
 
-const query = { a: 1 };
-const contextRoot = "some-context-root";
-const contextDomain = "some-context-domain";
-const contextService = "some-context-service";
-const contextNetwork = "some-context-network";
-const context = {
-  [contextDomain]: {
-    root: contextRoot,
-    service: contextService,
-    network: contextNetwork,
-  },
-};
-const deletedCount = 3;
+describe("View store DELETE HTTP adapter", () => {
+  afterEach(restore);
 
-describe("View store delete", () => {
-  it("should reject an empty selector without invoking persistence", async () => {
-    const removeFn = fake.resolves({ deletedCount: 1 });
-    let error;
-    try {
-      await del({ removeFn })(
-        { query: { context, query: {} }, params: {} },
-        { status: () => ({ send: () => {} }) }
-      );
-    } catch (caught) {
-      error = caught;
-    }
-    expect(error && error.statusCode).to.equal(400);
-    expect(removeFn).not.to.have.been.called;
+  it("exposes only the default HTTP handler", () => {
+    expect(Object.keys(api)).to.deep.equal(["default"]);
   });
 
-  it("should require the configured context before deleting", async () => {
-    const removeFn = fake.resolves({ deletedCount: 1 });
-    let error;
-    try {
-      await del({ removeFn })(
-        { query: { query }, params: {} },
-        { status: () => ({ send: () => {} }) }
-      );
-    } catch (caught) {
-      error = caught;
-    }
-    expect(error && error.statusCode).to.equal(403);
-    expect(removeFn).not.to.have.been.called;
-  });
-
-  it("allows a nonempty body query without context on a noncontextual store", async () => {
-    delete process.env.CONTEXT;
-    const removeFn = fake.resolves({ deletedCount: 1 });
-    await del({ removeFn })(
-      { query: { query: { a: 1 } }, params: {} },
-      { status: () => ({ send: () => {} }) }
+  it("forwards options, ID, query and context and sends even a zero deletion result", async () => {
+    const result = { deletedCount: 0 };
+    const operation = fake.resolves(result);
+    const factory = fake.returns(operation);
+    replace(deps, "remove", factory);
+    const options = { removeFn() {} };
+    const query = { active: true };
+    const context = { tenant: { root: "A" } };
+    const res = { status: fake(() => res), send: fake() };
+    await api.default(options)(
+      { params: { id: "view" }, query: { query, context } },
+      res,
     );
-    expect(removeFn).to.have.been.calledWithExactly({ "body.a": 1 });
+    expect(factory).to.have.been.calledWithExactly(options);
+    expect(operation).to.have.been.calledWithExactly({
+      id: "view",
+      query,
+      context,
+    });
+    expect(res.status).to.have.been.calledWithExactly(200);
+    expect(res.send).to.have.been.calledWithExactly(result);
   });
 
-  beforeEach(() => {
-    process.env.CONTEXT = contextDomain;
-  });
-  afterEach(() => {
-    restore();
-  });
-
-  it("should call with the correct params with context and id only", async () => {
-    const removeFake = fake.returns({ deletedCount });
-
-    const id = "some-id";
-    const req = {
-      query: {
-        context,
-        query: {},
-      },
-      params: {
-        id,
-      },
-    };
-
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
-    const res = {
-      status: statusFake,
-    };
-
-    await del({ removeFn: removeFake })(req, res);
-    expect(removeFake).to.have.been.calledWith({
-      "headers.context": {
-        root: contextRoot,
-        domain: contextDomain,
-        service: contextService,
-        network: contextNetwork,
-      },
-      "headers.id": id,
-    });
-    expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith({ deletedCount });
-  });
-  it("should call with the correct params with query and group", async () => {
-    const removeFake = fake.returns({ deletedCount });
-
-    const token = "some-token";
-    const req = {
-      query: {
-        context,
-        query,
-        token,
-      },
-      params: {},
-    };
-
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
-    const res = {
-      status: statusFake,
-    };
-
-    await del({
-      removeFn: removeFake,
-    })(req, res);
-    expect(removeFake).to.have.been.calledWith({
-      "headers.context": {
-        root: contextRoot,
-        domain: contextDomain,
-        service: contextService,
-        network: contextNetwork,
-      },
-      "body.a": 1,
-    });
-    expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith({ deletedCount });
-  });
-  it("should call with the correct params with query and context", async () => {
-    const removeFake = fake.returns({ deletedCount });
-
-    const req = {
-      query: {
-        context,
-        query,
-      },
-      params: {},
-    };
-
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
-    const res = {
-      status: statusFake,
-    };
-
-    await del({ removeFn: removeFake })(req, res);
-    expect(removeFake).to.have.been.calledWith({
-      "headers.context": {
-        root: contextRoot,
-        domain: contextDomain,
-        service: contextService,
-        network: contextNetwork,
-      },
-      "body.a": 1,
-    });
-    expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith({ deletedCount });
-  });
-  it("should call with the correct params with context and id only and no env context", async () => {
-    const removeFake = fake.returns({ deletedCount });
-
-    const id = "some-id";
-    const req = {
-      query: {
-        context,
-        query: {},
-      },
-      params: {
-        id,
-      },
-    };
-
-    const sendFake = fake();
-    const statusFake = fake.returns({
-      send: sendFake,
-    });
-    const res = {
-      status: statusFake,
-    };
-
-    delete process.env.CONTEXT;
-    await del({ removeFn: removeFake })(req, res);
-    expect(removeFake).to.have.been.calledWith({
-      "headers.id": id,
-    });
-    expect(statusFake).to.have.been.calledWith(200);
-    expect(sendFake).to.have.been.calledWith({ deletedCount });
-  });
-  it("should throw if missing root params", async () => {
-    const removeFake = fake.returns({ deletedCount });
-
-    const req = {
-      query: {},
-      params: {},
-    };
-
-    const res = {};
-
-    const error = new Error();
-    const messageFake = fake.returns(error);
-    replace(deps, "badRequestError", {
-      message: messageFake,
-    });
-
+  it("propagates the shared operation failure without sending success", async () => {
+    const failure = new Error("delete failed");
+    replace(deps, "remove", fake.returns(fake.rejects(failure)));
+    const res = { status: fake() };
+    let actual;
     try {
-      await del({ removeFn: removeFake })(req, res);
+      await api.default({})({ params: { id: "view" }, query: {} }, res);
+    } catch (error) {
+      actual = error;
+    }
+    expect(actual).to.equal(failure);
+    expect(res.status).not.to.have.been.called;
+  });
 
-      //shouldn't get called
-      expect(1).to.equal(0);
-    } catch (e) {
-      expect(e).to.equal(error);
-      expect(messageFake).to.have.been.calledWith("Missing query.");
+  it("composes with the actual library and keeps the ID/query tenant boundary", async () => {
+    const previous = process.env.CONTEXT;
+    process.env.CONTEXT = "tenant";
+    try {
+      const context = {
+        tenant: { root: "A", service: "core", network: "local" },
+      };
+      const removeFn = fake.resolves({ deletedCount: 1 });
+      const res = { status: fake(() => res), send: fake() };
+      await api.default({ removeFn })(
+        { params: { id: "view" }, query: { query: { active: true }, context } },
+        res,
+      );
+      expect(removeFn).to.have.been.calledWithExactly({
+        "headers.id": "view",
+        "body.active": true,
+        "headers.context": {
+          root: "A",
+          domain: "tenant",
+          service: "core",
+          network: "local",
+        },
+      });
+      expect(res.status).to.have.been.calledWithExactly(200);
+      expect(res.send).to.have.been.calledWithExactly({ deletedCount: 1 });
+    } finally {
+      if (previous === undefined) delete process.env.CONTEXT;
+      else process.env.CONTEXT = previous;
     }
   });
 });

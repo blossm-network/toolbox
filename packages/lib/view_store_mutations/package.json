@@ -1,0 +1,26 @@
+{
+  "name": "@blossm/view-store-mutations",
+  "version": "0.0.1",
+  "description": "Shared view mutation mapping and results independent of HTTP and persistence adapters.",
+  "main": "index.js",
+  "type": "module",
+  "author": "blossm.network",
+  "engines": {
+    "node": ">= 24.22.1"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@blossm/datetime": "^0.0.18",
+    "@blossm/errors": "^0.0.40"
+  },
+  "devDependencies": {
+    "mocha": "^12.0.3",
+    "sinon": "^22.1.0",
+    "sinon-chai": "^4.0.1"
+  }
+}
