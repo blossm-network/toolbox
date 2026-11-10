@@ -84,7 +84,7 @@ describe("View store get", () => {
     const countFn = fake.resolves(0);
     for (const pagination of [
       { limit: "0" },
-      { limit: "101" },
+      { limit: "10001" },
       { limit: null },
       { limit: true },
       { limit: [1] },
@@ -115,7 +115,7 @@ describe("View store get", () => {
     for (const [pagination, limit, skip] of [
       [{}, 50, 0],
       [{ limit: "1", skip: "0" }, 1, 0],
-      [{ limit: 100, skip: 9007199254740991 }, 100, 9007199254740991],
+      [{ limit: 10000, skip: 9007199254740991 }, 10000, 9007199254740991],
     ]) {
       await get({ findFn, countFn })(
         { query: { context, ...pagination }, params: {} },

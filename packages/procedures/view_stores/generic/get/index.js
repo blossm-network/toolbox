@@ -3,7 +3,7 @@ import deps from "./deps.js";
 const defaultQueryFn = (query) => query;
 const defaultSortFn = (sort) => sort;
 const defaultLimit = 50;
-const maxLimit = 100;
+const maxLimit = 10000;
 
 const paginationValue = (value, fallback, minimum, maximum, name) => {
   if (value === undefined) return fallback;
