@@ -86,16 +86,32 @@ describe("Mongodb event store", () => {
     const store = fake(async ({ name }) => ({ name }));
     replace(deps, "db", { store });
     replace(deps, "eventStore", fake());
-    await server({ schema: {}, indexes: ["amount", "other", "nested.field"], secretFn: fake.resolves("secret") });
-    for (const [position, prefix] of [[0, "payload"], [1, "state"]]) {
+    await server({
+      schema: {},
+      indexes: ["amount", "other", "nested.field"],
+      secretFn: fake.resolves("secret"),
+    });
+    for (const [position, prefix] of [
+      [0, "payload"],
+      [1, "state"],
+    ]) {
       const { schema, indexes, typeKey } = store.getCall(position).args[0];
       const actual = new mongoose.Schema(schema, { typeKey });
       for (const index of indexes) actual.index(...index);
       const registered = actual.indexes();
       for (const field of ["amount", "other", "nested.field"]) {
-        expect(registered.some(([keys]) => Object.keys(keys).length == 1 && keys[`${prefix}.${field}`] == 1)).to.equal(true);
+        expect(
+          registered.some(
+            ([keys]) =>
+              Object.keys(keys).length == 1 && keys[`${prefix}.${field}`] == 1,
+          ),
+        ).to.equal(true);
       }
-      expect(indexes.slice(-3)).to.deep.equal(["amount", "other", "nested.field"].map((field) => [{ [`${prefix}.${field}`]: 1 }]));
+      expect(indexes.slice(-3)).to.deep.equal(
+        ["amount", "other", "nested.field"].map((field) => [
+          { [`${prefix}.${field}`]: 1 },
+        ]),
+      );
     }
   });
   it("should call with the correct params", async () => {
