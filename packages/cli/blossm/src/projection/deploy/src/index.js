@@ -163,8 +163,8 @@ const saveId = async ({
 
   if (!push) return;
 
-  // If push is true, body.view and body.keys should exist.
-  const { view: newView, keys } = updateResponse.body;
+  // Successful writes provide a view; a failed condition returns 204 without one.
+  const { view: newView, keys } = updateResponse.body || {};
 
   if (!newView) return;
 
@@ -424,21 +424,19 @@ export default projection({
 
         const composedIdQuery = cleanIdQuery(composedQuery);
 
-        if (arrayFilters) arrayFilters.push(query);
-
         if (id) {
           del
             ? await deleteId({
                 context: aggregateContext,
                 id,
-                query: composedIdQuery,
+                query,
                 push,
               })
             : await saveId({
                 aggregate,
                 context: aggregateContext,
                 id,
-                query: composedIdQuery,
+                query,
                 update: composedUpdate,
                 ...(arrayFilters && { arrayFilters }),
                 push,

@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 import server, { __resetStoresForTest } from "../index.js";
 import deps from "../deps.js";
 import del from "../../generic/delete/index.js";
+import put from "../../generic/put/index.js";
+import composeUpdate from "../../../../lib/compose_update/index.js";
+import { load } from "../../../../cli/blossm/test/load.js";
 
 const uri = process.env.BLOSSM_TEST_MONGODB_URI;
 const integration = uri ? describe : describe.skip;
@@ -33,6 +36,17 @@ integration("MongoDB view store startup", function () {
       serverSelectionTimeoutMS: 5000,
     });
     connected = true;
+    deps.viewStore = (options) => {
+      composition = options;
+    };
+    await server({
+      schema: {
+        value: Number,
+        status: String,
+        items: [{ id: String, label: String }],
+      },
+      secretFn: async () => undefined,
+    });
   });
 
   after(async () => {
@@ -50,16 +64,7 @@ integration("MongoDB view store startup", function () {
   });
 
   it("starts with one unique view-ID index and rejects duplicate IDs", async () => {
-    let serving = false;
-    deps.viewStore = (options) => {
-      composition = options;
-      serving = true;
-    };
-    await server({
-      schema: { value: Number },
-      secretFn: async () => undefined,
-    });
-    assert.equal(serving, true);
+    assert.equal(typeof composition.writeFn, "function");
     const model = mongoose.model("views");
     const indexes = (await model.collection.indexes()).filter(
       ({ key }) => Object.keys(key).length === 1 && key["headers.id"] === 1
@@ -143,5 +148,128 @@ integration("MongoDB view store startup", function () {
       (error) => error.statusCode === 403
     );
     assert.equal(await model.countDocuments({ "headers.id": "tenant-b" }), 1);
+  });
+
+  it("preserves generated ID guards and element filters through actual Mongo mutations", async () => {
+    const model = mongoose.model("views");
+    const context = { root: "A", service: "core", network: "local" };
+    await model.create({
+      headers: { id: "guarded", context: { ...context, domain: "tenant" } },
+      body: {
+        status: "inactive",
+        items: [
+          { id: "first", label: "old" },
+          { id: "second", label: "old" },
+        ],
+      },
+    });
+    let notifications = 0;
+    const run = async (operation, push = false) => {
+      const dispatch = async (handler, request) => {
+        let statusCode, body;
+        await handler(request, {
+          status: (code) => ({
+            send: (value) => {
+              statusCode = code;
+              body = value;
+            },
+          }),
+          sendStatus: (code) => {
+            statusCode = code;
+          },
+        });
+        return { statusCode, ...(body && { body }) };
+      };
+      const projection = await load(
+        "blossm/src/projection/deploy/src/index.js",
+        {
+          projection: (options) => options,
+          config: { name: "example", context: "tenant" },
+          process: { env: { CONTEXT: "tenant", NODE_ENV: "local" } },
+          composeUpdate,
+          handlers: { core: { example: () => ({ ...operation, context }) } },
+          viewStore: () => ({
+            set: ({ context }) => ({
+              update: (body) =>
+                dispatch(
+                  put({
+                    writeFn: composition.writeFn,
+                    formatFn: ({ body }) => body,
+                  }),
+                  { params: { id: body.id }, body: { ...body, context } }
+                ),
+              delete: (id, { query }) =>
+                dispatch(del({ removeFn: composition.removeFn }), {
+                  params: { id },
+                  query: { query, context },
+                }),
+            }),
+          }),
+          gcpToken: () => {},
+          gcpSecret: {},
+          gcpQueue: { enqueue() {} },
+          command: () => {
+            notifications++;
+            throw new Error("No-op must not notify");
+          },
+          logger: { error() {} },
+        }
+      );
+      await projection.mainFn({
+        aggregate: {
+          headers: { service: "core", domain: "example", root: "root" },
+        },
+        push,
+      });
+    };
+    await run(
+      {
+        id: "guarded",
+        query: { status: "active" },
+        update: { status: "changed" },
+      },
+      true
+    );
+    assert.equal(
+      (await model.findOne({ "headers.id": "guarded" }).lean()).body.status,
+      "inactive"
+    );
+    assert.equal(notifications, 0);
+    await run(
+      {
+        id: "missing",
+        query: { status: "active" },
+        update: { status: "changed" },
+      },
+      true
+    );
+    assert.equal(await model.countDocuments({ "headers.id": "missing" }), 0);
+    await run({
+      id: "guarded",
+      query: { status: "inactive" },
+      update: { status: "active" },
+    });
+    assert.equal(
+      (await model.findOne({ "headers.id": "guarded" }).lean()).body.status,
+      "active"
+    );
+    await run({
+      id: "guarded",
+      query: { status: "active" },
+      update: { $set: { "items.$[item].label": "new" } },
+      arrayFilters: [{ "item.id": "first" }],
+    });
+    assert.deepEqual(
+      (await model.findOne({ "headers.id": "guarded" }).lean()).body.items.map(
+        ({ label }) => label
+      ),
+      ["new", "old"]
+    );
+    await run({ id: "created", update: { status: "created" } });
+    assert.equal(await model.countDocuments({ "headers.id": "created" }), 1);
+    await run({ id: "guarded", query: { status: "inactive" }, del: true });
+    assert.equal(await model.countDocuments({ "headers.id": "guarded" }), 1);
+    await run({ id: "guarded", query: { status: "active" }, del: true });
+    assert.equal(await model.countDocuments({ "headers.id": "guarded" }), 0);
   });
 });
