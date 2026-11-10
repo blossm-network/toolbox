@@ -1,16 +1,16 @@
 export default async ({ store, query, fn }) => {
   const cursor = store.find(query).cursor();
-  let failed = false;
+  let cleanupFailed = false;
+  let cleanupError;
   try {
     await cursor.eachAsync(fn, { parallel: 1 });
-  } catch (err) {
-    failed = true;
-    throw err;
   } finally {
     try {
       await cursor.close();
     } catch (err) {
-      if (!failed) throw err;
+      cleanupFailed = true;
+      cleanupError = err;
     }
   }
+  if (cleanupFailed) throw cleanupError;
 };

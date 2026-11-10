@@ -6,11 +6,13 @@ import mongoose from "mongoose";
 const { expect } = chai;
 
 // Use the installed cursor's actual eachAsync implementation, without a server.
-const cursorFor = (documents, error) => {
+const cursorFor = (documents, error, close = fake.resolves()) => {
   const connection = mongoose.createConnection();
-  const Model = connection.model("cursor-test", new mongoose.Schema({}, { strict: false, autoCreate: false }));
+  const Model = connection.model(
+    "cursor-test",
+    new mongoose.Schema({}, { strict: false, autoCreate: false }),
+  );
   Model.collection.buffer = false;
-  const close = fake.resolves();
   Model.collection.find = () => ({
     next: async () => {
       if (error) throw error;
@@ -37,7 +39,9 @@ describe("For each", () => {
       store,
       query: { active: true },
       fn: async ({ value }) => {
-        await new Promise((resolve) => setTimeout(resolve, value == 1 ? 10 : 0));
+        await new Promise((resolve) =>
+          setTimeout(resolve, value == 1 ? 10 : 0),
+        );
         completed.push(value);
       },
     });
@@ -50,12 +54,22 @@ describe("For each", () => {
   for (const failure of ["callback", "cursor", "sync callback"]) {
     it(`rejects on ${failure} failure`, async () => {
       const error = new Error("iteration failed");
-      const cursor = cursorFor([{ value: 1 }], failure == "cursor" ? error : undefined);
+      const cursor = cursorFor(
+        [{ value: 1 }],
+        failure == "cursor" ? error : undefined,
+      );
       let actual;
       try {
         await forEach({
           store: input(cursor),
-          fn: failure == "sync callback" ? () => { throw error; } : async () => { throw error; },
+          fn:
+            failure == "sync callback"
+              ? () => {
+                  throw error;
+                }
+              : async () => {
+                  throw error;
+                },
         });
       } catch (err) {
         actual = err;
@@ -66,22 +80,29 @@ describe("For each", () => {
   }
   it("preserves callback errors when closing also fails", async () => {
     const error = new Error("callback failure");
-    const cursor = cursorFor([{ value: 1 }]);
-    cursor.close = fake.rejects(new Error("cleanup failure"));
+    const cursor = cursorFor(
+      [{ value: 1 }],
+      undefined,
+      fake.rejects(new Error("cleanup failure")),
+    );
     let actual;
     try {
-      await forEach({ store: input(cursor), fn: async () => { throw error; } });
+      await forEach({
+        store: input(cursor),
+        fn: async () => {
+          throw error;
+        },
+      });
     } catch (err) {
       actual = err;
     }
     expect(actual).to.equal(error);
-    expect(cursor.close.callCount).to.equal(1);
+    expect(cursor.closedFake.callCount).to.equal(1);
   });
 
   it("rejects a closing failure after callbacks complete", async () => {
     const error = new Error("cleanup failure");
-    const cursor = cursorFor([{ value: 1 }]);
-    cursor.close = fake.rejects(error);
+    const cursor = cursorFor([{ value: 1 }], undefined, fake.rejects(error));
     let actual;
     try {
       await forEach({ store: input(cursor), fn: async () => {} });
@@ -89,7 +110,42 @@ describe("For each", () => {
       actual = err;
     }
     expect(actual).to.equal(error);
-    expect(cursor.close.callCount).to.equal(1);
+    expect(cursor.closedFake.callCount).to.equal(1);
   });
-
+  it("does not invoke later callbacks after a failure", async () => {
+    const error = new Error("callback failure");
+    const cursor = cursorFor([{ value: 1 }, { value: 2 }]);
+    const fn = fake.rejects(error);
+    let actual;
+    try {
+      await forEach({ store: input(cursor), fn });
+    } catch (err) {
+      actual = err;
+    }
+    expect(actual).to.equal(error);
+    expect(fn.callCount).to.equal(1);
+    expect(cursor.closedFake.callCount).to.equal(1);
+  });
+  it("waits for the underlying cursor to close before resolving", async () => {
+    let finishClose;
+    const closing = new Promise((resolve) => {
+      finishClose = resolve;
+    });
+    const close = fake(() => closing);
+    const cursor = cursorFor([{ value: 1 }], undefined, close);
+    let completed = false;
+    const pending = forEach({ store: input(cursor), fn: async () => {} }).then(
+      () => {
+        completed = true;
+      },
+    );
+    await new Promise((resolve) => setImmediate(resolve));
+    try {
+      expect(close.callCount).to.equal(1);
+      expect(completed).to.equal(false);
+    } finally {
+      finishClose();
+    }
+    await pending;
+  });
 });
