@@ -104,16 +104,46 @@ describe("Connects", () => {
     });
   });
 
-  it("round-trips reserved and Unicode credentials through the real driver parser", async () => {
-    const user = "user/:@%#雪";
-    const password = "pass/:@%#雪";
+  for (const [label, username, secret] of [
+    ["reserved characters and Unicode", "user/:@%#雪", "pass/:@%#雪"],
+    ["literal percent escapes", "user%2Fname", "pass%40word%25"],
+    ["URI delimiters", "user?&=+[]", "pass?&=+[]"],
+  ]) {
+    it(`round-trips credentials containing ${label} through the real driver parser`, async () => {
+      const previousCalls = connectFake.callCount;
+      await connect({
+        protocol: "mongodb",
+        user: username,
+        password: secret,
+        host: "localhost",
+        database,
+      });
+      expect(connectFake.callCount).to.equal(previousCalls + 1);
+      const [uri] = connectFake.lastCall.args;
+      const client = new deps.mongoose.mongo.MongoClient(uri);
+      expect(client.options.credentials.username).to.equal(username);
+      expect(client.options.credentials.password).to.equal(secret);
+    });
+  }
+
+  it("preserves multiple hosts, database and query options around encoded credentials", async () => {
     await connect({
-      protocol: "mongodb", user, password, host: "localhost", database,
+      protocol: "mongodb",
+      user: "user@name",
+      password: "secret/password",
+      host: "mongo-a:27017,mongo-b:27018",
+      database,
+      parameters: { replicaSet: "rs-test", authSource: "admin" },
     });
     const [uri] = connectFake.lastCall.args;
     const client = new deps.mongoose.mongo.MongoClient(uri);
-    expect(client.options.credentials.username).to.equal(user);
-    expect(client.options.credentials.password).to.equal(password);
+    expect(client.options.hosts.map((address) => address.toString())).to.deep.equal([
+      "mongo-a:27017",
+      "mongo-b:27018",
+    ]);
+    expect(client.options.dbName).to.equal(database);
+    expect(client.options.replicaSet).to.equal("rs-test");
+    expect(client.options.credentials.source).to.equal("admin");
   });
 
   it("it pass along the onError callback", async () => {
