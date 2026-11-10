@@ -42,7 +42,7 @@ describe("Mongodb event store save block", () => {
         lean: true,
         omitUndefined: true,
         upsert: true,
-        new: true,
+        returnDocument: "after",
         runValidators: true,
       },
     });
@@ -68,7 +68,7 @@ describe("Mongodb event store save block", () => {
         lean: true,
         omitUndefined: true,
         upsert: true,
-        new: true,
+        returnDocument: "after",
         runValidators: true,
       },
     });

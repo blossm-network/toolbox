@@ -11,7 +11,7 @@ export default ({ blockchainStore }) => ({ block, transaction }) =>
       lean: true,
       omitUndefined: true,
       upsert: true,
-      new: true,
+      returnDocument: "after",
       runValidators: true,
       ...(transaction && { session: transaction }),
     },
