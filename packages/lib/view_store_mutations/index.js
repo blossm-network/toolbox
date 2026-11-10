@@ -28,6 +28,43 @@ const formatBody = (value) => {
   return formattedBody;
 };
 
+export const formatView = ({ formatFn, updateKeys }, newView) => {
+  //TODO this function is duplicated in /get. Refactor.
+  const formattedTrace = [];
+  for (const service in newView.trace) {
+    for (const domain in newView.trace[service]) {
+      for (const txId of newView.trace[service][domain])
+        if (!formattedTrace.includes(txId)) formattedTrace.push(txId);
+    }
+  }
+
+  const values =
+    updateKeys && updateKeys.map((key) => getValue(newView.body, key));
+
+  return {
+    view: {
+      body: formatFn({
+        body: newView.body,
+        id: newView.headers.id,
+        created: newView.headers.created,
+        modified: newView.headers.modified,
+      }),
+      headers: {
+        id: newView.headers.id,
+        context: newView.headers.context,
+        ...(newView.headers.groups && { groups: newView.headers.groups }),
+        trace: formattedTrace,
+        created: newView.headers.created,
+        modified: newView.headers.modified,
+      },
+    },
+    ...(values && {
+      // Fallback for .flat().
+      keys: [].concat(...values),
+    }),
+  };
+};
+
 // Internal callers own authorization; writes map a supplied context without requiring one.
 export const write =
   ({ writeFn, formatFn, updateFn = defaultFn, updateKeys }) =>
@@ -84,40 +121,7 @@ export const write =
 
     if (!newView) return;
 
-    //TODO this function is duplicated in /get. Refactor.
-    const formattedTrace = [];
-    for (const service in newView.trace) {
-      for (const domain in newView.trace[service]) {
-        for (const txId of newView.trace[service][domain])
-          if (!formattedTrace.includes(txId)) formattedTrace.push(txId);
-      }
-    }
-
-    const values =
-      updateKeys && updateKeys.map((key) => getValue(newView.body, key));
-
-    return {
-      view: {
-        body: formatFn({
-          body: newView.body,
-          id: newView.headers.id,
-          created: newView.headers.created,
-          modified: newView.headers.modified,
-        }),
-        headers: {
-          id: newView.headers.id,
-          context: newView.headers.context,
-          ...(newView.headers.groups && { groups: newView.headers.groups }),
-          trace: formattedTrace,
-          created: newView.headers.created,
-          modified: newView.headers.modified,
-        },
-      },
-      ...(values && {
-        // Fallback for .flat().
-        keys: [].concat(...values),
-      }),
-    };
+    return formatView({ formatFn, updateKeys }, newView);
   };
 
 export const remove =

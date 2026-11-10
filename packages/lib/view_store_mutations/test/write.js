@@ -2,7 +2,7 @@ import * as chai from "chai";
 import sinonChai from "sinon-chai";
 import { restore, fake, useFakeTimers } from "sinon";
 
-import { write } from "../index.js";
+import { write, formatView } from "../index.js";
 import deps from "../deps.js";
 
 chai.use(sinonChai);
@@ -399,4 +399,17 @@ describe("Shared view write", () => {
       if (phase === "update") expect(options.writeFn).not.to.have.been.called;
       if (phase !== "format") expect(options.formatFn).not.to.have.been.called;
     });
+  it("formats a persisted mutation result without writing it again", () => {
+    const formatFn = fake.returns(formattedWriteResult);
+    const result = formatView({ formatFn }, writeResult);
+    expect(result.view.body).to.deep.equal(formattedWriteResult);
+    expect(result.view.headers.trace).to.deep.equal([trace1, trace2]);
+    expect(result.view.headers.groups).to.equal(writeResultGroups);
+    expect(formatFn.firstCall.args[0]).to.deep.equal({
+      body: writeResultBody,
+      id: writeResultId,
+      created: writeResultCreated,
+      modified: writeResultModified,
+    });
+  });
 });
