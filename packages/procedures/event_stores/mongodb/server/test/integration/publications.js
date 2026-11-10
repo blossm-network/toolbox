@@ -82,6 +82,7 @@ describe("MongoDB publication recovery", function () {
 
     append = (id, transaction) =>
       postTransaction({
+        normalizeTransactionFn: composition.normalizeTransactionFn,
         eventData: [{ event: event(id) }],
         saveEventsFn: composition.saveEventsFn,
         reserveRootCountsFn: composition.reserveRootCountsFn,

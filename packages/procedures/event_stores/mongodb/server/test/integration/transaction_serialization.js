@@ -67,6 +67,7 @@ describe("MongoDB transaction operation serialization", function () {
 
   const append = (names, tx = { id: "multi-root" }) =>
     postTransaction({
+      normalizeTransactionFn: composition.normalizeTransactionFn,
       eventData: names.map((root, index) => ({
         event: createEvent({
           root,
@@ -140,6 +141,62 @@ describe("MongoDB transaction operation serialization", function () {
     assert.deepEqual(saved.tx, tx);
     assert.equal(saved.headers.tHash, hash(tx).create());
     assert.equal(hash(saved.tx).create(), saved.headers.tHash);
+  });
+
+  it("casts transaction fields once before hashing, with custom claims and array audiences retained", async () => {
+    const input = {
+      id: 123,
+      claims: { exp: "1700000000", aud: ["one", "two"], custom: { empty: {} } },
+      path: [
+        {
+          network: "local",
+          host: "localhost",
+          procedure: "command",
+          hash: "trace",
+          issued: "2026-11-10",
+          extra: true,
+        },
+      ],
+    };
+    await session.withTransaction(() => append(["normalized"], input));
+    const saved = await events.findOne({ "tx.id": "123" }).lean();
+    assert.deepEqual(saved.tx, {
+      ...input,
+      id: "123",
+      claims: { ...input.claims, exp: 1700000000 },
+      path: [{ ...input.path[0], issued: "2026-11-10T00:00:00.000Z" }],
+    });
+    assert.equal(saved.headers.tHash, hash(saved.tx).create());
+    assert.notEqual(saved.headers.tHash, hash(input).create());
+  });
+
+  it("rejects invalid claims and missing required trace fields before reserving counts", async () => {
+    const trace = {
+      network: "local",
+      host: "localhost",
+      procedure: "command",
+      hash: "trace",
+    };
+    const invalid = [
+      { claims: { exp: "not-a-number" }, path: [] },
+      { claims: { aud: ["one", 2] }, path: [] },
+      { path: [{ ...trace, issued: "not-a-date" }] },
+      ...Object.keys(trace).map((field) => {
+        const path = { ...trace };
+        delete path[field];
+        return { path: [path] };
+      }),
+    ];
+    for (const tx of invalid) {
+      await assert.rejects(
+        session.withTransaction(() => append(["invalid"], tx)),
+        /Invalid transaction metadata/
+      );
+    }
+    assert.equal(roots.length, 0);
+    assert.equal(await counts.countDocuments(), 0);
+    assert.equal(await events.countDocuments(), 0);
+    assert.equal(await publications.countDocuments(), 0);
   });
 
   it("rolls back every root's counter, event and notice after a multi-root append", async () => {

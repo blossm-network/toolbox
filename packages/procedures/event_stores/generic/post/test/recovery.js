@@ -4,6 +4,8 @@ import { fake, replace, restore } from "sinon";
 import post from "../index.js";
 import deps from "../deps.js";
 
+const normalizeTransactionFn = (tx) => tx;
+
 describe("Durable publication recovery", () => {
   let nodeEnv;
   beforeEach(() => {
@@ -19,6 +21,7 @@ describe("Durable publication recovery", () => {
   it("drains pending notifications even when retry events were already committed", async () => {
     const publishPendingFn = fake.resolves();
     await post({
+      normalizeTransactionFn,
       idempotencyConflictCheckFn: async () => true,
       createTransactionFn: (fn) => fn(),
       publishPendingFn,
@@ -43,6 +46,7 @@ describe("Durable publication recovery", () => {
     );
     const sendStatus = fake();
     const pending = post({
+      normalizeTransactionFn,
       createTransactionFn: () =>
         new Promise((resolve) => {
           commit = resolve;
@@ -65,7 +69,7 @@ describe("Durable publication recovery", () => {
     const publishPendingFn = fake.resolves();
     const sendStatus = fake();
     await rejects(
-      post({ createTransactionFn: fake.rejects(failure), publishPendingFn })(
+      post({ normalizeTransactionFn, createTransactionFn: fake.rejects(failure), publishPendingFn })(
         { body: { eventData: [] } },
         { sendStatus }
       ),
@@ -80,7 +84,7 @@ describe("Durable publication recovery", () => {
     const createTransactionFn = fake.resolves();
     const sendStatus = fake();
     await rejects(
-      post({ createTransactionFn, publishPendingFn: fake.rejects(failure) })(
+      post({ normalizeTransactionFn, createTransactionFn, publishPendingFn: fake.rejects(failure) })(
         { body: { eventData: [] } },
         { sendStatus }
       ),

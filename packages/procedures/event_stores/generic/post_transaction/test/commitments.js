@@ -3,6 +3,8 @@ import createEvent from "@blossm/create-event";
 import hash from "@blossm/hash";
 import post from "../index.js";
 
+const normalizeTransactionFn = (tx) => tx;
+
 describe("Stored JSON commitments", () => {
   it("preserves scalar payloads and verifies every component with the canonical hash owner", async () => {
     const commitments = [];
@@ -17,6 +19,7 @@ describe("Stored JSON commitments", () => {
         network: process.env.NETWORK,
       });
       await post({
+        normalizeTransactionFn,
         eventData: [{ event }],
         tx: { id: "tx" },
         reserveRootCountsFn: async () => ({ root: "r", value: 1 }),

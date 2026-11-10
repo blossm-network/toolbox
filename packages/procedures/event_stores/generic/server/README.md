@@ -34,3 +34,12 @@ attempt is logged and cannot change its successful response. Transaction
 failures still propagate. Raw adapter dispatchers continue rejecting failures
 so callers inspecting delivery directly can observe them. Published notices
 include the stable event `hash` for subscriber deduplication across redelivery.
+
+## Transaction normalization contract
+
+Adapters provide `normalizeTransactionFn(tx)`, returning the representation their
+persistence layer will store and rejecting invalid metadata. It runs once per
+append before counter reservations and hashing, including local execution.
+Mongo reuses its event model schema for this operation. A noncasting adapter can
+validate and return the same object; it must still preserve that representation
+through readback. Server composition rejects a missing normalizer before serving.

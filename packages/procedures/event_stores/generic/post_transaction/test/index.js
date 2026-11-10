@@ -6,6 +6,8 @@ import { restore, fake, stub, replace, useFakeTimers } from "sinon";
 import postTransaction from "../index.js";
 import deps from "../deps.js";
 
+const normalizeTransactionFn = (tx) => tx;
+
 chai.use(sinonChai);
 chai.use(chaiDatetime);
 const { expect } = chai;
@@ -102,6 +104,7 @@ describe("Event store post", () => {
     replace(deps, "hash", hashFake);
 
     const result = await postTransaction({
+      normalizeTransactionFn,
       eventData,
       tx,
       saveEventsFn: saveEventsFnFake,
@@ -204,6 +207,7 @@ describe("Event store post", () => {
     replace(deps, "hash", hashFake);
 
     const result = await postTransaction({
+      normalizeTransactionFn,
       eventData: [
         {
           ...eventData[0],
@@ -307,6 +311,7 @@ describe("Event store post", () => {
     replace(deps, "hash", hashFake);
 
     const result = await postTransaction({
+      normalizeTransactionFn,
       eventData: [
         {
           event: {
@@ -462,6 +467,7 @@ describe("Event store post", () => {
     const groupsAdded = "some-groups-added";
     const groupsRemoved = "some-groups-removed";
     const result = await postTransaction({
+      normalizeTransactionFn,
       eventData: [
         ...eventData,
         ...eventData,
@@ -682,6 +688,7 @@ describe("Event store post", () => {
     replace(deps, "hash", hashFake);
 
     const result = await postTransaction({
+      normalizeTransactionFn,
       eventData,
       tx,
       saveEventsFn: saveEventsFnFake,
@@ -764,6 +771,7 @@ describe("Event store post", () => {
 
     try {
       await postTransaction({
+        normalizeTransactionFn,
         eventData: [
           {
             ...eventData[0],
@@ -788,6 +796,7 @@ describe("Event store post", () => {
 
     try {
       await postTransaction({
+        normalizeTransactionFn,
         eventData,
         tx,
         saveEventsFn: saveEventsFnFake,
@@ -809,6 +818,7 @@ describe("Event store post", () => {
     });
     try {
       await postTransaction({
+        normalizeTransactionFn,
         eventData: [
           {
             event: {
@@ -842,6 +852,7 @@ describe("Event store post", () => {
     });
     try {
       await postTransaction({
+        normalizeTransactionFn,
         eventData: [
           {
             event: {
@@ -875,6 +886,7 @@ describe("Event store post", () => {
     });
     try {
       await postTransaction({
+        normalizeTransactionFn,
         eventData: [
           {
             event: {

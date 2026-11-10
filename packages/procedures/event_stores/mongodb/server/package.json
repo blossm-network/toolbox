@@ -36,14 +36,15 @@
     "@blossm/mongodb-event-store-save-events": "^0.0.140",
     "@blossm/mongodb-event-store-save-snapshot": "^0.0.71",
     "@blossm/uuid": "^0.0.9",
-    "@blossm/mongodb-event-store-publish-pending": "^0.0.1"
+    "@blossm/mongodb-event-store-publish-pending": "^0.0.1",
+    "mongoose": "^9.12.1",
+    "@blossm/errors": "^0.0.40"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",
     "mocha": "^11.6.0",
     "sinon": "^21.0.0",
     "sinon-chai": "^4.0.0",
-    "mongoose": "^9.12.1",
     "@blossm/hash": "^0.0.13"
   }
 }

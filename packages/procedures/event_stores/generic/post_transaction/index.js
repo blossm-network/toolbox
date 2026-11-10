@@ -4,9 +4,17 @@ export default ({
   // eventData is { event, number }, where `number` is the only acceptable number for this event.
   eventData,
   saveEventsFn,
+  normalizeTransactionFn,
   reserveRootCountsFn,
   tx: { path: txPath = [], claims: txClaims, id: txId, ip: txIp } = {},
 }) => async (transaction) => {
+  const tx = await normalizeTransactionFn({
+    ...(txClaims && { claims: txClaims }),
+    ...(txId && { id: txId }),
+    ...(txIp && { ip: txIp }),
+    path: txPath,
+  });
+
   const eventRootCounts = eventData.reduce((result, { event }) => {
     if (result[event.headers.root] == undefined) result[event.headers.root] = 0;
     result[event.headers.root]++;
@@ -91,12 +99,6 @@ export default ({
           const groupsAdded = event.groupsAdded;
           const groupsRemoved = event.groupsRemoved;
           const payload = event.payload === undefined ? {} : event.payload;
-          const tx = {
-            ...(txClaims && { claims: txClaims }),
-            ...(txId && { id: txId }),
-            ...(txIp && { ip: txIp }),
-            path: txPath,
-          };
           const hashedPayload = deps.hash(payload).create();
           const hashedContext = deps.hash(context).create();
           const hashedGroupsAdded =

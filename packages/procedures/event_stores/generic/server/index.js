@@ -2,6 +2,7 @@ import deps from "./deps.js";
 
 export default async ({
   saveEventsFn,
+  normalizeTransactionFn,
   reserveRootCountsFn,
   publishPendingFn,
   rootStreamFn,
@@ -25,6 +26,11 @@ export default async ({
   if (process.env.NODE_ENV != "local" && typeof publishPendingFn != "function")
     throw deps.internalServerError.message(
       "Event stores require durable publication."
+    );
+
+  if (typeof normalizeTransactionFn != "function")
+    throw deps.internalServerError.message(
+      "Event stores require transaction normalization."
     );
 
   const recoverPublications = async () => {
@@ -93,6 +99,7 @@ export default async ({
     )
     .post(
       deps.post({
+        normalizeTransactionFn,
         saveEventsFn,
         reserveRootCountsFn,
         publishPendingFn: recoverPublications,
