@@ -14,14 +14,22 @@ describe("Stream operation identity", () => {
     try {
       const parts = ["account", "core", "event-store"];
       let requests;
-      replace(deps, "streamMany", async (values) => { requests = values; });
-      await stream({
-        operationNameComponentQueries: [{ operationNameComponents: parts, query: {} }],
-        fn: () => {},
-      }).in({}).with({
-        internalTokenFn: async () => ({ token: "fake", type: "Bearer" }),
+      replace(deps, "streamMany", async (values) => {
+        requests = values;
       });
-      expect(requests[0].url).to.equal(`http://${operationHash(...parts)}.local`);
+      await stream({
+        operationNameComponentQueries: [
+          { operationNameComponents: parts, query: {} },
+        ],
+        fn: () => {},
+      })
+        .in({})
+        .with({
+          internalTokenFn: async () => ({ token: "fake", type: "Bearer" }),
+        });
+      expect(requests[0].url).to.equal(
+        `http://${operationHash(...parts)}.local`,
+      );
     } finally {
       for (const [name, value] of Object.entries(original)) {
         if (value === undefined) delete process.env[name];

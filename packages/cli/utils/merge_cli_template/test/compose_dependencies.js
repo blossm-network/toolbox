@@ -34,12 +34,14 @@ describe("Contextual Compose dependencies", () => {
       );
       assert.equal(peers.length, 3);
       assert.equal(new Set(peers.map((peer) => peer.container_name)).size, 3);
-      for (let i = 0; i < dependencies.length; i++) {
-        assert.equal(peers[i].environment.CONTEXT, dependencies[i].context);
+      for (const dependency of dependencies) {
+        const peer = peers.find(
+          (value) => value.environment.CONTEXT === dependency.context,
+        );
+        assert.ok(peer);
         assert.equal(
-          peers[i].image,
-          mainService({ ...dependencies[i], containerRegistery: "registry" })
-            .image,
+          peer.image,
+          mainService({ ...dependency, containerRegistery: "registry" }).image,
         );
       }
     });
@@ -89,11 +91,11 @@ describe("Contextual Compose dependencies", () => {
         (service) => service.environment?.PROCEDURE === procedure,
       );
       assert.equal(
-        peers[0].image,
+        peers.find((peer) => peer.environment.NAME === "summary0").image,
         `core-registry/${procedure}.team.summary0:latest`,
       );
       assert.equal(
-        peers[1].image,
+        peers.find((peer) => peer.environment.NAME === "summary1").image,
         `app-registry/${procedure}.team.summary1:latest`,
       );
     });
