@@ -86,7 +86,7 @@ BLOSSM_TEST_MONGODB_URI='mongodb://127.0.0.1:27017/?replicaSet=test' npm run tes
 Or run from the Toolbox root through Lerna:
 
 ```sh
-BLOSSM_TEST_MONGODB_URI='mongodb://127.0.0.1:27017/?replicaSet=test' ./node_modules/.bin/lerna run test:integration --scope @blossm/mongodb-event-store --npm-client npm --stream
+BLOSSM_TEST_MONGODB_URI='mongodb://127.0.0.1:27017/?replicaSet=test' yarn lerna run test:integration --scope @blossm/mongodb-event-store --stream --concurrency 2
 ```
 
 Each suite creates and drops its own temporary database. Shared Mocha hooks
@@ -96,7 +96,7 @@ the regular test command never connects to MongoDB.
 
 Transaction metadata retains an explicit Mongo schema. Before hashing, the
 adapter casts and validates `tx` using that same event model. JWT times are
-numbers, audiences accept a string or string array, and trace dates normalize to
+ISO strings, audiences accept a string or string array, and trace dates normalize to
 ISO strings. Required trace fields remain required; custom claims and trace
 fields are preserved. The normalized object is hashed and persisted, so Mongo
 readback reproduces `headers.tHash`. Authentication remains at its existing
