@@ -21,7 +21,7 @@
     "@blossm/role-permissions": "^0.0.30",
     "@blossm/uuid": "^0.0.9",
     "yaml": "^2.9.1",
-    "@blossm/node-external-token": "^0.0.203"
+    "@blossm/node-external-token": "^0.0.204"
   },
   "devDependencies": {
     "mocha": "^12.0.3"
