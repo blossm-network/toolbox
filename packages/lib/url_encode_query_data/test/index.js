@@ -18,7 +18,7 @@ describe("Url encode", () => {
     const url = "http://google.com";
     const response = await encode(url, params);
     expect(response).to.equal(
-      `${url}?hello=there&how%5B0%5D=are&how%5B1%5D=you&andy%5B0%5D=0&andy%5B1%5D=ur%20dogs%3F&dandy%5Ba%5D=1`
+      `${url}?hello=there&how%5B0%5D=are&how%5B1%5D=you&andy%5B0%5D=0&andy%5B1%5D=ur%20dogs%3F&dandy%5Ba%5D=1`,
     );
   });
   it("should call get with correct params as array", async () => {
@@ -37,7 +37,7 @@ describe("Url encode", () => {
 describe("Package dependencies", () => {
   it("declares the runtime encoder for standalone consumers", () => {
     const manifest = JSON.parse(
-      readFileSync(new URL("../package.json", import.meta.url), "utf8")
+      readFileSync(new URL("../package.json", import.meta.url), "utf8"),
     );
     expect(manifest.dependencies).to.have.property("qs").that.is.a("string");
   });
