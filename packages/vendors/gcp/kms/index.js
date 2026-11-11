@@ -85,33 +85,35 @@ const sign = async ({
   return signature.toString(format);
 };
 
-const verify =
-  ({ key, ring, location, version, project }) =>
-  async ({ message, signature, format = "base64" }) => {
-    const instanceKey = getClient().cryptoKeyVersionPath(
-      project,
-      location,
-      ring,
+const verify = ({ key, ring, location, version, project }) => async ({
+  message,
+  signature,
+  format = "base64",
+}) => {
+  const instanceKey = getClient().cryptoKeyVersionPath(
+    project,
+    location,
+    ring,
+    key,
+    version
+  );
+  if (publicKeys[instanceKey] == undefined) {
+    const pem = await publicKey({
       key,
-      version
-    );
-    if (publicKeys[instanceKey] == undefined) {
-      const pem = await publicKey({
-        key,
-        ring,
-        location,
-        version,
-        project,
-      });
+      ring,
+      location,
+      version,
+      project,
+    });
 
-      publicKeys[instanceKey] = pem;
-    }
+    publicKeys[instanceKey] = pem;
+  }
 
-    return deps.crypto
-      .createVerify("SHA256")
-      .update(message)
-      .verify(publicKeys[instanceKey], signature, format);
-  };
+  return deps.crypto
+    .createVerify("SHA256")
+    .update(message)
+    .verify(publicKeys[instanceKey], signature, format);
+};
 
 export default {
   get __client() {
