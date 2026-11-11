@@ -1,4 +1,4 @@
-// One database per event-store or view-store destination in every environment.
+// Match deployed event-store and view-store database names in every environment.
 export default ({ procedure, service, domain, context, name }) => {
   switch (procedure) {
     case "event-store":
