@@ -2,35 +2,15 @@ import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { createRequire, isBuiltin } from "node:module";
-import { pathToFileURL } from "node:url";
 import yaml from "yaml";
 import { spawnSync } from "node:child_process";
 import { runInNewContext } from "node:vm";
 
-const moduleUrl = (file, replacements = {}) => {
-  const require = createRequire(file);
-  const source = readFileSync(file, "utf8")
-    .replace(
-      /import rootDir from "@blossm\/cli-root-dir";/,
-      replacements.root || "const rootDir = {};"
-    )
-    .replace(
-      /from "([^"]+)"/g,
-      (_, name) =>
-        `from ${JSON.stringify(
-          replacements[name] ||
-            (isBuiltin(name)
-              ? `node:${name}`
-              : name.startsWith(".")
-              ? new URL(name, file).href
-              : pathToFileURL(require.resolve(name)).href)
-        )}`
-    );
-  return `data:text/javascript;base64,${Buffer.from(source).toString(
-    "base64"
-  )}`;
-};
+import loadServices from "./load_services.js";
+import { load } from "../../../blossm/test/load.js";
+import mainService from "../src/write_compose/main_service.js";
+import databaseService from "../src/write_compose/database_service.js";
+import databaseName from "../src/database_name.js";
 
 describe("Compose store database isolation", () => {
   let directory;
@@ -39,22 +19,20 @@ describe("Compose store database isolation", () => {
   });
   afterEach(() => rmSync(directory, { recursive: true, force: true }));
   const generate = async (overrides = {}) => {
-    const servicesFile = new URL(
-      "../src/write_compose/procedure_services.js",
-      import.meta.url
+    const write = await load(
+      "utils/merge_cli_template/src/write_compose/index.js",
+      {
+        fs: { writeFileSync },
+        yaml,
+        path,
+        mainService,
+        databaseService,
+        databaseName,
+        procedureServices: await loadServices(directory, {
+          network: "test.network",
+        }),
+      },
     );
-    const composeFile = new URL(
-      "../src/write_compose/index.js",
-      import.meta.url
-    );
-    const services = moduleUrl(servicesFile, {
-      root: `const rootDir = { path: () => ${JSON.stringify(directory)} };`,
-    });
-    const write = (
-      await import(
-        moduleUrl(composeFile, { "./procedure_services.js": services })
-      )
-    ).default;
     write({
       config: {
         procedure: "view-store",
@@ -78,7 +56,7 @@ describe("Compose store database isolation", () => {
       ...overrides,
     });
     return yaml.parse(
-      readFileSync(path.join(directory, "docker-compose.yaml"), "utf8")
+      readFileSync(path.join(directory, "docker-compose.yaml"), "utf8"),
     );
   };
   it("uses production identities for every store and deduplicates the fixture database list", async () => {
@@ -95,8 +73,58 @@ describe("Compose store database isolation", () => {
     ]);
     assert.deepEqual(
       JSON.parse(services.db.environment.MONGODB_DATABASES).sort(),
-      names
+      names,
     );
+  });
+  for (const [config, expected] of [
+    [
+      {
+        procedure: "event-store",
+        service: "core",
+        domain: "ledger",
+        context: undefined,
+        name: undefined,
+      },
+      "core_ledger",
+    ],
+    [
+      { procedure: "view-store", name: "summary", context: undefined },
+      "summary",
+    ],
+  ]) {
+    it(`assigns main store ${expected} and its fixture grant together`, async () => {
+      const { services } = await generate({
+        ...config,
+        config: { ...config, testing: { dependencies: [] } },
+      });
+      assert.equal(services.main.environment.MONGODB_DATABASE, expected);
+      assert.deepEqual(JSON.parse(services.db.environment.MONGODB_DATABASES), [
+        expected,
+      ]);
+      assert(services.main.depends_on.includes("db"));
+    });
+  }
+  it("provides Mongo for a non-store procedure's store dependency", async () => {
+    const { services } = await generate({
+      procedure: "command",
+      config: {
+        procedure: "command",
+        testing: {
+          dependencies: [
+            { procedure: "event-store", service: "core", domain: "ledger" },
+          ],
+        },
+      },
+    });
+    assert.equal(services.main.environment.MONGODB_DATABASE, undefined);
+    assert.deepEqual(JSON.parse(services.db.environment.MONGODB_DATABASES), [
+      "core_ledger",
+    ]);
+    const peer = Object.values(services).find(
+      (service) => service.environment?.PROCEDURE === "event-store",
+    );
+    assert.equal(peer.environment.MONGODB_DATABASE, "core_ledger");
+    assert(peer.depends_on.includes("db"));
   });
   it("does not add a database to a procedure without store dependencies", async () => {
     const { services } = await generate({
@@ -140,7 +168,7 @@ describe("Compose store database isolation", () => {
         (db) => [
           { role: "readWrite", db },
           { role: "dbAdmin", db },
-        ]
+        ],
       ),
     });
   });
