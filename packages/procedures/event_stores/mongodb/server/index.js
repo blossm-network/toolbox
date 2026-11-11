@@ -18,7 +18,7 @@ export function __resetStoresForTest() {
 
 const typeKey = "$type";
 
-// Normalize trace dates to the JSON representation committed by tHash.
+// Normalize transaction dates to the JSON representation committed by tHash.
 const transactionTimestamp = {
   type: String,
   set: (value) => value == null ? value : new Date(value).toISOString(),
@@ -101,9 +101,9 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
                         value.every((audience) => typeof audience == "string")),
                   },
                   sub: String,
-                  exp: Number,
-                  iat: Number,
-                  nbf: Number,
+                  exp: transactionTimestamp,
+                  iat: transactionTimestamp,
+                  nbf: transactionTimestamp,
                   jti: String,
                 },
                 { _id: false, strict: false, minimize: false }
