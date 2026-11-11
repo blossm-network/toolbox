@@ -656,7 +656,9 @@ const writeConfig = ({
               ...(dependency.name ? [dependency.name] : []),
               ...(dependency.domain ? [dependency.domain] : []),
               ...(dependency.service ? [dependency.service] : []),
-              ...((dependency.context || dependency.procedure == "view-composite") ? [dependency.context] : []),
+              ...(dependency.context || dependency.procedure == "view-composite"
+                ? [dependency.context]
+                : []),
               dependency.procedure
             )}.${localNetwork}`,
             mocks: dependency.mocks,
