@@ -105,7 +105,7 @@ describe("Event store", () => {
 describe("Multiple event-store RPC composition", () => {
   afterEach(restore);
 
-  it("targets the deployed aggregate stream with real identity helpers and optional tokens", async () => {
+  it("targets the existing aggregate stream with real identity helpers and optional tokens", async () => {
     const { default: stream } = await import("../../stream/index.js");
     const { default: streamDeps } = await import("../../stream/deps.js");
     const { default: hash } = await import("../../../lib/operation_hash/index.js");
