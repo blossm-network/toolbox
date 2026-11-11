@@ -1,10 +1,12 @@
 Tools to validate common and custom types.
 
-Wrappers accept `(value, options)`. Their synchronous custom predicate option is
-`fn`, unlike the object-argument `refinementFn` option in `@blossm/validation`.
+Most leaf validators accept `(value, options)`. Where a custom predicate is
+supported, its synchronous option is `fn`, unlike the object-argument
+`refinementFn` option in `@blossm/validation`. `numbersEqual` accepts two numbers
+followed by options.
 `findError(results)` combines validation results and nested Blossm errors into
 one invalid-argument error, or returns null. Composite validators such as `name`
-and `location` return an error directly when invalid.
+and `location` return an error directly when invalid and `undefined` on success.
 
 Existing policies are explicit:
 
