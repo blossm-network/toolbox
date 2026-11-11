@@ -1,3 +1,4 @@
+import assert from "node:assert/strict";
 import * as chai from "chai";
 import sinonChai from "sinon-chai";
 chai.use(sinonChai);
@@ -84,15 +85,31 @@ describe("Authorize", () => {
     expect(document).to.deep.equal({ permissions: [matching] });
   });
 
+  it("denies an empty requirement list even when the principal has permissions", async () => {
+    await assert.rejects(
+      authorize({
+        permissionsLookupFn: async () => [{ service, domain, privilege }],
+        permissions: [],
+        principal,
+      }),
+      { message: "There are missing permissions." },
+    );
+  });
+
   it("should authorize with permissions as none", async () => {
+    const permissionsLookupFn = fake.throws(
+      new Error("lookup must be bypassed"),
+    );
     const document = await authorize({
       context,
+      permissionsLookupFn,
       permissions: "none",
       network,
     });
     expect(document).to.deep.equal({
       permissions: [],
     });
+    expect(permissionsLookupFn).not.to.have.been.called;
   });
   it("should authorize with no sub and permissions as none", async () => {
     const document = await authorize({
