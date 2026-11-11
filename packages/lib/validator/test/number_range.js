@@ -55,10 +55,10 @@ describe("Inclusive bound messages", () => {
     expect(validator.numberRange(2, bounds).isValid()).to.equal(true);
     expect(validator.numberRange(3, bounds).isValid()).to.equal(true);
     expect(validator.numberRange(1, bounds).errors[0].message).to.include(
-      "at least 2"
+      "at least 2",
     );
     expect(validator.numberRange(4, bounds).errors[0].message).to.include(
-      "at most 3"
+      "at most 3",
     );
   });
 });

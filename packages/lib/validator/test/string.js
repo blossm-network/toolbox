@@ -97,7 +97,7 @@ describe("Inclusive length messages", () => {
   it("describes the allowed maximum accurately", () => {
     expect(validator.string("ab", { maxLength: 2 }).isValid()).to.equal(true);
     expect(
-      validator.string("abc", { maxLength: 2 }).errors[0].message
+      validator.string("abc", { maxLength: 2 }).errors[0].message,
     ).to.include("at most 2 characters");
   });
 });
