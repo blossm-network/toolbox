@@ -10,3 +10,6 @@ The apostrophe is part of the CSV text and remains visible to programmatic CSV
 parsers. This limits formula interpretation on direct spreadsheet import; it is
 not a guarantee across every spreadsheet application, locale or save/reopen
 workflow. Verify the target spreadsheet/import settings when offering downloads.
+
+See [OWASP CSV injection guidance](https://owasp.org/www-community/attacks/CSV_Injection)
+for spreadsheet-specific import and save/reopen limitations.

@@ -11,5 +11,5 @@ const spreadsheetString = (value) => {
 
 export default ({ data, fields }) =>
   new deps.Parser({ fields, formatters: { string: spreadsheetString } }).parse(
-    data
+    data,
   );

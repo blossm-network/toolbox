@@ -38,7 +38,7 @@ describe("Spreadsheet downloads", () => {
     ];
     for (const value of values) {
       expect(jsonToCSV({ data: [{ value }], fields: ["value"] })).to.equal(
-        `"value"\n"'${value}"`
+        `"value"\n"'${value}"`,
       );
     }
   });
@@ -51,7 +51,22 @@ describe("Spreadsheet downloads", () => {
   });
   it("keeps normal string values unchanged", () => {
     expect(
-      jsonToCSV({ data: [{ value: "ordinary" }], fields: ["value"] })
+      jsonToCSV({ data: [{ value: "ordinary" }], fields: ["value"] }),
     ).to.equal('"value"\n"ordinary"');
   });
+});
+
+it("protects nested values and serialized strings while retaining CSV cell boundaries", () => {
+  const data = [
+    {
+      nested: { value: "\ufeff\t＝1+1" },
+      serialized: { toJSON: () => "=1+1" },
+      text: 'ordinary,"=1+1\nnext',
+    },
+  ];
+  expect(
+    jsonToCSV({ data, fields: ["nested.value", "serialized", "text"] }),
+  ).to.equal(
+    `"nested.value","serialized","text"\n"'\ufeff\t＝1+1","'=1+1","ordinary,""=1+1\nnext"`,
+  );
 });
