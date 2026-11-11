@@ -1,0 +1,82 @@
+import assert from "assert";
+import { load } from "./load.js";
+import { formatView } from "../../../lib/view_store_mutations/index.js";
+
+const fixture = async ({ handler, response = { body: {} } }) => {
+  const updates = [];
+  const deletions = [];
+  const notifications = [];
+  const projection = await load("blossm/src/projection/deploy/src/index.js", {
+    projection: (options) => options,
+    config: { name: "cards" },
+    process: { env: { NODE_ENV: "local" } },
+    handlers: { animals: { bird: handler } },
+    viewStore: () => ({
+      set: () => ({
+        update: async (args) => {
+          updates.push(args);
+          return response;
+        },
+        delete: async (...args) => deletions.push(args),
+      }),
+    }),
+    command: () => ({
+      set: () => ({ issue: async (args) => notifications.push(args) }),
+    }),
+    channelName: () => "channel",
+    logger: { error: () => {} },
+    gcpToken: () => {},
+    nodeExternalToken: () => {},
+    gcpSecret: { get: () => {} },
+    gcpQueue: { enqueue: () => {} },
+    composeUpdate: (update) => update,
+  });
+  return {
+    updates,
+    deletions,
+    notifications,
+    run: (push = false) =>
+      projection.mainFn({
+        aggregate: {
+          headers: { service: "animals", domain: "bird", root: "root" },
+        },
+        push,
+      }),
+  };
+};
+
+describe("Generated projection helper semantics", () => {
+  it("treats a no-content update as a completed no-op without pushing", async () => {
+    const test = await fixture({
+      handler: async () => ({ id: "id", update: { label: "new" } }),
+      response: { statusCode: 204 },
+    });
+    await test.run(true);
+    assert.strictEqual(test.updates.length, 1);
+    assert.deepStrictEqual(test.notifications, []);
+  });
+  it("publishes the returned view header trace", async () => {
+    const trace = ["tx"];
+    const test = await fixture({
+      handler: async () => ({ id: "id", update: { label: "new" } }),
+      response: {
+        statusCode: 200,
+        body: formatView(
+          { formatFn: ({ body }) => body },
+          {
+            headers: {
+              id: "id",
+              context: { root: "context" },
+              created: "now",
+              modified: "now",
+            },
+            trace: { animals: { bird: trace } },
+            body: { label: "new" },
+          },
+        ),
+      },
+    });
+    await test.run(true);
+    assert.deepStrictEqual(test.notifications[0].trace, trace);
+  });
+});

@@ -174,7 +174,7 @@ const saveId = async ({
     view: newView,
     keys,
     id: newView.headers.id,
-    trace: newView.trace,
+    trace: newView.headers.trace,
     type:
       newView.headers.created == newView.headers.modified ? "create" : "update",
   });
