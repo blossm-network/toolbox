@@ -9,11 +9,19 @@ const parts = ["account", "core", "event-store"];
 const region = "region";
 
 describe("Merged stream RPC", () => {
+  let environment;
   beforeEach(() => {
+    environment = { HOST: process.env.HOST, NODE_ENV: process.env.NODE_ENV };
     process.env.HOST = "internal";
     process.env.NODE_ENV = "production";
   });
-  afterEach(restore);
+  afterEach(() => {
+    restore();
+    for (const [key, value] of Object.entries(environment)) {
+      if (value === undefined) delete process.env[key];
+      else process.env[key] = value;
+    }
+  });
 
   it("constructs ordinary RPC identity and preserves caller query objects", async () => {
     const producer = fake.resolves({ token: "fake-identity", type: "Bearer" });
@@ -87,7 +95,7 @@ describe("Merged stream RPC", () => {
     });
   });
 
-  it("decodes fragmented records independently before sorting actual HTTP source bodies", async () => {
+  it("decodes fragmented source Responses independently before sorting", async () => {
     replace(deps, "streamMany", request.streamMany);
     replace(requestDeps, "fetch", async (url) => {
       const values =
@@ -117,7 +125,7 @@ describe("Merged stream RPC", () => {
     assert.deepEqual(output, [1, 2, 3, 4]);
   });
 
-  it("propagates actual upstream HTTP errors and callback failures", async () => {
+  it("propagates upstream HTTP errors before invoking callbacks", async () => {
     replace(deps, "streamMany", request.streamMany);
     replace(
       requestDeps,
