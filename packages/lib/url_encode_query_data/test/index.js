@@ -46,22 +46,39 @@ describe("Package dependencies", () => {
 describe("Existing URL components", () => {
   it("appends parameters to an existing query", () => {
     expect(encode("https://example.test/?old=1", { fresh: 2 })).to.equal(
-      "https://example.test/?old=1&fresh=2"
+      "https://example.test/?old=1&fresh=2",
     );
   });
   it("keeps new queries before fragments", () => {
     expect(encode("/relative#part", { fresh: 2 })).to.equal(
-      "/relative?fresh=2#part"
+      "/relative?fresh=2#part",
     );
     expect(encode("https://example.test/?old=1#part", { fresh: 2 })).to.equal(
-      "https://example.test/?old=1&fresh=2#part"
+      "https://example.test/?old=1&fresh=2#part",
     );
   });
   it("preserves empty parameters and existing separators", () => {
     expect(encode("mongodb://host/db", {})).to.equal("mongodb://host/db");
     expect(encode("/path?", { fresh: 2 })).to.equal("/path?fresh=2");
     expect(encode("/path?old=1&", { fresh: 2 })).to.equal(
-      "/path?old=1&fresh=2"
+      "/path?old=1&fresh=2",
     );
   });
+});
+
+it("preserves existing query bytes, duplicate keys and fragment-only punctuation", () => {
+  const encoded = encode(
+    "/path%23part?existing=a+b&fresh=old#section?ignored=1",
+    { fresh: "a#b" },
+  );
+  expect(encoded).to.equal(
+    "/path%23part?existing=a+b&fresh=old&fresh=a%23b#section?ignored=1",
+  );
+  const parsed = new URL(encoded, "https://example.test");
+  expect(parsed.searchParams.getAll("fresh")).to.deep.equal(["old", "a#b"]);
+  expect(parsed.searchParams.get("existing")).to.equal("a b");
+  expect(parsed.hash).to.equal("#section?ignored=1");
+  expect(encode("/path#section?ignored=1", { fresh: 2 })).to.equal(
+    "/path?fresh=2#section?ignored=1",
+  );
 });

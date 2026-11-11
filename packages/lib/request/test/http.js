@@ -168,6 +168,24 @@ describe("Native HTTP transport boundaries", () => {
     assert.equal(JSON.parse(del.body).method, "DELETE");
   });
 
+  it("sends appended queries before fragments through GET, DELETE and streams", async () => {
+    const url = `${base}/echo?old=1#section?ignored=1`;
+    const options = { query: { fresh: "a#b" } };
+    for (const method of ["get", "del"]) {
+      const result = await request[method](url, options);
+      assert.equal(JSON.parse(result.body).url, "/echo?old=1&fresh=a%23b");
+    }
+    let body = "";
+    await request.stream(
+      url,
+      (chunk) => {
+        body += chunk.toString();
+      },
+      options,
+    );
+    assert.equal(JSON.parse(body).url, "/echo?old=1&fresh=a%23b");
+  });
+
   it("returns ordinary HTTP failures but rejects streaming failures before callbacks", async () => {
     const response = await request.get(`${base}/forbidden`);
     assert.equal(response.statusCode, 403);
