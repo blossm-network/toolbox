@@ -92,7 +92,7 @@ const parseArgs = async (
     //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        e.message || `I couldn't read the command. Flags should be set like \`--flag=flagValue\`, \`--flag flagValue\`, or \`-f flagValue\``
+        e?.message || `I couldn't read the command. Flags should be set like \`--flag=flagValue\`, \`--flag flagValue\`, or \`-f flagValue\``
       ),
       red.bold("error")
     );
