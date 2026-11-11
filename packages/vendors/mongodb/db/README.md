@@ -16,3 +16,8 @@ BLOSSM_TEST_MONGODB_URI="mongodb://127.0.0.1:27017/?replicaSet=test" npm test
 ```
 
 The checks create and drop their own database and are skipped without this variable.
+
+`mapReduce` is not part of this adapter: the current Mongoose model has no such
+method. The `aggregate` helper supports matching, projection, sorting and paging.
+Application-specific reductions need a purpose-built aggregation pipeline; this
+adapter does not translate arbitrary JavaScript map/reduce functions.

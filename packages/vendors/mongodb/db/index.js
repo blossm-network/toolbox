@@ -4,7 +4,6 @@ import aggregate from "./src/operations/aggregate.js";
 import findOne from "./src/operations/find_one.js";
 import write from "./src/operations/write.js";
 import create from "./src/operations/create.js";
-import mapReduce from "./src/operations/map_reduce.js";
 import forEach from "./src/operations/for_each.js";
 import count from "./src/operations/count.js";
 import updateMany from "./src/operations/update_many.js";
@@ -22,7 +21,6 @@ export {
   forEach,
   count,
   updateMany,
-  mapReduce,
   connect,
   store,
   startSession,
