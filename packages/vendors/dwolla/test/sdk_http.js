@@ -86,7 +86,7 @@ describe("Actual Dwolla SDK HTTP contracts", () => {
       body: {
         code: "ValidationError",
         _embedded: {
-          errors: [{ message: "Email is required", path: "/email" }],
+          errors: [{ message: "Owner field is required", path: "/owners/0/x" }],
         },
       },
     };
@@ -96,7 +96,7 @@ describe("Actual Dwolla SDK HTTP contracts", () => {
       assert.equal(sdkErrors[0].body.code, "ValidationError");
       assert.equal(error.statusCode, 400);
       assert.deepEqual(error.info().errors, [
-        { message: "Email is required", path: "email" },
+        { message: "Owner field is required", path: "owners.0.x" },
       ]);
       return true;
     });
