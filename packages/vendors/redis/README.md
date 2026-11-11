@@ -7,7 +7,6 @@ string/number/Buffer field representations; serialize dates explicitly.
 Without a ready Redis client, the same API uses a process-local cache with TTL
 checks on access. Fallback writes replace the entire cached object; remote HSET
 writes update individual hash fields. The fallback is not shared between
-instances, and entries written during
-an outage are not copied into Redis when it becomes ready. Callers must set an
+instances, and entries written during an outage are not copied into Redis when it becomes ready. Callers must set an
 expiry for bounded permission/token caching. Remote writes and setExpiry remain
 two operations, so a process stopping between them can leave an unexpired hash.
