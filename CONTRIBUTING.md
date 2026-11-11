@@ -87,6 +87,28 @@ access, registry and account 2FA before starting. Do not place tokens in source,
 command arguments, documentation or captured logs. If modern npm needs browser
 approval, complete that existing authorization flow rather than disabling 2FA.
 
+For security-key browser authentication, keep the publishing scope explicit:
+
+```sh
+npm login --scope=@blossm --auth-type=web --registry=https://registry.npmjs.org/
+npm_config_scope=@blossm yarn lerna-publish
+```
+
+Login and publication can require separate browser approvals. If Lerna stops at
+an OTP-only prompt, stop that publisher before using the modern npm browser
+fallback for the exact Lerna-selected, packed archives:
+
+```sh
+npm publish /path/to/approved-package.tgz --scope=@blossm --access public --registry=https://registry.npmjs.org/
+```
+
+Keep `--scope=@blossm` on fallback uploads and choose scope-wide authorization
+when npm offers it. A scoped publication approval allowed subsequent uploads in
+the verified workflow; follow actual challenges if that authorization expires.
+Use the selected browser flow rather than requesting a new token by default.
+Record accepted uploads so processing delays cannot trigger duplicate uploads.
+Authentication retries do not require another version bump.
+
 After publication, verify the exact version, `latest` tag and downloaded tarball
 integrity/content against tested source. Registry processing can be delayed; a
 temporary 404 is not a reason to publish a second time. CI verification must not
