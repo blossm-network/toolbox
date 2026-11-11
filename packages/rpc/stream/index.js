@@ -36,6 +36,8 @@ export default ({region = process.env.GCP_REGION, operationNameComponentQueries,
           externalTokenFn,
           currentToken,
           claims,
+          timeout,
+          signal,
         } = {}) => {
           const internal = host == process.env.HOST;
 
@@ -111,7 +113,11 @@ export default ({region = process.env.GCP_REGION, operationNameComponentQueries,
               for (const d of parsedData) await fn(d);
               progress = leftover;
             },
-            sortFn
+            sortFn,
+            {
+              ...(timeout !== undefined && { timeout }),
+              ...(signal && { signal }),
+            }
           );
 
           if (!response || response.statusCode < 300) return;

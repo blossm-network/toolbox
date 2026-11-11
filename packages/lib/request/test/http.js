@@ -8,8 +8,68 @@ import request from "../index.js";
 const sockets = new Set();
 let server, other, base, elsewhere;
 const seen = [];
+const active = new Map();
+const track = (path, res) => {
+  const state = {
+    res,
+    closed: new Promise((resolve) => res.once("close", resolve)),
+  };
+  active.set(path, state);
+  return state;
+};
 const handle = async (req, res) => {
   seen.push({ url: req.url, headers: req.headers, method: req.method });
+  if (req.url.startsWith("/hop/")) {
+    const remaining = Number(req.url.split("/").pop());
+    if (remaining) res.writeHead(302, { location: `/hop/${remaining - 1}` });
+    return res.end(remaining ? "redirect" : "arrived");
+  }
+  if (req.url.startsWith("/hold/")) {
+    track(req.url, res);
+    res.write("first");
+    return;
+  }
+  if (req.url.startsWith("/sorted/")) {
+    track(req.url, res);
+    const first = req.url.endsWith("a") ? 1 : 2;
+    res.write(`{"n":${first}}\n{"n":`);
+    return;
+  }
+  if (req.url.startsWith("/merge/")) {
+    track(req.url, res);
+    if (req.url.endsWith("hold")) res.write("first");
+    const hold = active.get("/merge/hold");
+    const failed = active.get("/merge/fail");
+    if (hold && failed) {
+      failed.res.writeHead(503);
+      failed.res.end('{"message":"source unavailable"}');
+    }
+    return;
+  }
+  if (req.url === "/slow-upload") {
+    const state = track(req.url, res);
+    state.bytes = 0;
+    state.complete = false;
+    req.on("error", () => {});
+    let timer;
+    const onData = (chunk) => {
+      state.bytes += chunk.length;
+      req.pause();
+      timer = setTimeout(() => req.resume(), 100);
+    };
+    req.on("data", onData);
+    res.once("close", () => clearTimeout(timer));
+    state.resume = () => {
+      clearTimeout(timer);
+      req.removeListener("data", onData);
+      req.resume();
+    };
+    req.on("end", () => {
+      state.complete = true;
+      res.end("uploaded");
+    });
+    return;
+  }
   if (req.url.startsWith("/redirect")) {
     res.writeHead(302, {
       location: req.url.includes("other") ? `${elsewhere}/echo` : "/echo",
@@ -36,7 +96,7 @@ const handle = async (req, res) => {
   if (req.url === "/forbidden") {
     res.writeHead(403, { "content-type": "application/json" });
     return res.end(
-      JSON.stringify({ code: "Forbidden", message: "Not permitted." })
+      JSON.stringify({ code: "Forbidden", message: "Not permitted." }),
     );
   }
   if (req.url === "/stream") {
@@ -56,7 +116,7 @@ const handle = async (req, res) => {
       url: req.url,
       headers: req.headers,
       body: Buffer.concat(chunks).toString(),
-    })
+    }),
   );
 };
 
@@ -75,12 +135,16 @@ describe("Native HTTP transport boundaries", () => {
     base = `http://127.0.0.1:${server.address().port}`;
     elsewhere = `http://127.0.0.1:${other.address().port}`;
   });
+  afterEach(() => {
+    for (const state of active.values()) state.res.destroy();
+    active.clear();
+  });
   after(async () => {
     for (const socket of sockets) socket.destroy();
     await Promise.all(
       [server, other].map(
-        (instance) => new Promise((resolve) => instance.close(resolve))
-      )
+        (instance) => new Promise((resolve) => instance.close(resolve)),
+      ),
     );
   });
 
@@ -110,7 +174,7 @@ describe("Native HTTP transport boundaries", () => {
     let calls = 0;
     await assert.rejects(
       request.stream(`${base}/forbidden`, () => calls++),
-      (err) => err.statusCode === 403 && err.message === "Not permitted."
+      (err) => err.statusCode === 403 && err.message === "Not permitted.",
     );
     assert.equal(calls, 0);
   });
@@ -127,7 +191,7 @@ describe("Native HTTP transport boundaries", () => {
         await new Promise((resolve) => setTimeout(resolve, 30));
         active--;
       },
-      { onResponseFn: (response) => events.push(response.headers["x-stream"]) }
+      { onResponseFn: (response) => events.push(response.headers["x-stream"]) },
     );
     assert.equal(events[0], "yes");
     assert.equal(events.slice(1).join(""), "firstsecond");
@@ -141,7 +205,7 @@ describe("Native HTTP transport boundaries", () => {
         calls++;
         throw failure;
       }),
-      (err) => err === failure
+      (err) => err === failure,
     );
     await new Promise((resolve) => setTimeout(resolve, 35));
     assert.equal(calls, 1);
@@ -150,11 +214,11 @@ describe("Native HTTP transport boundaries", () => {
   it("enforces request and stream idle timeouts", async () => {
     await assert.rejects(
       request.get(`${base}/slow`, { timeout: 10 }),
-      (err) => err.name === "TimeoutError"
+      (err) => err.name === "TimeoutError",
     );
     await assert.rejects(
       request.stream(`${base}/idle`, () => undefined, { timeout: 10 }),
-      (err) => err.name === "TimeoutError"
+      (err) => err.name === "TimeoutError",
     );
   });
 
@@ -163,18 +227,18 @@ describe("Native HTTP transport boundaries", () => {
     controller.abort(new Error("cancelled"));
     await assert.rejects(
       request.get(`${base}/echo`, { signal: controller.signal }),
-      /cancelled/
+      /cancelled/,
     );
   });
 
   it("retains same-origin credentials and strips them across a redirect", async () => {
     const headers = { authorization: "Bearer fake", cookie: "access=fake" };
     const same = JSON.parse(
-      (await request.get(`${base}/redirect`, { headers })).body
+      (await request.get(`${base}/redirect`, { headers })).body,
     );
     assert.equal(same.headers.authorization, headers.authorization);
     const cross = JSON.parse(
-      (await request.get(`${base}/redirect-other`, { headers })).body
+      (await request.get(`${base}/redirect-other`, { headers })).body,
     );
     assert.equal(cross.headers.authorization, undefined);
     assert.equal(cross.headers.cookie, undefined);
@@ -197,7 +261,7 @@ describe("Native HTTP transport boundaries", () => {
     const echoed = JSON.parse(result.body);
     assert.match(
       echoed.headers["content-type"],
-      /^multipart\/form-data; boundary=/
+      /^multipart\/form-data; boundary=/,
     );
     assert.match(echoed.body, /name="title"\r\n\r\nexample/);
     assert.match(echoed.body, /filename="guide.txt"/);
@@ -220,6 +284,150 @@ describe("Native HTTP transport boundaries", () => {
     assert.equal(metadata.headers["content-encoding"], undefined);
     assert.equal(metadata.headers["content-length"], undefined);
     assert.equal(metadata.headers["content-type"], "text/plain");
+  });
+
+  it("aborts a response midway and closes the server response", async () => {
+    const controller = new AbortController();
+    const failure = new Error("cancel receiving");
+    let calls = 0;
+    let closed;
+    await assert.rejects(
+      request.stream(
+        `${base}/hold/abort`,
+        () => {
+          calls++;
+          closed = active.get("/hold/abort").closed;
+          controller.abort(failure);
+        },
+        { signal: controller.signal },
+      ),
+      (error) => error === failure,
+    );
+    assert.equal(calls, 1);
+    await closed;
+  });
+
+  it("rejects an abruptly disconnected response without later callbacks", async () => {
+    let calls = 0;
+    await assert.rejects(
+      request.stream(`${base}/hold/reset`, () => {
+        calls++;
+        active.get("/hold/reset").res.destroy();
+      }),
+      (error) => error instanceof Error,
+    );
+    assert.equal(calls, 1);
+    await active.get("/hold/reset").closed;
+  });
+
+  it("closes a response when the metadata callback fails before body iteration", async () => {
+    const failure = new Error("cannot accept response");
+    let calls = 0;
+    await assert.rejects(
+      request.stream(`${base}/hold/metadata`, () => calls++, {
+        onResponseFn: () => {
+          throw failure;
+        },
+      }),
+      (error) => error === failure,
+    );
+    assert.equal(calls, 0);
+    await active.get("/hold/metadata").closed;
+  });
+
+  it("merges actual HTTP sources with independent fragmented records", async () => {
+    let decoders = 0;
+    const decode = () => {
+      decoders++;
+      let pending = "";
+      return {
+        write: (chunk) => {
+          const lines = (pending + chunk.toString()).split("\n");
+          pending = lines.pop();
+          return lines.map((line) => JSON.parse(line));
+        },
+        end: () => {
+          assert.equal(pending, "");
+          return [];
+        },
+      };
+    };
+    const output = [];
+    await request.streamMany(
+      [{ url: `${base}/sorted/a` }, { url: `${base}/sorted/b` }],
+      async ({ n }) => {
+        output.push(n);
+        if (n <= 2)
+          active.get(`/sorted/${n === 1 ? "a" : "b"}`).res.end(`${n + 2}}\n`);
+      },
+      (a, b) => a.n - b.n,
+      { decode },
+    );
+    assert.deepEqual(output, [1, 2, 3, 4]);
+    assert.equal(decoders, 2);
+  });
+
+  it("cancels the other actual source when one returns an HTTP failure", async () => {
+    let calls = 0;
+    await assert.rejects(
+      request.streamMany(
+        [{ url: `${base}/merge/hold` }, { url: `${base}/merge/fail` }],
+        () => calls++,
+      ),
+      (error) =>
+        error.statusCode === 503 && error.message === "source unavailable",
+    );
+    assert.equal(calls, 0);
+    await active.get("/merge/hold").closed;
+  });
+
+  it("closes every actual source when the output callback fails", async () => {
+    const failure = new Error("cannot process merged output");
+    let calls = 0;
+    await assert.rejects(
+      request.streamMany(
+        [{ url: `${base}/hold/first` }, { url: `${base}/hold/second` }],
+        async () => {
+          calls++;
+          throw failure;
+        },
+      ),
+      (error) => error === failure,
+    );
+    assert.equal(calls, 1);
+    await Promise.all([
+      active.get("/hold/first").closed,
+      active.get("/hold/second").closed,
+    ]);
+  });
+
+  it("follows five redirects and stops before a sixth hop", async () => {
+    assert.equal((await request.get(`${base}/hop/5`)).body, "arrived");
+    const before = seen.length;
+    await assert.rejects(
+      request.get(`${base}/hop/6`),
+      /exceeded five redirects/,
+    );
+    assert.deepEqual(
+      seen.slice(before).map(({ url }) => url),
+      ["/hop/6", "/hop/5", "/hop/4", "/hop/3", "/hop/2", "/hop/1"],
+    );
+  });
+
+  it("times out while the server is still receiving a progressing upload", async () => {
+    await assert.rejects(
+      request.post(`${base}/slow-upload`, {
+        body: { data: "x".repeat(4 * 1024 * 1024) },
+        timeout: 400,
+      }),
+      (error) => error.name === "TimeoutError",
+    );
+    const upload = active.get("/slow-upload");
+    assert.ok(upload.bytes > 0);
+    assert.equal(upload.complete, false);
+    // Resume the paused server reader so it can observe the client's disconnect.
+    upload.resume();
+    await upload.closed;
   });
 
   it("completes an empty stream list", async () => {

@@ -437,3 +437,26 @@ describe("Multipart input ownership", () => {
     assert.equal(calls, 0);
   });
 });
+
+describe("Native redirect security", () => {
+  afterEach(restore);
+
+  it("rejects HTTPS downgrades before making an insecure request", async () => {
+    const redirected = response("redirect", {
+      status: 302,
+      headers: { location: "http://example.invalid/plain" },
+    });
+    let calls = 0;
+    replace(deps, "fetch", async (url) => {
+      calls++;
+      assert.equal(url.protocol, "https:");
+      return redirected;
+    });
+    await assert.rejects(
+      request.get("https://example.invalid/secure"),
+      /insecure URL/,
+    );
+    assert.equal(calls, 1);
+    assert.equal(redirected.bodyUsed, true);
+  });
+});

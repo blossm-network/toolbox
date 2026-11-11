@@ -10,7 +10,9 @@ those decoded representations.
 `formData` accepts scalar fields, Buffers, Blobs and `{value, options}` fields
 with `filename` and `contentType`. Unopened path-backed file streams use native
 file-backed Blobs; already-open, descriptor-backed and other multipart streams
-are buffered with cancellation. Multipart buffering has no byte limit. File-stream byte ranges
+are buffered with cancellation. Multipart buffering has no byte limit. For large
+files, pass a file-backed Blob from `node:fs`'s `openAsBlob` to avoid buffering.
+File-stream byte ranges
 and existing descriptors are respected. Passing formData hands its Node input
 streams to the adapter: they are consumed during preparation or destroyed on
 failure/cancellation, including a signal that was already aborted. Successfully
