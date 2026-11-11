@@ -21,7 +21,7 @@ describe("Generated procedure RPC helpers", () => {
               },
             }),
           }),
-        }
+        },
       );
       const result = procedure.viewsFn({})({ name: "list" });
       if (fail) await assert.rejects(result, (err) => err === error);
