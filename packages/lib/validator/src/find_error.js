@@ -15,7 +15,7 @@ const getErrors = (results) => {
             message: error.message,
             path: error.path,
           };
-        })
+        }),
       );
     }
   }
