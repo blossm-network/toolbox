@@ -112,9 +112,7 @@ export default ({
             dependency.procedure
           );
 
-          const key = `${dependency.name}${
-            dependency.context ? `-${dependency.context}` : ""
-          }`;
+          const key = operationHash;
 
           services = {
             ...services,
@@ -147,9 +145,7 @@ export default ({
             dependency.procedure
           );
 
-          const key = `${dependency.name}${
-            dependency.context ? `-${dependency.context}` : ""
-          }`;
+          const key = operationHash;
 
           services = {
             ...services,
