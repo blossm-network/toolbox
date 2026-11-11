@@ -11,6 +11,6 @@ try {
   await mod.cli(process.argv);
 } catch (err) {
   //eslint-disable-next-line no-console
-  console.error(err.message || err);
+  console.error(err?.message || err);
   process.exitCode = 1;
 }
