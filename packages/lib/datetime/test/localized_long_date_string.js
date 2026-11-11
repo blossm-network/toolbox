@@ -13,7 +13,7 @@ describe("Converts correctly", () => {
     const string = "2019-05-31T19:07:17+00:00";
 
     expect(localizedLongDateString(string, -300)).to.equal(
-      "May 31st 2019, 2:07:17 pm"
+      "May 31st 2019, 2:07:17 pm",
     );
   });
 });
@@ -21,7 +21,7 @@ describe("Converts correctly", () => {
 describe("Explicit long-date offsets", () => {
   it("does not infer daylight saving from another region", () => {
     expect(localizedLongDateString("2025-06-01T12:00:00Z", 0)).to.equal(
-      "June 1st 2025, 12:00:00 pm"
+      "June 1st 2025, 12:00:00 pm",
     );
   });
 });
