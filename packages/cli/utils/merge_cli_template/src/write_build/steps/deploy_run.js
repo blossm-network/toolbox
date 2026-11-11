@@ -71,9 +71,7 @@ export default ({
           procedure,
           hash: operationHash,
           ...labels,
-        })
-          .map(([key, value]) => `${key}=${value}`)
-          .join(",")}`,
+        }).reduce((string, [key, value]) => (string += `${key}=${value},`), "")}`,
       ],
     },
   ];

@@ -121,21 +121,22 @@ describe("Generated operation identity", () => {
         context,
         procedure: "view-composite",
         strict: true,
-      });
+      }).flat();
       const envStep = steps.find((step) => step.entrypoint == "node");
       const localEnv = Buffer.from(envStep.args.at(-1), "base64").toString();
       const deploy = steps.find((step) => step.args?.includes("deploy"));
-      const remoteEnv = deploy.args.find((arg) =>
-        arg.startsWith("--set-env-vars="),
+      const prepare = steps[steps.indexOf(deploy) - 1];
+      const remoteEnv = JSON.parse(
+        Buffer.from(prepare.args.at(-1), "base64").toString(),
       );
       const labels = deploy.args.find((arg) => arg.startsWith("--labels="));
       if (context === undefined) {
         assert.equal(localEnv.includes("CONTEXT="), false);
-        assert.equal(remoteEnv.includes("CONTEXT="), false);
+        assert.equal(Object.hasOwn(remoteEnv, "CONTEXT"), false);
         assert.equal(labels.includes("context="), false);
       } else {
         assert.ok(localEnv.includes("CONTEXT=ctx\n"));
-        assert.ok(remoteEnv.includes("CONTEXT=ctx,"));
+        assert.equal(remoteEnv.CONTEXT, "ctx");
         assert.ok(labels.includes("context=ctx,"));
       }
     }

@@ -53,11 +53,11 @@ describe("Deployment and local environment boundaries", () => {
             assert.strictEqual(deployed.ENDPOINT, envVars.ENDPOINT);
             assert.strictEqual(deployed.LIVE, "yes");
             assert(!Object.hasOwn(deployed, "TEST_ONLY"));
-            const argument = deployRun(deployment.options).args.find((arg) =>
-              arg.startsWith("--set-env-vars=")
-            );
-            assert(argument.includes(`ENDPOINT=${envVars.ENDPOINT},`));
-            assert(!argument.includes("TEST_ONLY="));
+            const [prepare, deploy] = deployRun(deployment.options);
+            assert(deploy.args.includes("--env-vars-file=.blossm-cloud-run-env.json"));
+            const variables = JSON.parse(Buffer.from(prepare.args.at(-1), "base64").toString());
+            assert.strictEqual(variables.ENDPOINT, envVars.ENDPOINT);
+            assert(!Object.hasOwn(variables, "TEST_ONLY"));
           }
           const local = steps.find((step) => step.step === "writeEnv").options
             .custom;
