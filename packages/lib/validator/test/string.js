@@ -106,23 +106,33 @@ describe("Throw-only string predicates", () => {
   it("still enforces length and nonempty rules after a successful predicate", () => {
     for (const fn of [() => undefined, () => null]) {
       expect(validator.string("abc", { fn, maxLength: 2 }).isValid()).to.equal(
-        false
+        false,
       );
       expect(
-        validator.string("", { fn, shouldAllowEmptyString: false }).isValid()
+        validator.string("", { fn, shouldAllowEmptyString: false }).isValid(),
       ).to.equal(false);
       expect(validator.string("ab", { fn, maxLength: 2 }).isValid()).to.equal(
-        true
+        true,
       );
     }
   });
 });
 
-
 it("keeps false and throwing string predicates rejected even within bounds", () => {
-  for (const fn of [() => false, () => 0, () => "", () => { throw new Error("Rejected."); }]) {
-    expect(validator.string("ab", { fn, maxLength: 2 }).isValid()).to.equal(false);
+  for (const fn of [
+    () => false,
+    () => 0,
+    () => "",
+    () => {
+      throw new Error("Rejected.");
+    },
+  ]) {
+    expect(validator.string("ab", { fn, maxLength: 2 }).isValid()).to.equal(
+      false,
+    );
   }
-  expect(validator.string("", { fn: () => undefined }).isValid()).to.equal(true);
+  expect(validator.string("", { fn: () => undefined }).isValid()).to.equal(
+    true,
+  );
   expect(validator.string("ab", { maxLength: 2 }).isValid()).to.equal(true);
 });
