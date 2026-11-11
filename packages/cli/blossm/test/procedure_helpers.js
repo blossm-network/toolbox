@@ -24,7 +24,8 @@ describe("Generated procedure RPC helpers", () => {
         }),
       });
       const result = procedure.countFn({})({ domain: "bird", root: "root" });
-      if (count === null) await assert.rejects(result, (err) => err === failure);
+      if (count === null)
+        await assert.rejects(result, (err) => err === failure);
       else assert.strictEqual(await result, count);
     }
   });
