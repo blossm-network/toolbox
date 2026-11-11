@@ -32,7 +32,7 @@ describe("HTTP response streaming", () => {
       res.emit(event, failure);
       await assert.rejects(
         pending,
-        event === "error" ? (error) => error === failure : /closed/
+        event === "error" ? (error) => error === failure : /closed/,
       );
       assert.equal(res.listenerCount("drain"), 0);
     }
@@ -55,7 +55,7 @@ describe("HTTP response streaming", () => {
         "content-type": "text/plain",
         "set-cookie": ["a=1", "b=2"],
         "x-download": "yes",
-      }
+      },
     );
   });
 });
