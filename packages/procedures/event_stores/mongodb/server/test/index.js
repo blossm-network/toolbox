@@ -118,8 +118,8 @@ describe("Mongodb event store", () => {
       const tx = {
         id: "transaction",
         claims: {
-          exp: 1700000000,
-          iat: 1600000000,
+          exp: "2026-11-11T00:00:00.000Z",
+          iat: "2026-11-10T00:00:00.000Z",
           aud: ["one", "two"],
           custom: { role: "reader" },
         },

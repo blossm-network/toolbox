@@ -119,8 +119,9 @@ describe("MongoDB transaction operation serialization", function () {
       id: "metadata-roundtrip",
       ip: "127.0.0.1",
       claims: {
-        exp: 1700000000,
-        iat: 1600000000,
+        exp: "2026-11-11T00:00:00.000Z",
+        iat: "2026-11-10T00:00:00.000Z",
+        nbf: "2026-11-10T00:00:00.000Z",
         aud: "one",
         custom: { role: "reader" },
       },
@@ -146,7 +147,7 @@ describe("MongoDB transaction operation serialization", function () {
   it("casts transaction fields once before hashing, with custom claims and array audiences retained", async () => {
     const input = {
       id: 123,
-      claims: { exp: "1700000000", aud: ["one", "two"], custom: { empty: {} } },
+      claims: { exp: "2026-11-11", aud: ["one", "two"], custom: { empty: {} } },
       path: [
         {
           network: "local",
@@ -163,7 +164,7 @@ describe("MongoDB transaction operation serialization", function () {
     assert.deepEqual(saved.tx, {
       ...input,
       id: "123",
-      claims: { ...input.claims, exp: 1700000000 },
+      claims: { ...input.claims, exp: "2026-11-11T00:00:00.000Z" },
       path: [{ ...input.path[0], issued: "2026-11-10T00:00:00.000Z" }],
     });
     assert.equal(saved.headers.tHash, hash(saved.tx).create());
@@ -178,7 +179,7 @@ describe("MongoDB transaction operation serialization", function () {
       hash: "trace",
     };
     const invalid = [
-      { claims: { exp: "not-a-number" }, path: [] },
+      { claims: { exp: "not-a-date" }, path: [] },
       { claims: { aud: ["one", 2] }, path: [] },
       { path: [{ ...trace, issued: "not-a-date" }] },
       ...Object.keys(trace).map((field) => {
