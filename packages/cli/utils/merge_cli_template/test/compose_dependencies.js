@@ -1,9 +1,8 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync, readFileSync } from "node:fs";
+import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { createRequire } from "node:module";
-import { pathToFileURL } from "node:url";
+import loadServices from "./load_services.js";
 import mainService from "../src/write_compose/main_service.js";
 
 describe("Contextual Compose dependencies", () => {
@@ -11,32 +10,7 @@ describe("Contextual Compose dependencies", () => {
   let services;
   beforeEach(async () => {
     directory = mkdtempSync(path.join(tmpdir(), "blossm-compose-"));
-    const file = new URL(
-      "../src/write_compose/procedure_services.js",
-      import.meta.url,
-    );
-    const require = createRequire(file);
-    const source = readFileSync(file, "utf8")
-      .replace(
-        'import rootDir from "@blossm/cli-root-dir";',
-        `const rootDir = { path: () => ${JSON.stringify(directory)} };`,
-      )
-      .replace(
-        /from "([^"]+)"/g,
-        (_, name) =>
-          `from ${JSON.stringify(
-            name.startsWith(".")
-              ? new URL(name, file).href
-              : ["path"].includes(name)
-                ? `node:${name}`
-                : pathToFileURL(require.resolve(name)).href,
-          )}`,
-      );
-    services = (
-      await import(
-        `data:text/javascript;base64,${Buffer.from(source).toString("base64")}`
-      )
-    ).default;
+    services = await loadServices(directory);
   });
   afterEach(() => {
     rmSync(directory, { recursive: true, force: true });
