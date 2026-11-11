@@ -1,7 +1,6 @@
-import { parse, join } from "node:path";
-import { Storage } from "@google-cloud/storage";
+import deps from "./deps.js";
 
-const __client = new Storage();
+const __client = new deps.Storage();
 
 const upload = async ({ bucket, file, destination }) => {
   const options = {
@@ -20,11 +19,11 @@ const download = async ({ bucket: bucketName, destination, file }) => {
     });
   } else {
     const [files] = await bucket.getFiles();
-    const { dir, name, ext } = parse(destination);
+    const { dir, name, ext } = deps.parse(destination);
     let counter = 0;
     for (const file of files) {
       await file.download({
-        destination: join(
+        destination: deps.join(
           dir,
           `${name}${counter === 0 ? "" : `_${counter}`}${ext}`
         ),
