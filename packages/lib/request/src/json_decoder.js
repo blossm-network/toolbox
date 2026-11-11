@@ -1,8 +1,6 @@
-import { StringDecoder } from "node:string_decoder";
-
 // HTTP chunk boundaries have no relationship to JSON record boundaries.
 export default () => {
-  const utf8 = new StringDecoder("utf8");
+  const utf8 = new TextDecoder("utf-8", { fatal: true });
   let buffer = "";
   let index = 0;
   let start = -1;
@@ -17,13 +15,13 @@ export default () => {
     for (; index < buffer.length; index++) {
       const char = buffer[index];
       if (start === -1) {
-        if (/\s/.test(char)) {
+        if (/[ \t\r\n]/.test(char)) {
           consumed = index + 1;
           continue;
         }
         if (char !== "{" && char !== "[")
           throw new SyntaxError(
-            "A JSON stream record must be an object or array."
+            "A JSON stream record must be an object or array.",
           );
         start = index;
       }
@@ -51,10 +49,12 @@ export default () => {
   return {
     write: (chunk) =>
       consume(
-        typeof chunk === "string" ? chunk : utf8.write(Buffer.from(chunk))
+        typeof chunk === "string"
+          ? chunk
+          : utf8.decode(Buffer.from(chunk), { stream: true }),
       ),
     end: () => {
-      const values = consume(utf8.end());
+      const values = consume(utf8.decode());
       if (buffer.trim())
         throw new SyntaxError("The JSON stream ended within a record.");
       return values;
