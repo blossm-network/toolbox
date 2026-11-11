@@ -78,12 +78,12 @@ export default ({
             else
               return baseMessageFn(
                 e || new Error("This value is invalid."),
-                context.title
+                context.title,
               );
           }
           return baseMessageFn(
             new Error("This value is invalid."),
-            context.title
+            context.title,
           );
         };
         return refinedFn;
