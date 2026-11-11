@@ -18,7 +18,7 @@ describe("Scheduler HTTP contract", () => {
     });
     await schedule.create({
       url: uri,
-      data: { a: 1 },
+      data: { a: 1, message: "hello 🌱", active: false },
       token,
       schedule: "* * * * *",
       project: "dummy",
@@ -26,17 +26,44 @@ describe("Scheduler HTTP contract", () => {
     });
     const target = request.job.httpTarget;
     assert.equal(target.headers["content-type"], "application/json");
-    assert.deepEqual(JSON.parse(target.body.toString()), { a: 1 });
+    assert.deepEqual(JSON.parse(target.body.toString()), {
+      a: 1,
+      message: "hello 🌱",
+      active: false,
+    });
     assert.deepEqual(target.oauthToken, token);
     const message =
       protos.google.cloud.scheduler.v1.HttpTarget.fromObject(target);
     assert.equal(
       protos.google.cloud.scheduler.v1.HttpTarget.verify(message),
-      null
+      null,
     );
     assert.equal(
       message.oauthToken.serviceAccountEmail,
-      token.serviceAccountEmail
+      token.serviceAccountEmail,
+    );
+    const { CreateJobRequest, HttpMethod } = protos.google.cloud.scheduler.v1;
+    const wire = CreateJobRequest.fromObject(request);
+    assert.equal(CreateJobRequest.verify(wire), null);
+    const decoded = CreateJobRequest.decode(
+      CreateJobRequest.encode(wire).finish(),
+    );
+    assert.equal(decoded.parent, "projects/dummy/locations/us-east1");
+    assert.equal(decoded.job.schedule, "* * * * *");
+    assert.equal(decoded.job.httpTarget.uri, uri);
+    assert.equal(decoded.job.httpTarget.httpMethod, HttpMethod.POST);
+    assert.equal(
+      decoded.job.httpTarget.headers["content-type"],
+      "application/json",
+    );
+    assert.deepEqual(JSON.parse(decoded.job.httpTarget.body.toString()), {
+      a: 1,
+      message: "hello 🌱",
+      active: false,
+    });
+    assert.equal(
+      decoded.job.httpTarget.oauthToken.serviceAccountEmail,
+      token.serviceAccountEmail,
     );
   });
 });
