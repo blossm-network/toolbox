@@ -1,6 +1,8 @@
 Creates, decodes and verifies Blossm tokens. `decode` returns `{ headers, claims }`
 and does not establish authenticity. `validate` verifies the signature, configured
-algorithm, audience and time bounds before returning claims.
+algorithm, audience and time bounds before returning claims. Tokens must have
+exactly three nonempty, canonical base64url segments; malformed encoding is
+rejected before calling the verifier.
 
 The existing wire format uses ISO date strings for exp, nbf and iat, with
 `expiresIn` and `activeIn` expressed in milliseconds. Validation requires a
