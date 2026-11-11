@@ -5,12 +5,7 @@
  * - Sorting
  * - MongoDB query syntax
  *
- * The function takes in the query params from the request (req.query),
- * and is responsible for returning { query, sort }, where
- * query is the query to be executed against the view store, formatted as a MongoDB query.
- *
- * and sort is the specification of how the results should be sorted, formatted as an array of MongoDB s.
- * sort is optional.
+ * The function takes in req.query.sort and returns the MongoDB sort specification.
  *
  */
 

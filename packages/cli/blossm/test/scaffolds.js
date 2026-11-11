@@ -19,7 +19,7 @@ const packages = ["chai", "chai-datetime", "sinon", "sinon-chai"].map(
     )
       directory = path.dirname(directory);
     return [name, directory];
-  }
+  },
 );
 
 const runFixture = ({ source, enabled = false, count }) => {
@@ -32,14 +32,14 @@ const runFixture = ({ source, enabled = false, count }) => {
       fs.symlinkSync(
         directory,
         path.join(fixture, "node_modules", name),
-        "dir"
+        "dir",
       );
     }
     // The fact's test must replace this seam before its sample RPC executes.
     if (source === "fact/init/template") {
       fs.writeFileSync(
         path.join(fixture, "deps.js"),
-        'export default { eventStore: () => { throw new Error("unstubbed RPC"); }, gcpToken: () => { throw new Error("unstubbed cloud token"); } };'
+        'export default { eventStore: () => { throw new Error("unstubbed RPC"); }, gcpToken: () => { throw new Error("unstubbed cloud token"); } };',
       );
     }
     if (enabled) {
@@ -47,7 +47,7 @@ const runFixture = ({ source, enabled = false, count }) => {
         if (file.startsWith("_") && file.endsWith(".js")) {
           fs.renameSync(
             path.join(fixture, file),
-            path.join(fixture, file.slice(1))
+            path.join(fixture, file.slice(1)),
           );
         }
       }
@@ -55,19 +55,19 @@ const runFixture = ({ source, enabled = false, count }) => {
     const result = spawnSync(
       process.execPath,
       [mocha, "--recursive", "test/unit", "--reporter", "json"],
-      { cwd: fixture, encoding: "utf8", timeout: 20000 }
+      { cwd: fixture, encoding: "utf8", timeout: 20000 },
     );
     assert.strictEqual(
       result.status,
       0,
-      `${source}: ${result.stdout}\n${result.stderr}`
+      `${source}: ${result.stdout}\n${result.stderr}`,
     );
     const output = result.stdout.slice(result.stdout.indexOf('{\n  "stats"'));
     const report = JSON.parse(output);
     assert.strictEqual(
       report.stats.tests,
       count,
-      `${source}: offered scaffold checks must execute`
+      `${source}: offered scaffold checks must execute`,
     );
     assert.strictEqual(report.stats.passes, count, source);
   } finally {
