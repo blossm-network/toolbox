@@ -731,3 +731,8 @@ digests deliberately after verifying their official registry manifests.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the Lerna test and explicit release
 workflow, frozen installs, scoped checks and npm publication verification.
+
+EVM helpers live under `packages/onchain/evm/`: HTTP clients, the trusted-forwarder
+ABI and Juicebox V6 addresses, and local ERC-2771 signing. Each package README
+documents its inputs and pinned provenance. Signing returns execute calldata for
+the caller to submit.
