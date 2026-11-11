@@ -1,5 +1,6 @@
 // Read before creating so an existing resource is reusable without hiding a
 // failed write. All resource values remain argv data, never shell source.
+// An expected projection permits exact-target reuse, never silent retargeting.
 // Double dollars survive Cloud Build substitution before Bash receives them.
 export default ({ describe, create, update = [], expected }) => ({
   name: "gcr.io/cloud-builders/gcloud",

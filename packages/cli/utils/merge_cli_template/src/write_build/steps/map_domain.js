@@ -1,5 +1,6 @@
 import ensureResource from "./ensure_resource.js";
 
+// Verify configured service ownership; provisioning readiness is separate.
 export default ({ serviceName, uri, project, region }) =>
   ensureResource({
     describe: [
@@ -7,6 +8,7 @@ export default ({ serviceName, uri, project, region }) =>
       "run",
       "domain-mappings",
       "describe",
+      "--platform=managed",
       `--domain=${uri}`,
       `--project=${project}`,
       `--region=${region}`,
@@ -17,6 +19,7 @@ export default ({ serviceName, uri, project, region }) =>
       "run",
       "domain-mappings",
       "create",
+      "--platform=managed",
       `--service=${serviceName}`,
       `--domain=${uri}`,
       `--project=${project}`,
