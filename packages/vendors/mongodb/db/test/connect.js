@@ -34,6 +34,11 @@ describe("Connects", () => {
     replaceGetter(deps.mongoose, "connection", connectionFake);
   });
 
+  it("keeps empty connection parameters from adding an empty query", async () => {
+    await connect({ protocol, user, password, host, database, parameters: {} });
+    expect(connectFake.lastCall.args[0]).to.equal(baseConnectionString);
+  });
+
   it("it should connect if all the params are normal, and ommittable params omitted", async () => {
     await connect({ protocol, user, password, host, database });
 
