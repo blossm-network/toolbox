@@ -9,7 +9,7 @@
  */
 
 // export default ({ body, id }) => {
-//   return { body };
+//   return body;
 // };
 
 export default ({ body }) => body;

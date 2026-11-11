@@ -2,8 +2,8 @@
  * This file is optional. Get rid of the leading underscore _ from the file's name to require it.
  * It can be used to turn data into a csv.
  *
- * The function takes in an array of views as it is saved in the store,
- * and is responsible for returning reformated data and a list of keys to use as rows.
+ * Export an object whose fn formats one stored view body into a CSV row.
+ * The fields array specifies the columns to include.
  *
  * The function must be deterministic, meaning the output should always be the same for every input.
  */
