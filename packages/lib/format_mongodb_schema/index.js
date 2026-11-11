@@ -27,7 +27,7 @@ const formatSchemaValue = (value, typeKey, { wrapType = true } = {}) => {
       [typeKey]: value.type.map((e) =>
         formatSchemaValue(e, typeKey, {
           wrapType: false,
-        })
+        }),
       ),
     };
     delete formattedObj.type;
@@ -134,7 +134,7 @@ const copySchema = (value) => {
   if (Array.isArray(value)) return value.map(copySchema);
   if (value && Object.getPrototypeOf(value) === Object.prototype)
     return Object.fromEntries(
-      Object.entries(value).map(([key, item]) => [key, copySchema(item)])
+      Object.entries(value).map(([key, item]) => [key, copySchema(item)]),
     );
   return value;
 };
