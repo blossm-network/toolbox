@@ -5,11 +5,24 @@ import environmentName from "../environment_name.js";
 const runtimeFile = new URL("../index.js", import.meta.url);
 const generatorFile = new URL(
   "../../merge_cli_template/index.js",
-  import.meta.url
+  import.meta.url,
 );
+const connectionFile = new URL(
+  "../../../../lib/connection_token/index.js",
+  import.meta.url,
+);
+const execute = (source, deps, declaration = "export default ") =>
+  new Function(
+    ...Object.keys(deps),
+    source
+      .replace(/^import\s[\s\S]*?;\s*$/gm, "")
+      .replace(declaration, "return "),
+  )(...Object.values(deps));
 
 describe("Dependency credential environment names", () => {
-  it("uses every configured network label without aliasing peer subdomains", async () => {
+  it("composes full-network generation and lookup through the connection-token factory", async () => {
+    // Load the real generator too, proving its declared helper subpath resolves.
+    await import(generatorFile);
     const networks = [
       "example.network",
       "api.example.network",
@@ -28,51 +41,75 @@ describe("Dependency credential environment names", () => {
               },
             },
           },
-        ])
+        ]),
       ),
     };
-    const generatorSource = readFileSync(generatorFile, "utf8");
-    const fn = generatorSource.slice(
-      generatorSource.indexOf("const envDependencyKeyEnvironmentVariables ="),
-      generatorSource.indexOf("const envBaseContainerRegistry")
+    const source = readFileSync(generatorFile, "utf8");
+    const generator = source.slice(
+      source.indexOf("const envDependencyKeyEnvironmentVariables ="),
+      source.indexOf("const envBaseContainerRegistry"),
     );
     const env = new Function(
       "environmentName",
-      `${fn}; return envDependencyKeyEnvironmentVariables;`
+      `${generator}; return envDependencyKeyEnvironmentVariables;`,
     )(environmentName)({ env: "testing", config });
-    const prior = { ...process.env };
-    Object.assign(process.env, env);
-    try {
-      const source = readFileSync(runtimeFile, "utf8")
-        .replace(
-          'import gcpSecret from "@blossm/gcp-secret";',
-          "const gcpSecret = { get: async name => name };"
-        )
-        .replace(
-          'import connectionToken from "@blossm/connection-token";',
-          "const connectionToken = options => options;"
-        )
-        .replace(
-          /from "(\.\/[^"]+)"/g,
-          (_, name) => `from ${JSON.stringify(new URL(name, runtimeFile).href)}`
-        );
-      const { credentialsFn } = (
-        await import(
-          `data:text/javascript;base64,${Buffer.from(source).toString(
-            "base64"
-          )}`
-        )
-      ).default;
-      for (const network of networks)
-        assert.deepEqual(await credentialsFn({ network }), {
-          root: `${network}-root`,
-          secret: `${network}-secret`,
-        });
-    } finally {
-      for (const key of Object.keys(env)) {
-        if (prior[key] === undefined) delete process.env[key];
-        else process.env[key] = prior[key];
-      }
+    const reads = [];
+    const exchanges = [];
+    const cache = new Map();
+    const connectionToken = execute(readFileSync(connectionFile, "utf8"), {
+      deps: {
+        redis: {
+          readObject: async (key) => cache.get(key),
+          writeObject: async (key, value) => cache.set(key, value),
+          setExpiry: async () => {},
+        },
+        basicToken: (credentials) => credentials,
+        decode: () => ({ claims: { exp: "2100-01-01T00:00:00Z" } }),
+        command: ({ network }) => ({
+          set: ({ token }) => ({
+            issue: async () => {
+              exchanges.push({ network, credentials: token.externalFn() });
+              return { body: { token: { value: `${network}-token` } } };
+            },
+          }),
+        }),
+      },
+    });
+    const tokenFor = execute(readFileSync(runtimeFile, "utf8"), {
+      gcpSecret: {
+        get: async (name) => {
+          reads.push(name);
+          return name;
+        },
+      },
+      connectionToken,
+      environmentName,
+      process: { env },
+    });
+    for (const network of networks) {
+      assert.deepEqual(await tokenFor({ network }), {
+        token: `${network}-token`,
+        type: "Bearer",
+      });
+      assert.deepEqual(exchanges.at(-1), {
+        network,
+        credentials: { root: `${network}-root`, secret: `${network}-secret` },
+      });
     }
+    assert.deepEqual(
+      reads,
+      networks.map((network) => `${network}-secret`),
+    );
+    assert.equal(cache.size, networks.length);
+    assert.equal(
+      await tokenFor({ network: "unconfigured.example.network" }),
+      null,
+    );
+    assert.equal(
+      reads.length,
+      networks.length,
+      "unknown subdomain must not use base credentials",
+    );
+    assert.equal(exchanges.length, networks.length);
   });
 });
