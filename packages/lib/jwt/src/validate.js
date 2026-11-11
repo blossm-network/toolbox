@@ -7,13 +7,22 @@ const timeClaim = (value) => {
   const timestamp = typeof value == "string" ? Date.parse(value) : NaN;
   if (!Number.isFinite(timestamp))
     throw deps.invalidCredentialsError.message(
-      "The token time claim is invalid."
+      "The token time claim is invalid.",
     );
   return timestamp;
 };
 
 export default async ({ token, verifyFn, audience, algorithm }) => {
-  const [header, payload, signature] = token.split(".");
+  const parts = typeof token == "string" ? token.split(".") : [];
+  if (
+    parts.length != 3 ||
+    parts.some(
+      (part) =>
+        !part || Buffer.from(part, "base64url").toString("base64url") != part,
+    )
+  )
+    throw deps.invalidCredentialsError.message("The token format is invalid.");
+  const [header, payload, signature] = parts;
 
   const isVerified = await verifyFn({
     message: `${header}.${payload}`,
@@ -30,7 +39,7 @@ export default async ({ token, verifyFn, audience, algorithm }) => {
 
   if (!claims.aud.split(",").includes(audience))
     throw deps.invalidCredentialsError.message(
-      "The token is intended for a different audience."
+      "The token is intended for a different audience.",
     );
 
   //Throw if the token is expired.

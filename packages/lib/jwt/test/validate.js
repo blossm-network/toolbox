@@ -37,7 +37,7 @@ describe("Validate", () => {
     restore();
   });
   it("it should validate a valid jwt token", async () => {
-    const sig = "some-signature";
+    const sig = Buffer.from("some-signature").toString("base64");
     const token = await create({ options, signFn: () => sig });
     const verifyFn = fake.returns(true);
     const validatedClaims = await validate({
@@ -57,7 +57,7 @@ describe("Validate", () => {
   it("it should validate a valid jwt token with data", async () => {
     const value = "value";
     const payload = { key: value };
-    const sig = "some-signature";
+    const sig = Buffer.from("some-signature").toString("base64");
     const token = await create({ options, payload, signFn: () => sig });
     const verifyFn = fake.returns(true);
     const validatedToken = await validate({
@@ -71,7 +71,7 @@ describe("Validate", () => {
   it("it should be invalid if the secret is wrong", async () => {
     const value = "value";
     const payload = { key: value };
-    const sig = "some-signature";
+    const sig = Buffer.from("some-signature").toString("base64");
     const token = await create({ options, payload, signFn: () => sig });
     const verifyFn = fake.returns(false);
 
@@ -94,7 +94,7 @@ describe("Validate", () => {
   it("it should be invalid if the algorithm is wrong", async () => {
     const value = "value";
     const payload = { key: value };
-    const sig = "some-signature";
+    const sig = Buffer.from("some-signature").toString("base64");
     const token = await create({
       options,
       payload,
@@ -116,7 +116,7 @@ describe("Validate", () => {
       expect(1).to.equal(2);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
-        "The token algorithm is wrong."
+        "The token algorithm is wrong.",
       );
       expect(e).to.equal(error);
     }
@@ -124,7 +124,7 @@ describe("Validate", () => {
   it("it should be invalid if the audience is wrong", async () => {
     const value = "value";
     const payload = { key: value };
-    const sig = "some-signature";
+    const sig = Buffer.from("some-signature").toString("base64");
     const token = await create({
       options: {
         ...options,
@@ -149,13 +149,13 @@ describe("Validate", () => {
       expect(1).to.equal(2);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
-        "The token is intended for a different audience."
+        "The token is intended for a different audience.",
       );
       expect(e).to.equal(error);
     }
   });
   it("should throw if token is expired", async () => {
-    const sig = "some-signature";
+    const sig = Buffer.from("some-signature").toString("base64");
     const token = await create({
       options: {
         ...options,
@@ -184,7 +184,7 @@ describe("Validate", () => {
     }
   });
   it("should throw if token is before nbf", async () => {
-    const sig = "some-signature";
+    const sig = Buffer.from("some-signature").toString("base64");
     const token = await create({
       options: {
         ...options,
@@ -207,7 +207,7 @@ describe("Validate", () => {
       expect(1).to.equal(2);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
-        "The token isn't active yet."
+        "The token isn't active yet.",
       );
       expect(e).to.equal(error);
     }
@@ -230,7 +230,7 @@ describe("Signed token time claims", () => {
       "sha256",
       Buffer.from(message),
       keys.publicKey,
-      Buffer.from(signature, "base64")
+      Buffer.from(signature, "base64"),
     );
   for (const exp of [undefined, null, "invalid", 1700000000]) {
     it(`rejects invalid legacy expiry ${exp}`, async () => {
@@ -241,7 +241,7 @@ describe("Signed token time claims", () => {
           audience,
           algorithm,
         }),
-        { message: "The token time claim is invalid." }
+        { message: "The token time claim is invalid." },
       );
     });
   }
@@ -257,7 +257,7 @@ describe("Signed token time claims", () => {
         audience,
         algorithm,
       }),
-      { message: "The token time claim is invalid." }
+      { message: "The token time claim is invalid." },
     );
   });
   it("rejects a token at its exact expiration instant", async () => {
@@ -270,10 +270,71 @@ describe("Signed token time claims", () => {
           audience,
           algorithm,
         }),
-        { message: "The token is expired." }
+        { message: "The token is expired." },
       );
     } finally {
       clock.restore();
     }
   });
+});
+
+describe("Compact token encoding", () => {
+  const keys = crypto.generateKeyPairSync("ec", { namedCurve: "prime256v1" });
+  const verify = ({ message, signature }) =>
+    crypto.verify(
+      "sha256",
+      Buffer.from(message),
+      keys.publicKey,
+      Buffer.from(signature, "base64"),
+    );
+  let token;
+  before(async () => {
+    token = await create({
+      options: { ...options, expiresIn: 60000 },
+      signFn: (message) =>
+        crypto
+          .sign("sha256", Buffer.from(message), keys.privateKey)
+          .toString("base64"),
+    });
+  });
+  it("accepts an actual signed token from create", async () => {
+    const claims = await validate({
+      token,
+      verifyFn: verify,
+      audience,
+      algorithm,
+    });
+    expect(claims.aud).to.equal(audience);
+  });
+  for (const [description, alter] of [
+    ["an extra segment", (parts) => [...parts, "ignored"].join(".")],
+    ["a missing segment", (parts) => parts.slice(0, 2).join(".")],
+    ["a non-string token", () => null],
+    ...[0, 1, 2].flatMap((index) =>
+      [
+        ["empty", () => ""],
+        ["invalid character", (part) => `${part}!!`],
+        ["padding", (part) => `${part}=`],
+        ["noncanonical trailing bits", () => "Zh"],
+      ].map(([kind, change]) => [
+        `${kind} in segment ${index + 1}`,
+        (parts) =>
+          parts.map((part, i) => (i == index ? change(part) : part)).join("."),
+      ]),
+    ),
+  ]) {
+    it(`rejects ${description} before verification`, async () => {
+      const verifyFn = fake(verify);
+      await assert.rejects(
+        validate({
+          token: alter(token.split(".")),
+          verifyFn,
+          audience,
+          algorithm,
+        }),
+        { message: "The token format is invalid." },
+      );
+      expect(verifyFn).to.not.have.been.called;
+    });
+  }
 });
