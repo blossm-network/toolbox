@@ -28,6 +28,7 @@ describe("Mongodb event store root stream", () => {
       snapshotStore: { collection: { name: "snapshots" } },
     })({
       unsnapshottedOnly: true,
+      transaction: "transaction-session",
       fn,
       parallel: 2,
       reverse: true,
@@ -50,7 +51,7 @@ describe("Mongodb event store root stream", () => {
           let: { root: "$root" },
           pipeline: [
             { $match: { $expr: { $eq: ["$headers.root", "$$root"] } } },
-            { $sort: { "headers.created": -1 } },
+            { $sort: { "headers.number": -1, "headers.created": -1 } },
             { $limit: 1 },
             { $project: { "headers.lastEventNumber": 1, _id: 0 } },
           ],
@@ -83,6 +84,7 @@ describe("Mongodb event store root stream", () => {
       { $limit: 3 },
       { $project: { root: 1, value: 1, updated: 1, _id: 0 } },
     ]);
+    expect(aggregate.firstCall.args[1]).to.deep.equal({ session: "transaction-session" });
     expect(cursor).to.have.been.calledWith();
     expect(eachAsync).to.have.been.calledWith(fn, { parallel: 2 });
     expect(result).to.equal("stream-result");

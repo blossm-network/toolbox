@@ -92,10 +92,15 @@ describe("Block bounds", () => {
         parallel,
         updatedOnOrAfter,
         updatedBefore,
+        unsnapshottedOnly,
       }) => {
         expect(parallel).to.equal(1);
-        if (updated >= updatedOnOrAfter && updated < updatedBefore)
-          for (const root of roots) await fn({ root, updated });
+        if ((!updatedOnOrAfter || updated >= updatedOnOrAfter) &&
+            (!updatedBefore || updated < updatedBefore))
+          for (const root of roots) {
+            if (unsnapshottedOnly && snapshots.has(root)) continue;
+            await fn({ root, value: 1, updated });
+          }
       },
       findOneSnapshotFn: async ({ query }) =>
         snapshots.get(query["headers.root"]),

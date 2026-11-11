@@ -221,6 +221,7 @@ const snapshotStore = async ({ schema, indexes }) => {
     indexes: [
       [{ "headers.root": 1 }],
       [{ "headers.root": 1, "headers.created": -1 }],
+      [{ "headers.root": 1, "headers.number": -1, "headers.created": -1 }],
       ...indexes.map((index) => [{ [`state.${index}`]: 1 }]),
     ],
   });
