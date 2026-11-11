@@ -9,3 +9,13 @@ propagate, and a missing response is not reported as completed delivery.
 
 Import `COMPLETED` and `QUEUED` from `@blossm/rpc-delivery-consts` for delivery
 comparisons. Event outcome constants are a separate contract.
+
+Transport deadlines and cancellation can be passed with
+`with({ timeout: 120000, signal })`. These options go to the HTTP transport,
+including single-source streams, and are never serialized into request data or
+queued operations. Omitting them uses the request package's defaults. The
+specialized RPC adapters do not currently expose these options through their
+own APIs; this option is available on the generic RPC builder.
+
+These transport deadlines do not cover token acquisition or queued operation
+execution. They apply when the HTTP transport starts.

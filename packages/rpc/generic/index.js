@@ -50,6 +50,8 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
           claims,
           enqueueFn,
           includeDelivery = false,
+          timeout,
+          signal,
         } = {}) => {
           const internal = host == process.env.HOST;
 
@@ -123,6 +125,8 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
                     },
                   }),
                   ...(onDataFn && { onDataFn }),
+                  ...(timeout !== undefined && { timeout }),
+                  ...(signal && { signal }),
                 });
 
           if (response?.statusCode >= 300) {
