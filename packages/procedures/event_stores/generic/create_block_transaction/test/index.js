@@ -269,6 +269,7 @@ describe("Event store create block transaction", () => {
     expect(response).to.deep.equal({ block: saveBlockResponse, full: false });
     expect(latestBlockFnFake).to.have.been.calledOnceWith({ transaction });
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
+      unsnapshottedOnly: true,
       transaction,
       parallel: 1,
       reverse: true,
@@ -560,6 +561,7 @@ describe("Event store create block transaction", () => {
 
     expect(latestBlockFnFake).to.have.been.calledOnceWith({});
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
+      unsnapshottedOnly: true,
       parallel: 10,
       reverse: true,
       fn: match(() => true),
@@ -795,6 +797,7 @@ describe("Event store create block transaction", () => {
 
     expect(latestBlockFnFake).to.have.been.calledOnceWith({ transaction });
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
+      unsnapshottedOnly: true,
       transaction,
       parallel: 1,
       reverse: true,
@@ -991,6 +994,7 @@ describe("Event store create block transaction", () => {
 
     expect(latestBlockFnFake).to.have.been.calledOnceWith({ transaction });
     expect(rootStreamFnFake).to.have.been.calledOnceWith({
+      unsnapshottedOnly: true,
       transaction,
       parallel: 1,
       reverse: true,

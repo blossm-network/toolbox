@@ -412,6 +412,7 @@ describe("Mongodb event store", () => {
       indexes: [
           [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.created": -1 }],
+        [{ "headers.root": 1, "headers.number": -1, "headers.created": -1 }],
       ],
     });
     expect(storeFake.getCall(2)).to.have.been.calledWith({
@@ -779,6 +780,7 @@ describe("Mongodb event store", () => {
       indexes: [
           [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.created": -1 }],
+        [{ "headers.root": 1, "headers.number": -1, "headers.created": -1 }],
         [{ [`state.${index}`]: 1 }],
       ],
     });
@@ -1084,6 +1086,7 @@ describe("Mongodb event store", () => {
       indexes: [
           [{ "headers.root": 1 }],
         [{ "headers.root": 1, "headers.created": -1 }],
+        [{ "headers.root": 1, "headers.number": -1, "headers.created": -1 }],
       ],
     });
     expect(storeFake.getCall(2)).to.have.been.calledWith({

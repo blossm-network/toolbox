@@ -3,6 +3,7 @@ import { rejects } from "node:assert/strict";
 import mongoose from "mongoose";
 import setup from "./setup.js";
 import create from "../../../../generic/create_block_transaction/index.js";
+import aggregate from "../../../../generic/aggregate/index.js";
 import latestBlock from "../../../latest_block/index.js";
 import rootStream from "../../../root_stream/index.js";
 import findOneSnapshot from "../../../find_one_snapshot/index.js";
@@ -20,24 +21,36 @@ describe("MongoDB durable block frontier", function () {
     const model = (name, indexes = []) => {
       const schema = new mongoose.Schema(
         { events: Buffer, snapshots: Buffer, txs: Buffer },
-        { strict: false, minimize: false, versionKey: false }
+        { strict: false, minimize: false, versionKey: false },
       );
       for (const index of indexes) schema.index(index, { unique: true });
       return mongoose.model(name, schema, name);
     };
-    events = model("frontier_events", [{ "headers.root": 1, "headers.number": 1 }]);
+    events = model("frontier_events", [
+      { "headers.root": 1, "headers.number": 1 },
+    ]);
     counts = model("frontier_counts", [{ root: 1 }]);
     snapshots = model("frontier_snapshots", [{ "headers.nonce": 1 }]);
     blocks = model("frontier_blocks", [{ "headers.number": 1 }]);
-    await Promise.all([events.init(), counts.init(), snapshots.init(), blocks.init()]);
+    await Promise.all([
+      events.init(),
+      counts.init(),
+      snapshots.init(),
+      blocks.init(),
+    ]);
     configuration = {
       latestBlockFn: latestBlock({ blockchainStore: blocks }),
-      rootStreamFn: rootStream({ countsStore: counts }),
+      rootStreamFn: rootStream({
+        countsStore: counts,
+        snapshotStore: snapshots,
+      }),
       findOneSnapshotFn: findOneSnapshot({ snapshotStore: snapshots }),
       eventStreamFn: eventStream({ eventStore: events }),
       saveSnapshotFn: saveSnapshot({ snapshotStore: snapshots }),
       saveBlockFn: saveBlock({ blockchainStore: blocks }),
-      handlers: { add: (state, {amount}) => ({amount: (state.amount || 0) + amount}) },
+      handlers: {
+        add: (state, { amount }) => ({ amount: (state.amount || 0) + amount }),
+      },
       signFn: async () => "local-test-signature",
       blockPublisherPublicKeyFn: async () => "local-test-key",
       isPublic: true,
@@ -48,24 +61,42 @@ describe("MongoDB durable block frontier", function () {
   const build = async (overrides = {}) => {
     const session = await mongoose.startSession();
     try {
-      return await session.withTransaction(() => create({...configuration, ...overrides})(session));
+      return await session.withTransaction(() =>
+        create({ ...configuration, ...overrides })(session),
+      );
     } finally {
       await session.endSession();
     }
   };
-  const append = async (number, amount, session) => {
+  const append = async (number, amount, session, root = "late") => {
     const updated = "2021-01-01T00:00:00.000Z";
-    await events.create([{
-      hash: `event-${number}`,
-      headers: { root: "late", number, action: "add", created: updated },
-      payload: { amount }, context: {}, tx: { id: `tx-${number}` },
-    }], { session });
-    await counts.updateOne({root: "late"}, {$set: {value: number, updated}}, {upsert: true, session});
+    await events.create(
+      [
+        {
+          hash: `event-${root}-${number}`,
+          headers: { root, number, action: "add", created: updated },
+          payload: { amount },
+          context: {},
+          tx: { id: `tx-${number}` },
+        },
+      ],
+      { session },
+    );
+    await counts.updateOne(
+      { root },
+      { $set: { value: number + 1, updated } },
+      { upsert: true, session },
+    );
   };
-  const exportedEvents = block => decode(Buffer.from(block.events.value?.() || block.events)).map(([, value]) => JSON.parse(Buffer.from(value).toString()));
+  const exportedEvents = (block) =>
+    decode(Buffer.from(block.events.value?.() || block.events)).map(
+      ([, value]) => JSON.parse(Buffer.from(value).toString()),
+    );
 
   beforeEach(async () => {
-    await Promise.all([events, counts, snapshots, blocks].map(model => model.deleteMany({})));
+    await Promise.all(
+      [events, counts, snapshots, blocks].map((model) => model.deleteMany({})),
+    );
     await build();
   });
 
@@ -73,16 +104,20 @@ describe("MongoDB durable block frontier", function () {
     const held = await mongoose.startSession();
     try {
       held.startTransaction();
-      await append(1, 7, held);
+      await append(0, 7, held);
       const empty = await build();
       expect(empty.block.headers.eCount).to.equal(0);
       expect(await snapshots.countDocuments()).to.equal(0);
       await held.commitTransaction();
       const included = await build();
-      expect(exportedEvents(included.block).map(event => event.hash)).to.deep.equal(["event-1"]);
-      const snapshot = await snapshots.findOne({"headers.root": "late"}).lean();
-      expect(snapshot.headers.lastEventNumber).to.equal(1);
-      expect(snapshot.state).to.deep.equal({amount: 7});
+      expect(
+        exportedEvents(included.block).map((event) => event.hash),
+      ).to.deep.equal(["event-late-0"]);
+      const snapshot = await snapshots
+        .findOne({ "headers.root": "late" })
+        .lean();
+      expect(snapshot.headers.lastEventNumber).to.equal(0);
+      expect(snapshot.state).to.deep.equal({ amount: 7 });
       expect((await build()).block.headers.eCount).to.equal(0);
     } finally {
       if (held.inTransaction()) await held.abortTransaction();
@@ -91,23 +126,36 @@ describe("MongoDB durable block frontier", function () {
   });
 
   it("rolls snapshot progress back with a failed block and includes it on retry", async () => {
-    await append(1, 7);
+    await append(0, 7);
     const prior = await configuration.latestBlockFn();
     const rollback = new Error("force block rollback after snapshot write");
-    await rejects(build({saveBlockFn: async () => {throw rollback;}}), error => error === rollback);
-    expect((await configuration.latestBlockFn()).headers.number).to.equal(prior.headers.number);
+    await rejects(
+      build({
+        saveBlockFn: async () => {
+          throw rollback;
+        },
+      }),
+      (error) => error === rollback,
+    );
+    expect((await configuration.latestBlockFn()).headers.number).to.equal(
+      prior.headers.number,
+    );
     expect(await snapshots.countDocuments()).to.equal(0);
     expect((await build()).block.headers.eCount).to.equal(1);
-    expect((await snapshots.findOne().lean()).state).to.deep.equal({amount: 7});
+    expect((await snapshots.findOne().lean()).state).to.deep.equal({
+      amount: 7,
+    });
   });
 
   it("retries contending builders from the same predecessor without duplicate inclusion", async () => {
-    await append(1, 7);
+    await append(0, 7);
     let arrivals = 0;
     let release;
-    const bothRead = new Promise(resolve => {release = resolve;});
+    const bothRead = new Promise((resolve) => {
+      release = resolve;
+    });
     const initialNumbers = [];
-    const contendedLatest = async options => {
+    const contendedLatest = async (options) => {
       const latest = await configuration.latestBlockFn(options);
       if (arrivals < 2) {
         initialNumbers.push(latest.headers.number);
@@ -118,22 +166,53 @@ describe("MongoDB durable block frontier", function () {
     };
     // Mocha's timeout bounds the barrier; later driver retries proceed normally.
     const contenders = await Promise.all([
-      build({latestBlockFn: contendedLatest}), build({latestBlockFn: contendedLatest}),
+      build({ latestBlockFn: contendedLatest }),
+      build({ latestBlockFn: contendedLatest }),
     ]);
     expect(initialNumbers).to.have.length(2);
     expect(initialNumbers[0]).to.equal(initialNumbers[1]);
-    expect(contenders.reduce((sum, {block}) => sum + block.headers.eCount, 0)).to.equal(1);
-    const sequence = (await blocks.find().sort({"headers.number": 1}).lean()).map(({headers}) => headers.number);
+    expect(
+      contenders.reduce((sum, { block }) => sum + block.headers.eCount, 0),
+    ).to.equal(1);
+    const sequence = (
+      await blocks.find().sort({ "headers.number": 1 }).lean()
+    ).map(({ headers }) => headers.number);
     expect(sequence).to.deep.equal(sequence.map((_, i) => i));
   });
 
-  it("uses snapshot sequence when creation timestamps reverse", async () => {
-    await append(1, 7);
+  it("uses snapshot sequence when timestamps reverse and skips unchanged roots", async () => {
+    await append(0, 7);
     await build();
-    await append(2, 5);
+    await append(1, 5);
     await build();
-    await snapshots.updateOne({"headers.lastEventNumber": 2}, {$set: {"headers.created": "2019-01-01T00:00:00.000Z"}});
+    await snapshots.updateOne(
+      { "headers.lastEventNumber": 1 },
+      { $set: { "headers.created": "2019-01-01T00:00:00.000Z" } },
+    );
     expect((await build()).block.headers.eCount).to.equal(0);
-    expect((await configuration.findOneSnapshotFn({query: {}, sort: {"headers.number": -1}})).state).to.deep.equal({amount: 12});
+    const current = await aggregate(configuration)("late", {
+      includeEvents: true,
+    });
+    expect(current.state).to.deep.equal({ amount: 12 });
+    expect(current.headers.number).to.equal(1);
+    expect(current.events).to.deep.equal([]);
+    await append(0, 3, undefined, "other");
+    const replayed = [];
+    const next = await build({
+      eventStreamFn: async (options) => {
+        replayed.push(options.query["headers.root"]);
+        return configuration.eventStreamFn(options);
+      },
+    });
+    expect(next.block.headers.eCount).to.equal(1);
+    expect(replayed).to.deep.equal(["other"]);
+    expect(
+      (
+        await configuration.findOneSnapshotFn({
+          query: { "headers.root": "late" },
+          sort: { "headers.number": -1 },
+        })
+      ).state,
+    ).to.deep.equal({ amount: 12 });
   });
 });

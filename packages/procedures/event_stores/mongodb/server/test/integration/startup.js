@@ -21,6 +21,14 @@ describe("MongoDB event store indexes", function () {
       secretFn: async () => undefined,
     });
     expect(typeof composition.saveEventsFn).to.equal("function");
+    const snapshotIndexes = await mongoose.connection
+      .collection("snapshots")
+      .indexes();
+    expect(snapshotIndexes.map(({ key }) => key)).to.deep.include({
+      "headers.root": 1,
+      "headers.number": -1,
+      "headers.created": -1,
+    });
     for (const [collection, field] of [
       ["events", "hash"],
       ["events", "headers.idempotency"],

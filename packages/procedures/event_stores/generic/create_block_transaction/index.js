@@ -83,7 +83,7 @@ export default ({
   });
 
   // Snapshot lastEventNumber owns progress; timestamps are block metadata only.
-  // ponytail: scan all roots, use a durable pending-root queue if scan cost warrants it.
+  // ponytail: scan O(roots) metadata; use a durable pending-root queue if this dominates builds.
   const end = deps.dateString();
 
   let count = 0;
@@ -92,6 +92,7 @@ export default ({
   const increment = Math.round(blockLimit * 0.1);
 
   await rootStreamFn({
+    unsnapshottedOnly: true,
     ...(transaction && { transaction }),
     reverse: true,
     fn: async ({ root }) => {
