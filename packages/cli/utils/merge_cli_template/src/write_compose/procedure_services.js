@@ -8,33 +8,60 @@ import rootDir from "@blossm/cli-root-dir";
 import databaseService from "./database_service.js";
 import mainService from "./main_service.js";
 
-// Index source configs once; installed/generated trees and symlinks are not procedures.
-const dependencyConfigs = (dir, configs = []) => {
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+// Scan this workspace once. Never follow symlinks or installed/generated trees.
+const dependencyConfigs = (dir, configs = [], root = dir) => {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  if (
+    dir !== root &&
+    entries.some(
+      (entry) =>
+        entry.name === "config.yaml" &&
+        (entry.isFile() || entry.isSymbolicLink()),
+    )
+  )
+    return configs;
+  for (const entry of entries) {
     if (entry.isSymbolicLink()) continue;
     const filePath = path.join(dir, entry.name);
     if (entry.isFile() && ["blossm.yaml", "blossm.yml"].includes(entry.name)) {
-      configs.push(yaml.parse(fs.readFileSync(filePath, "utf8")));
+      let config;
+      try {
+        config = yaml.parse(fs.readFileSync(filePath, "utf8"));
+      } catch (cause) {
+        throw new Error(`Invalid procedure configuration: ${filePath}`, {
+          cause,
+        });
+      }
+      if (config?.procedure) configs.push({ config, file: filePath });
     } else if (
       entry.isDirectory() &&
-      !["node_modules", ".git", ".blossm", "dist", "build"].includes(entry.name)
+      !["node_modules", ".git", ".blossm", ".nx"].includes(entry.name)
     ) {
-      dependencyConfigs(filePath, configs);
+      dependencyConfigs(filePath, configs, root);
     }
   }
   return configs;
 };
 
-const findEnvForDependency = (env, dependency, configs, network) => {
+const findEnvForDependency = (env, dependency, configs, networks) => {
+  // Source identity uses real networks; local aliases belong to Compose routing.
+  const sourceNetwork = (value) =>
+    value == undefined || value === networks.local
+      ? networks.source
+      : value === networks.localCore
+        ? networks.core
+        : value;
   const matches = configs.filter(
-    (config) =>
+    ({ config }) =>
       ["procedure", "domain", "service", "name", "context"].every(
-        (key) => (dependency[key] ?? null) === (config[key] ?? null)
-      ) && (dependency.network || network) === (config.network || network)
+        (key) => (dependency[key] ?? null) === (config[key] ?? null),
+      ) && sourceNetwork(dependency.network) === sourceNetwork(config.network),
   );
   if (matches.length > 1)
-    throw new Error("Ambiguous dependency procedure configuration.");
-  return matches[0]?.env?.[env];
+    throw new Error(
+      `Ambiguous dependency procedure configuration: ${matches.map(({ file }) => file).join(", ")}`,
+    );
+  return matches[0]?.config.env?.[env];
 };
 
 export default ({
@@ -86,13 +113,19 @@ export default ({
 
   let services = {};
   let includeDatabase = false;
-  const configs = config.testing.dependencies.some(
-    (dependency) => dependency.procedure != "http"
-  )
-    ? dependencyConfigs(rootDir.path())
-    : [];
+  const needsConfigs = config.testing.dependencies.some(
+    (dependency) => dependency.procedure !== "http",
+  );
+  const workspace = needsConfigs ? rootDir.config() : {};
+  const configs = needsConfigs ? dependencyConfigs(rootDir.path()) : [];
+  const networks = {
+    source: workspace.network,
+    core: workspace.core?.network ?? workspace.network,
+    local: network,
+    localCore: localCoreNetwork,
+  };
   for (const dependency of config.testing.dependencies) {
-    const customEnv = findEnvForDependency(env, dependency, configs, network);
+    const customEnv = findEnvForDependency(env, dependency, configs, networks);
 
     const registry =
       localCoreNetwork && dependency.network == localCoreNetwork
@@ -122,7 +155,7 @@ export default ({
           const operationHash = hash(
             dependency.name,
             ...(dependency.context ? [dependency.context] : []),
-            dependency.procedure
+            dependency.procedure,
           );
 
           const key = operationHash;
@@ -155,7 +188,7 @@ export default ({
           const operationHash = hash(
             dependency.name,
             ...(dependency.context ? [dependency.context] : []),
-            dependency.procedure
+            dependency.procedure,
           );
 
           const key = operationHash;
@@ -185,7 +218,7 @@ export default ({
           const operationHash = hash(
             dependency.domain,
             dependency.service,
-            dependency.procedure
+            dependency.procedure,
           );
 
           const key = `${dependency.domain}-${dependency.service}`;
@@ -215,7 +248,7 @@ export default ({
             dependency.name,
             dependency.domain,
             dependency.service,
-            dependency.procedure
+            dependency.procedure,
           );
           const key = `${dependency.name}-${dependency.domain}-${dependency.service}`;
           services = {
@@ -243,7 +276,7 @@ export default ({
             dependency.name,
             ...(dependency.domain ? [dependency.domain] : []),
             ...(dependency.service ? [dependency.service] : []),
-            dependency.procedure
+            dependency.procedure,
           );
           const key = `${dependency.name}${
             dependency.domain ? `-${dependency.domain}` : ""
