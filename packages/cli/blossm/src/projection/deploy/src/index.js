@@ -217,6 +217,7 @@ const replayIfNeeded = async ({
   };
 
   let id;
+  let del;
 
   // Must be synchronous
   for (const r of replay || []) {
@@ -241,6 +242,7 @@ const replayIfNeeded = async ({
       query: replayQuery,
       update: replayUpdate,
       replay: replayReplay,
+      del: replayDel,
       ops: replayOps = [],
     } = await handlers[r.service][r.domain]({
       state: aggregate.state,
@@ -253,6 +255,7 @@ const replayIfNeeded = async ({
       fullUpdate: recursiveFullUpdate,
       fullQuery: recursiveFullQuery,
       id: recursiveId,
+      del: recursiveDel,
     } = await replayIfNeeded({
       aggregateFn,
       readFactFn,
@@ -286,6 +289,7 @@ const replayIfNeeded = async ({
     );
 
     if (recursiveId || replayId) id = recursiveId || replayId;
+    if (recursiveDel || replayDel) del = true;
 
     fullUpdate = composedUpdate;
     fullQuery = {
@@ -294,7 +298,7 @@ const replayIfNeeded = async ({
     };
   }
 
-  return { fullUpdate, fullQuery, id };
+  return { fullUpdate, fullQuery, id, del };
 };
 
 //Given a query { obj.id: "some-obj-id", obj.subobj.id: "some-subobj-id"}
