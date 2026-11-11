@@ -12,17 +12,19 @@ const withEncryptedFile = async (fn) => {
   const filename = `${deps.uuid()}.txt.encrypted`;
   let result;
   let failure;
+  let failed = false;
   try {
     result = await fn(filename);
   } catch (err) {
+    failed = true;
     failure = err;
   }
   try {
     await deps.unlink(filename);
   } catch (err) {
-    if (!failure && err.code !== "ENOENT") throw err;
+    if (!failed && err.code !== "ENOENT") throw err;
   }
-  if (failure) throw failure;
+  if (failed) throw failure;
   return result;
 };
 
@@ -33,7 +35,7 @@ const get = async (
     ring = process.env.GCP_KMS_SECRET_BUCKET_KEY_RING,
     location = process.env.GCP_KMS_SECRET_BUCKET_KEY_LOCATION,
     bucket = process.env.GCP_SECRET_BUCKET,
-  } = {}
+  } = {},
 ) =>
   withEncryptedFile(async (filename) => {
     await deps.download({
@@ -59,7 +61,7 @@ const create = async (
     ring = process.env.GCP_KMS_SECRET_BUCKET_KEY_RING,
     location = process.env.GCP_KMS_SECRET_BUCKET_KEY_LOCATION,
     bucket = process.env.GCP_SECRET_BUCKET,
-  } = {}
+  } = {},
 ) => {
   await createKeyIfNeeded({ key, project, ring, location });
   const ciphertext = await deps.encrypt({
