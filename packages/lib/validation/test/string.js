@@ -170,3 +170,50 @@ describe("Refinement fallbacks", () => {
     expect(result.errors[0].message).to.equal("Specific rejection.");
   });
 });
+
+it("uses a generic or titled fallback without exposing rejected input", () => {
+  for (const [title, message] of [
+    [undefined, "This value is invalid."],
+    ["code", "This code doesn't look right."],
+  ]) {
+    const result = string({
+      value: "private-input",
+      title,
+      refinementFn: () => false,
+      refinementMessageFn: () => undefined,
+    });
+    expect(result.isValid()).to.equal(false);
+    expect(result.errors[0].message).to.equal(message);
+  }
+});
+
+it("preserves thrown Error messages and handles missing thrown values", () => {
+  for (const [thrown, message] of [
+    [new Error("Specific rejection."), "Specific rejection."],
+    [null, "This value is invalid."],
+    [undefined, "This value is invalid."],
+  ]) {
+    const result = string({
+      value: "input",
+      refinementFn: () => {
+        throw thrown;
+      },
+    });
+    expect(result.isValid()).to.equal(false);
+    expect(result.errors[0].message).to.equal(message);
+  }
+});
+
+it("retains the custom base-message error and title contract for rejected predicates", () => {
+  const result = string({
+    value: "input",
+    title: "code",
+    refinementFn: () => false,
+    baseMessageFn: (error, title) => {
+      expect(error).to.be.instanceOf(Error);
+      expect(title).to.equal("code");
+      return "Rejected by policy.";
+    },
+  });
+  expect(result.errors[0].message).to.equal("Rejected by policy.");
+});
