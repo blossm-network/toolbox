@@ -42,11 +42,11 @@ describe("CLI flag value contracts", () => {
           },
         ],
       }),
-      /exit 1/
+      /exit 1/,
     );
     assert.strictEqual(test.promptCount(), 0);
     assert(
-      test.messages.some((args) => args[0].includes("env must be one of"))
+      test.messages.some((args) => args[0].includes("env must be one of")),
     );
   });
   it("preserves explicit false and zero instead of replacing them with defaults", async () => {
@@ -95,4 +95,73 @@ describe("CLI flag value contracts", () => {
     assert.strictEqual(result.env, "production");
     assert.strictEqual(test.promptCount(), 0);
   });
+});
+
+it("checks short flag aliases and invalid configured choices", async () => {
+  const test = await fixture();
+  const flags = [
+    {
+      name: "env",
+      short: "e",
+      type: String,
+      choices: ["development", "production"],
+      default: "development",
+    },
+  ];
+  const result = await test.normalize({
+    entrypointType: "path",
+    entrypointDefault: ".",
+    args: ["-e", "production"],
+    flags,
+  });
+  assert.equal(result.env, "production");
+  await assert.rejects(
+    test.normalize({
+      entrypointType: "path",
+      entrypointDefault: ".",
+      args: [],
+      flags: [{ ...flags[0], default: "typo" }],
+    }),
+    /exit 1/,
+  );
+  assert.equal(test.promptCount(), 0);
+});
+
+it("retains the interactive choice path when no flag or default is supplied", async () => {
+  const test = await fixture();
+  const result = await test.normalize({
+    entrypointType: "path",
+    entrypointDefault: ".",
+    args: [],
+    flags: [
+      { name: "env", type: String, choices: ["development", "production"] },
+    ],
+  });
+  assert.equal(result.env, "development");
+  assert.equal(test.promptCount(), 1);
+});
+
+it("retains the generic diagnostic when a custom flag parser throws no Error", async () => {
+  const test = await fixture();
+  await assert.rejects(
+    test.normalize({
+      entrypointType: "path",
+      entrypointDefault: ".",
+      args: ["--value", "input"],
+      flags: [
+        {
+          name: "value",
+          type: () => {
+            throw null;
+          },
+        },
+      ],
+    }),
+    /exit 1/,
+  );
+  assert.ok(
+    test.messages.some(([message]) =>
+      message.includes("I couldn't read the command"),
+    ),
+  );
 });
