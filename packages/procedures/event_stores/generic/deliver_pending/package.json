@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-deliver-pending",
   "description": "Retries pending deliveries and removes acknowledged records.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",

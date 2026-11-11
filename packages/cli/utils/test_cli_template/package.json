@@ -1,6 +1,6 @@
 {
   "name": "@blossm/test-cli-template",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Tests a template.",
   "main": "index.js",
   "type": "module",
@@ -15,9 +15,9 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
+    "@blossm/robo-say": "^0.0.12",
     "chalk": "^5.6.2",
-    "fs-extra": "^11.4.1",
-    "@blossm/robo-say": "^0.0.11"
+    "fs-extra": "^11.4.1"
   },
   "devDependencies": {
     "mocha": "^12.0.3"

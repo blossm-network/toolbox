@@ -1,7 +1,7 @@
 {
   "name": "@blossm/rpc",
   "description": "Calls a remote procedure within the network.",
-  "version": "0.0.269",
+  "version": "0.0.270",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -15,22 +15,22 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/enqueue-operation": "^0.0.11",
-    "@blossm/errors": "^0.0.40",
-    "@blossm/logger": "^0.0.13",
-    "@blossm/network-token": "^0.0.10",
-    "@blossm/network-url": "^0.0.7",
-    "@blossm/operation-hash": "^0.0.17",
-    "@blossm/operation-short-name": "^0.0.1",
-    "@blossm/operation-token": "^0.0.21",
-    "@blossm/operation-url": "^0.0.23",
-    "@blossm/request": "^0.0.69",
-    "@blossm/rpc-delivery-consts": "^0.0.1"
+    "@blossm/enqueue-operation": "^0.0.12",
+    "@blossm/errors": "^0.0.41",
+    "@blossm/logger": "^0.0.14",
+    "@blossm/network-token": "^0.0.11",
+    "@blossm/network-url": "^0.0.8",
+    "@blossm/operation-hash": "^0.0.18",
+    "@blossm/operation-short-name": "^0.0.2",
+    "@blossm/operation-token": "^0.0.22",
+    "@blossm/operation-url": "^0.0.24",
+    "@blossm/request": "^0.0.70",
+    "@blossm/rpc-delivery-consts": "^0.0.2"
   },
   "devDependencies": {
+    "@blossm/event-outcome-consts": "^0.0.2",
     "mocha": "^12.0.3",
     "sinon": "^22.1.0",
-    "sinon-chai": "^4.0.1",
-    "@blossm/event-outcome-consts": "^0.0.1"
+    "sinon-chai": "^4.0.1"
   }
 }

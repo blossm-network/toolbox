@@ -1,6 +1,6 @@
 {
   "name": "@blossm/merge-cli-template",
-  "version": "0.0.644",
+  "version": "0.0.645",
   "description": "Merges the contents of a file with a template.",
   "main": "index.js",
   "type": "module",
@@ -15,19 +15,19 @@
     "test": "mocha --recursive test"
   },
   "dependencies": {
-    "@blossm/cli-root-dir": "^0.0.15",
-    "@blossm/operation-hash": "^0.0.17",
+    "@blossm/cli-root-dir": "^0.0.16",
+    "@blossm/node-external-token": "^0.0.205",
+    "@blossm/operation-hash": "^0.0.18",
+    "@blossm/robo-say": "^0.0.12",
     "chalk": "^5.6.2",
     "common-tags": "^1.8.2",
     "fs-extra": "^11.4.1",
-    "yaml": "^2.9.1",
-    "@blossm/node-external-token": "^0.0.204",
-    "@blossm/robo-say": "^0.0.11"
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
-    "mocha": "^12.0.3",
-    "@blossm/rpc": "^0.0.269",
-    "@blossm/view-composite-rpc": "^0.0.166",
-    "@blossm/operation-short-name": "^0.0.1"
+    "@blossm/operation-short-name": "^0.0.2",
+    "@blossm/rpc": "^0.0.270",
+    "@blossm/view-composite-rpc": "^0.0.167",
+    "mocha": "^12.0.3"
   }
 }

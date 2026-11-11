@@ -1,6 +1,6 @@
 {
   "name": "@blossm/hmac",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Creates HMAC-SHA256 authentication codes.",
   "main": "index.js",
   "type": "module",

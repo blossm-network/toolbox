@@ -1,6 +1,6 @@
 {
   "name": "@blossm/hash-string",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Hashes a string.",
   "main": "index.js",
   "type": "module",

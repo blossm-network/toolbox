@@ -1,6 +1,6 @@
 {
   "name": "@blossm/contract-addresses-trusted-forwarder",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Pinned Juicebox V6 ERC2771Forwarder deployment addresses",
   "main": "index.js",
   "type": "module",
@@ -15,10 +15,10 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.40"
+    "@blossm/errors": "^0.0.41"
   },
   "devDependencies": {
-    "mocha": "^12.0.3",
-    "chai": "^6.3.0"
+    "chai": "^6.3.0",
+    "mocha": "^12.0.3"
   }
 }

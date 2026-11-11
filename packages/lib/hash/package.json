@@ -1,6 +1,6 @@
 {
   "name": "@blossm/hash",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Keccak-256 hash of canonical JSON values.",
   "main": "index.js",
   "type": "module",
@@ -12,7 +12,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/cononical-string": "^0.0.9",
+    "@blossm/cononical-string": "^0.0.10",
     "keccak": "^3.0.4"
   },
   "scripts": {

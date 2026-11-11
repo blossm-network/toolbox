@@ -1,6 +1,6 @@
 {
   "name": "@blossm/channel-name",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "A properly formatted channel name.",
   "main": "index.js",
   "type": "module",

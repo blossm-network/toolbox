@@ -1,6 +1,6 @@
 {
   "name": "@blossm/get-token",
-  "version": "0.0.412",
+  "version": "0.0.413",
   "description": "Gets a token for a development environment.",
   "main": "index.js",
   "type": "module",
@@ -15,11 +15,11 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/command-rpc": "^0.0.309",
-    "@blossm/create-event": "^0.0.55",
-    "@blossm/crypt": "^0.0.9",
-    "@blossm/event-store-rpc": "^0.0.311",
-    "@blossm/uuid": "^0.0.9"
+    "@blossm/command-rpc": "^0.0.310",
+    "@blossm/create-event": "^0.0.56",
+    "@blossm/crypt": "^0.0.10",
+    "@blossm/event-store-rpc": "^0.0.312",
+    "@blossm/uuid": "^0.0.10"
   },
   "devDependencies": {
     "mocha": "^12.0.3"

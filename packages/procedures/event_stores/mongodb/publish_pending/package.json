@@ -1,7 +1,7 @@
 {
   "name": "@blossm/mongodb-event-store-publish-pending",
   "description": "Publishes pending MongoDB event notifications.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -15,8 +15,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/mongodb-database": "^0.0.134",
-    "@blossm/event-store-deliver-pending": "^0.0.1"
+    "@blossm/event-store-deliver-pending": "^0.0.2",
+    "@blossm/mongodb-database": "^0.0.135"
   },
   "devDependencies": {
     "mocha": "^12.0.3",

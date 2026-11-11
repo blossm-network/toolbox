@@ -1,6 +1,6 @@
 {
   "name": "@blossm/erc2771",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Local ERC-2771 request signing for Juicebox V6 forwarders",
   "main": "index.js",
   "type": "module",
@@ -15,15 +15,15 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "viem": "^2.38.0",
-    "@blossm/contract-addresses-trusted-forwarder": "^0.0.1",
-    "@blossm/contract-abis-trusted-forwarder": "^0.0.1",
-    "@blossm/providers": "^0.0.1",
-    "@blossm/errors": "^0.0.40"
+    "@blossm/contract-abis-trusted-forwarder": "^0.0.2",
+    "@blossm/contract-addresses-trusted-forwarder": "^0.0.2",
+    "@blossm/errors": "^0.0.41",
+    "@blossm/providers": "^0.0.2",
+    "viem": "^2.38.0"
   },
   "devDependencies": {
-    "mocha": "^12.0.3",
     "chai": "^6.3.0",
+    "mocha": "^12.0.3",
     "sinon": "^22.1.0"
   }
 }

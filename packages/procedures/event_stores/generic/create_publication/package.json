@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-create-publication",
   "description": "Creates an event notification for durable publication.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",

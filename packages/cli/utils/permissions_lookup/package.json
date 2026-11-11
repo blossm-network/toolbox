@@ -1,6 +1,6 @@
 {
   "name": "@blossm/permissions-lookup",
-  "version": "0.0.179",
+  "version": "0.0.180",
   "description": "Looks up permissions for a role.",
   "main": "index.js",
   "type": "module",
@@ -15,13 +15,13 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/errors": "^0.0.40",
-    "@blossm/fact-rpc": "^0.0.210",
-    "@blossm/redis": "^0.0.16",
-    "@blossm/role-permissions": "^0.0.30",
-    "@blossm/uuid": "^0.0.9",
-    "yaml": "^2.9.1",
-    "@blossm/node-external-token": "^0.0.204"
+    "@blossm/errors": "^0.0.41",
+    "@blossm/fact-rpc": "^0.0.211",
+    "@blossm/node-external-token": "^0.0.205",
+    "@blossm/redis": "^0.0.17",
+    "@blossm/role-permissions": "^0.0.31",
+    "@blossm/uuid": "^0.0.10",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "mocha": "^12.0.3"

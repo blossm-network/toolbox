@@ -1,6 +1,6 @@
 {
   "name": "@blossm/operation-short-name",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Creates a short name for an operation.",
   "main": "index.js",
   "type": "module",
@@ -15,8 +15,8 @@
     "test": "mocha --recursive"
   },
   "dependencies": {
-    "@blossm/service-name-consts": "^0.0.5",
-    "@blossm/trim-string": "^0.0.6"
+    "@blossm/service-name-consts": "^0.0.6",
+    "@blossm/trim-string": "^0.0.7"
   },
   "devDependencies": {
     "mocha": "^12.0.3",
