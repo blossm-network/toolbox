@@ -13,7 +13,6 @@ import createKeyRing from "./steps/create_key_ring.js";
 import createSymmetricEncryptKey from "./steps/create_symmetric_encrypt_key.js";
 import createAsymmetricSignKey from "./steps/create_asymmetric_sign_key.js";
 import scheduleJob from "./steps/schedule_job.js";
-import updateScheduledJob from "./steps/update_scheduled_job.js";
 // import startDnsTransaction from "./steps/start_dns_transaction.js";
 // import addDnsTransaction from "./steps/add_dns_transaction.js";
 // import executeDnsTransaction from "./steps/execute_dns_transaction.js";
@@ -194,13 +193,6 @@ export default ({
             serviceName,
             computeUrlId,
             uri: `${uri}/create-block`,
-            project,
-          }),
-          //Update the schedule if it's changed.
-          updateScheduledJob({
-            region,
-            name: `event-store-${service}-${domain}-create-block`,
-            schedule: blockSchedule,
             project,
           }),
           scheduleJob({
