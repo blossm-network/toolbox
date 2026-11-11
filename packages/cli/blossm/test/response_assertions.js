@@ -17,7 +17,7 @@ describe("Shared generated response assertion owner", () => {
     ]) {
       assert.throws(
         () => check({ data: { value: actual }, expected: { value: expected } }),
-        chai.AssertionError
+        chai.AssertionError,
       );
       check({ data: { value: expected }, expected: { value: expected } });
     }
@@ -27,7 +27,7 @@ describe("Shared generated response assertion owner", () => {
           data: { rows: [{ id: "wrong" }] },
           expected: { rows: [{ id: "expected" }] },
         }),
-      chai.AssertionError
+      chai.AssertionError,
     );
     check({
       data: { rows: [{ id: "expected", extra: true }] },
@@ -50,7 +50,7 @@ describe("Shared generated response assertion owner", () => {
     ]) {
       assert.throws(
         () => check({ data: { rows: actual }, expected: { rows: expected } }),
-        chai.AssertionError
+        chai.AssertionError,
       );
     }
     for (const values of [[1, 0, false, ""], [[1], [false]], [{ id: "one" }]]) {
@@ -58,5 +58,4 @@ describe("Shared generated response assertion owner", () => {
     }
     check({ data: { rows: ["opaque", "extra"] }, expected: { rows: [null] } });
   });
-
 });
