@@ -1,6 +1,8 @@
 import * as chai from "chai";
 const { expect } = chai;
 
+// Null/undefined expected fields are presence-only; objects and arrays describe
+// subsets, so additional response fields and array entries are allowed.
 const checkResponse = ({ data, expected }) => {
   if (expected == null) return;
   if (expected instanceof Array) expect(data).to.be.an("array");

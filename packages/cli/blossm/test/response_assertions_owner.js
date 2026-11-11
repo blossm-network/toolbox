@@ -31,7 +31,7 @@ describe("Shared generated response assertion owner", () => {
 
 // These are the two directory layers copied by merge-cli-template. Import the
 // emitted helper with Node as well as checking each generated suite's reference.
-for (const procedure of ["command", "fact", "view_composite"]) {
+for (const procedure of ["command", "fact", "view_composite", "projection"]) {
   it(`includes the shared response assertion in generated ${procedure} tests`, async () => {
     const { cp, mkdtemp, readFile, rm } = await import("node:fs/promises");
     const { join } = await import("node:path");
