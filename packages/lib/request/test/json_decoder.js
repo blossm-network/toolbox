@@ -7,7 +7,7 @@ const objects = [
   {},
 ];
 const bytes = Buffer.from(
-  objects.map((object) => JSON.stringify(object)).join("\n")
+  objects.map((object) => JSON.stringify(object)).join("\n"),
 );
 
 describe("JSON stream decoder", () => {
@@ -20,7 +20,7 @@ describe("JSON stream decoder", () => {
           ...decoder.write(bytes.subarray(split)),
           ...decoder.end(),
         ],
-        objects
+        objects,
       );
     }
   });
@@ -50,5 +50,33 @@ describe("JSON stream decoder", () => {
     const decoder = request.jsonDecoder();
     decoder.write('{"unfinished":');
     assert.throws(() => decoder.end(), SyntaxError);
+  });
+});
+
+describe("JSON stream input integrity", () => {
+  it("rejects invalid and unfinished UTF-8 instead of changing string values", () => {
+    const invalid = Buffer.concat([
+      Buffer.from('{"text":"'),
+      Buffer.from([0xff]),
+      Buffer.from('"}'),
+    ]);
+    assert.throws(() => request.jsonDecoder().write(invalid), TypeError);
+    const decoder = request.jsonDecoder();
+    decoder.write(Buffer.from([0xf0, 0x9f]));
+    assert.throws(() => decoder.end(), TypeError);
+  });
+
+  it("retains a UTF-16 surrogate pair split across direct string chunks", () => {
+    const decoder = request.jsonDecoder();
+    assert.deepEqual(decoder.write('{"text":"\ud83e'), []);
+    assert.deepEqual(decoder.write('\udd8b"}'), [{ text: "🦋" }]);
+    assert.deepEqual(decoder.end(), []);
+  });
+
+  it("accepts JSON whitespace and rejects non-JSON separators", () => {
+    const decoder = request.jsonDecoder();
+    assert.deepEqual(decoder.write(" \t\r\n{} \t\r\n[]"), [{}, []]);
+    assert.deepEqual(decoder.end(), []);
+    assert.throws(() => request.jsonDecoder().write("{}\u00a0{}"), SyntaxError);
   });
 });

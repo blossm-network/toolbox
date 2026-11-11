@@ -178,9 +178,9 @@ export default ({region, operationNameComponents}) => ({
   stream: (fn, query, { raw } = {}) => {
     const id = query.id;
     delete query.id;
-    const decoder = raw ? null : deps.jsonDecoder();
     return common({
       method: async (url, data) => {
+        const decoder = raw ? null : deps.jsonDecoder();
         const response = await deps.stream(
           url,
           async (data) => {

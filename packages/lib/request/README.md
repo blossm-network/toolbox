@@ -41,6 +41,9 @@ state between sources. Without a decoder, values remain raw byte chunks.
 
 `jsonDecoder()` creates independent UTF-8 framing state for consecutive JSON
 objects/arrays. Feed chunks with `write(chunk)` and flush with `end()`. Quoted
-braces, nesting, escapes and byte-split code points are retained. Malformed or
-truncated records reject the stream. Raw HTTP streams are not implicitly parsed;
-RPC explicitly opts into this decoder.
+braces, nesting, escapes and byte-split code points are retained. Invalid UTF-8
+bytes, malformed JSON, non-JSON separators and truncated final records reject
+the stream. Direct string chunks retain their UTF-16 characters across splits.
+The decoder buffers an incomplete record without a byte cap. Raw HTTP streams
+are not implicitly parsed; generic RPC explicitly opts in, with independent
+state for every HTTP execution, including retries and concurrent executions.

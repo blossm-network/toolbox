@@ -19,3 +19,9 @@ own APIs; this option is available on the generic RPC builder.
 
 These transport deadlines do not cover token acquisition or queued operation
 execution. They apply when the HTTP transport starts.
+
+Structured `stream(fn, query)` calls deliver complete JSON object/array records,
+independent of HTTP chunk boundaries. Each HTTP execution owns its decoder,
+including retries or concurrent `.with()` calls on the same builder. Invalid
+UTF-8, malformed JSON and unfinished records reject the call. Pass
+`stream(fn, query, { raw: true })` for arbitrary text or binary byte chunks.
