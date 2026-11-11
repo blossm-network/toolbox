@@ -12,11 +12,13 @@ export default (headers = {}) => {
     "content-length",
   ]);
   const connection = Object.entries(headers).find(
-    ([name]) => name.toLowerCase() === "connection"
+    ([name]) => name.toLowerCase() === "connection",
   )?.[1];
   for (const name of String(connection || "").split(","))
     blocked.add(name.trim().toLowerCase());
   return Object.fromEntries(
-    Object.entries(headers).filter(([name]) => !blocked.has(name.toLowerCase()))
+    Object.entries(headers).filter(
+      ([name]) => !blocked.has(name.toLowerCase()),
+    ),
   );
 };

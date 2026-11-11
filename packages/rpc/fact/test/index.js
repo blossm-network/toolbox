@@ -200,6 +200,8 @@ describe("Fact", () => {
     const root = "some-root";
 
     const onResponseFn = "some-on-response-fn";
+    const signal = new AbortController().signal;
+    const timeout = 1234;
     const { body: result } = await fact({ name, domain, service })
       .set({
         context,
@@ -210,7 +212,7 @@ describe("Fact", () => {
           externalFn: externalTokenFn,
         },
       })
-      .stream(fn, { query, root, onResponseFn });
+      .stream(fn, { query, root, onResponseFn, signal, timeout });
 
     expect(result).to.equal(response);
     expect(rpcFake).to.have.been.calledWith({
@@ -220,7 +222,7 @@ describe("Fact", () => {
     expect(streamFake).to.have.been.calledWith(
       fn,
       { query, id: root },
-      { raw: false, onResponseFn }
+      { raw: false, onResponseFn, signal, timeout }
     );
     expect(inFake).to.have.been.calledWith({
       context,

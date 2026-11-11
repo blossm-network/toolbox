@@ -39,7 +39,7 @@ describe("Fact gateway stream composition", () => {
             connection: "close",
             "content-length": "4",
           },
-        })
+        }),
     );
     const res = new Response();
     await get({
@@ -64,7 +64,7 @@ describe("Fact gateway stream composition", () => {
       requestDeps,
       "fetch",
       async () =>
-        new globalThis.Response('{"message":"not permitted"}', { status: 403 })
+        new globalThis.Response('{"message":"not permitted"}', { status: 403 }),
     );
     const res = new Response();
     await assert.rejects(
@@ -73,7 +73,7 @@ describe("Fact gateway stream composition", () => {
         stream: true,
         internalTokenFn: async () => null,
       })({ query: {}, params: {} }, res),
-      (error) => error.statusCode === 403
+      (error) => error.statusCode === 403,
     );
     assert.equal(res.statusCode, undefined);
     assert.equal(res.chunks.length, 0);
@@ -89,7 +89,7 @@ describe("Fact gateway stream composition", () => {
           start(controller) {
             controller.enqueue(Buffer.from("first"));
           },
-        })
+        }),
       );
     });
     const res = new Response();
@@ -104,7 +104,7 @@ describe("Fact gateway stream composition", () => {
         stream: true,
         internalTokenFn: async () => null,
       })({ query: {}, params: {} }, res),
-      (error) => error.name === "AbortError"
+      (error) => error.name === "AbortError",
     );
     assert.ok(upstream.aborted);
     assert.equal(res.listenerCount("close"), 0);
