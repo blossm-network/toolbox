@@ -18,16 +18,16 @@ const require = createRequire(import.meta.url);
 describe("Create-event consumer dependencies", () => {
   it("loads and creates an event with only its declared runtime dependencies", async () => {
     const consumer = await mkdtemp(
-      join(tmpdir(), "blossm-create-event-consumer-")
+      join(tmpdir(), "blossm-create-event-consumer-"),
     );
     try {
       const manifest = JSON.parse(
-        await readFile(new URL("../package.json", import.meta.url), "utf8")
+        await readFile(new URL("../package.json", import.meta.url), "utf8"),
       );
       for (const name of ["index.js", "deps.js", "package.json"])
         await copyFile(
           new URL(`../${name}`, import.meta.url),
-          join(consumer, name)
+          join(consumer, name),
         );
       for (const name of Object.keys(manifest.dependencies)) {
         const destination = join(consumer, "node_modules", name);
@@ -35,7 +35,7 @@ describe("Create-event consumer dependencies", () => {
         await symlink(
           await realpath(dirname(require.resolve(`${name}/package.json`))),
           destination,
-          "dir"
+          "dir",
         );
       }
       const { default: createEvent } = await import(

@@ -1,4 +1,3 @@
-import { string as dateString } from "@blossm/datetime";
 import deps from "./deps.js";
 
 export default ({
@@ -27,7 +26,7 @@ export default ({
             : ""
         }${deps.cononicalString(payload)}`
       ).toString("hex"),
-      created: dateString(),
+      created: deps.dateString(),
       action,
       domain,
       service,
