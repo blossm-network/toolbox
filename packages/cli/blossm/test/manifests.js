@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
 import { readFileSync, existsSync } from "node:fs";
 
 const json = (relative) =>
@@ -33,12 +35,20 @@ describe("CLI and generated manifest contracts", () => {
     ])
       assert.ok(
         dependencies[name],
-        `${name} must be available to standalone CLI tests`
+        `${name} must be available to standalone CLI tests`,
       );
   });
   it("points the CLI package main at its existing implementation", () => {
     assert.ok(
-      existsSync(new URL(`../${json("../package.json").main}`, import.meta.url))
+      existsSync(
+        new URL(`../${json("../package.json").main}`, import.meta.url),
+      ),
+    );
+    assert.equal(
+      createRequire(new URL("../package.json", import.meta.url)).resolve(
+        "@blossm/cli",
+      ),
+      fileURLToPath(new URL("../src/index.js", import.meta.url)),
     );
   });
 });
