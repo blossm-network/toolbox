@@ -1,15 +1,11 @@
 import assert from "assert";
-import path from "path";
 import fs from "fs";
-import { load } from "./load.js";
-
-const buildDir = "utils/merge_cli_template/src/write_build";
 
 describe("Generated build steps", () => {
   it("installs production dependencies from the build lock and excludes workspace artifacts", () => {
     const template = new URL(
       "../../utils/merge_cli_template/template/",
-      import.meta.url
+      import.meta.url,
     );
     const dockerfile = fs.readFileSync(new URL("Dockerfile", template), "utf8");
     const ignored = fs
@@ -18,7 +14,7 @@ describe("Generated build steps", () => {
       .split("\n");
     assert(dockerfile.includes("COPY package.json yarn.lock ./"));
     assert(
-      dockerfile.includes("RUN yarn install --production --frozen-lockfile")
+      dockerfile.includes("RUN yarn install --production --frozen-lockfile"),
     );
     assert(!dockerfile.includes("npm install"));
     for (const entry of [
@@ -32,10 +28,15 @@ describe("Generated build steps", () => {
       "docker-compose.yaml",
       ".aws",
       ".gcloud",
+      ".config/gcloud",
+      "*.pem",
+      "*.key",
+      "*.p12",
+      "npm-debug.log*",
+      "yarn-error.log*",
+      ".blossm-cloud-run-env.json",
     ]) {
       assert(ignored.includes(entry), entry);
     }
   });
-
-
 });
