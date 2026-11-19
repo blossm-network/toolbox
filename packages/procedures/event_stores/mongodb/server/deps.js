@@ -18,6 +18,7 @@ import saveSnapshot from "@blossm/mongodb-event-store-save-snapshot";
 import saveBlock from "@blossm/mongodb-event-store-save-block";
 import latestBlock from "@blossm/mongodb-event-store-latest-block";
 import formatSchema from "@blossm/format-mongodb-schema";
+import transactionSchema from "@blossm/event-transaction-schema";
 import idempotencyConflictCheck from "@blossm/mongodb-event-store-idempotency-conflict-check";
 
 export default {
@@ -36,6 +37,7 @@ export default {
   idempotencyConflictCheck,
   count,
   formatSchema,
+  transactionSchema,
   saveBlock,
   latestBlock,
   eventStream,
