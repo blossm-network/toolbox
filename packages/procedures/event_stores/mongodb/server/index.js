@@ -18,12 +18,6 @@ export function __resetStoresForTest() {
 
 const typeKey = "$type";
 
-// Normalize transaction dates to the JSON representation committed by tHash.
-const transactionTimestamp = {
-  type: String,
-  set: (value) => value == null ? value : new Date(value).toISOString(),
-};
-
 const eventStore = async ({ schema, indexes, secretFn }) => {
   if (_eventStore != undefined) {
     logger.info("Thank you existing event store database.");
@@ -85,53 +79,7 @@ const eventStore = async ({ schema, indexes, secretFn }) => {
         default: undefined,
       },
       tx: {
-        [typeKey]: new deps.Schema(
-          {
-            ip: String,
-            id: String,
-            claims: {
-              type: new deps.Schema(
-                {
-                  iss: String,
-                  aud: {
-                    type: Object,
-                    validate: (value) =>
-                      typeof value == "string" ||
-                      (Array.isArray(value) &&
-                        value.every((audience) => typeof audience == "string")),
-                  },
-                  sub: String,
-                  exp: transactionTimestamp,
-                  iat: transactionTimestamp,
-                  nbf: transactionTimestamp,
-                  jti: String,
-                },
-                { _id: false, strict: false, minimize: false }
-              ),
-            },
-            path: {
-              type: [
-                new deps.Schema(
-                  {
-                    name: String,
-                    id: String,
-                    domain: String,
-                    service: String,
-                    network: { type: String, required: true },
-                    host: { type: String, required: true },
-                    procedure: { type: String, required: true },
-                    hash: { type: String, required: true },
-                    issued: transactionTimestamp,
-                    timestamp: transactionTimestamp,
-                  },
-                  { _id: false, strict: false, minimize: false }
-                ),
-              ],
-              default: undefined,
-            },
-          },
-          { _id: false, minimize: false }
-        ),
+        [typeKey]: deps.transactionSchema(deps.Schema),
       },
       payload: schema,
     },

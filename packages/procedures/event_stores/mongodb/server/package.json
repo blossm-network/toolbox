@@ -19,6 +19,7 @@
     "@blossm/datetime": "^0.0.19",
     "@blossm/errors": "^0.0.41",
     "@blossm/event-store": "^0.0.324",
+    "@blossm/event-transaction-schema": "^0.0.1",
     "@blossm/format-mongodb-schema": "^0.0.18",
     "@blossm/logger": "^0.0.14",
     "@blossm/mongodb-database": "^0.0.135",
