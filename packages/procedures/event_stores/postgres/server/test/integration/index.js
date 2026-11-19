@@ -1,0 +1,1129 @@
+import { randomUUID } from "node:crypto";
+import hash from "@blossm/hash";
+import { expect } from "chai";
+import { COMMITTED, DUPLICATE } from "@blossm/event-outcome-consts";
+import { fake, replace, restore } from "sinon";
+import { connect, query as sql } from "@blossm/postgres-database";
+import prepareStores, { find } from "@blossm/postgres-event-store-storage";
+import postTransaction from "@blossm/event-store-post-transaction";
+import aggregate from "@blossm/event-store-aggregate";
+import query from "@blossm/event-store-query";
+import createBlockTransaction from "@blossm/event-store-create-block-transaction";
+
+import publishDeps from "@blossm/postgres-event-store-publish-pending/deps.js";
+import genericDeps from "@blossm/event-store/deps.js";
+import eventStore from "../../index.js";
+import deps from "../../deps.js";
+
+if (!process.env.TEST_POSTGRES_URL)
+  throw new Error(
+    "Set TEST_POSTGRES_URL to a disposable PostgreSQL test database.",
+  );
+
+const namespace = `blossm_test_${randomUUID().replaceAll("-", "")}`;
+const handlers = {
+  add: (state, { amount = 1, ...rest }) => ({
+    ...state,
+    ...rest,
+    total: (state.total || 0) + amount,
+  }),
+};
+const event = (root, { id = randomUUID(), amount = 1, ...payload } = {}) => ({
+  headers: {
+    root,
+    action: "add",
+    domain: process.env.DOMAIN,
+    service: process.env.SERVICE,
+    network: process.env.NETWORK,
+    topic: "added",
+    version: 0,
+    created: new Date().toISOString(),
+    idempotency: id,
+  },
+  payload: { amount, ...payload },
+  context: { shop: { root: "shop", service: "test", network: "test" } },
+  groupsAdded: [{ root: "members", service: "test", network: "test" }],
+});
+
+const failure = async (fn) => {
+  try {
+    await fn();
+  } catch (err) {
+    return err;
+  }
+  throw new Error("Expected the operation to fail.");
+};
+
+describe("Postgres event store integration", function () {
+  this.timeout(20000);
+  let database;
+  let stores;
+  let api;
+  let postRoute;
+  let blockRoute;
+  let published;
+  let publicationAttempts;
+  let failPublish;
+  let previousEnv;
+
+  const append = (eventData) =>
+    api.createTransactionFn(
+      postTransaction({
+        ...api,
+        eventData,
+        tx: { id: randomUUID(), path: [] },
+      }),
+    );
+  const read = (root, options) => aggregate(api)(root, options);
+
+  before(async () => {
+    previousEnv = { ...process.env };
+    Object.assign(process.env, {
+      DOMAIN: "counter",
+      SERVICE: "test",
+      NETWORK: "test",
+      NODE_ENV: "test",
+    });
+    const connection = {
+      connectionString: process.env.TEST_POSTGRES_URL,
+      max: 12,
+    };
+    replace(deps.db, "connect", (config) => {
+      database = connect(config);
+      return database;
+    });
+    const compose = deps.eventStore;
+    replace(genericDeps, "server", () => ({
+      get() {
+        return this;
+      },
+      post(handler, options) {
+        if (options?.path === "/create-block") blockRoute = handler;
+        else postRoute = handler;
+        return this;
+      },
+      listen() {},
+    }));
+    replace(deps, "eventStore", async (options) => {
+      await compose(options);
+      api = options;
+    });
+    published = [];
+    publicationAttempts = [];
+    await eventStore({
+      connection,
+      namespace,
+      indexes: ["label", "items.code"],
+      handlers,
+      publishFn: async (...args) => {
+        publicationAttempts.push(args);
+        if (failPublish) throw new Error("publication unavailable");
+        published.push(args);
+      },
+      encryptFn: async (message) => message,
+      signFn: async (hash) => `signed:${hash}`,
+      blockPublisherPublicKeyFn: async () => Buffer.from("test-key"),
+      isPublic: true,
+    });
+    restore();
+    stores = await prepareStores({ database, namespace });
+  });
+
+  beforeEach(async () => {
+    await database.query(
+      `TRUNCATE ${Object.values(stores)
+        .map(({ table }) => table)
+        .join(", ")}`,
+    );
+    published.length = 0;
+    publicationAttempts.length = 0;
+    failPublish = false;
+  });
+
+  after(async () => {
+    restore();
+    if (database && !database.ended) {
+      await database.query(`DROP SCHEMA IF EXISTS "${namespace}" CASCADE`);
+      await database.end();
+    }
+    if (previousEnv) {
+      for (const key of ["DOMAIN", "SERVICE", "NETWORK", "NODE_ENV"])
+        if (previousEnv[key] === undefined) delete process.env[key];
+        else process.env[key] = previousEnv[key];
+    }
+  });
+
+  it("should preserve the generic POST, idempotency, publication and reducer flow", async () => {
+    const first = event("bicycle", { amount: 2, label: "pink" });
+    const req = {
+      body: { eventData: [{ event: first }], tx: { id: "tx", path: [] } },
+    };
+    let status;
+    await postRoute(req, {
+      sendStatus: (value) => {
+        status = value;
+      },
+    });
+    await postRoute(req, { sendStatus: () => {} });
+    expect(status).to.equal(204);
+    expect(published.length).to.equal(1);
+    expect(await api.countFn({ root: "bicycle" })).to.equal(1);
+    expect(await api.countFn({ root: "missing" })).to.equal(0);
+    const result = await read("bicycle", { includeEvents: true });
+    expect(result.state).to.deep.equal({ label: "pink", total: 2 });
+    expect(result.headers.lastEventNumber).to.equal(0);
+    expect(result.events[0].headers.nonce).to.equal("bicycle_0");
+    const stored = result.events[0];
+    expect(hash(stored.headers).create()).to.equal(stored.hash);
+    expect(hash(stored.payload).create()).to.equal(stored.headers.pHash);
+    expect(hash(stored.context).create()).to.equal(stored.headers.cHash);
+    expect(hash(stored.tx).create()).to.equal(stored.headers.tHash);
+    expect(result.context).to.deep.equal(first.context);
+    expect(result.groups).to.deep.equal(first.groupsAdded);
+  });
+
+  it("should order event numbers numerically and await bounded replay callbacks", async () => {
+    await append(Array.from({ length: 125 }, () => ({ event: event("many") })));
+    const numbers = [];
+    await api.eventStreamFn({
+      query: { "headers.root": "many" },
+      sort: { "headers.number": 1 },
+      fn: async (e) => {
+        await Promise.resolve();
+        numbers.push(e.headers.number);
+      },
+    });
+    expect(numbers).to.deep.equal(Array.from({ length: 125 }, (_, i) => i));
+    expect((await read("many")).state.total).to.equal(125);
+    expect((await read("many", { eventLimit: 11 })).state.total).to.equal(11);
+    expect(
+      (await api.findEventsFn({ query: { "headers.root": "many" } })).length,
+    ).to.equal(100);
+  });
+
+  it("should roll counters back on expected-number, handler and duplicate failures, even locally", async () => {
+    const previous = process.env.NODE_ENV;
+    process.env.NODE_ENV = "local";
+    try {
+      const wrongNumber = await failure(() =>
+        append([{ event: event("wrong"), number: 1 }]),
+      );
+      expect(wrongNumber.statusCode).to.equal(412);
+      expect(await api.countFn({ root: "wrong" })).to.equal(0);
+      const unknown = event("unknown");
+      unknown.headers.action = "missing";
+      expect(
+        (await failure(() => append([{ event: unknown }]))).statusCode,
+      ).to.equal(400);
+      expect(await api.countFn({ root: "unknown" })).to.equal(0);
+      const id = randomUUID();
+      expect(
+        (
+          await failure(() =>
+            append([
+              { event: event("one", { id }) },
+              { event: event("two", { id }) },
+            ]),
+          )
+        ).statusCode,
+      ).to.equal(412);
+      expect(await api.countFn({ root: "one" })).to.equal(0);
+      expect(await api.countFn({ root: "two" })).to.equal(0);
+      expect(await read("one")).to.equal(undefined);
+    } finally {
+      process.env.NODE_ENV = previous;
+    }
+  });
+
+  it("should allocate contiguous counts under concurrent same-root writes", async () => {
+    await Promise.all(
+      Array.from({ length: 6 }, () => append([{ event: event("shared") }])),
+    );
+    expect(await api.countFn({ root: "shared" })).to.equal(6);
+    const result = await read("shared", { includeEvents: true });
+    expect(result.state.total).to.equal(6);
+    expect(result.events.map((e) => e.headers.number)).to.deep.equal([
+      0, 1, 2, 3, 4, 5,
+    ]);
+  });
+
+  it("should complete overlapping multi-root batches in opposite root order", async () => {
+    await Promise.all([
+      append([{ event: event("a") }, { event: event("b") }]),
+      append([{ event: event("b") }, { event: event("a") }]),
+    ]);
+    expect(await api.countFn({ root: "a" })).to.equal(2);
+    expect(await api.countFn({ root: "b" })).to.equal(2);
+  });
+
+  it("should reject a raced duplicate without leaving an allocated count", async () => {
+    const id = randomUUID();
+    const outcomes = await Promise.allSettled([
+      append([{ event: event("raced", { id }) }]),
+      append([{ event: event("raced", { id }) }]),
+    ]);
+    expect(
+      outcomes.filter(({ status }) => status == "fulfilled").length,
+    ).to.equal(1);
+    expect(
+      outcomes.find(({ status }) => status == "rejected").reason.statusCode,
+    ).to.equal(412);
+    expect(await api.countFn({ root: "raced" })).to.equal(1);
+  });
+
+  it("should query nested payloads and array elements through the generic query", async () => {
+    await append([
+      { event: event("pink", { label: "pink", items: [{ code: "basket" }] }) },
+      { event: event("blue", { label: "blue", items: [{ code: "light" }] }) },
+    ]);
+    expect(
+      (await query(api)([{ key: "label", value: "pink" }])).map(
+        (a) => a.headers.root,
+      ),
+    ).to.deep.equal(["pink"]);
+    expect(
+      (await query(api)([{ key: "items.code", value: "basket" }])).map(
+        (a) => a.headers.root,
+      ),
+    ).to.deep.equal(["pink"]);
+    const injected = `pink" || true || "`;
+    expect(
+      await api.findEventsFn({ query: { "payload.label": injected } }),
+    ).to.deep.equal([]);
+  });
+
+  it("should preserve time bounds, reverse root ordering and string parallel values", async () => {
+    const dates = [
+      "2026-01-01T00:00:00.000Z",
+      "2026-01-02T00:00:00.000Z",
+      "2026-01-03T00:00:00.000Z",
+    ];
+    for (const [i, updated] of dates.entries()) {
+      await append([{ event: event(`root-${i}`) }]);
+      await database.query(
+        `UPDATE ${stores.countsStore.table} SET updated = $1 WHERE root = $2`,
+        [updated, `root-${i}`],
+      );
+    }
+    const roots = [];
+    await api.rootStreamFn({
+      updatedOnOrAfter: dates[0],
+      updatedBefore: dates[2],
+      fn: (r) => roots.push(r.root),
+    });
+    expect(roots).to.deep.equal(["root-1", "root-0"]);
+    const reversed = [];
+    await api.rootStreamFn({
+      reverse: true,
+      limit: 2,
+      fn: (r) => reversed.push(r.root),
+    });
+    expect(reversed).to.deep.equal(["root-0", "root-1"]);
+    const parallel = [];
+    await api.rootStreamFn({ parallel: "2", fn: (r) => parallel.push(r.root) });
+    expect(parallel.length).to.equal(3);
+  });
+
+  it("should use the block transaction snapshot for implicit reads and read its own writes", async () => {
+    await append([{ event: event("consistent") }]);
+    await api.createTransactionFn(async () => {
+      expect(await api.countFn({ root: "consistent" })).to.equal(1);
+      const outside = await database.connect();
+      try {
+        await outside.query(
+          `UPDATE ${stores.countsStore.table} SET value = 2 WHERE root = $1`,
+          ["consistent"],
+        );
+      } finally {
+        outside.release();
+      }
+      expect(await api.countFn({ root: "consistent" })).to.equal(1);
+      await api.reserveRootCountsFn({ root: "own-write", amount: 1 });
+      expect(await api.countFn({ root: "own-write" })).to.equal(1);
+    });
+    expect(await api.countFn({ root: "consistent" })).to.equal(2);
+  });
+
+  it("should close a failed cursor and roll back writes made by its callback", async () => {
+    await append([{ event: event("stream") }]);
+    const error = new Error("callback failed");
+    expect(
+      await failure(() =>
+        api.createTransactionFn(async () => {
+          await api.eventStreamFn({
+            query: {},
+            fn: async () => {
+              await api.reserveRootCountsFn({ root: "rollback", amount: 1 });
+              throw error;
+            },
+          });
+        }),
+      ),
+    ).to.equal(error);
+    expect(await api.countFn({ root: "rollback" })).to.equal(0);
+    expect((await read("stream")).state.total).to.equal(1);
+  });
+
+  it("should create genesis, snapshots and blocks with the existing generic builder and replay the tail", async () => {
+    const makeBlock = () =>
+      api.createTransactionFn(
+        createBlockTransaction({ ...api, blockLimit: 100 }),
+      );
+    const genesis = await makeBlock();
+    expect(genesis.block.headers.number).to.equal(0);
+    expect(Buffer.isBuffer(genesis.block.events)).to.equal(true);
+    await append([{ event: event("snapshot", { amount: 3, label: "pink" }) }]);
+    // Keep the root strictly within the builder's inclusive/exclusive time window.
+    await database.query(
+      `UPDATE ${stores.countsStore.table} SET updated = $1`,
+      ["2021-01-01T00:00:00.000Z"],
+    );
+    const built = await makeBlock();
+    expect(built.block.headers.number).to.equal(1);
+    expect(built.block.headers.eCount).to.equal(1);
+    expect(built.block.headers.sCount).to.equal(1);
+    const stored = await api.latestBlockFn();
+    for (const field of ["events", "snapshots", "txs"])
+      expect(stored[field].equals(built.block[field])).to.equal(true);
+    const snapshot = await api.findOneSnapshotFn({
+      query: { "headers.root": "snapshot" },
+    });
+    expect(snapshot.state.total).to.equal(3);
+    expect(Buffer.isBuffer(snapshot.events)).to.equal(true);
+    const selected = await api.findOneSnapshotFn({
+      query: { "headers.root": "snapshot" },
+      select: { events: 0 },
+    });
+    expect(selected).not.to.have.property("events");
+    expect(
+      (await query(api)([{ key: "label", value: "pink" }]))[0].state.total,
+    ).to.equal(3);
+    await append([{ event: event("snapshot", { amount: 2 }) }]);
+    const result = await read("snapshot", { includeEvents: true });
+    expect(result.state.total).to.equal(5);
+    expect(result.events.map((e) => e.headers.number)).to.deep.equal([1]);
+    expect(
+      (await read("snapshot", { timestamp: snapshot.headers.created })).state
+        .total,
+    ).to.equal(3);
+    expect(await api.saveSnapshotFn({ snapshot })).to.deep.equal(snapshot);
+    expect(await api.saveBlockFn({ block: stored })).to.deep.equal(stored);
+  });
+
+  it("should filter snapshot-covered roots before applying the stream limit", async () => {
+    const makeBlock = () =>
+      api.createTransactionFn(
+        createBlockTransaction({ ...api, blockLimit: 100 }),
+      );
+    await makeBlock();
+    await append([{ event: event("covered") }, { event: event("extended") }]);
+    await makeBlock();
+    await append([{ event: event("extended") }, { event: event("fresh") }]);
+    for (const [root, updated] of [
+      ["covered", "2021-01-01T00:00:00.000Z"],
+      ["extended", "2021-01-02T00:00:00.000Z"],
+      ["fresh", "2021-01-03T00:00:00.000Z"],
+    ])
+      await database.query(
+        `UPDATE ${stores.countsStore.table} SET updated = $1 WHERE root = $2`,
+        [updated, root],
+      );
+    const roots = async (options) => {
+      const found = [];
+      await api.rootStreamFn({ ...options, fn: (r) => found.push(r.root) });
+      return found;
+    };
+    // The oldest root is fully snapshotted; it must not consume the limit.
+    expect(await roots({ reverse: true, limit: 1 })).to.deep.equal(["covered"]);
+    expect(
+      await roots({ unsnapshottedOnly: true, reverse: true, limit: 1 }),
+    ).to.deep.equal(["extended"]);
+    expect(
+      await roots({ unsnapshottedOnly: true, reverse: true }),
+    ).to.deep.equal(["extended", "fresh"]);
+    expect(
+      await roots({
+        unsnapshottedOnly: true,
+        updatedOnOrAfter: "2021-01-03T00:00:00.000Z",
+      }),
+    ).to.deep.equal(["fresh"]);
+    // The next block snapshots exactly the uncovered tail and nothing remains.
+    const built = await makeBlock();
+    expect(built.block.headers.sCount).to.equal(2);
+    expect(built.block.headers.eCount).to.equal(2);
+    expect(await roots({ unsnapshottedOnly: true })).to.deep.equal([]);
+  });
+
+  it("should cast declared payloads before hashing, store those bytes and guard snapshot state", async () => {
+    const other = `${namespace}_schema`;
+    let declared;
+    replace(deps, "eventStore", async (options) => {
+      declared = options;
+    });
+    let running;
+    try {
+      running = await eventStore({
+        connection: {
+          connectionString: process.env.TEST_POSTGRES_URL,
+          max: 2,
+        },
+        namespace: other,
+        schema: {
+          amount: { type: "Number", required: true },
+          label: "String",
+          when: "Date",
+        },
+        handlers: {
+          add: (state, payload) => ({ ...state, ...payload }),
+          drift: (state, payload) => ({
+            ...state,
+            ...payload,
+            undeclared: true,
+          }),
+        },
+        publishFn: async () => {},
+        encryptFn: async (message) => message,
+        signFn: async (hash) => `signed:${hash}`,
+        blockPublisherPublicKeyFn: async () => Buffer.from("test-key"),
+        isPublic: true,
+      });
+      restore();
+      const post = (eventData) =>
+        declared.createTransactionFn(
+          postTransaction({
+            ...declared,
+            eventData,
+            tx: { id: 123, claims: { exp: "2026-01-01T00:00:00Z" } },
+          }),
+        );
+      const makeBlock = () =>
+        declared.createTransactionFn(
+          createBlockTransaction({ ...declared, blockLimit: 100 }),
+        );
+      const otherStores = await prepareStores({ database, namespace: other });
+
+      const submitted = {
+        amount: "2",
+        label: 7,
+        when: "2026-01-01",
+        undeclared: true,
+      };
+      await post([{ event: { ...event("cast"), payload: submitted } }]);
+      const [stored] = await find({ store: otherStores.eventStore });
+      expect(stored.payload).to.deep.equal({
+        amount: 2,
+        label: "7",
+        when: "2026-01-01T00:00:00.000Z",
+      });
+      expect(stored.tx).to.deep.equal({
+        id: "123",
+        claims: { exp: "2026-01-01T00:00:00.000Z" },
+        path: [],
+      });
+      expect(stored.headers.pHash).to.equal(hash(stored.payload).create());
+      expect(stored.headers.pHash).not.to.equal(hash(submitted).create());
+      expect(stored.headers.tHash).to.equal(hash(stored.tx).create());
+      expect(stored.hash).to.equal(hash(stored.headers).create());
+      const [notice] = await find({ store: otherStores.publicationsStore });
+      expect(notice.hash).to.equal(stored.hash);
+
+      // An uncastable payload leaves no event, counter or notice.
+      const invalid = await failure(() =>
+        post([{ event: { ...event("invalid"), payload: { amount: "many" } } }]),
+      );
+      expect(invalid.statusCode).to.equal(400);
+      expect(await declared.countFn({ root: "invalid" })).to.equal(0);
+      expect((await find({ store: otherStores.eventStore })).length).to.equal(
+        1,
+      );
+
+      // State replayed from normalized payloads satisfies the schema unchanged.
+      await makeBlock();
+      const built = await makeBlock();
+      expect(built.block.headers.sCount).to.equal(1);
+      const snapshot = await declared.findOneSnapshotFn({
+        query: { "headers.root": "cast" },
+      });
+      expect(snapshot.state).to.deep.equal(stored.payload);
+      expect(snapshot.headers.sHash).to.equal(hash(snapshot.state).create());
+
+      // A reducer that leaves the schema fails the block instead of having
+      // its hashed state rewritten; nothing from that block is kept.
+      const drifting = event("drift");
+      await post([
+        {
+          event: {
+            ...drifting,
+            headers: { ...drifting.headers, action: "drift" },
+            payload: { amount: 1 },
+          },
+        },
+      ]);
+      const rejected = await failure(makeBlock);
+      expect(rejected.message).to.equal(
+        "Snapshot state does not match its declared schema.",
+      );
+      expect((await declared.latestBlockFn()).hash).to.equal(built.block.hash);
+      expect(
+        (await find({ store: otherStores.snapshotStore })).length,
+      ).to.equal(1);
+    } finally {
+      restore();
+      await database.query(`DROP SCHEMA IF EXISTS "${other}" CASCADE`);
+      if (running) await running.close();
+    }
+  });
+
+  it("should reject an unsupported declared schema before connecting", async () => {
+    const connect = fake();
+    replace(deps.db, "connect", connect);
+    try {
+      const rejected = await failure(() =>
+        eventStore({ namespace, schema: { id: "ObjectId" }, handlers }),
+      );
+      expect(rejected).to.be.instanceOf(TypeError);
+      expect(connect.called).to.equal(false);
+    } finally {
+      restore();
+    }
+  });
+
+  it("should roll snapshot and block writes back together", async () => {
+    const block = {
+      hash: "block",
+      headers: { number: 0, created: new Date().toISOString() },
+      events: Buffer.from([0, 255]),
+      snapshots: Buffer.from("snapshots"),
+      txs: Buffer.from("txs"),
+    };
+    const snapshot = {
+      hash: "snapshot",
+      headers: {
+        nonce: "root_0",
+        root: "root",
+        number: 0,
+        created: block.headers.created,
+      },
+      state: { total: 1 },
+      events: Buffer.from([1, 0, 255]),
+    };
+    await failure(() =>
+      api.createTransactionFn(async (transaction) => {
+        await api.saveSnapshotFn({ snapshot, transaction });
+        await api.saveBlockFn({ block, transaction });
+        throw new Error("abort");
+      }),
+    );
+    expect(await api.latestBlockFn()).to.equal(null);
+    expect(await find({ store: stores.snapshotStore })).to.deep.equal([]);
+  });
+
+  it("should serialize simultaneous store initialization without partial schemas", async () => {
+    const other = `${namespace}_init`;
+    try {
+      const prepared = await Promise.all(
+        Array.from({ length: 3 }, () =>
+          prepareStores({ database, namespace: other, indexes: ["label"] }),
+        ),
+      );
+      expect(prepared.map((s) => s.eventStore.table)).to.deep.equal(
+        Array(3).fill(`"${other}"."events"`),
+      );
+    } finally {
+      await database.query(`DROP SCHEMA IF EXISTS "${other}" CASCADE`);
+    }
+  });
+
+  it("should preserve scalar types, null/missing and exact document/array equality", async () => {
+    await append([
+      {
+        event: event("types", {
+          n: 2,
+          active: false,
+          absent: null,
+          tags: ["pink", "blue"],
+          details: { color: "pink", size: 2 },
+          items: [{ code: "basket" }],
+        }),
+      },
+      {
+        event: event("different", { n: "2", active: true, absent: "present" }),
+      },
+    ]);
+    const roots = async (field, value) =>
+      (
+        await api.findEventsFn({
+          query: { [`payload.${field}`]: value },
+          sort: { "headers.root": 1 },
+        })
+      ).map((e) => e.headers.root);
+    expect(await roots("n", 2)).to.deep.equal(["types"]);
+    expect(await roots("n", "2")).to.deep.equal(["different"]);
+    expect(await roots("active", false)).to.deep.equal(["types"]);
+    expect(await roots("absent", null)).to.deep.equal(["types"]);
+    expect(await roots("missing", null)).to.deep.equal(["different", "types"]);
+    expect(await roots("tags", "pink")).to.deep.equal(["types"]);
+    expect(await roots("tags", ["pink", "blue"])).to.deep.equal(["types"]);
+    expect(await roots("tags", ["blue", "pink"])).to.deep.equal([]);
+    expect(await roots("details", { size: 2, color: "pink" })).to.deep.equal([
+      "types",
+    ]);
+    expect(await roots("details", { color: "pink" })).to.deep.equal([]);
+    expect(await roots("items.code", "basket")).to.deep.equal(["types"]);
+    const plan = await api.createTransactionFn(async (transaction) => {
+      await sql({
+        database,
+        transaction,
+        text: "SET LOCAL enable_seqscan = off",
+      });
+      return sql({
+        database,
+        transaction,
+        text: `EXPLAIN SELECT doc FROM ${stores.eventStore.table} WHERE doc @? $1::jsonpath`,
+        values: ['lax $."payload"."n" ? (@ == 2)'],
+      });
+    });
+    expect(plan.rows.map((r) => r["QUERY PLAN"]).join("\n")).to.include(
+      "events_document",
+    );
+  });
+
+  it("should enforce unique event hashes/nonces, snapshot nonces and block numbers", async () => {
+    await append([{ event: event("unique") }]);
+    const [stored] = await api.findEventsFn({ query: {} });
+    const duplicateHash = {
+      ...stored,
+      headers: {
+        ...stored.headers,
+        root: "other",
+        nonce: "other_0",
+        idempotency: randomUUID(),
+      },
+    };
+    expect(
+      (
+        await failure(() =>
+          api.createTransactionFn((transaction) =>
+            api.saveEventsFn({ events: [duplicateHash], transaction }),
+          ),
+        )
+      ).statusCode,
+    ).to.equal(412);
+    const duplicateNonce = {
+      ...duplicateHash,
+      hash: "new-hash",
+      headers: { ...duplicateHash.headers, nonce: stored.headers.nonce },
+    };
+    expect(
+      (
+        await failure(() =>
+          api.createTransactionFn((transaction) =>
+            api.saveEventsFn({ events: [duplicateNonce], transaction }),
+          ),
+        )
+      ).statusCode,
+    ).to.equal(412);
+    expect((await api.findEventsFn({ query: {} })).length).to.equal(1);
+    const snapshot = {
+      hash: "s",
+      headers: {
+        nonce: "unique_0",
+        root: "unique",
+        number: 0,
+        created: stored.headers.created,
+      },
+      state: { total: 1 },
+      events: Buffer.from([0, 255]),
+    };
+    await api.saveSnapshotFn({ snapshot });
+    expect(
+      (
+        await failure(() =>
+          api.saveSnapshotFn({ snapshot: { ...snapshot, hash: "s-other" } }),
+        )
+      ).code,
+    ).to.equal("23505");
+    const block = {
+      hash: "b",
+      headers: { number: 0, created: stored.headers.created },
+      events: Buffer.from([255, 0]),
+      snapshots: Buffer.alloc(0),
+      txs: Buffer.from([128]),
+    };
+    await api.saveBlockFn({ block });
+    expect(
+      (
+        await failure(() =>
+          api.saveBlockFn({ block: { ...block, hash: "b-other" } }),
+        )
+      ).code,
+    ).to.equal("23505");
+    expect((await api.latestBlockFn()).hash).to.equal("b");
+  });
+
+  afterEach(restore);
+
+  it("rolls back events, counts and notices in the same transaction", async () => {
+    const err = await failure(() =>
+      api.createTransactionFn(async (transaction) => {
+        await postTransaction({
+          ...api,
+          eventData: [{ event: event("aborted") }],
+          tx: { id: "aborted" },
+        })(transaction);
+        throw new Error("abort transaction");
+      }),
+    );
+    expect(err.message).to.equal("abort transaction");
+    expect(await find({ store: stores.eventStore })).to.deep.equal([]);
+    expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+    expect(await api.countFn({ root: "aborted" })).to.equal(0);
+  });
+
+  it("recovers a failed notice on duplicate POST without another event", async () => {
+    const req = { body: { eventData: [{ event: event("retry") }] } };
+    failPublish = true;
+    const sendStatus = fake();
+    await postRoute(req, { sendStatus });
+    expect(sendStatus.firstCall.args).to.deep.equal([204]);
+    expect(await api.countFn({ root: "retry" })).to.equal(1);
+    const [notice] = await find({ store: stores.publicationsStore });
+    expect(notice.data.hash).to.equal(notice.hash);
+    expect(publicationAttempts[0][0].hash).to.equal(notice.hash);
+    failPublish = false;
+    await postRoute(req, { sendStatus() {} });
+    expect(await api.countFn({ root: "retry" })).to.equal(1);
+    expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+    expect(published).to.have.length(1);
+    expect(publicationAttempts.map(([data]) => data.hash)).to.deep.equal([
+      notice.hash,
+      notice.hash,
+    ]);
+  });
+
+  it("recovers a committed notice through scheduled block creation", async () => {
+    await append([{ event: event("committed-before-dispatch") }]);
+    expect(published).to.have.length(0);
+    expect(await find({ store: stores.publicationsStore })).to.have.length(1);
+    await blockRoute({}, { send() {} });
+    expect(published).to.have.length(1);
+    expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+  });
+
+  it("redelivers acknowledged publications when pending deletion fails", async () => {
+    await append([{ event: event("ack-before-delete") }]);
+    replace(publishDeps.db, "remove", async () => {
+      throw new Error("delete unavailable");
+    });
+    expect((await failure(() => api.publishPendingFn())).message).to.equal(
+      "delete unavailable",
+    );
+    expect(published).to.have.length(1);
+    expect(await find({ store: stores.publicationsStore })).to.have.length(1);
+    restore();
+    await api.publishPendingFn();
+    expect(published).to.have.length(2);
+    expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+  });
+
+  it("rolls back the event and root count if its notice conflicts", async () => {
+    await append([{ event: event("seed") }]);
+    const [seed] = await find({ store: stores.eventStore });
+    const collision = {
+      ...seed,
+      headers: {
+        ...seed.headers,
+        root: "collision",
+        nonce: "collision_0",
+        idempotency: "collision",
+      },
+    };
+    // Keep a notice with the candidate hash while the candidate event itself is absent.
+    await database.query(
+      `DELETE FROM ${stores.eventStore.table} WHERE hash = $1`,
+      [seed.hash],
+    );
+    const err = await failure(() =>
+      api.createTransactionFn(async (transaction) => {
+        await api.reserveRootCountsFn({
+          root: "collision",
+          amount: 1,
+          transaction,
+        });
+        await api.saveEventsFn({ events: [collision], transaction });
+      }),
+    );
+    expect(err.statusCode).to.equal(412);
+    expect(
+      await find({
+        store: stores.eventStore,
+        query: { "headers.root": "collision" },
+      }),
+    ).to.deep.equal([]);
+    expect(await api.countFn({ root: "collision" })).to.equal(0);
+    expect(await find({ store: stores.publicationsStore })).to.have.length(1);
+  });
+
+  it("rotates failed batches so later unattempted notices make progress", async () => {
+    await append(
+      Array.from({ length: 101 }, (_, index) => ({
+        event: event(`pending-${index}`),
+      })),
+    );
+    const originalPublish = published;
+    // Fail only the first hundred selected notices, then let a later notice through.
+    const pending = await database.query(
+      `SELECT hash FROM ${stores.publicationsStore.table} ORDER BY attempts, created, hash LIMIT 100`,
+    );
+    const failed = new Set(pending.rows.map(({ hash }) => hash));
+    const { default: publishPending } =
+      await import("@blossm/postgres-event-store-publish-pending");
+    const drain = publishPending({
+      publicationsStore: stores.publicationsStore,
+      publishFn: async (data) => {
+        const [stored] = await find({
+          store: stores.eventStore,
+          query: { "headers.root": data.root },
+        });
+        if (failed.has(stored.hash)) throw new Error("retired topic");
+        originalPublish.push(data);
+      },
+    });
+    await failure(drain);
+    await failure(drain);
+    expect(published).to.have.length(1);
+    expect(
+      await find({ store: stores.publicationsStore, limit: 101 }),
+    ).to.have.length(100);
+  });
+
+  it("honors the server publication batch size across successive recovery calls", async () => {
+    replace(deps.db, "connect", () => database);
+    let bounded;
+    replace(deps, "eventStore", async (options) => {
+      bounded = options;
+    });
+    await eventStore({
+      namespace,
+      handlers,
+      publicationBatchSize: 2,
+      publishFn: async (...args) => published.push(args),
+    });
+    await append(
+      Array.from({ length: 4 }, (_, index) => ({
+        event: event(`bounded-${index}`),
+      })),
+    );
+    expect(await find({ store: stores.publicationsStore })).to.have.length(4);
+
+    await bounded.publishPendingFn();
+    expect(published).to.have.length(2);
+    expect(await find({ store: stores.publicationsStore })).to.have.length(2);
+
+    await bounded.publishPendingFn();
+    expect(published).to.have.length(4);
+    expect(new Set(published.map(([notice]) => notice.root)).size).to.equal(4);
+    expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+  });
+
+  it("recovers a bounded persisted batch during fresh server startup before listening", async () => {
+    await append(
+      Array.from({ length: 4 }, (_, index) => ({
+        event: event(`startup-${index}`),
+      })),
+    );
+    let restartedDatabase;
+    replace(deps.db, "connect", (connection) => {
+      restartedDatabase = connect(connection);
+      return restartedDatabase;
+    });
+    const listen = fake(() => {
+      expect(published).to.have.length(2);
+    });
+    const http = {
+      get() {
+        return this;
+      },
+      post() {
+        return this;
+      },
+      listen,
+    };
+    replace(genericDeps, "server", () => http);
+    try {
+      await eventStore({
+        connection: { connectionString: process.env.TEST_POSTGRES_URL },
+        namespace,
+        handlers,
+        publicationBatchSize: 2,
+        publishFn: async (...args) => published.push(args),
+      });
+      expect(listen.calledOnce).to.equal(true);
+      expect(published).to.have.length(2);
+      expect(await find({ store: stores.publicationsStore })).to.have.length(2);
+    } finally {
+      if (restartedDatabase) await restartedDatabase.end();
+    }
+  });
+
+  it("retains failed startup notices while the fresh server still listens", async () => {
+    await append(
+      Array.from({ length: 4 }, (_, index) => ({
+        event: event(`startup-failed-${index}`),
+      })),
+    );
+    let restartedDatabase;
+    replace(deps.db, "connect", (connection) => {
+      restartedDatabase = connect(connection);
+      return restartedDatabase;
+    });
+    const publishFn = fake.rejects(
+      Object.assign(new Error("private publication data"), {
+        code: "PUBLISH_DOWN",
+      }),
+    );
+    const listen = fake(() => {
+      expect(publishFn.callCount).to.equal(2);
+    });
+    const http = {
+      get() {
+        return this;
+      },
+      post() {
+        return this;
+      },
+      listen,
+    };
+    replace(genericDeps, "server", () => http);
+    const errorLog = fake();
+    replace(genericDeps.logger, "error", errorLog);
+    try {
+      await eventStore({
+        connection: { connectionString: process.env.TEST_POSTGRES_URL },
+        namespace,
+        handlers,
+        publicationBatchSize: 2,
+        publishFn,
+      });
+      expect(listen.calledOnce).to.equal(true);
+      expect(publishFn.callCount).to.equal(2);
+      expect(await find({ store: stores.publicationsStore })).to.have.length(4);
+      expect(errorLog.calledOnce).to.equal(true);
+      expect(JSON.stringify(errorLog.firstCall.args)).not.to.include(
+        "private publication data",
+      );
+    } finally {
+      if (restartedDatabase) await restartedDatabase.end();
+    }
+  });
+
+  it("returns committed outcomes despite pending deletion failure, then recovers the same notice on retry", async () => {
+    const req = {
+      body: {
+        eventData: [{ event: event("outcome-delete-failure") }],
+        returnOutcomes: true,
+      },
+    };
+    replace(publishDeps.db, "remove", async () => {
+      throw new Error("delete unavailable");
+    });
+    const send = fake();
+    await postRoute(req, { send });
+    expect(send.firstCall.args[0]).to.deep.equal({ outcomes: [COMMITTED] });
+    expect(await api.countFn({ root: "outcome-delete-failure" })).to.equal(1);
+    const [notice] = await find({ store: stores.publicationsStore });
+    expect(published[0][0].hash).to.equal(notice.hash);
+
+    restore();
+    await postRoute(req, { send });
+    expect(send.secondCall.args[0]).to.deep.equal({ outcomes: [DUPLICATE] });
+    expect(await api.countFn({ root: "outcome-delete-failure" })).to.equal(1);
+    expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+    expect(published.map(([data]) => data.hash)).to.deep.equal([
+      notice.hash,
+      notice.hash,
+    ]);
+  });
+
+  for (const deletionFails of [false, true]) {
+    it(`returns the committed block despite ${
+      deletionFails ? "deletion" : "publication"
+    } failure and later delivers the same notice`, async () => {
+      await append([{ event: event("committed-block") }]);
+      const [notice] = await find({ store: stores.publicationsStore });
+      if (deletionFails)
+        replace(publishDeps.db, "remove", async () => {
+          throw new Error("delete unavailable");
+        });
+      else failPublish = true;
+      const send = fake();
+      await blockRoute({}, { send });
+      expect(send.calledOnce).to.equal(true);
+      expect((await api.latestBlockFn()).hash).to.equal(
+        send.firstCall.args[0].hash,
+      );
+      expect(await find({ store: stores.publicationsStore })).to.have.length(1);
+
+      restore();
+      failPublish = false;
+      await blockRoute({}, { send });
+      expect(send.calledTwice).to.equal(true);
+      expect((await api.latestBlockFn()).hash).to.equal(
+        send.secondCall.args[0].hash,
+      );
+      expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+      expect(publicationAttempts.map(([data]) => data.hash)).to.deep.equal([
+        notice.hash,
+        notice.hash,
+      ]);
+    });
+  }
+
+  it("propagates a real outbox storage constraint failure and rolls back without a committed response", async () => {
+    await database.query(
+      `ALTER TABLE ${stores.publicationsStore.table} ADD CONSTRAINT integration_reject_notice CHECK (false)`,
+    );
+    try {
+      const send = fake();
+      const err = await failure(() =>
+        postRoute(
+          {
+            body: {
+              eventData: [{ event: event("invalid-storage") }],
+              returnOutcomes: true,
+            },
+          },
+          { send },
+        ),
+      );
+      expect(err.code).to.equal("23514");
+      expect(send.called).to.equal(false);
+      expect(await api.countFn({ root: "invalid-storage" })).to.equal(0);
+      expect(await find({ store: stores.eventStore })).to.deep.equal([]);
+      expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+      expect(publicationAttempts).to.have.length(0);
+    } finally {
+      await database.query(
+        `ALTER TABLE ${stores.publicationsStore.table} DROP CONSTRAINT integration_reject_notice`,
+      );
+    }
+  });
+
+  it("propagates expected-number transaction failure without acknowledging commitment", async () => {
+    const sendStatus = fake();
+    const err = await failure(() =>
+      postRoute(
+        {
+          body: { eventData: [{ event: event("stale-number"), number: 1 }] },
+        },
+        { sendStatus },
+      ),
+    );
+    expect(err.statusCode).to.equal(412);
+    expect(sendStatus.called).to.equal(false);
+    expect(await api.countFn({ root: "stale-number" })).to.equal(0);
+    expect(await find({ store: stores.eventStore })).to.deep.equal([]);
+    expect(await find({ store: stores.publicationsStore })).to.deep.equal([]);
+    expect(publicationAttempts).to.have.length(0);
+  });
+});

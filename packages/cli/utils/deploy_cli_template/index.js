@@ -85,16 +85,17 @@ export default ({ domain, dir }) => async (args, configFn) => {
         roboSay(`Deploying ${e} by assembling template into ${workingDir}...`)
       );
 
-      await mergeCliTemplate({
-        scriptDir: dir,
-        workingDir,
-        env: e,
-        path: input.path,
-        dry: input.dryRun,
-        configFn,
-      });
-
       try {
+        // Assembly failures also remove the working directory.
+        await mergeCliTemplate({
+          scriptDir: dir,
+          workingDir,
+          env: e,
+          path: input.path,
+          dry: input.dryRun,
+          configFn,
+        });
+
         if (input.unitTest) {
           //eslint-disable-next-line no-console
           console.log(roboSay("Running your tests..."));

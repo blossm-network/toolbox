@@ -15,6 +15,7 @@ import mapDomain from "./steps/map_domain.js";
 import writeEnv from "./steps/write_env.js";
 
 export default ({
+  cloudRun,
   domain,
   region,
   project,
@@ -95,6 +96,7 @@ export default ({
             procedure,
           }),
           deployRun({
+            cloudRun,
             extension: imageExtension,
             serviceName,
             allowUnauthenticated: true,

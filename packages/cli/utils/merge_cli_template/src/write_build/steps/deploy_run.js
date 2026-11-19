@@ -25,6 +25,17 @@ export default ({
   env = "",
   labels = "",
   allowUnauthenticated = false,
+  // Omitted options keep the historical connector and internal ingress.
+  // An explicit null connector deploys without one.
+  cloudRun: {
+    serviceAccount,
+    vpcConnector = `${region}-network`,
+    ingress = "internal",
+    maxInstances,
+    minInstances,
+  } = {},
+  cloudSqlInstance,
+  secrets = {},
 } = {}) => {
   const variables = {
     NODE_ENV: nodeEnv,
@@ -50,7 +61,6 @@ export default ({
     {
       name: "gcr.io/cloud-builders/gcloud",
       args: [
-        "alpha",
         "run",
         "deploy",
         `${serviceName}`,
@@ -60,10 +70,33 @@ export default ({
         "--platform=managed",
         `--memory=${memory}`,
         `--timeout=${timeout}`,
-        `--vpc-connector=${region}-network`,
-        `--vpc-egress=all`,
-        ...(allowUnauthenticated ? ["--allow-unauthenticated"] : []),
-        `--ingress=${allowUnauthenticated ? "all" : "internal"}`,
+        ...(vpcConnector
+          ? [`--vpc-connector=${vpcConnector}`, `--vpc-egress=all`]
+          : []),
+        // Reachable ingress is never public access: internal services always
+        // require an authenticated invoker.
+        allowUnauthenticated
+          ? "--allow-unauthenticated"
+          : "--no-allow-unauthenticated",
+        `--ingress=${allowUnauthenticated ? "all" : ingress}`,
+        ...(serviceAccount ? [`--service-account=${serviceAccount}`] : []),
+        ...(maxInstances == undefined
+          ? []
+          : [`--max-instances=${maxInstances}`]),
+        ...(minInstances == undefined
+          ? []
+          : [`--min-instances=${minInstances}`]),
+        ...(cloudSqlInstance
+          ? [`--add-cloudsql-instances=${cloudSqlInstance}`]
+          : []),
+        // Secret values are bound by Cloud Run, never written to the build.
+        ...(Object.keys(secrets).length
+          ? [
+              `--set-secrets=${Object.entries(secrets)
+                .map(([key, value]) => `${key}=${value}`)
+                .join(",")}`,
+            ]
+          : []),
         `--project=${project}`,
         `--region=${region}`,
         "--env-vars-file=.blossm-cloud-run-env.json",

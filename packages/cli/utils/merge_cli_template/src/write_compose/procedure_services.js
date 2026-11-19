@@ -7,6 +7,7 @@ import rootDir from "@blossm/cli-root-dir";
 
 import databaseName from "../database_name.js";
 import mainService from "./main_service.js";
+import { localPostgresEnv, postgresReady } from "./postgres_service.js";
 
 // Scan this workspace once. Never follow symlinks or installed/generated trees.
 const dependencyConfigs = (dir, configs = [], root = dir) => {
@@ -84,6 +85,7 @@ export default ({
   mongodbUser,
   mongodbUserPassword,
   dependencyKeyEnvironmentVariables,
+  eventStore,
 }) => {
   const common = {
     ports: [`${port}`],
@@ -224,11 +226,16 @@ export default ({
               ...common,
               image: `${commonServiceImagePrefix}.${dependency.service}.${dependency.domain}:latest`,
               container_name: `${operationHash}.${network}`,
-              depends_on: [databaseServiceKey],
+              depends_on:
+                eventStore == "postgres" ? postgresReady : [databaseServiceKey],
               environment: {
                 ...commonEnvironment,
-                ...commonStoreEnvironment,
-                MONGODB_DATABASE: databaseName(dependency),
+                ...(eventStore == "postgres"
+                  ? localPostgresEnv(databaseName(dependency))
+                  : {
+                      ...commonStoreEnvironment,
+                      MONGODB_DATABASE: databaseName(dependency),
+                    }),
                 PROCEDURE: dependency.procedure,
                 OPERATION_HASH: operationHash,
                 DOMAIN: dependency.domain,

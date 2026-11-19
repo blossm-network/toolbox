@@ -1,5 +1,6 @@
 import roboSay from "@blossm/robo-say";
 import rootDir from "@blossm/cli-root-dir";
+import environmentPrefix from "@blossm/cli-root-dir/environment_prefix.js";
 import hash from "@blossm/operation-hash";
 import environmentName from "@blossm/node-external-token/environment_name.js";
 import { promisify } from "util";
@@ -20,19 +21,13 @@ const access = promisify(fs.access);
 import writeCompose from "./src/write_compose/index.js";
 import writeBuild from "./src/write_build/index.js";
 import resolveTransientInfo from "./src/resolve_transient_info.js";
-
-const envUriSpecifier = (env) => {
-  switch (env) {
-    case "sandbox":
-      return "snd.";
-    case "staging":
-      return "stg.";
-    case "development":
-      return "dev.";
-    default:
-      return "";
-  }
-};
+import {
+  eventStoreKind,
+  postgresConnection,
+  registry,
+  buildServiceAccount,
+  cloudRun,
+} from "./src/deployment_config.js";
 
 const envDependencyKeyEnvironmentVariables = ({ env, config }) => {
   if (!config.dependencies) return {};
@@ -117,7 +112,7 @@ const envPublicKeyUrl = ({ env, config }) =>
     ? `https://f.${env == "production" ? "" : "snd."}${
         config.core.network
       }/public-key`
-    : `https://f.${envUriSpecifier(env)}${config.network}/public-key`;
+    : `https://f.${environmentPrefix(env, config)}${config.network}/public-key`;
 
 const envComputeUrlId = ({ env, config }) => {
   switch (env) {
@@ -727,6 +722,8 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const blossmConfig = rootDir.config();
     const project = envProject({ env, config: blossmConfig });
+    const envUriSpecifier = environmentPrefix(env, blossmConfig);
+    const eventStore = eventStoreKind(blossmConfig);
 
     const blockSchedule = config.blockSchedule || blossmConfig.blockSchedule;
     const region =
@@ -737,7 +734,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       : network;
     const coreNetwork =
       coreNetworkSuffix == network
-        ? `${envUriSpecifier(env)}${coreNetworkSuffix}`
+        ? `${envUriSpecifier}${coreNetworkSuffix}`
         : env == "production"
         ? coreNetworkSuffix
         : `snd.${coreNetworkSuffix}`;
@@ -769,7 +766,8 @@ const configure = async (workingDir, configFn, env, strict) => {
     const secretBucketKeyLocation = "global";
     const secretBucketKeyRing = "secrets-bucket";
 
-    const containerRegistery = `us.gcr.io/${project}`;
+    const containerRegistery =
+      registry({ env, config: blossmConfig }) || `us.gcr.io/${project}`;
     const baseContainerRegistery = envBaseContainerRegistry({
       env,
       config: blossmConfig,
@@ -781,7 +779,7 @@ const configure = async (workingDir, configFn, env, strict) => {
     const localCoreNetwork =
       coreNetworkSuffix == network ? localNetwork : "local.core.network";
 
-    const host = `${region}.${envUriSpecifier(env)}${network}`;
+    const host = `${region}.${envUriSpecifier}${network}`;
 
     const computeUrlId = envComputeUrlId({ env, config: blossmConfig });
 
@@ -814,11 +812,14 @@ const configure = async (workingDir, configFn, env, strict) => {
       redisPort,
       timeout: configTimeout({ config, blossmConfig }),
       memory: configMemory({ config, blossmConfig }),
-      mongodbUser: envMongodbUser({ env, config: blossmConfig, procedure }),
-      mongodbHost: envMongodbHost({ env, config: blossmConfig, procedure }),
-      mongodbProtocol: mongodbProtocol({
-        config: blossmConfig,
-        procedure,
+      // A PostgreSQL event store needs no Mongo connection settings.
+      ...(!(procedure == "event-store" && eventStore == "postgres") && {
+        mongodbUser: envMongodbUser({ env, config: blossmConfig, procedure }),
+        mongodbHost: envMongodbHost({ env, config: blossmConfig, procedure }),
+        mongodbProtocol: mongodbProtocol({
+          config: blossmConfig,
+          procedure,
+        }),
       }),
       mainContainerName,
       containerRegistery,
@@ -826,7 +827,15 @@ const configure = async (workingDir, configFn, env, strict) => {
       blockSchedule,
       envVars,
       devEnvVars,
-      envUriSpecifier: envUriSpecifier(env),
+      envUriSpecifier,
+      eventStore,
+      // Cloud connection settings are consumed only by a real deployment.
+      postgres:
+        strict && procedure == "event-store" && eventStore == "postgres"
+          ? postgresConnection({ env, config: blossmConfig })
+          : undefined,
+      cloudRun: cloudRun({ env, config: blossmConfig }),
+      buildServiceAccount: buildServiceAccount({ env, config: blossmConfig }),
       computeUrlId,
       dnsZone,
       service,
@@ -867,6 +876,7 @@ const configure = async (workingDir, configFn, env, strict) => {
       envVars,
       devEnvVars,
       dependencyKeyEnvironmentVariables,
+      eventStore,
       ...custom,
     });
   } catch (e) {
@@ -887,13 +897,22 @@ const configure = async (workingDir, configFn, env, strict) => {
 export default async ({
   scriptDir,
   workingDir,
-  path,
+  path: sourcePath,
   env,
   dry,
   configFn,
 }) => {
   await copyTemplate(__dirname, workingDir);
   await copyScript(scriptDir, workingDir);
-  await copySource(path, workingDir);
+  // A selected store may replace parts of the default entrypoint. Its files
+  // live beside the default at `<procedure>/<store>/deploy/src`.
+  const overlay = path.resolve(
+    scriptDir,
+    "..",
+    eventStoreKind(rootDir.config()),
+    "deploy/src"
+  );
+  if (fs.existsSync(overlay)) await fs.copy(overlay, workingDir);
+  await copySource(sourcePath, workingDir);
   await configure(workingDir, configFn, env, !dry);
 };

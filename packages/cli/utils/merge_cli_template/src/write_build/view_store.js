@@ -21,6 +21,7 @@ import createQueue from "./steps/create_queue.js";
 import updateQueue from "./steps/update_queue.js";
 
 export default ({
+  cloudRun,
   region,
   name,
   project,
@@ -102,6 +103,7 @@ export default ({
             procedure,
           }),
           deployRun({
+            cloudRun,
             serviceName,
             extension: imageExtension,
             region,
@@ -139,12 +141,14 @@ export default ({
             },
           }),
           createQueue({
+            region,
             name: `view-store${context ? `-${context}` : ""}-${name}`,
             project,
             maxDispatchPerSecond: 50,
             maxConcurrentDispatches: 100,
           }),
           updateQueue({
+            region,
             name: `view-store${context ? `-${context}` : ""}-${name}`,
             project,
             maxDispatchPerSecond: 50,

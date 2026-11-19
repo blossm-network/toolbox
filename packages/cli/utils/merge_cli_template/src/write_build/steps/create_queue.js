@@ -3,6 +3,7 @@ import ensureResource from "./ensure_resource.js";
 export default ({
   name,
   project,
+  region,
   maxDispatchPerSecond,
   maxConcurrentDispatches,
 }) =>
@@ -12,7 +13,7 @@ export default ({
       "queues",
       "describe",
       name,
-      "--location=us-central1",
+      `--location=${region}`,
       `--project=${project}`,
     ],
     create: [
@@ -20,7 +21,7 @@ export default ({
       "queues",
       "create",
       name,
-      "--location=us-central1",
+      `--location=${region}`,
       `--project=${project}`,
       "--log-sampling-ratio=0.1",
       `--max-dispatches-per-second=${maxDispatchPerSecond}`,

@@ -8,7 +8,8 @@ import { string as dateString } from "@blossm/datetime";
 import hash from "@blossm/hash";
 import uuid from "@blossm/uuid";
 import config from "./../../config.json" with { type: "json" };
-import gcpPubsub from "@blossm/gcp-pubsub";
+import topics from "../topic.js";
+import expectations from "../expectations.js";
 
 chai.use(sinonChai);
 chai.use(chaiDatetime);
@@ -25,8 +26,8 @@ describe("Event store integration tests", () => {
   const example0 = config.testing.examples[0];
   const example1 = config.testing.examples[1];
 
-  before(async () => await gcpPubsub.create(topic));
-  after(async () => await gcpPubsub.del(topic));
+  before(async () => await topics.create(topic));
+  after(async () => await topics.del(topic));
 
   it("should have examples", () => {
     expect(example0).to.exist;
@@ -447,7 +448,7 @@ describe("Event store integration tests", () => {
         ],
       },
     });
-    expect(response.statusCode).to.equal(500);
+    expect(response.statusCode).to.equal(expectations.invalidPayloadStatus);
   };
   it("should not return an error if two simultaneous events are attempted", async () => {
     const root = uuid();

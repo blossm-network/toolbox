@@ -15,7 +15,7 @@ export default ({
   custom = {},
   format = "dotenv",
 } = {}) => {
-  const values =
+  const all =
     format === "json"
       ? custom
       : {
@@ -34,6 +34,11 @@ export default ({
           GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
           ...custom,
         };
+  // An unset value is left out: written as text it would reach the service as
+  // the string "undefined". Deliberate "", 0, false and null are kept.
+  const values = Object.fromEntries(
+    Object.entries(all).filter(([, value]) => value !== undefined)
+  );
   const filename = format === "json" ? ".blossm-cloud-run-env.json" : ".env";
   const data =
     format === "json"

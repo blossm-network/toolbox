@@ -43,3 +43,12 @@ append before counter reservations and hashing, including local execution.
 Mongo reuses its event model schema for this operation. A noncasting adapter can
 validate and return the same object; it must still preserve that representation
 through readback. Server composition rejects a missing normalizer before serving.
+
+## Payload normalization hook
+
+Adapters may also provide `normalizePayloadFn(payload)`. It is optional; without
+it the submitted payload is hashed and passed to `saveEventsFn` unchanged, which
+is the Mongo adapter's existing behavior. When supplied, the server passes it
+through POST to the append transaction, where each payload is normalized before
+counters are reserved and before `headers.pHash` is computed. The adapter must
+then persist exactly the payload it is given; it must not cast or rehash again.

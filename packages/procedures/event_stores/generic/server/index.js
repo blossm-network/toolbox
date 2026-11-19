@@ -3,6 +3,7 @@ import deps from "./deps.js";
 export default async ({
   saveEventsFn,
   normalizeTransactionFn,
+  normalizePayloadFn,
   reserveRootCountsFn,
   publishPendingFn,
   rootStreamFn,
@@ -100,6 +101,7 @@ export default async ({
     .post(
       deps.post({
         normalizeTransactionFn,
+        ...(normalizePayloadFn && { normalizePayloadFn }),
         saveEventsFn,
         reserveRootCountsFn,
         publishPendingFn: recoverPublications,

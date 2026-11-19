@@ -171,10 +171,10 @@ process.exit(Number(args.includes("describe") ? process.env.DESCRIBE_STATUS : pr
     };
     const steps = eventStore(options);
     const job = "event-store-core-challenge-create-block";
-    assert.equal(
-      steps.filter((step) => JSON.stringify(step).includes(job)).length,
-      1,
-    );
+    // The block continuation queue shares this name and is a separate resource.
+    const scheduled = (step) =>
+      JSON.stringify(step).includes(`"scheduler","jobs","describe","${job}"`);
+    assert.equal(steps.filter(scheduled).length, 1);
     const local = eventStore({ ...options, strict: false });
     assert(!local.some((step) => JSON.stringify(step).includes(job)));
   });
