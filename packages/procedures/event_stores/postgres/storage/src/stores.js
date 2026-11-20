@@ -4,15 +4,17 @@ const identifier = (name) => `"${name.replace(/"/g, '""')}"`;
 const number = "bigint NOT NULL CHECK (number BETWEEN 0 AND 9007199254740991)";
 
 export default async ({ database, namespace = "public", indexes = [] }) => {
-  // PostgreSQL truncates longer identifiers, which would alias two namespaces.
+  // PostgreSQL truncates longer identifiers, and UTF-8 encoding replaces every
+  // unpaired surrogate with U+FFFD. Either would alias two namespaces.
   if (
     typeof namespace !== "string" ||
     !namespace.length ||
     namespace.includes("\0") ||
+    !namespace.isWellFormed() ||
     Buffer.byteLength(namespace, "utf8") > 63
   )
     throw new TypeError(
-      "PostgreSQL namespace must contain 1 to 63 UTF-8 bytes and no NUL.",
+      "PostgreSQL namespace must be well-formed Unicode of 1 to 63 UTF-8 bytes without NUL.",
     );
   const schema = identifier(namespace);
   const descriptors = Object.fromEntries(
