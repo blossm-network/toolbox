@@ -76,6 +76,8 @@ vendors:
       # the defaults: us.gcr.io/<project> images, the default build and runtime
       # identities, the `<region>-network` VPC connector and internal ingress.
       # Services other than gateways always require an authenticated caller.
+      # A procedure's blossm.yaml may set its own runtimeServiceAccounts map,
+      # which wins over the one here for the environments it names.
       #
       # registries:
       #   development: us-east1-docker.pkg.dev/development-12345/blossm

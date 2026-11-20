@@ -64,6 +64,32 @@ TEST_POSTGRES_URL=postgres://user:password@127.0.0.1:5432/database \
   yarn lerna run test:integration --scope @blossm/cli --stream
 ```
 
+## Runtime identity per procedure
+
+`vendors.cloud.gcp.runtimeServiceAccounts.<env>` in `config.yaml` is the
+runtime identity of every procedure deployed to that environment. A procedure
+can name its own in its `blossm.yaml`:
+
+```yaml
+runtimeServiceAccounts:
+  development: session-start@development-12345.iam.gserviceaccount.com
+```
+
+`cloudRun` in `src/deployment_config.js` owns the rule, for every procedure
+kind. The procedure's entry for the deployed environment wins. An environment
+the map does not name uses the `config.yaml` value, and with neither the deploy
+step keeps its own default. A configured map that is null, empty, not a map, or
+that holds any entry that is not a service account email fails before a build
+is written or submitted. It never falls back to the broader `config.yaml`
+account. Environment names are not checked, so a misspelled key is an
+environment the map does not name.
+
+This is the only Cloud Run setting a procedure overrides. The registry, build
+identity, connector, ingress and instance settings stay per environment in
+`config.yaml`. An event store's own grants in the next section follow whichever
+identity was selected. The build identity needs `iam.serviceAccounts.actAs` on
+each runtime identity it deploys.
+
 ## Event-store deployment IAM
 
 `src/write_build/event_store.js` owns the resource grants of a deployed event
@@ -86,8 +112,9 @@ not established here. Command references:
 - [`gcloud pubsub topics add-iam-policy-binding`](https://cloud.google.com/sdk/gcloud/reference/pubsub/topics/add-iam-policy-binding)
 - [`gcloud tasks queues add-iam-policy-binding`](https://cloud.google.com/sdk/gcloud/reference/tasks/queues/add-iam-policy-binding)
 
-The runtime identity is `runtimeServiceAccounts.<env>` when configured.
-Otherwise the build passes
+The runtime identity is the one selected in
+[Runtime identity per procedure](#runtime-identity-per-procedure) when
+configured. Otherwise the build passes
 `${PROJECT_NUMBER}-compute@developer.gserviceaccount.com` as
 `--service-account`, using Cloud Build's built-in substitution. Builds are
 submitted to the deployment project, so this is the account Cloud Run would
