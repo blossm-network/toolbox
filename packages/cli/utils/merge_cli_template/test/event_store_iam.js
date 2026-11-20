@@ -272,7 +272,7 @@ exit 0
         );
       });
 
-  it("changes no other procedure's build and adds no grant to one", () => {
+  it("keeps the store's key grants out of every other procedure's build", () => {
     const render = (procedure, isPublic) => {
       writeBuild({
         workingDir: root,
@@ -307,17 +307,24 @@ exit 0
       assert.equal(rendered, render(procedure, undefined), procedure);
       assert(yaml.parse(rendered).steps.length, procedure);
       assert(!rendered.includes("kms"), procedure);
-      // A projection's long-standing push-invoker grant is the only binding
-      // any of them holds.
+      // With no runtime identity configured, a private procedure holds only
+      // the executer's invoker grant, beside a projection's push-invoker one.
       const grants = yaml
         .parse(rendered)
-        .steps.filter((step) => step.args.includes("add-iam-policy-binding"));
-      assert.equal(grants.length, procedure == "projection" ? 1 : 0, procedure);
-      for (const { args } of grants)
-        assert(
-          args.some((arg) => arg.includes("cloud-run-pubsub-invoker@")),
-          procedure,
-        );
+        .steps.filter((step) => step.args.includes("add-iam-policy-binding"))
+        .map(({ args }) => args.find((arg) => arg.startsWith("--member=")));
+      const gateway = procedure.endsWith("-gateway");
+      assert.deepEqual(
+        grants.filter((member) => !member.includes("pubsub-invoker@")),
+        gateway
+          ? []
+          : ["--member=serviceAccount:executer@p.iam.gserviceaccount.com"],
+        procedure,
+      );
+      assert.equal(
+        grants.length,
+        gateway ? 0 : procedure == "projection" ? 2 : 1,
+      );
     }
   });
 

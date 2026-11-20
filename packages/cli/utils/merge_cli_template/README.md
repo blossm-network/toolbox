@@ -90,6 +90,48 @@ identity, connector, ingress and instance settings stay per environment in
 identity was selected. The build identity needs `iam.serviceAccounts.actAs` on
 each runtime identity it deploys.
 
+## Access granted by each deployment
+
+Every deployment grants the access its own procedure needs, so no service
+needs an operator to run an IAM command after it deploys. The grants are
+additive and repeat without effect on a redeploy. Event stores are covered in
+the next section.
+
+| Grant | To | On |
+| --- | --- | --- |
+| `roles/run.invoker` | `executer@<project>` | the procedure's own service, unless it is a public gateway |
+| `roles/run.invoker` | the procedure's runtime identity | each service it calls |
+| `roles/cloudtasks.enqueuer` | the runtime identity of a command or projection | the queue of each store, command or view store it calls, and a projection's own play queue |
+| `roles/iam.serviceAccountUser` | the same identity, when it holds a queue grant | `executer@<project>`, whose identity its tasks carry |
+| the role for each declared key use | the procedure's runtime identity | that Cloud KMS key |
+
+The services a procedure calls are read from its `blossm.yaml`: a gateway's
+routes in its own network, a command's own event store unless
+`testing.store` is `false`, a projection's event stores and view store, and
+every entry of `testing.dependencies` that names a procedure and has neither
+`mocks` nor a `network`. A gateway in the core network with a strict route
+also reaches the four core facts its authorization reads. A called service
+must already be deployed, which the integration suites require anyway.
+
+A procedure that uses a Cloud KMS key declares it:
+
+```yaml
+keys:
+  - ring: jwt
+    name: access
+    use: sign # sign, verify, encrypt or decrypt
+    location: global # the default
+```
+
+The runtime-identity grants are only made when the procedure has a configured
+runtime identity. Without one the service runs as the project's default
+account, whose access the build does not manage.
+
+What stays a one-time operator step per identity: creating the service
+account, letting the build identity act as it
+(`roles/iam.serviceAccountUser`), and any access the build identity itself
+needs for integration suites that use real cloud resources.
+
 ## Event-store deployment IAM
 
 `src/write_build/event_store.js` owns the resource grants of a deployed event
