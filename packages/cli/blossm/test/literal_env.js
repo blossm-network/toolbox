@@ -35,5 +35,19 @@ describe("Generated build steps", () => {
     assert(bytes.toString().endsWith(`LITERAL=${literal}\n`));
   });
 
+  it("omits unset values and keeps deliberate falsy ones", async () => {
+    const writeEnv = await load(`${buildDir}/steps/write_env.js`, {
+      nodeImage: "node:fixture",
+    });
+    const step = writeEnv({
+      project: "project",
+      custom: { EMPTY: "", ZERO: 0, FALSE: false, UNSET: undefined },
+    });
+    const lines = Buffer.from(step.args[2], "base64").toString().split("\n");
+    for (const line of ["GCP_PROJECT=project", "EMPTY=", "ZERO=0", "FALSE=false"])
+      assert(lines.includes(line), line);
+    assert(!lines.some((line) => /^(UNSET|GCP_SECRET_BUCKET)=|=undefined$/.test(line)));
+  });
+
 
 });
