@@ -1,6 +1,6 @@
 {
   "name": "@blossm/merge-cli-template",
-  "version": "0.0.645",
+  "version": "0.0.646",
   "description": "Merges the contents of a file with a template.",
   "main": "index.js",
   "type": "module",
@@ -15,7 +15,7 @@
     "test": "mocha --recursive test"
   },
   "dependencies": {
-    "@blossm/cli-root-dir": "^0.0.16",
+    "@blossm/cli-root-dir": "^0.0.17",
     "@blossm/node-external-token": "^0.0.205",
     "@blossm/operation-hash": "^0.0.18",
     "@blossm/robo-say": "^0.0.12",

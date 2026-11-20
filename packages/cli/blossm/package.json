@@ -1,6 +1,6 @@
 {
   "name": "@blossm/cli",
-  "version": "0.0.1958",
+  "version": "0.0.1959",
   "description": "A command line tool for interacting with blossm.",
   "main": "src/index.js",
   "type": "module",
@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@blossm/event-outcome-consts": "^0.0.2",
-    "@blossm/postgres-database": "^0.0.1",
+    "@blossm/postgres-database": "^0.0.2",
     "arg": "^5.0.2",
     "chai": "^6.3.0",
     "chai-datetime": "^1.8.1",
@@ -26,9 +26,9 @@
   },
   "author": "blossm.network",
   "dependencies": {
-    "@blossm/cli-root-dir": "^0.0.16",
-    "@blossm/deploy-cli-template": "^0.0.681",
-    "@blossm/execute-cli-template": "^0.0.79",
+    "@blossm/cli-root-dir": "^0.0.17",
+    "@blossm/deploy-cli-template": "^0.0.682",
+    "@blossm/execute-cli-template": "^0.0.80",
     "@blossm/gcp-queue": "^0.0.38",
     "@blossm/gcp-secret": "^0.0.65",
     "@blossm/gcp-storage": "^0.0.17",
