@@ -6,7 +6,7 @@ export default ({
   saveEventsFn,
   normalizeTransactionFn,
   // Optional adapter casting; the returned payload is hashed and persisted as is.
-  normalizePayloadFn = (payload) => payload,
+  normalizePayloadFn,
   reserveRootCountsFn,
   tx: { path: txPath = [], claims: txClaims, id: txId, ip: txIp } = {},
 }) => async (transaction) => {
@@ -17,9 +17,14 @@ export default ({
     path: txPath,
   });
 
+  // This function reruns after a known transaction abort, so a normalizer gets
+  // its own copy of the JSON payload: mutating it cannot alter the submission
+  // or a later attempt. Without a normalizer the submitted payload is kept.
   const payloads = await Promise.all(
-    eventData.map(({ event }) =>
-      normalizePayloadFn(event.payload === undefined ? {} : event.payload)
+    eventData.map(async ({ event: { payload = {} } }) =>
+      normalizePayloadFn
+        ? normalizePayloadFn(structuredClone(payload))
+        : payload
     )
   );
 

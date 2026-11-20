@@ -152,6 +152,63 @@ describe("Payload normalization", () => {
     assert.equal(saveEventsFn.callCount, 0);
   });
 
+  for (const [kind, reject] of [
+    ["rejects", () => Promise.reject(new Error("invalid payload"))],
+    [
+      "throws synchronously",
+      () => {
+        throw new Error("invalid payload");
+      },
+    ],
+  ])
+    it(`does not reserve counts or persist any event of a mixed batch when one normalization ${kind}`, async () => {
+      const reserveRootCountsFn = fake();
+      const saveEventsFn = fake();
+      await assert.rejects(
+        post({
+          eventData: [
+            event({ n: 1 }),
+            event({ invalid: true }),
+            event({ n: 3 }),
+          ],
+          normalizeTransactionFn: (tx) => tx,
+          normalizePayloadFn: (payload) =>
+            payload.invalid ? reject() : Promise.resolve(payload),
+          reserveRootCountsFn,
+          saveEventsFn,
+        })(),
+        { message: "invalid payload" }
+      );
+      assert.equal(reserveRootCountsFn.callCount, 0);
+      assert.equal(saveEventsFn.callCount, 0);
+    });
+
+  it("gives each attempt its own copy, so a mutating normalizer cannot change the submission or a retry", async () => {
+    const submitted = { amount: "2", nested: { visits: 0 } };
+    const original = structuredClone(submitted);
+    const saveEventsFn = fake.resolves();
+    // The transaction driver reruns this same function after a known abort.
+    const attempt = post({
+      eventData: [event(submitted)],
+      normalizeTransactionFn: (tx) => tx,
+      normalizePayloadFn: async (payload) => {
+        payload.amount = Number(payload.amount) + 1;
+        payload.nested.visits++;
+        return payload;
+      },
+      reserveRootCountsFn: async ({ root }) => ({ root, value: 1 }),
+      saveEventsFn,
+    });
+    await attempt();
+    await attempt();
+    assert.deepEqual(submitted, original);
+    const [first, retried] = saveEventsFn.args.map(([{ events }]) => events[0]);
+    assert.deepEqual(first.payload, { amount: 3, nested: { visits: 1 } });
+    assert.deepEqual(retried.payload, first.payload);
+    assert.equal(retried.headers.pHash, first.headers.pHash);
+    assert.equal(retried.headers.pHash, hash(retried.payload).create());
+  });
+
   it("keeps the submitted payload when the adapter supplies no normalizer", async () => {
     const payload = { amount: "2" };
     const saveEventsFn = fake.resolves();
