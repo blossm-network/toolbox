@@ -248,6 +248,69 @@ describe("PostgreSQL event-store deployment", function () {
     });
   }
 
+  // The procedure's own blossm.yaml reaches the rendered deploy command and
+  // the store's IAM grants through the real CLI.
+  const own =
+    "blossm-session-start@blossm-network-development.iam.gserviceaccount.com";
+  const rootAccount =
+    "blossm-session@blossm-network-development.iam.gserviceaccount.com";
+  const identities = (read) => {
+    const build = yaml.parse(read("build.yaml"));
+    const members = new Set(
+      build.steps
+        .flatMap((step) => step.args ?? [])
+        .filter(
+          (arg) =>
+            typeof arg == "string" &&
+            arg.startsWith("--member=serviceAccount:blossm-"),
+        ),
+    );
+    return {
+      deploy: deployment(build).args.filter((arg) =>
+        arg.startsWith("--service-account="),
+      ),
+      members: [...members],
+    };
+  };
+
+  it("deploys as the runtime identity of the procedure's blossm.yaml", () => {
+    const { result, read } = deploy(root, profile(), [], {
+      runtimeServiceAccounts: { development: own },
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.deepEqual(identities(read), {
+      deploy: [`--service-account=${own}`],
+      members: [`--member=serviceAccount:${own}`],
+    });
+  });
+
+  it("keeps the config.yaml runtime identity when the procedure names another environment", () => {
+    const { result, read } = deploy(root, profile(), [], {
+      runtimeServiceAccounts: { production: own },
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.deepEqual(identities(read), {
+      deploy: [`--service-account=${rootAccount}`],
+      members: [`--member=serviceAccount:${rootAccount}`],
+    });
+  });
+
+  for (const [name, runtimeServiceAccounts] of [
+    ["null", null],
+    ["empty", {}],
+    ["invalid", { development: "allUsers" }],
+  ]) {
+    it(`rejects a ${name} procedure runtime identity before any gcloud command`, () => {
+      const { result, calls, remaining } = deploy(root, profile(), [], {
+        runtimeServiceAccounts,
+      });
+      assert.notEqual(result.status, 0);
+      assert.match(result.stderr, /blossm\.yaml runtimeServiceAccounts/);
+      assert.deepEqual(calls, []);
+      assert.deepEqual(remaining, []);
+    });
+  }
+
   it("leaves a Mongo workspace on its existing entrypoint and deployment", async () => {
     const { result, read, capture } = deploy(root, mongoProfile());
     assert.equal(result.status, 0, result.stderr);

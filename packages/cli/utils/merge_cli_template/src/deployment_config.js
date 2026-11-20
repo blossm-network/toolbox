@@ -1,8 +1,8 @@
 // Reads and validates the optional deployment profile in config.yaml. Every
 // omitted field keeps the generator's historical behavior. Invalid values
 // throw here, before a build description is written or submitted.
-const fail = (path, expectation) => {
-  throw new Error(`config.yaml ${path} must be ${expectation}.`);
+const fail = (path, expectation, file = "config.yaml") => {
+  throw new Error(`${file} ${path} must be ${expectation}.`);
 };
 
 const eventStores = ["mongodb", "postgres"];
@@ -73,10 +73,31 @@ export const registry = ({ env, config }) =>
 export const buildServiceAccount = ({ env, config }) =>
   optional(config, "buildServiceAccounts", env, account, "a service account email");
 
+// A procedure's blossm.yaml may name its own runtime identity per environment.
+// A configured map must be complete and valid: an empty, null or malformed
+// override fails instead of falling back to the broader config.yaml account.
+// Only an environment the map does not name uses that default.
+const procedureAccount = ({ env, procedure }) => {
+  if (!Object.hasOwn(procedure, "runtimeServiceAccounts")) return undefined;
+  const accounts = procedure.runtimeServiceAccounts;
+  const path = "runtimeServiceAccounts";
+  const entries =
+    accounts != null && typeof accounts == "object" && !Array.isArray(accounts)
+      ? Object.entries(accounts)
+      : [];
+  if (!entries.length)
+    fail(path, "a map of environment to service account email", "blossm.yaml");
+  for (const [key, value] of entries)
+    if (!account(value))
+      fail(`${path}.${key}`, "a service account email", "blossm.yaml");
+  return Object.hasOwn(accounts, env) ? accounts[env] : undefined;
+};
+
 // Cloud Run options. An undefined entry lets the deploy step keep its default.
 // `vpcConnector: null` is an explicit request for no connector, which the
-// deploy step enforces with `--clear-vpc-connector`.
-export const cloudRun = ({ env, config }) => {
+// deploy step enforces with `--clear-vpc-connector`. `procedure` is the parsed
+// blossm.yaml of the procedure being deployed.
+export const cloudRun = ({ env, config, procedure = {} }) => {
   const connectors = config.vendors.cloud.gcp.vpcConnectors;
   const vpcConnector =
     connectors && Object.hasOwn(connectors, env) ? connectors[env] : undefined;
@@ -92,13 +113,15 @@ export const cloudRun = ({ env, config }) => {
   if (minInstances > maxInstances)
     fail(`vendors.cloud.gcp.minInstances.${env}`, "no greater than maxInstances");
   return {
-    serviceAccount: optional(
-      config,
-      "runtimeServiceAccounts",
-      env,
-      account,
-      "a service account email"
-    ),
+    serviceAccount:
+      procedureAccount({ env, procedure }) ??
+      optional(
+        config,
+        "runtimeServiceAccounts",
+        env,
+        account,
+        "a service account email"
+      ),
     vpcConnector,
     ingress: optional(
       config,

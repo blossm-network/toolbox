@@ -836,7 +836,8 @@ const configure = async (workingDir, configFn, env, strict) => {
         strict && procedure == "event-store" && eventStore == "postgres"
           ? postgresConnection({ env, config: blossmConfig })
           : undefined,
-      cloudRun: cloudRun({ env, config: blossmConfig }),
+      // A procedure may name its own runtime identity in blossm.yaml.
+      cloudRun: cloudRun({ env, config: blossmConfig, procedure: config }),
       buildServiceAccount: buildServiceAccount({ env, config: blossmConfig }),
       computeUrlId,
       dnsZone,

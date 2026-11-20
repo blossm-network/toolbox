@@ -139,6 +139,60 @@ describe("PostgreSQL event-store deployment profile", () => {
     );
   });
 
+  const own = "blossm-session-start@blossm-network-development.iam.gserviceaccount.com";
+  const root = profile().vendors.cloud.gcp.runtimeServiceAccounts.development;
+  const identity = (procedure, config = profile()) =>
+    cloudRun({ env, config, procedure }).serviceAccount;
+
+  it("prefers the procedure's runtime identity for the selected environment", () => {
+    assert.equal(
+      identity({ runtimeServiceAccounts: { development: own } }),
+      own,
+    );
+    // The other Cloud Run options still come from config.yaml.
+    assert.deepEqual(
+      cloudRun({
+        env,
+        config: profile(),
+        procedure: { runtimeServiceAccounts: { development: own } },
+      }),
+      { ...cloudRun({ env, config: profile() }), serviceAccount: own },
+    );
+  });
+
+  it("falls back to config.yaml when the procedure names no identity for the environment", () => {
+    assert.equal(identity({}), root);
+    assert.equal(identity({ runtimeServiceAccounts: { production: own } }), root);
+    // With neither configured, the deploy step keeps its own default.
+    assert.equal(
+      identity(
+        { runtimeServiceAccounts: { production: own } },
+        { vendors: { cloud: { gcp: {} } } },
+      ),
+      undefined,
+    );
+  });
+
+  for (const [name, runtimeServiceAccounts] of [
+    ["null", null],
+    ["empty", {}],
+    ["text", own],
+    ["list", [own]],
+    ["null entry", { development: null }],
+    ["empty entry", { development: "" }],
+    ["public member", { development: "allUsers" }],
+    ["non-service account", { development: "someone@example.com" }],
+    // Every entry is checked, not only the selected environment.
+    ["invalid other environment", { development: own, production: "" }],
+  ]) {
+    it(`rejects a procedure runtime identity override: ${name}`, () => {
+      assert.throws(
+        () => identity({ runtimeServiceAccounts }),
+        /blossm\.yaml runtimeServiceAccounts.* must be /,
+      );
+    });
+  }
+
   const connection = (config) =>
     config.vendors.eventStore.postgres.connections.development;
   for (const [name, mutate, read = postgresConnection] of [
