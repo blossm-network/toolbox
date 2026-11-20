@@ -5,6 +5,10 @@ import path from "path";
 import mainService from "./main_service.js";
 import procedureServices from "./procedure_services.js";
 import databaseService from "./database_service.js";
+import postgresService, {
+  postgresServiceKey,
+  postgresReady,
+} from "./postgres_service.js";
 import databaseName from "../database_name.js";
 
 const databaseServiceKey = "db";
@@ -37,6 +41,7 @@ export default ({
   envVars,
   devEnvVars,
   dependencyKeyEnvironmentVariables,
+  eventStore,
 }) => {
   const mongodbUser = "tester";
   const mongodbUserPassword = "password";
@@ -44,12 +49,20 @@ export default ({
   const mongodbHost = "mongodb";
   const mongodbAdminDatabase = "admin";
 
+  // PostgreSQL event stores use their own fixture; Mongo serves the rest.
+  const stores = [
+    { procedure, service, domain, context, name },
+    ...config.testing.dependencies,
+  ];
+  const usesPostgres =
+    eventStore == "postgres" &&
+    stores.some((store) => store.procedure == "event-store");
   const databases = [
     ...new Set(
-      [
-        databaseName({ procedure, service, domain, context, name }),
-        ...config.testing.dependencies.map(databaseName),
-      ].filter(Boolean)
+      stores
+        .filter((store) => !usesPostgres || store.procedure != "event-store")
+        .map(databaseName)
+        .filter(Boolean)
     ),
   ];
 
@@ -78,6 +91,7 @@ export default ({
     mongodbHost,
     mongodbProtocol,
     dependencyKeyEnvironmentVariables,
+    eventStore,
   });
 
   const main = mainService({
@@ -107,17 +121,30 @@ export default ({
     envVars,
     devEnvVars,
     dependencyKeyEnvironmentVariables,
+    eventStore,
   });
+
+  const dependsOn = [
+    ...(databases.length ? [databaseServiceKey] : []),
+    ...Object.keys(_procedureServices),
+  ].filter((value, index, self) => self.indexOf(value) === index);
 
   const compose = {
     version: "3",
     services: {
       main: {
         ...main,
-        depends_on: [
-          ...(databases.length ? [databaseServiceKey] : []),
-          ...Object.keys(_procedureServices),
-        ].filter((value, index, self) => self.indexOf(value) === index),
+        // Only a main PostgreSQL event store connects at startup, so it alone
+        // waits for the fixture to accept connections.
+        depends_on:
+          usesPostgres && procedure == "event-store"
+            ? {
+                ...Object.fromEntries(
+                  dependsOn.map((key) => [key, { condition: "service_started" }])
+                ),
+                ...postgresReady,
+              }
+            : dependsOn,
       },
       ..._procedureServices,
       ...(databases.length > 0 && {
@@ -128,6 +155,7 @@ export default ({
           userPassword: mongodbUserPassword,
         }),
       }),
+      ...(usesPostgres && { [postgresServiceKey]: postgresService() }),
     },
     networks: {
       default: {

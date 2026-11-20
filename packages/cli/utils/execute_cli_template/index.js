@@ -21,19 +21,6 @@ const envProject = ({ env, config }) => {
   }
 };
 
-const envUriSpecifier = (env) => {
-  switch (env) {
-    case "sandbox":
-      return "snd.";
-    case "staging":
-      return "stg.";
-    case "development":
-      return "dev.";
-    default:
-      return "";
-  }
-};
-
 const envComputeUrlId = ({ env, config }) => {
   switch (env) {
     case "production":
@@ -93,7 +80,8 @@ const execute = async (input, configFn) => {
     await gcpQueue.enqueue({
       queue:
         input.queue || queueName({ config: blossmConfig, data: input.data }),
-      location: "us-central1",
+      // Queues live beside their service: the deployment creates them there.
+      location: input.region,
       computeUrlId,
       project,
     })({
@@ -159,7 +147,8 @@ export default ({ domain }) => async (args, configFn) => {
           "us-west3",
           "us-west4",
         ],
-        default: "us-central1",
+        default:
+          blossmConfig.vendors?.cloud?.gcp?.defaults?.region || "us-central1",
       },
     ],
   });

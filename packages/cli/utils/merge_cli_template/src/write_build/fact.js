@@ -18,6 +18,7 @@ import deployRun from "./steps/deploy_run.js";
 import writeEnv from "./steps/write_env.js";
 
 export default ({
+  cloudRun,
   name,
   domain,
   region,
@@ -100,6 +101,7 @@ export default ({
             procedure,
           }),
           deployRun({
+            cloudRun,
             serviceName,
             procedure,
             extension: imageExtension,

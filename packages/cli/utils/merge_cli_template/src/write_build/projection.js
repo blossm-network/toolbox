@@ -22,6 +22,7 @@ import createQueue from "./steps/create_queue.js";
 import updateQueue from "./steps/update_queue.js";
 
 export default ({
+  cloudRun,
   region,
   context,
   name,
@@ -103,6 +104,7 @@ export default ({
             procedure,
           }),
           deployRun({
+            cloudRun,
             serviceName,
             procedure,
             extension: imageExtension,
@@ -137,24 +139,28 @@ export default ({
           }),
           //Only one replay at a time.
           createQueue({
+            region,
             name: `projection${context ? `-${context}` : ""}-${name}-replay`,
             project,
             maxDispatchPerSecond: 1,
             maxConcurrentDispatches: 1,
           }),
           updateQueue({
+            region,
             name: `projection${context ? `-${context}` : ""}-${name}-replay`,
             project,
             maxDispatchPerSecond: 1,
             maxConcurrentDispatches: 1,
           }),
           createQueue({
+            region,
             name: `projection${context ? `-${context}` : ""}-${name}-play`,
             project,
             maxDispatchPerSecond: 50,
             maxConcurrentDispatches: 100,
           }),
           updateQueue({
+            region,
             name: `projection${context ? `-${context}` : ""}-${name}-play`,
             project,
             maxDispatchPerSecond: 50,

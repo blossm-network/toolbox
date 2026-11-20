@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "@blossm/postgres-event-store": "*",
+    "@blossm/gcp-pubsub": "*",
+    "@blossm/gcp-token": "*",
+    "@blossm/gcp-queue": "*",
+    "@blossm/event-store-rpc": "*",
+    "@blossm/gcp-kms": "*"
+  },
+  "devDependencies": {
+    "localenv": "^0.2.2",
+    "mocha": "^11.6.0",
+    "chai": "^5.2.0",
+    "sinon-chai": "^4.0.0",
+    "chai-datetime": "^1.8.1",
+    "@blossm/request": "*",
+    "@blossm/datetime": "*",
+    "@blossm/uuid": "*",
+    "@blossm/cononical-string": "*",
+    "@blossm/hash": "*",
+    "@blossm/rlp": "*",
+    "@blossm/merkle-tree": "*"
+  }
+}

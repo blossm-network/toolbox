@@ -18,6 +18,7 @@ import scheduleJob from "./steps/schedule_job.js";
 import writeEnv from "./steps/write_env.js";
 
 export default ({
+  cloudRun,
   region,
   domain,
   name,
@@ -98,6 +99,7 @@ export default ({
             procedure,
           }),
           deployRun({
+            cloudRun,
             serviceName,
             extension: imageExtension,
             region,

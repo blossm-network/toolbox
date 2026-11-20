@@ -1,4 +1,5 @@
 import databaseName from "../database_name.js";
+import postgresEnv, { postgresPasswordEnv } from "../postgres_env.js";
 import yarnInstall from "./steps/yarn_install.js";
 import unitTests from "./steps/unit_tests.js";
 import baseUnitTests from "./steps/base_unit_tests.js";
@@ -25,6 +26,9 @@ import createQueue from "./steps/create_queue.js";
 import updateQueue from "./steps/update_queue.js";
 
 export default ({
+  cloudRun,
+  eventStoreKind,
+  postgres,
   domain,
   region,
   project,
@@ -67,6 +71,44 @@ export default ({
   checkInPath,
   checkInSchedule,
 }) => {
+  const database = databaseName({ procedure: "event-store", service, domain });
+  const blockchainKeys = [
+    createKeyRing({
+      name: `${serviceName}-blockchain`,
+      location: "global",
+      project,
+    }),
+    createSymmetricEncryptKey({
+      name: "private",
+      ring: `${serviceName}-blockchain`,
+      location: "global",
+      rotation: "90d",
+      next: "+p90d",
+      project,
+    }),
+    createAsymmetricSignKey({
+      name: "producer",
+      ring: `${serviceName}-blockchain`,
+      location: "global",
+      project,
+    }),
+  ];
+  // The local PostgreSQL store signs with a disposable key, so its test-only
+  // builds never touch KMS. Mongo keeps its keys ahead of its local tests.
+  const needsKeys = strict || eventStoreKind != "postgres";
+  // Tasks are enqueued in GCP_REGION under these names: `add` uses the store
+  // queue and a full block continues through the create-block queue.
+  const queues = ["", "-create-block"].flatMap((suffix) => {
+    const queue = {
+      name: `event-store-${service}-${domain}${suffix}`,
+      project,
+      region,
+      //Throttles for block creation. TODO increase when scale is necessary.
+      maxDispatchPerSecond: 10,
+      maxConcurrentDispatches: 100,
+    };
+    return [createQueue(queue), updateQueue(queue)];
+  });
   return [
     yarnInstall,
     ...(runUnitTests ? [unitTests] : []),
@@ -93,25 +135,7 @@ export default ({
         ...dependencyKeyEnvironmentVariables,
       },
     }),
-    createKeyRing({
-      name: `${serviceName}-blockchain`,
-      location: "global",
-      project,
-    }),
-    createSymmetricEncryptKey({
-      name: "private",
-      ring: `${serviceName}-blockchain`,
-      location: "global",
-      rotation: "90d",
-      next: "+p90d",
-      project,
-    }),
-    createAsymmetricSignKey({
-      name: "producer",
-      ring: `${serviceName}-blockchain`,
-      location: "global",
-      project,
-    }),
+    ...(needsKeys ? blockchainKeys : []),
     dockerComposeUp,
     dockerComposeProcesses,
     ...(runBaseIntegrationTests ? [baseIntegrationTests({ strict })] : []),
@@ -124,6 +148,7 @@ export default ({
             procedure,
           }),
           deployRun({
+            cloudRun,
             serviceName,
             procedure,
             extension: imageExtension,
@@ -148,27 +173,30 @@ export default ({
             env: {
               DOMAIN: domain,
               SERVICE: service,
-              MONGODB_DATABASE: databaseName({ procedure: "event-store", service, domain }),
-              MONGODB_USER: mongodbUser,
-              MONGODB_HOST: mongodbHost,
-              MONGODB_PROTOCOL: mongodbProtocol,
+              ...(postgres
+                ? postgresEnv({
+                    // Cloud Run mounts the instance's Unix socket here.
+                    host: `/cloudsql/${postgres.cloudSqlInstance}`,
+                    database: postgres.database,
+                    user: postgres.user,
+                    max: postgres.max,
+                    namespace: database,
+                  })
+                : {
+                    MONGODB_DATABASE: database,
+                    MONGODB_USER: mongodbUser,
+                    MONGODB_HOST: mongodbHost,
+                    MONGODB_PROTOCOL: mongodbProtocol,
+                  }),
               ...dependencyKeyEnvironmentVariables,
             },
+            ...(postgres && {
+              cloudSqlInstance: postgres.cloudSqlInstance,
+              secrets: { [postgresPasswordEnv]: postgres.passwordSecret },
+            }),
             labels: { domain, service },
           }),
-          createQueue({
-            name: `event-store-${service}-${domain}`,
-            project,
-            //Throttles for block creation. TODO increase when scale is necessary.
-            maxDispatchPerSecond: 10,
-            maxConcurrentDispatches: 100,
-          }),
-          updateQueue({
-            name: `event-store-${service}-${domain}`,
-            project,
-            maxDispatchPerSecond: 10,
-            maxConcurrentDispatches: 100,
-          }),
+          ...queues,
           // startDnsTransaction({ dnsZone, project }),
           // addDnsTransaction({ uri, dnsZone, project }),
           // executeDnsTransaction({ dnsZone, project }),
