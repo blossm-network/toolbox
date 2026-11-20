@@ -4,10 +4,11 @@ import { restore, replace, stub } from "sinon";
 import deps from "../deps.js";
 import { connect, query, createTransaction, stream } from "../index.js";
 
-const client = () => ({
-  query: stub().resolves({ rows: [] }),
-  release: stub(),
-});
+const client = () =>
+  Object.assign(new EventEmitter(), {
+    query: stub().resolves({ rows: [] }),
+    release: stub(),
+  });
 const pool = (...clients) => {
   const database = { query: stub().resolves({ rows: [] }), connect: stub() };
   clients.forEach((value, i) => database.connect.onCall(i).resolves(value));
@@ -231,6 +232,114 @@ describe("PostgreSQL database", () => {
     expect(sleep.called).to.equal(false);
   });
 
+  it("should preserve the commit error and discard when rollback also fails", async () => {
+    const transaction = client();
+    const error = new Error("commit acknowledgement lost");
+    transaction.query.withArgs("COMMIT").rejects(error);
+    transaction.query.withArgs("ROLLBACK").rejects(new Error("disconnected"));
+    const database = pool(transaction);
+    const fn = stub().resolves();
+    expect(await rejection(() => createTransaction({ database, fn }))).to.equal(
+      error,
+    );
+    expect(fn.calledOnce).to.equal(true);
+    expect(database.connect.calledOnce).to.equal(true);
+    expect(transaction.release.calledOnceWithExactly(true)).to.equal(true);
+    expect(sleep.called).to.equal(false);
+  });
+
+  it("should reject without replay when PostgreSQL answers COMMIT with ROLLBACK", async () => {
+    const transaction = client();
+    transaction.query.withArgs("COMMIT").resolves({ command: "ROLLBACK" });
+    const database = pool(transaction);
+    const fn = stub().resolves("lost");
+    const error = await rejection(() => createTransaction({ database, fn }));
+    expect(error.message).to.equal(
+      "Transaction was aborted; COMMIT rolled it back.",
+    );
+    expect(fn.calledOnce).to.equal(true);
+    expect(transaction.release.calledOnce).to.equal(true);
+    expect(sleep.called).to.equal(false);
+  });
+
+  it("should absorb error events from a checked-out client until release", async () => {
+    const transaction = client();
+    transaction.release.callsFake(() =>
+      expect(transaction.listenerCount("error")).to.equal(0),
+    );
+    const database = pool(transaction);
+    await createTransaction({
+      database,
+      fn: async () => {
+        expect(() =>
+          transaction.emit("error", new Error("backend terminated")),
+        ).not.to.throw();
+      },
+    });
+    expect(transaction.release.calledOnce).to.equal(true);
+  });
+
+  it("should replay the whole outer transaction when a nested one fails retryably", async () => {
+    const first = client();
+    const second = client();
+    const database = pool(first, second);
+    const error = Object.assign(new Error("deadlock"), { code: "40P01" });
+    const inner = stub().onFirstCall().rejects(error).resolves("done");
+    const outer = stub().callsFake(async () => {
+      await query({ database, text: "write" });
+      return createTransaction({ database, fn: inner });
+    });
+    expect(await createTransaction({ database, fn: outer })).to.equal("done");
+    expect(outer.callCount).to.equal(2);
+    expect(inner.args.map(([current]) => current)).to.deep.equal([
+      first,
+      second,
+    ]);
+    // The nested call neither begins, rolls back nor retries by itself.
+    expect(first.query.args.map(([text]) => text)).to.deep.equal([
+      "BEGIN ISOLATION LEVEL REPEATABLE READ",
+      "write",
+      "ROLLBACK",
+    ]);
+    expect(first.release.calledOnceWithExactly(false)).to.equal(true);
+    expect(second.query.lastCall.args).to.deep.equal(["COMMIT"]);
+    expect(database.connect.callCount).to.equal(2);
+    expect(sleep.calledOnce).to.equal(true);
+    await query({ database, text: "outside" });
+    expect(database.query.calledOnceWithExactly("outside", [])).to.equal(true);
+  });
+
+  it("should roll back both databases and clear both contexts when an inner database fails", async () => {
+    const first = client();
+    const second = client();
+    const a = pool(first);
+    const b = pool(second);
+    const error = new Error("inner failure");
+    expect(
+      await rejection(() =>
+        createTransaction({
+          database: a,
+          fn: () =>
+            createTransaction({
+              database: b,
+              fn: async () => {
+                throw error;
+              },
+            }),
+        }),
+      ),
+    ).to.equal(error);
+    for (const transaction of [first, second]) {
+      expect(transaction.query.lastCall.args).to.deep.equal(["ROLLBACK"]);
+      expect(transaction.release.calledOnceWithExactly(false)).to.equal(true);
+    }
+    expect(second.release.calledBefore(first.release)).to.equal(true);
+    await query({ database: a, text: "outside a" });
+    await query({ database: b, text: "outside b" });
+    expect(a.query.calledOnceWithExactly("outside a", [])).to.equal(true);
+    expect(b.query.calledOnceWithExactly("outside b", [])).to.equal(true);
+  });
+
   it("should rollback ordinary callback errors without retrying or delaying", async () => {
     const transaction = client();
     const database = pool(transaction);
@@ -442,5 +551,49 @@ describe("PostgreSQL database", () => {
     expect(database.connect.calledOnce).to.equal(true);
     expect(fn.called).to.equal(false);
     expect(sleep.called).to.equal(false);
+  });
+
+  it("should never replay an owned stream whose callback fails with a retryable code", async () => {
+    const transaction = client();
+    transaction.query.onCall(2).resolves({ rows: [1] });
+    const database = pool(transaction);
+    const error = Object.assign(new Error("serialization failure"), {
+      code: "40001",
+    });
+    const fn = stub().rejects(error);
+    expect(
+      await rejection(() => stream({ database, text: "SELECT 1", fn })),
+    ).to.equal(error);
+    expect(fn.calledOnce).to.equal(true);
+    expect(database.connect.calledOnce).to.equal(true);
+    expect(transaction.query.args.map(([text]) => text).slice(-2)[0]).to.match(
+      /^CLOSE /,
+    );
+    expect(transaction.query.lastCall.args).to.deep.equal(["ROLLBACK"]);
+    expect(transaction.release.calledOnceWithExactly(false)).to.equal(true);
+    expect(sleep.called).to.equal(false);
+  });
+
+  it("should replay a stream with the transaction that contains it", async () => {
+    const first = client();
+    const second = client();
+    for (const transaction of [first, second])
+      transaction.query.onCall(2).resolves({ rows: [1] });
+    const database = pool(first, second);
+    const error = Object.assign(new Error("serialization failure"), {
+      code: "40001",
+    });
+    const fn = stub().onFirstCall().rejects(error).resolves();
+    await createTransaction({
+      database,
+      fn: () => stream({ database, text: "SELECT 1", fn }),
+    });
+    expect(fn.callCount).to.equal(2);
+    expect(first.query.args.map(([text]) => text).slice(-2)[0]).to.match(
+      /^CLOSE /,
+    );
+    expect(first.query.lastCall.args).to.deep.equal(["ROLLBACK"]);
+    expect(second.query.lastCall.args).to.deep.equal(["COMMIT"]);
+    expect(sleep.calledOnce).to.equal(true);
   });
 });

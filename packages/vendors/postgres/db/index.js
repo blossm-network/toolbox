@@ -24,6 +24,10 @@ const runTransaction = async ({ database, fn, attempts }) => {
 
   for (let attempt = 1; attempt <= attempts; attempt++) {
     const transaction = await database.connect();
+    // pg-pool removes its error listener at checkout. An unhandled client
+    // "error" event would crash the process; its queries already reject.
+    const ignore = () => {};
+    transaction.on("error", ignore);
     let committing = false;
     let discard = false;
 
@@ -33,7 +37,10 @@ const runTransaction = async ({ database, fn, attempts }) => {
       context.set(database, transaction);
       const result = await transactions.run(context, () => fn(transaction));
       committing = true;
-      await transaction.query("COMMIT");
+      const { command } = await transaction.query("COMMIT");
+      // PostgreSQL answers COMMIT of an aborted transaction with ROLLBACK.
+      if (command === "ROLLBACK")
+        throw new Error("Transaction was aborted; COMMIT rolled it back.");
       return result;
     } catch (error) {
       discard = committing;
@@ -49,6 +56,7 @@ const runTransaction = async ({ database, fn, attempts }) => {
       )
         throw error;
     } finally {
+      transaction.removeListener("error", ignore);
       transaction.release(discard);
     }
     await deps.sleep(10 * 2 ** (attempt - 1) + Math.random() * 20);
