@@ -90,6 +90,9 @@ describe("Postgres event store storage", () => {
       "a\0b",
       "n".repeat(64),
       "é".repeat(32),
+      // Unpaired surrogates all encode as U+FFFD, aliasing distinct names.
+      "x\ud800",
+      "x\udc00",
     ])
       try {
         await stores({ database, namespace });
