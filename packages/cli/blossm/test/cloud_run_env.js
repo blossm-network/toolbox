@@ -150,7 +150,8 @@ describe("Cloud Run environment file generation", () => {
     assert.strictEqual(data.ZERO, "0");
     assert.strictEqual(data.FALSE, "false");
     assert.strictEqual(data.NULL, "null");
-    assert.strictEqual(data.UNDEFINED, "undefined");
+    // An unset value is omitted rather than deployed as the text "undefined".
+    assert(!Object.hasOwn(data, "UNDEFINED"));
     assert(Object.values(data).every((entry) => typeof entry === "string"));
     assert(!Object.hasOwn(data, "MAIN_CONTAINER_NAME"));
     assert(!prepare.args[2].includes("$"));
