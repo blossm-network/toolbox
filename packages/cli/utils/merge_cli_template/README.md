@@ -156,8 +156,18 @@ blocks, so the key ring, the `producer` key and its two grants are the same
 for both.
 
 `isPublic` does not make the Cloud Run service public. Every store is deployed
-with `--no-allow-unauthenticated` and the configured ingress, and the only
-invoker the build adds is `executer@<project>`.
+with `--no-allow-unauthenticated --invoker-iam-check` and the configured
+ingress, and the only invoker the build adds is `executer@<project>`.
+
+Only the command, fact and view gateways are public. They are deployed with
+`--no-invoker-iam-check` and ingress `all`: Cloud Run skips the invoker check
+for that one service and no `allUsers` binding is written. An organization
+that enforces domain restricted sharing
+(`constraints/iam.allowedPolicyMemberDomains`, the default since 2024) rejects
+that binding, and `gcloud run deploy --allow-unauthenticated` then only warns
+and leaves the gateway private. An organization that enforces
+`constraints/run.managed.requireInvokerIam` rejects the gateway deployment
+instead, and needs an exception for the project.
 
 The build only adds. When a private store is redeployed as public, its
 existing `private` key, that key's versions and the runtime's encrypter
