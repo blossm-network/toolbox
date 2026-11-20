@@ -134,6 +134,33 @@ describe("Postgres event store declared schema", () => {
     expect(transaction.query.called).to.equal(false);
   });
 
+  it("normalizes and stores the event in local mode without writing an outbox notice", async () => {
+    const nodeEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = "local";
+    try {
+      // The bypass is chosen at composition, so compose again in local mode.
+      await eventStore({
+        schema: { amount: "Number" },
+        handlers: { add: () => ({}) },
+        publishFn: async () => {},
+      });
+      await postTransaction({
+        ...api,
+        eventData: [event({ amount: "2", undeclared: true })],
+        tx: { id: "tx" },
+      })(transaction);
+    } finally {
+      if (nodeEnv === undefined) delete process.env.NODE_ENV;
+      else process.env.NODE_ENV = nodeEnv;
+    }
+    const [insert] = inserted("events");
+    const stored = JSON.parse(insert.values[6]);
+    expect(stored.payload).to.deep.equal({ amount: 2 });
+    expect(stored.headers.pHash).to.equal(hash(stored.payload).create());
+    expect(inserted("publications")).to.deep.equal([]);
+    expect(api.publishPendingFn).to.equal(undefined);
+  });
+
   it("saves a snapshot unchanged only when its hashed state satisfies the schema", async () => {
     const snapshot = {
       hash: "snapshot",

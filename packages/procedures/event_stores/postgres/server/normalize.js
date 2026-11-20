@@ -25,6 +25,66 @@ const assertSupported = (type, path) => {
     );
 };
 
+// The shared schema formatter rewrites an array of arrays as an array of
+// objects keyed "0", which would silently reshape submitted data.
+const assertNoNestedArrays = (value, path) => {
+  if (value === null || typeof value != "object") return;
+  if (Array.isArray(value) && Array.isArray(value[0]))
+    throw new TypeError(
+      `Unsupported PostgreSQL event-store schema type at ${path}: array of arrays.`,
+    );
+  for (const [key, child] of Object.entries(value))
+    assertNoNestedArrays(child, `${path}.${key}`);
+};
+
+// The formatter reads field options only on a top-level field with a `type`.
+// Its other keys (default, enum, ...) hold data, not type declarations. A
+// `type` that itself has a `type` instead declares a nested object's field.
+const hasOptions = (field) =>
+  field !== null &&
+  typeof field == "object" &&
+  !Array.isArray(field) &&
+  field.type != undefined &&
+  (typeof field.type != "object" ||
+    Array.isArray(field.type) ||
+    field.type.type == undefined);
+
+const at = (value, path) =>
+  path
+    .split(".")
+    .reduce(
+      (parent, key) =>
+        parent != null && Object.hasOwn(parent, key) ? parent[key] : undefined,
+      value,
+    );
+
+// Mongoose silently drops a non-object assigned to a nested path, at any
+// depth, and casts an array given as a document-array element to an empty object.
+const assertObjects = (schema, value) => {
+  for (const path of Object.keys(schema.nested)) {
+    const nested = at(value, path);
+    if (nested != null && (typeof nested != "object" || Array.isArray(nested)))
+      throw new TypeError(`An object is required at ${path}.`);
+  }
+  schema.eachPath((path, type) => {
+    if (!type.schema) return;
+    const child = at(value, path);
+    for (const item of Array.isArray(child) ? child : [child]) {
+      if (Array.isArray(item))
+        throw new TypeError(`An object is required in ${path}.`);
+      if (item !== null && typeof item == "object")
+        assertObjects(type.schema, item);
+    }
+  });
+};
+
+// JSON has no non-finite numbers; stringify would silently store them as null.
+const finite = (_, value) => {
+  if (typeof value == "number" && !Number.isFinite(value))
+    throw new TypeError("A finite number is required.");
+  return value;
+};
+
 // Disconnected Mongoose models give declared schemas the Mongo adapter's
 // casting, stripping and validation without a MongoDB connection. The result is
 // plain JSON, so the bytes hashed by the generic procedures are the bytes JSONB stores.
@@ -34,6 +94,9 @@ export default (schema) => {
     (schema === null || typeof schema != "object" || Array.isArray(schema))
   )
     throw new TypeError("PostgreSQL event-store schema must be an object.");
+  for (const [name, field] of Object.entries(schema ?? {}))
+    if (hasOptions(field)) assertNoNestedArrays(field.type, `${name}.type`);
+    else assertNoNestedArrays(field, name);
 
   // A private instance keeps these models out of the global Mongoose registry.
   const mongoose = new Mongoose();
@@ -55,13 +118,13 @@ export default (schema) => {
 
   const normalize = (Model, field, message) => async (value) => {
     try {
-      // Mongoose silently drops a non-object assigned to a nested path.
       if (value === null || typeof value != "object" || Array.isArray(value))
         throw new TypeError("An object is required.");
+      assertObjects(Model.schema, { [field]: value });
       const document = new Model({ [field]: value });
       await document.validate();
       return JSON.parse(
-        JSON.stringify(document.toObject({ minimize: false })[field]),
+        JSON.stringify(document.toObject({ minimize: false })[field], finite),
       );
     } catch (cause) {
       throw badRequest.message(message, { cause });

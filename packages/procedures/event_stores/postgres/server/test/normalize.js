@@ -74,6 +74,261 @@ describe("Postgres event store schema normalization", () => {
       );
   });
 
+  const deep = {
+    title: { type: "String", required: true, default: "untitled" },
+    owner: {
+      name: "String",
+      tags: ["String"],
+      address: { city: "String", moved: "Date", geo: { lat: "Number" } },
+    },
+    lines: [
+      { sku: "String", subject: { root: "String" }, parts: [{ n: "Number" }] },
+    ],
+  };
+
+  it("casts and strips at every depth, materializing only the empties below a submitted object", async () => {
+    const { normalizePayloadFn } = normalize(deep);
+    const payload = await normalizePayloadFn({
+      owner: {
+        name: 1,
+        tags: [2],
+        address: {
+          city: 3,
+          moved: "2026-01-01",
+          geo: { lat: "4.5", undeclared: true },
+          undeclared: true,
+        },
+        undeclared: true,
+      },
+      lines: [
+        {
+          sku: 5,
+          subject: { root: 6, undeclared: true },
+          parts: [{ n: "7", undeclared: true }],
+        },
+      ],
+    });
+    assert.deepEqual(payload, {
+      owner: {
+        name: "1",
+        tags: ["2"],
+        address: {
+          city: "3",
+          moved: "2026-01-01T00:00:00.000Z",
+          geo: { lat: 4.5 },
+        },
+      },
+      lines: [{ sku: "5", subject: { root: "6" }, parts: [{ n: 7 }] }],
+    });
+    assert.deepEqual(await normalizePayloadFn(payload), payload);
+
+    // Nothing is invented for an omitted top-level field, required or defaulted.
+    assert.deepEqual(await normalizePayloadFn({}), {});
+    // Below a submitted object, Mongoose adds declared arrays and nested
+    // objects as empties. They are part of what is hashed and stored.
+    const sparse = await normalizePayloadFn({ owner: {}, lines: [{}] });
+    assert.deepEqual(sparse, {
+      owner: { tags: [], address: { geo: {} } },
+      lines: [{ subject: {}, parts: [] }],
+    });
+    assert.deepEqual(await normalizePayloadFn(sparse), sparse);
+    // Null is kept, and a single object is wrapped into its declared array.
+    assert.deepEqual(
+      await normalizePayloadFn({
+        owner: { address: null },
+        lines: { sku: "one" },
+      }),
+      {
+        owner: { tags: [], address: null },
+        lines: [{ sku: "one", subject: {}, parts: [] }],
+      },
+    );
+  });
+
+  it("rejects a wrong shape or uncastable value at any depth instead of dropping it", async () => {
+    const { normalizePayloadFn } = normalize(deep);
+    for (const [payload, path] of [
+      [{ owner: { address: { geo: { lat: "north" } } } }],
+      [{ owner: { address: { moved: "someday" } } }],
+      [{ lines: [{ parts: [{ n: "few" }] }] }],
+      [{ owner: "text" }, "payload.owner"],
+      [{ lines: "text" }, "payload.lines"],
+      // Mongoose alone would drop these declared fields without an error.
+      [{ owner: { address: "text" } }],
+      [{ owner: { address: [{}] } }],
+      [{ owner: { address: { geo: 0 } } }],
+      [{ lines: [{ subject: "text" }] }],
+      [{ lines: [[{ sku: "nested" }]] }],
+      [{ lines: [{ parts: [[{ n: 1 }]] }] }],
+    ])
+      await assert.rejects(
+        normalizePayloadFn(payload),
+        rejection("Invalid event payload.", path),
+        JSON.stringify(payload),
+      );
+  });
+
+  it("rejects non-finite numbers rather than storing them as null", async () => {
+    const { normalizePayloadFn, assertStateFn } = normalize({
+      count: "Number",
+      free: "Object",
+    });
+    // JSON.parse("1e400") is Infinity, so a request body can carry one.
+    for (const payload of [
+      { count: "Infinity" },
+      { count: JSON.parse("1e400") },
+      { free: { deep: [-Infinity] } },
+    ])
+      await assert.rejects(
+        normalizePayloadFn(payload),
+        rejection("Invalid event payload."),
+      );
+    await assert.rejects(
+      assertStateFn({ count: Infinity }),
+      rejection("Invalid snapshot state."),
+    );
+    assert.deepEqual(await normalizePayloadFn({ count: "1e308" }), {
+      count: 1e308,
+    });
+  });
+
+  it("requires snapshot state to equal its cast form at every depth, including nested empties", async () => {
+    const { assertStateFn } = normalize(deep);
+    const state = {
+      title: "bicycle",
+      owner: { tags: [], address: { geo: {} } },
+      lines: [{ sku: "5", subject: {}, parts: [] }],
+    };
+    await assertStateFn(state);
+    await assertStateFn({ title: "bicycle" });
+    // A top-level default never fills in a required field.
+    await assert.rejects(
+      assertStateFn({ owner: state.owner }),
+      rejection("Invalid snapshot state.", "state.title"),
+    );
+    for (const drifted of [
+      { ...state, owner: {} },
+      { ...state, owner: { ...state.owner, address: { geo: { lat: "4" } } } },
+      { ...state, lines: [{ sku: "5", subject: {} }] },
+      { ...state, lines: [{ ...state.lines[0], parts: [{ n: 1, x: 2 }] }] },
+    ])
+      await assert.rejects(
+        assertStateFn(drifted),
+        rejection("Snapshot state does not match its declared schema."),
+        JSON.stringify(drifted),
+      );
+    await assert.rejects(
+      assertStateFn({ ...state, owner: { ...state.owner, address: "text" } }),
+      rejection("Invalid snapshot state."),
+    );
+
+    // Required containers bind state but, like every payload field, not events.
+    const required = normalize({
+      list: { type: ["Number"], required: true },
+      box: { type: { label: "String" }, required: true },
+    });
+    assert.deepEqual(await required.normalizePayloadFn({}), {});
+    await required.assertStateFn({ list: [], box: {} });
+    for (const [missing, path] of [
+      [{ box: {} }, "state.list"],
+      [{ list: [] }, "state.box"],
+    ])
+      await assert.rejects(
+        required.assertStateFn(missing),
+        rejection("Invalid snapshot state.", path),
+      );
+  });
+
+  it("fails closed at any depth on unsupported types, arrays of arrays and field options below the top level", () => {
+    for (const unsupported of [
+      { a: { b: { c: "ObjectId" } } },
+      { a: { b: ["UUID"] } },
+      { a: [{ b: [{ c: "Buffer" }] }] },
+      { a: [{ b: ["ObjectId"] }] },
+      { a: { type: ["Decimal128"] } },
+      { a: { type: [{ b: "BigInt" }] } },
+      { a: { type: { b: "ObjectId" } } },
+      { a: { type: "Map", of: "String" } },
+      // Mongoose 9 types that cast to BSON wrappers, not JSON numbers.
+      { a: "Int32" },
+      { a: "Double" },
+      // The shared formatter would turn the inner array into an object.
+      { a: [["Number"]] },
+      { a: { type: [["Number"]] } },
+      { a: { b: [["Number"]] } },
+      { a: [{ b: [[{ c: "String" }]] }] },
+    ])
+      assert.throws(
+        () => normalize(unsupported),
+        (error) =>
+          error instanceof TypeError &&
+          /^Unsupported PostgreSQL event-store schema type at /.test(
+            error.message,
+          ),
+        JSON.stringify(unsupported),
+      );
+    // The shared formatter reads `type`, `required` and `default` only on
+    // top-level fields. Deeper, Mongoose takes them for field names and
+    // refuses their values as types.
+    for (const nestedOptions of [
+      { a: { b: { type: "String", required: true } } },
+      { a: { b: { type: "Number", default: 4 } } },
+      { a: [{ b: { type: "String", required: true } }] },
+      { a: { type: [{ b: { type: "Number", default: 1 } }] } },
+    ])
+      assert.throws(
+        () => normalize(nestedOptions),
+        /is not a valid type at path/,
+        JSON.stringify(nestedOptions),
+      );
+    // Elements without a declared type stay raw JSON.
+    for (const supported of [{ a: [] }, { a: ["Object"] }, { a: "Mixed" }])
+      normalize(supported);
+  });
+
+  it("reads nested arrays in top-level field options as data, not type declarations", async () => {
+    // The top-level default is suppressed, so it is never applied or cast.
+    const defaulted = normalize({
+      free: { type: "Object", default: [[1]] },
+      count: "Number",
+    });
+    assert.deepEqual(await defaulted.normalizePayloadFn({ count: "2" }), {
+      count: 2,
+    });
+    assert.deepEqual(
+      await defaulted.normalizePayloadFn({ free: [[3]], extra: true }),
+      { free: [[3]] },
+    );
+    await defaulted.assertStateFn({ count: 2 });
+    await defaulted.assertStateFn({ free: [[3]] });
+
+    // Mixed has no enum validator: the value stays raw JSON.
+    const listed = normalize({
+      free: { type: "Object", enum: [[[1]], [[2]]] },
+      count: "Number",
+    });
+    for (const free of [[[1]], [[9]], { any: "thing" }])
+      assert.deepEqual(
+        await listed.normalizePayloadFn({ free, count: "2", extra: true }),
+        { free, count: 2 },
+      );
+    await listed.assertStateFn({ free: [[2]], count: 2 });
+
+    // The declared type beside those options is still inspected.
+    for (const unsupported of [
+      { a: { type: [["Number"]], default: [[1]] } },
+      { a: { type: { b: [["Number"]] }, default: {} } },
+      // A `type` holding a `type` declares a nested object, so its siblings
+      // are field declarations.
+      { a: { type: { type: "String" }, b: [["Number"]] } },
+    ])
+      assert.throws(
+        () => normalize(unsupported),
+        /^TypeError: Unsupported PostgreSQL event-store schema type at .*array of arrays\.$/,
+        JSON.stringify(unsupported),
+      );
+  });
+
   it("leaves payloads and state raw when no fields are declared", () => {
     for (const absent of [undefined, {}])
       assert.deepEqual(Object.keys(normalize(absent)), [
