@@ -581,6 +581,224 @@ describe("Postgres event store integration", function () {
       ).to.equal(1);
     }));
 
+  it("should roll back snapshots already written in a block when a later state is rejected", () =>
+    withDeclared(`${namespace}_block`, async ({ declared, otherStores }) => {
+      const makeBlock = () =>
+        declared.createTransactionFn(
+          createBlockTransaction({ ...declared, blockLimit: 100 }),
+        );
+      const post = (root, action) => {
+        const posted = event(root);
+        return declared.createTransactionFn(
+          postTransaction({
+            ...declared,
+            eventData: [
+              {
+                event: {
+                  ...posted,
+                  headers: { ...posted.headers, action },
+                  payload: { amount: 1 },
+                },
+              },
+            ],
+            tx: { id: randomUUID() },
+          }),
+        );
+      };
+      const genesis = await makeBlock();
+      await post("first", "add");
+      await post("second", "add");
+      await post("third", "drift");
+      // The builder visits roots by update time; the rejected one comes last.
+      for (const [root, updated] of [
+        ["first", "2021-01-01T00:00:00.000Z"],
+        ["second", "2021-01-02T00:00:00.000Z"],
+        ["third", "2021-01-03T00:00:00.000Z"],
+      ])
+        await database.query(
+          `UPDATE ${otherStores.countsStore.table} SET updated = $1 WHERE root = $2`,
+          [updated, root],
+        );
+
+      const saved = [];
+      const snapshotsSeenInside = [];
+      const building = { ...declared, blockLimit: 100 };
+      building.saveSnapshotFn = async (options) => {
+        const snapshot = await declared.saveSnapshotFn(options);
+        saved.push(snapshot.headers.root);
+        snapshotsSeenInside.push(
+          (
+            await find({
+              store: otherStores.snapshotStore,
+              transaction: options.transaction,
+            })
+          ).length,
+        );
+        return snapshot;
+      };
+      const rejected = await failure(() =>
+        declared.createTransactionFn(createBlockTransaction(building)),
+      );
+      expect(rejected.statusCode).to.equal(400);
+      expect(rejected.message).to.equal(
+        "Snapshot state does not match its declared schema.",
+      );
+      // Two valid snapshots were really inserted before the rejection.
+      expect(saved).to.deep.equal(["first", "second"]);
+      expect(snapshotsSeenInside).to.deep.equal([1, 2]);
+
+      // None of them, nor a block, survives; events and counters are untouched.
+      expect(await find({ store: otherStores.snapshotStore })).to.deep.equal(
+        [],
+      );
+      expect((await declared.latestBlockFn()).hash).to.equal(
+        genesis.block.hash,
+      );
+      expect(await find({ store: otherStores.eventStore })).to.have.length(3);
+      const pending = [];
+      await declared.rootStreamFn({
+        unsnapshottedOnly: true,
+        reverse: true,
+        fn: ({ root }) => pending.push(root),
+      });
+      expect(pending).to.deep.equal(["first", "second", "third"]);
+    }));
+
+  it("should bypass the outbox and publication end to end when composed in local mode", async () => {
+    const other = `${namespace}_local`;
+    const routes = {};
+    replace(genericDeps, "server", () => ({
+      get() {
+        return this;
+      },
+      post(handler, options) {
+        routes[options?.path === "/create-block" ? "block" : "post"] = handler;
+        return this;
+      },
+      listen() {},
+    }));
+    const publishFn = fake.resolves();
+    const previous = process.env.NODE_ENV;
+    process.env.NODE_ENV = "local";
+    let running;
+    try {
+      running = await eventStore({
+        connection: {
+          connectionString: process.env.TEST_POSTGRES_URL,
+          max: 2,
+        },
+        namespace: other,
+        schema: { amount: "Number", label: "String" },
+        handlers: { add: (state, payload) => ({ ...state, ...payload }) },
+        publishFn,
+        encryptFn: async (message) => message,
+        signFn: async (hash) => `signed:${hash}`,
+        blockPublisherPublicKeyFn: async () => Buffer.from("test-key"),
+        isPublic: true,
+      });
+      const otherStores = await prepareStores({ database, namespace: other });
+      const posted = event("local");
+      const req = {
+        body: {
+          eventData: [
+            {
+              event: { ...posted, payload: { amount: "2", undeclared: true } },
+            },
+          ],
+          tx: { id: "local" },
+        },
+      };
+      const sendStatus = fake();
+      await routes.post(req, { sendStatus });
+      expect(sendStatus.firstCall.args).to.deep.equal([204]);
+      // The same normalized, hashed event as outside local mode.
+      const [stored] = await find({ store: otherStores.eventStore });
+      expect(stored.payload).to.deep.equal({ amount: 2 });
+      expect(stored.headers.pHash).to.equal(hash(stored.payload).create());
+      expect(
+        await find({ store: otherStores.publicationsStore }),
+      ).to.deep.equal([]);
+      // A duplicate retry and block creation do not dispatch either.
+      await routes.post(req, { sendStatus });
+      const send = fake();
+      await routes.block({}, { send });
+      await routes.block({}, { send });
+      expect(send.secondCall.args[0].headers.sCount).to.equal(1);
+      expect(await find({ store: otherStores.eventStore })).to.have.length(1);
+      expect(
+        await find({ store: otherStores.publicationsStore }),
+      ).to.deep.equal([]);
+      expect(publishFn.called).to.equal(false);
+    } finally {
+      process.env.NODE_ENV = previous;
+      restore();
+      await database.query(`DROP SCHEMA IF EXISTS "${other}" CASCADE`);
+      if (running) await running.close();
+    }
+  });
+
+  it("should end its real pool and surface the original error when startup fails", async () => {
+    const other = `${namespace}_startup`;
+    const pools = [];
+    replace(deps.db, "connect", (config) => {
+      pools.push(connect(config));
+      return pools.at(-1);
+    });
+    const connection = { connectionString: process.env.TEST_POSTGRES_URL };
+    try {
+      // Table preparation refuses the namespace.
+      const refused = await failure(() =>
+        eventStore({ connection, namespace: "n".repeat(64), handlers }),
+      );
+      expect(refused).to.be.instanceOf(TypeError);
+      expect(refused.message).to.include("namespace");
+
+      // The listener fails after tables exist and the pool has been used.
+      const listenFailed = new Error("listen failed");
+      replace(genericDeps, "server", () => ({
+        get() {
+          return this;
+        },
+        post() {
+          return this;
+        },
+        listen() {
+          throw listenFailed;
+        },
+      }));
+      expect(
+        await failure(() =>
+          eventStore({
+            connection,
+            namespace: other,
+            handlers,
+            publishFn: async () => {},
+          }),
+        ),
+      ).to.equal(listenFailed);
+      const { rows } = await database.query(
+        "SELECT count(*)::int AS tables FROM information_schema.tables WHERE table_schema = $1",
+        [other],
+      );
+      expect(rows[0].tables).to.equal(5);
+
+      expect(pools).to.have.length(2);
+      for (const pool of pools) {
+        expect(pool.ended).to.equal(true);
+        expect(pool.totalCount).to.equal(0);
+        expect((await failure(() => pool.query("SELECT 1"))).message).to.match(
+          /after calling end on the pool/,
+        );
+      }
+    } finally {
+      restore();
+      await database.query(`DROP SCHEMA IF EXISTS "${other}" CASCADE`);
+      await Promise.all(
+        pools.filter((pool) => !pool.ended).map((pool) => pool.end()),
+      );
+    }
+  });
+
   it("should replay a known abort from the unchanged submission to one stable normalized event and notice, and reject a mixed batch whole", () =>
     withDeclared(`${namespace}_retry`, async ({ declared, otherStores }) => {
       const submitted = {

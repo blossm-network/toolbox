@@ -48,9 +48,12 @@ Use a distinct database or namespace for each event store and environment. The
 namespace defaults to `public`; sharing one across unrelated event stores mixes
 their data. Startup creates its five tables and indexes transactionally. It
 requires DDL permission and does not migrate an existing layout. A namespace
-must be 1 to 63 UTF-8 bytes without NUL, PostgreSQL's identifier limit; anything
-else is rejected rather than truncated into another store's name. There is no
-process-wide store cache, so a different server cannot inherit another server's
+must be well-formed Unicode of 1 to 63 UTF-8 bytes without NUL. The
+[storage package](../storage/README.md) owns that guard: PostgreSQL would
+truncate a longer name and encode an unpaired surrogate as U+FFFD, and either
+could alias another store, so both are rejected at startup. The name is a
+quoted identifier; case and Unicode normalization forms are significant. A
+namespace separates data, not access. There is no process-wide store cache, so a different server cannot inherit another server's
 connection or tables.
 
 ## Declared schema
@@ -62,26 +65,56 @@ options. No MongoDB connection is opened, and each server has its own Mongoose
 instance.
 
 - **Payloads** are cast, stripped of undeclared fields and validated before the
-  generic append transaction reserves counters or computes `pHash`. As in the
-  Mongo event store, payload fields are never required and top-level defaults
-  are not applied; Mongoose still gives arrays nested inside subdocuments an
-  empty default. The result is plain JSON (dates as ISO strings), and exactly
-  that value is hashed, inserted as JSONB and returned by reads. The adapter does
-  not cast or rehash at insert. An uncastable or non-object payload is a 400 and
-  writes nothing.
+  generic append transaction reserves counters or computes `pHash`. The result
+  is plain JSON (dates as ISO strings), and exactly that value is hashed,
+  inserted as JSONB and returned by reads, including on a transaction retry,
+  which normalizes the unchanged submission again. The adapter does not cast or
+  rehash at insert. A payload that cannot be normalized is a 400 and writes
+  nothing, along with every other event in its batch.
+- **Casting** is Mongoose 9's, at every depth: numeric strings become numbers,
+  numbers and booleans become strings, date strings and epoch numbers become
+  ISO strings, a single value is wrapped into its declared array, `null` is
+  kept, and undeclared fields are removed inside nested objects and array
+  elements too. Rejected rather than repaired: a value its type cannot cast, a
+  non-object payload, a non-object where a nested object or an array element
+  object is declared (Mongoose alone would drop it silently), and a non-finite
+  number such as `1e400` (JSON would store it as `null`).
+- **Required and defaults.** As in the Mongo event store, payload fields are
+  never required and a top-level `default` is not applied, so an omitted
+  top-level field stays omitted. Below a submitted object or array element,
+  Mongoose still adds each declared array as `[]` and each declared nested
+  object as `{}`; those empties are part of the hashed, stored payload.
+  `type`, `required`, `default` and other field options are read on top-level
+  fields only, which is the shared formatter's contract. Below the top level a
+  field is a bare type name, a nested object or an array; options written
+  there are refused at startup, and a lone `{ type: "String" }` declares an
+  object with a string field named `type`.
 - **Snapshot state** is hashed by the generic block builder before the adapter
   sees it, so it is checked rather than rewritten. State must validate against
   the schema, including `required` fields, and must already be canonically equal
-  to its cast form. Otherwise the snapshot is rejected and the block transaction
-  rolls back. A reducer that adds undeclared fields or changes a declared type
-  therefore stops block creation for that store until the schema or reducer is
-  corrected. The Mongo adapter would instead cast such state on save.
+  to its cast form, comparing canonical hashes so key order does not matter.
+  That includes the nested empties above: state holding a declared nested
+  object must carry its declared arrays and objects, as replaying normalized
+  payloads does. Otherwise the snapshot is rejected and the whole block
+  transaction rolls back, including snapshots of other roots already written
+  in that block. A reducer that adds undeclared fields or changes a declared
+  type therefore stops block creation for that store until the schema or
+  reducer is corrected. The Mongo adapter would instead cast such state on save.
 - **Supported types** are String, Number, Boolean, Date, Object (Mixed), nested
-  objects and arrays of those. ObjectId, Buffer, Decimal128, BigInt, Map, UUID
-  and any other type without a JSON representation are rejected at startup,
+  objects and arrays of those; an array without an element type holds raw JSON.
+  ObjectId, Buffer, Decimal128, BigInt, Map, UUID, Int32, Double and any other
+  type without a JSON representation are rejected at startup at any depth,
   before a connection is opened, as are type names Mongoose does not know.
+  Arrays of arrays are rejected as well: the shared formatter would rewrite the
+  inner array as an object. That check covers type declarations only: on a
+  top-level field with a `type`, `default`, `enum` and other option values are
+  data and may hold nested arrays. Mixed values in a declared schema and in
+  transaction metadata are not inspected beyond a finite-number check, which
+  applies only to values those normalizers handle. Numbers are JavaScript
+  doubles, so an integer string beyond 2^53 loses precision when cast.
 - **No schema**, or one without fields, leaves payloads and state as the caller's
-  raw JSON with no casting, stripping or validation.
+  raw JSON with no casting, stripping, validation or finite-number check; only
+  transaction metadata is normalized.
 
 This differs from the Mongo adapter in one deliberate way: Mongo hashes the
 submitted payload and casts it afterwards on save, while this adapter casts
@@ -89,12 +122,11 @@ first so the stored bytes are the hashed bytes. Database-level `unique` options
 and Mongo indexes in a schema are not enforced here; use `indexes` for query
 paths.
 
-Transaction metadata is always normalized, with or without a schema, by a copy
-of the Mongo event model's `tx` definition: declared fields are cast to
+Transaction metadata is always normalized, with or without a schema, by the
+`tx` definition both adapters import from the shared
+`@blossm/event-transaction-schema` package: declared fields are cast to
 strings, claim and path dates become ISO strings, required path fields and
-audience types are enforced, and extra claim/path fields are retained. That
-definition currently lives in both adapters' server packages; a change to one
-must be made to the other.
+audience types are enforced, and extra claim/path fields are retained.
 
 ## Persistence boundaries
 
@@ -165,7 +197,11 @@ metadata and retains notices for retry; storage and transaction failures still
 reject the request. Explicit calls to the raw adapter dispatcher still reject
 on delivery errors. Every published notice carries its committed event hash as
 `hash` in its metadata, unchanged across retries, so subscribers can identify duplicates. This protects future writes and does not reconstruct historical
-missing notifications. Local mode keeps its existing no-publication behavior.
+missing notifications. Local mode keeps its existing no-publication behavior:
+when `NODE_ENV` is `local` at composition, appends write no notice and no
+dispatcher is supplied, while normalization, hashing, counters and rollback are
+unchanged. The mode is read once at startup for the outbox, so do not change it
+in a running process.
 Applications retain the generic block builder's existing root/time selection
 rules; this adapter does not change them.
 
@@ -195,7 +231,14 @@ uniqueness rollback, transaction snapshots, callback cleanup, binary snapshots,
 block round trips, concurrent initialization, atomic event/notice rollback,
 duplicate retry recovery, scheduled delivery, acknowledgment-before-delete
 redelivery, failed-batch rotation, snapshot-coverage filtering before a limit,
-and a declared schema's cast-before-hash storage and snapshot guard. The unit
-suites cover the same schema behavior against the real generic append
-transaction with a recording SQL client. See [CONTRIBUTING](../../../../../CONTRIBUTING.md)
+a declared schema's cast-before-hash storage and snapshot guard, a stable
+normalized event across a known-abort retry, rollback of snapshots already
+written in a block whose later state is rejected, the local-mode outbox bypass
+through the real routes, and pool shutdown with the original error after a
+failed startup. The unit suites cover nested casting, defaults, required fields
+and unsupported shapes, and the same schema behavior against the real generic
+append transaction with a recording SQL client. Unit results do not establish
+database behavior; the rollback, bypass and shutdown claims rest on the native
+suite. Neither suite covers a live Cloud SQL deployment or concurrent block
+builders. See [CONTRIBUTING](../../../../../CONTRIBUTING.md)
 for the repository-wide test and release workflow.
