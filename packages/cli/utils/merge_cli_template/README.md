@@ -49,10 +49,7 @@ previous revision.
 Local Compose ignores the deployment connection. It starts a disposable
 PostgreSQL 17 service with public fixture credentials, and the local entrypoint
 signs blocks with an in-process key instead of KMS. A test-only build therefore
-creates no KMS key, queue, topic or Scheduler job.
-
-The adapter packages are version 0.0.1 and unpublished. Until they are on the
-registry, `yarn install` of a generated PostgreSQL service cannot resolve them.
+creates no KMS key, queue, topic, Scheduler job or IAM binding.
 
 The CLI package's `test:integration` script starts the entrypoint the deploy
 command renders, with the generated local environment, against the disposable
@@ -66,6 +63,138 @@ publication, the container image, Cloud SQL connectivity or IAM.
 TEST_POSTGRES_URL=postgres://user:password@127.0.0.1:5432/database \
   yarn lerna run test:integration --scope @blossm/cli --stream
 ```
+
+## Event-store deployment IAM
+
+`src/write_build/event_store.js` owns the resource grants of a deployed event
+store, for both the PostgreSQL and Mongo adapters. Every deploying build runs
+`add-iam-policy-binding` for each grant, so a redeploy reconciles them and
+other bindings on the same resource, conditional ones included, are kept. A
+failed grant fails the build. A test-only (dry run) build and local Compose add
+no grant.
+
+Every grant is unconditional. The KMS key, service-account and Cloud Run
+commands pass `--condition=None`, so a policy that already holds conditional
+bindings does not stop a non-interactive build. The GA Pub/Sub topic and Cloud
+Tasks queue commands have no `--condition` flag and are run without one. What
+they do on a topic or queue whose policy already holds a conditional binding is
+not established here. Command references:
+
+- [`gcloud kms keys add-iam-policy-binding`](https://cloud.google.com/sdk/gcloud/reference/kms/keys/add-iam-policy-binding)
+- [`gcloud iam service-accounts add-iam-policy-binding`](https://cloud.google.com/sdk/gcloud/reference/iam/service-accounts/add-iam-policy-binding)
+- [`gcloud run services add-iam-policy-binding`](https://cloud.google.com/sdk/gcloud/reference/run/services/add-iam-policy-binding)
+- [`gcloud pubsub topics add-iam-policy-binding`](https://cloud.google.com/sdk/gcloud/reference/pubsub/topics/add-iam-policy-binding)
+- [`gcloud tasks queues add-iam-policy-binding`](https://cloud.google.com/sdk/gcloud/reference/tasks/queues/add-iam-policy-binding)
+
+The runtime identity is `runtimeServiceAccounts.<env>` when configured.
+Otherwise the build passes
+`${PROJECT_NUMBER}-compute@developer.gserviceaccount.com` as
+`--service-account`, using Cloud Build's built-in substitution. Builds are
+submitted to the deployment project, so this is the account Cloud Run would
+default to. Naming it stops Cloud Run from keeping a different account that an
+earlier revision of the service was given.
+
+| Member | Role | Resource | Stores |
+| --- | --- | --- | --- |
+| runtime | `roles/cloudkms.cryptoKeyEncrypter` | key `private` in ring `<serviceName>-blockchain` | private only |
+| runtime | `roles/cloudkms.signer` | key `producer` in the same ring | all |
+| runtime | `roles/cloudkms.publicKeyViewer` | key `producer` in the same ring | all |
+| runtime | `roles/pubsub.publisher` | each topic `<action>.<domain>.<service>` | all |
+| runtime | `roles/cloudtasks.enqueuer` | queue `event-store-<service>-<domain>-create-block` | all |
+| runtime | `roles/iam.serviceAccountUser` | service account `executer@<project>` | all |
+| `executer@<project>` | `roles/run.invoker` | the store's Cloud Run service | all |
+
+Only event stores receive these grants and these keys. The builds of other
+procedure kinds are not affected by `isPublic`.
+
+Queues, topics and the runtime grants are applied before `gcloud run deploy`,
+because the store publishes pending events when it starts. The invoker grant
+needs the service to exist, so it follows the deploy and precedes both
+Scheduler jobs.
+
+### Private and public stores
+
+A store is public when its `blossm.yaml` sets `isPublic` to a truthy value,
+and private otherwise, which is the default. The generator reads the value
+from the same parsed `blossm.yaml` that is written to the service's
+`config.json`, and both store entrypoints pass `config.isPublic || false` to
+the adapter, so the build and the deployed store always agree.
+
+`isPublic` decides one thing: whether block creation encrypts. A private store
+encrypts each event payload and snapshot state in the block it exports, using
+the `private` key. A public store exports them in the clear and never calls
+that key. So the build of a public store does not create the `private` key and
+does not grant `roles/cloudkms.cryptoKeyEncrypter`. Every store signs its
+blocks, so the key ring, the `producer` key and its two grants are the same
+for both.
+
+`isPublic` does not make the Cloud Run service public. Every store is deployed
+with `--no-allow-unauthenticated` and the configured ingress, and the only
+invoker the build adds is `executer@<project>`.
+
+The build only adds. When a private store is redeployed as public, its
+existing `private` key, that key's versions and the runtime's encrypter
+binding are left in place: the build has no step that deletes a key or removes
+a binding. The public store no longer uses them. Blocks the store exported
+while private stay encrypted with that key. Revoking old access or disabling
+key versions requires a separate operator decision. A public store redeployed
+as private gets the key and the grant on that deploy.
+
+IAM changes propagate eventually. A build that succeeds has submitted every
+grant, which is not evidence that each one is in effect yet or that the store
+can use it. A request made shortly after the first deploy can still be denied,
+and live verification of the store remains a separate operator step.
+
+### One-time operator bootstrap
+
+The build never grants itself authority. Before the first deploy an operator
+gives the build identity (`buildServiceAccounts.<env>`, or the project's
+default Cloud Build account) these permissions in the deployment project,
+through predefined or custom roles of the operator's choice:
+
+| For | Permissions |
+| --- | --- |
+| KMS key grants | `cloudkms.cryptoKeys.getIamPolicy`, `cloudkms.cryptoKeys.setIamPolicy` |
+| Topic grants | `pubsub.topics.getIamPolicy`, `pubsub.topics.setIamPolicy` |
+| Queue grant | `cloudtasks.queues.getIamPolicy`, `cloudtasks.queues.setIamPolicy` |
+| `executer` grant | `iam.serviceAccounts.getIamPolicy`, `iam.serviceAccounts.setIamPolicy` on `executer@<project>` |
+| Service invoker grant | `run.services.getIamPolicy`, `run.services.setIamPolicy` |
+| Deploying as the runtime | `iam.serviceAccounts.actAs` on the runtime identity |
+| Scheduler jobs that call as `executer` | `iam.serviceAccounts.actAs` on `executer@<project>` |
+
+Predefined roles that hold the policy permissions are `roles/cloudkms.admin`,
+`roles/pubsub.admin`, `roles/cloudtasks.admin`, `roles/run.admin` and
+`roles/iam.serviceAccountAdmin` on `executer@<project>`.
+`roles/iam.serviceAccountUser` holds `iam.serviceAccounts.actAs`, and the build
+identity needs it on both the runtime identity and `executer@<project>`: the
+build creates and updates both Scheduler jobs with `executer` as their OIDC
+account. The runtime's own `roles/iam.serviceAccountUser` grant on `executer`
+in the table above covers the tasks the store enqueues, not the build. These
+are in addition
+to what the build already needs to create keys, topics, queues, Scheduler jobs
+and the service. The `executer@<project>` account must exist, and the Cloud
+Tasks and Cloud Scheduler service agents must be able to mint its OIDC tokens.
+
+The build does not grant, and the operator provisions separately:
+
+- Cloud SQL access for the runtime (`roles/cloudsql.client`), the instance and
+  its database user.
+- Secret Manager access for the runtime to the pinned `passwordSecret`
+  (`roles/secretmanager.secretAccessor`), and for Mongo stores the secret
+  bucket and its KMS key.
+- `roles/cloudtasks.enqueuer` on the `event-store-<service>-<domain>` queue for
+  the services that enqueue `add` on it. Those callers, not the store, hold
+  that grant.
+
+`test/event_store_iam.js` runs the generated steps against a `gcloud` double
+and holds the exact grants and flags, their order, both identities, both
+adapters, private and public stores, the dry run, a redeploy and a failed
+grant. `packages/cli/blossm/test/postgres_event_store.js` runs the whole deploy
+command for a private and a public store on each adapter and compares the
+rendered `build.yaml` with the rendered `config.json` and entrypoint. The double rejects a KMS
+key, service-account or Cloud Run binding without `--condition=None`, and a
+topic or queue binding with any condition. It does not establish live IAM
+behavior.
 
 ## Integration suites in generated builds
 

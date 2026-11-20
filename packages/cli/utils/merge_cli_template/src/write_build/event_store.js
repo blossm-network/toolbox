@@ -24,6 +24,7 @@ import createPubsubTopic from "./steps/create_pubsub_topic.js";
 import writeEnv from "./steps/write_env.js";
 import createQueue from "./steps/create_queue.js";
 import updateQueue from "./steps/update_queue.js";
+import addIamPolicyBinding from "./steps/add_iam_policy_binding.js";
 
 export default ({
   cloudRun,
@@ -45,6 +46,7 @@ export default ({
   env,
   serviceName,
   blockSchedule,
+  isPublic,
   host,
   containerRegistery,
   mainContainerName,
@@ -72,20 +74,29 @@ export default ({
   checkInSchedule,
 }) => {
   const database = databaseName({ procedure: "event-store", service, domain });
+  // Block creation encrypts event payloads and snapshot state with the
+  // `private` key unless blossm.yaml sets `isPublic`. The entrypoints apply
+  // this same truthiness to the value in config.json, so a public store gets
+  // neither the key nor the grant. Every store signs with `producer`.
+  const encrypts = !isPublic;
   const blockchainKeys = [
     createKeyRing({
       name: `${serviceName}-blockchain`,
       location: "global",
       project,
     }),
-    createSymmetricEncryptKey({
-      name: "private",
-      ring: `${serviceName}-blockchain`,
-      location: "global",
-      rotation: "90d",
-      next: "+p90d",
-      project,
-    }),
+    ...(encrypts
+      ? [
+          createSymmetricEncryptKey({
+            name: "private",
+            ring: `${serviceName}-blockchain`,
+            location: "global",
+            rotation: "90d",
+            next: "+p90d",
+            project,
+          }),
+        ]
+      : []),
     createAsymmetricSignKey({
       name: "producer",
       ring: `${serviceName}-blockchain`,
@@ -109,6 +120,62 @@ export default ({
     };
     return [createQueue(queue), updateQueue(queue)];
   });
+  const topics = actions.map((action) =>
+    createPubsubTopic({ action, domain, service, project }),
+  );
+  // Cloud Run keeps a service's previous identity when none is passed, so the
+  // default is named explicitly and the grants below always match the
+  // revision. Builds are submitted to `project`, so Cloud Build substitutes
+  // its number into the default compute account Cloud Run would use.
+  const runtime =
+    cloudRun?.serviceAccount ??
+    "${PROJECT_NUMBER}-compute@developer.gserviceaccount.com";
+  // Task and Scheduler requests arrive with this account's OIDC token.
+  const executer = `executer@${project}.iam.gserviceaccount.com`;
+  // Without a condition choice, gcloud will not add a binding non-interactively
+  // to a policy that already holds a conditional one. KMS keys, service
+  // accounts and Cloud Run services accept an explicit unconditional choice,
+  // which leaves the conditional bindings in place. The GA topic and queue
+  // commands have no such flag and must not be given one.
+  const unconditional = "--condition=None";
+  const key = (name) => ({
+    group: ["kms", "keys"],
+    name,
+    flags: [
+      `--keyring=${serviceName}-blockchain`,
+      "--location=global",
+      unconditional,
+    ],
+  });
+  // What the running store calls: KMS for blocks, its topics for publication,
+  // and its create-block queue to continue a full block as the executer.
+  // Callers that enqueue `add` on the store queue hold their own grants.
+  const runtimeBindings = [
+    ...(encrypts
+      ? [{ ...key("private"), role: "roles/cloudkms.cryptoKeyEncrypter" }]
+      : []),
+    { ...key("producer"), role: "roles/cloudkms.signer" },
+    { ...key("producer"), role: "roles/cloudkms.publicKeyViewer" },
+    ...actions.map((action) => ({
+      group: ["pubsub", "topics"],
+      name: `${action}.${domain}.${service}`,
+      role: "roles/pubsub.publisher",
+    })),
+    {
+      group: ["tasks", "queues"],
+      name: `event-store-${service}-${domain}-create-block`,
+      flags: [`--location=${region}`],
+      role: "roles/cloudtasks.enqueuer",
+    },
+    {
+      group: ["iam", "service-accounts"],
+      name: executer,
+      flags: [unconditional],
+      role: "roles/iam.serviceAccountUser",
+    },
+  ].map((binding) =>
+    addIamPolicyBinding({ ...binding, member: runtime, project }),
+  );
   return [
     yarnInstall,
     ...(runUnitTests ? [unitTests] : []),
@@ -147,8 +214,13 @@ export default ({
             containerRegistery,
             procedure,
           }),
+          // Everything the store uses at startup exists and is granted
+          // before its first revision starts.
+          ...queues,
+          ...topics,
+          ...runtimeBindings,
           deployRun({
-            cloudRun,
+            cloudRun: { ...cloudRun, serviceAccount: runtime },
             serviceName,
             procedure,
             extension: imageExtension,
@@ -196,7 +268,14 @@ export default ({
             }),
             labels: { domain, service },
           }),
-          ...queues,
+          addIamPolicyBinding({
+            group: ["run", "services"],
+            name: serviceName,
+            flags: [`--region=${region}`, "--platform=managed", unconditional],
+            member: executer,
+            role: "roles/run.invoker",
+            project,
+          }),
           // startDnsTransaction({ dnsZone, project }),
           // addDnsTransaction({ uri, dnsZone, project }),
           // executeDnsTransaction({ dnsZone, project }),
@@ -207,14 +286,6 @@ export default ({
           //   project,
           //   region,
           // }),
-          ...actions.map((action) =>
-            createPubsubTopic({
-              action,
-              domain,
-              service,
-              project,
-            })
-          ),
           scheduleJob({
             name: `event-store-${service}-${domain}-create-block`,
             schedule: blockSchedule,
