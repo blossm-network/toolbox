@@ -2,14 +2,15 @@ import roboSay from "@blossm/robo-say";
 import rootDir from "@blossm/cli-root-dir";
 import environmentPrefix from "@blossm/cli-root-dir/environment_prefix.js";
 import hash from "@blossm/operation-hash";
+import directCallees from "./src/direct_callees.js";
 import environmentName from "@blossm/node-external-token/environment_name.js";
 import { promisify } from "util";
 import yaml from "yaml";
 import path from "path";
 import fs from "fs-extra";
 import chalk from "chalk";
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -76,7 +77,12 @@ const envProject = ({ env, config }) => {
   }
 };
 const envRedisHost = ({ env, config }) => {
-  if (!config.vendors.cache || !config.vendors.cache.redis || !config.vendors.cache.redis.host) return;
+  if (
+    !config.vendors.cache ||
+    !config.vendors.cache.redis ||
+    !config.vendors.cache.redis.host
+  )
+    return;
   switch (env) {
     case "production":
       return config.vendors.cache.redis.host.production;
@@ -92,7 +98,12 @@ const envRedisHost = ({ env, config }) => {
 };
 
 const envRedisPort = ({ env, config }) => {
-  if (!config.vendors.cache || !config.vendors.cache.redis || !config.vendors.cache.redis.port) return;
+  if (
+    !config.vendors.cache ||
+    !config.vendors.cache.redis ||
+    !config.vendors.cache.redis.port
+  )
+    return;
   switch (env) {
     case "production":
       return config.vendors.cache.redis.port.production;
@@ -257,12 +268,11 @@ const copyScript = async (scriptDir, workingDir) => {
   try {
     await access(scripts, fs.constants.R_OK);
   } catch (err) {
-    //eslint-disable-next-line no-console
     console.error(
       roboSay(
         "Full view store scripts not found. Reach out to bugs@blossm.network please, it's in everyone's best interest.",
-        red.bold("internal error")
-      )
+        red.bold("internal error"),
+      ),
     );
     fs.removeSync(workingDir);
     process.exit(1);
@@ -275,12 +285,11 @@ const copyTemplate = async (templateDir, workingDir) => {
   try {
     await access(template, fs.constants.R_OK);
   } catch (err) {
-    //eslint-disable-next-line no-console
     console.error(
       roboSay(
         "The deploy template not found. Reach out to bugs@blossm.network please, it's in everyone's best interest.",
-        red.bold("internal error")
-      )
+        red.bold("internal error"),
+      ),
     );
     fs.removeSync(workingDir);
     process.exit(1);
@@ -293,12 +302,11 @@ const copySource = async (p, workingDir) => {
   try {
     await access(srcDir, fs.constants.R_OK);
   } catch (err) {
-    //eslint-disable-next-line no-console
     console.error(
       roboSay(
-        "The provided path isn't reachable. Double check it's correct and give it another go."
+        "The provided path isn't reachable. Double check it's correct and give it another go.",
       ),
-      red.bold("error")
+      red.bold("error"),
     );
     fs.removeSync(workingDir);
     process.exit(1);
@@ -309,21 +317,21 @@ const copySource = async (p, workingDir) => {
 const topicsForDependencies = (config, events) => {
   const array = (events || [])
     .map((e) =>
-      e.actions.map((a) => `${a}.${e.domain}.${e.service || config.service}`)
+      e.actions.map((a) => `${a}.${e.domain}.${e.service || config.service}`),
     )
     .flat()
     .concat(
       (config.procedure == "command-gateway" &&
         config.commands.some(
-          (c) => c.protection == undefined || c.protection == "strict"
+          (c) => c.protection == undefined || c.protection == "strict",
         )) ||
         (config.procedure == "view-gateway" &&
           config.views.some(
-            (v) => v.protection == undefined || v.protection == "strict"
+            (v) => v.protection == undefined || v.protection == "strict",
           )) ||
         (config.procedure == "fact-gateway" &&
           config.facts.some(
-            (f) => f.protection == undefined || f.protection == "strict"
+            (f) => f.protection == undefined || f.protection == "strict",
           ))
         ? [
             "start.session.base",
@@ -332,7 +340,7 @@ const topicsForDependencies = (config, events) => {
             "create.role.base",
             "add-roles.principal.base",
           ]
-        : []
+        : [],
     );
   return [...new Set(array)];
 };
@@ -346,7 +354,7 @@ const eventStoreDependencies = ({ dependencies }) => {
         (d) =>
           d.procedure == "event-store" &&
           d.domain == dependency.domain &&
-          d.service == dependency.service
+          d.service == dependency.service,
       )
     ) {
       result.push({
@@ -491,7 +499,7 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
           name: "principals",
           domain: "group",
           service: "core",
-          network: localCoreNetwork
+          network: localCoreNetwork,
         },
         {
           procedure: "fact-gateway",
@@ -509,7 +517,7 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
     case "command-gateway": {
       const dependencies = [
         ...(config.commands.some(
-          (c) => c.protection == undefined || c.protection == "strict"
+          (c) => c.protection == undefined || c.protection == "strict",
         )
           ? tokenDependencies
           : []),
@@ -530,7 +538,7 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
     case "view-gateway":
       return [
         ...(config.views.some(
-          (s) => s.protection == undefined || s.protection == "strict"
+          (s) => s.protection == undefined || s.protection == "strict",
         )
           ? tokenDependencies
           : []),
@@ -547,7 +555,7 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
     case "fact-gateway": {
       return [
         ...(config.facts.some(
-          (f) => f.protection == undefined || f.protection == "strict"
+          (f) => f.protection == undefined || f.protection == "strict",
         )
           ? tokenDependencies
           : []),
@@ -582,7 +590,7 @@ const writeConfig = ({
   if (!config.testing.dependencies) config.testing.dependencies = [];
 
   const { dependencies, events } = resolveTransientInfo(
-    addDefaultDependencies({ config, localCoreNetwork })
+    addDefaultDependencies({ config, localCoreNetwork }),
   );
 
   const adjustedDependencies = [];
@@ -654,7 +662,7 @@ const writeConfig = ({
               ...(dependency.context || dependency.procedure == "view-composite"
                 ? [dependency.context]
                 : []),
-              dependency.procedure
+              dependency.procedure,
             )}.${localNetwork}`,
             mocks: dependency.mocks,
           });
@@ -714,7 +722,9 @@ const configure = async (workingDir, configFn, env, strict) => {
 
   try {
     const config = yaml.parse(fs.readFileSync(configPath, "utf8"));
-    const baseConfig = (await import(baseConfigPath, { with: { type: "json" } })).default;
+    const baseConfig = (
+      await import(baseConfigPath, { with: { type: "json" } })
+    ).default;
 
     writePackage({ config, baseConfig, workingDir });
     delete config.dependencies;
@@ -736,8 +746,8 @@ const configure = async (workingDir, configFn, env, strict) => {
       coreNetworkSuffix == network
         ? `${envUriSpecifier}${coreNetworkSuffix}`
         : env == "production"
-        ? coreNetworkSuffix
-        : `snd.${coreNetworkSuffix}`;
+          ? coreNetworkSuffix
+          : `snd.${coreNetworkSuffix}`;
 
     const dnsZone = config.dnsZone || blossmConfig.vendors.cloud.gcp.dnsZone;
 
@@ -752,9 +762,8 @@ const configure = async (workingDir, configFn, env, strict) => {
     const envVars = config.env && config.env[env];
     const devEnvVars = config.devEnv && config.devEnv[env];
 
-    const dependencyKeyEnvironmentVariables = envDependencyKeyEnvironmentVariables(
-      { env, config: blossmConfig }
-    );
+    const dependencyKeyEnvironmentVariables =
+      envDependencyKeyEnvironmentVariables({ env, config: blossmConfig });
 
     const rolesBucket = envRolesBucket({ env, config: blossmConfig });
     const secretBucket = envSecretsBucket({ env, config: blossmConfig });
@@ -768,10 +777,11 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     const containerRegistery =
       registry({ env, config: blossmConfig }) || `us.gcr.io/${project}`;
-    const baseContainerRegistery = envBaseContainerRegistry({
-      env,
-      config: blossmConfig,
-    }) || containerRegistery;
+    const baseContainerRegistery =
+      envBaseContainerRegistry({
+        env,
+        config: blossmConfig,
+      }) || containerRegistery;
 
     const mainContainerName = "main";
 
@@ -782,6 +792,11 @@ const configure = async (workingDir, configFn, env, strict) => {
     const host = `${region}.${envUriSpecifier}${network}`;
 
     const computeUrlId = envComputeUrlId({ env, config: blossmConfig });
+
+    // Read before the test configuration below rewrites the dependencies.
+    const callees = directCallees(config, {
+      coreIsOwn: coreNetworkSuffix == network,
+    });
 
     writeConfig({
       config,
@@ -795,6 +810,8 @@ const configure = async (workingDir, configFn, env, strict) => {
 
     writeBuild({
       workingDir,
+      callees,
+      keys: config.keys,
       env,
       publicKeyUrl,
       region,
@@ -883,14 +900,13 @@ const configure = async (workingDir, configFn, env, strict) => {
       ...custom,
     });
   } catch (e) {
-    //eslint-disable-next-line no-console
     console.error(e);
-    //eslint-disable-next-line no-console
+
     console.error(
       roboSay(
-        "blossm.yaml isn't parseable. Double check it's correct and give it another go."
+        "blossm.yaml isn't parseable. Double check it's correct and give it another go.",
       ),
-      red.bold("error")
+      red.bold("error"),
     );
     fs.removeSync(workingDir);
     process.exit(1);
@@ -913,7 +929,7 @@ export default async ({
     scriptDir,
     "..",
     eventStoreKind(rootDir.config()),
-    "deploy/src"
+    "deploy/src",
   );
   if (fs.existsSync(overlay)) await fs.copy(overlay, workingDir);
   await copySource(sourcePath, workingDir);

@@ -1,6 +1,6 @@
 import yaml from "yaml";
 import path from "path";
-import fs from 'fs';
+import fs from "fs";
 
 import viewStore from "./view_store.js";
 import commandGateway from "./command_gateway.js";
@@ -12,6 +12,7 @@ import eventStore from "./event_store.js";
 import job from "./job.js";
 import fact from "./fact.js";
 import viewComposite from "./view_composite.js";
+import callerBindings from "./caller_bindings.js";
 
 const checkInPath = "_check-in";
 const checkInSchedule = "0 * * * *";
@@ -530,6 +531,8 @@ const imageExtension = ({ service, context, domain, name, procedure }) => {
 };
 
 export default ({
+  callees,
+  keys,
   cloudRun,
   eventStore: eventStoreKind,
   postgres,
@@ -590,67 +593,83 @@ export default ({
 
   const runUnitTests = fs.existsSync(path.resolve(workingDir, "test/unit"));
   const runBaseUnitTests = fs.existsSync(
-    path.resolve(workingDir, "base_test/unit")
+    path.resolve(workingDir, "base_test/unit"),
   );
   const runIntegrationTests = fs.existsSync(
-    path.resolve(workingDir, "test/integration")
+    path.resolve(workingDir, "test/integration"),
   );
   const runBaseIntegrationTests = fs.existsSync(
-    path.resolve(workingDir, "base_test/integration")
+    path.resolve(workingDir, "base_test/integration"),
   );
 
   const build = {
-    steps: steps({
-      cloudRun,
-      eventStore: eventStoreKind,
-      postgres,
-      imageExtension: i,
-      region,
-      domain,
-      name,
-      localCoreNetwork,
-      localNetwork,
-      actions,
-      events,
-      publicKeyUrl,
-      project,
-      network,
-      context,
-      bootstrapContext,
-      memory,
-      procedure,
-      envVars,
-      devEnvVars,
-      envUriSpecifier,
-      dependencyKeyEnvironmentVariables,
-      containerRegistery,
-      mainContainerName,
-      dnsZone,
-      service,
-      timeout,
-      env,
-      host,
-      redisHost,
-      redisPort,
-      blockSchedule,
-      isPublic,
-      coreNetwork,
-      computeUrlId,
-      operationHash,
-      operationName,
-      mongodbHost,
-      mongodbUser,
-      mongodbProtocol,
-      rolesBucket,
-      secretBucket,
-      secretBucketKeyLocation,
-      secretBucketKeyRing,
-      runUnitTests,
-      runBaseUnitTests,
-      runIntegrationTests,
-      runBaseIntegrationTests,
-      strict,
-    }).flat(),
+    steps: [
+      ...steps({
+        cloudRun,
+        eventStore: eventStoreKind,
+        postgres,
+        imageExtension: i,
+        region,
+        domain,
+        name,
+        localCoreNetwork,
+        localNetwork,
+        actions,
+        events,
+        publicKeyUrl,
+        project,
+        network,
+        context,
+        bootstrapContext,
+        memory,
+        procedure,
+        envVars,
+        devEnvVars,
+        envUriSpecifier,
+        dependencyKeyEnvironmentVariables,
+        containerRegistery,
+        mainContainerName,
+        dnsZone,
+        service,
+        timeout,
+        env,
+        host,
+        redisHost,
+        redisPort,
+        blockSchedule,
+        isPublic,
+        coreNetwork,
+        computeUrlId,
+        operationHash,
+        operationName,
+        mongodbHost,
+        mongodbUser,
+        mongodbProtocol,
+        rolesBucket,
+        secretBucket,
+        secretBucketKeyLocation,
+        secretBucketKeyRing,
+        runUnitTests,
+        runBaseUnitTests,
+        runIntegrationTests,
+        runBaseIntegrationTests,
+        strict,
+      }).flat(),
+      // Cloud Run access is granted once the service and its queues exist.
+      ...(strict
+        ? callerBindings({
+            procedure,
+            name,
+            context,
+            callees,
+            keys,
+            cloudRun,
+            serviceName: `${region}-${operationName}-${operationHash}`,
+            region,
+            project,
+          })
+        : []),
+    ],
     // A user-specified build identity must choose its own log destination.
     ...(buildServiceAccount && {
       serviceAccount: `projects/${project}/serviceAccounts/${buildServiceAccount}`,
