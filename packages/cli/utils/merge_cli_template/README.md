@@ -127,10 +127,14 @@ The runtime-identity grants are only made when the procedure has a configured
 runtime identity. Without one the service runs as the project's default
 account, whose access the build does not manage.
 
+A configured build identity takes the same key grants for itself at the start
+of every build, dry runs included, because the integration suites use the real
+keys. It can do so with the `roles/cloudkms.admin` it already needs.
+
 What stays a one-time operator step per identity: creating the service
-account, letting the build identity act as it
-(`roles/iam.serviceAccountUser`), and any access the build identity itself
-needs for integration suites that use real cloud resources.
+account and letting the build identity act as it
+(`roles/iam.serviceAccountUser`). Automating either would need a project-wide
+IAM role on the build identity.
 
 ## Event-store deployment IAM
 

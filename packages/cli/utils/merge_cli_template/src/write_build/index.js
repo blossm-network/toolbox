@@ -12,7 +12,7 @@ import eventStore from "./event_store.js";
 import job from "./job.js";
 import fact from "./fact.js";
 import viewComposite from "./view_composite.js";
-import callerBindings from "./caller_bindings.js";
+import callerBindings, { keyBindings } from "./caller_bindings.js";
 
 const checkInPath = "_check-in";
 const checkInSchedule = "0 * * * *";
@@ -604,6 +604,11 @@ export default ({
 
   const build = {
     steps: [
+      // The suites use the declared keys as the build identity, in dry runs
+      // too. A build on the project's default identity manages its own access.
+      ...(buildServiceAccount && procedure != "event-store"
+        ? keyBindings({ keys, member: buildServiceAccount, project })
+        : []),
       ...steps({
         cloudRun,
         eventStore: eventStoreKind,
