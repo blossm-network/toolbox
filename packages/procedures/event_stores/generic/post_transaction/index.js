@@ -5,6 +5,8 @@ export default ({
   eventData,
   saveEventsFn,
   normalizeTransactionFn,
+  // Optional adapter casting; the returned payload is hashed and persisted as is.
+  normalizePayloadFn = (payload) => payload,
   reserveRootCountsFn,
   tx: { path: txPath = [], claims: txClaims, id: txId, ip: txIp } = {},
 }) => async (transaction) => {
@@ -14,6 +16,12 @@ export default ({
     ...(txIp && { ip: txIp }),
     path: txPath,
   });
+
+  const payloads = await Promise.all(
+    eventData.map(({ event }) =>
+      normalizePayloadFn(event.payload === undefined ? {} : event.payload)
+    )
+  );
 
   const eventRootCounts = eventData.reduce((result, { event }) => {
     if (result[event.headers.root] == undefined) result[event.headers.root] = 0;
@@ -46,15 +54,19 @@ export default ({
   const normalizedEvents = [];
 
   const eventDataByRoot = {};
-  for (const { event, number } of eventData) {
+  for (const [index, { event, number }] of eventData.entries()) {
     if (eventDataByRoot[event.headers.root] == undefined)
       eventDataByRoot[event.headers.root] = [];
-    eventDataByRoot[event.headers.root].push({ event, number });
+    eventDataByRoot[event.headers.root].push({
+      event,
+      number,
+      payload: payloads[index],
+    });
   }
   await Promise.all(
     Object.keys(eventDataByRoot).map(async (key) => {
       await Promise.all(
-        eventDataByRoot[key].map(async ({ event, number }) => {
+        eventDataByRoot[key].map(async ({ event, number, payload }) => {
           if (!eventNumberOffsets[event.headers.root])
             eventNumberOffsets[event.headers.root] = 0;
 
@@ -98,7 +110,6 @@ export default ({
           const context = event.context || {};
           const groupsAdded = event.groupsAdded;
           const groupsRemoved = event.groupsRemoved;
-          const payload = event.payload === undefined ? {} : event.payload;
           const hashedPayload = deps.hash(payload).create();
           const hashedContext = deps.hash(context).create();
           const hashedGroupsAdded =
