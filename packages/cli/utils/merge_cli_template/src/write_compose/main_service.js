@@ -1,4 +1,5 @@
 import databaseName from "../database_name.js";
+import { localPostgresEnv } from "./postgres_service.js";
 
 export default ({
   procedure,
@@ -27,6 +28,7 @@ export default ({
   mongodbProtocol,
   envVars,
   devEnvVars,
+  eventStore,
 }) => {
   const common = {
     container_name: mainContainerName,
@@ -99,7 +101,9 @@ export default ({
         ...common,
         environment: {
           ...common.environment,
-          ...commonDatabaseEnv,
+          ...(eventStore == "postgres"
+            ? localPostgresEnv(databaseName({ procedure, service, domain }))
+            : commonDatabaseEnv),
           DOMAIN: domain,
           SERVICE: service,
         },

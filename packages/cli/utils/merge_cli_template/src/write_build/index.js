@@ -17,6 +17,9 @@ const checkInPath = "_check-in";
 const checkInSchedule = "0 * * * *";
 
 const steps = ({
+  cloudRun,
+  eventStore: eventStoreKind,
+  postgres,
   region,
   domain,
   name,
@@ -68,6 +71,7 @@ const steps = ({
   switch (procedure) {
     case "view-store":
       return viewStore({
+        cloudRun,
         imageExtension,
         region,
         name,
@@ -111,6 +115,7 @@ const steps = ({
       });
     case "view-composite":
       return viewComposite({
+        cloudRun,
         imageExtension,
         region,
         domain,
@@ -152,6 +157,9 @@ const steps = ({
       });
     case "event-store":
       return eventStore({
+        cloudRun,
+        eventStoreKind,
+        postgres,
         imageExtension,
         domain,
         actions,
@@ -196,6 +204,7 @@ const steps = ({
       });
     case "projection":
       return projection({
+        cloudRun,
         imageExtension,
         region,
         name,
@@ -238,6 +247,7 @@ const steps = ({
       });
     case "command":
       return command({
+        cloudRun,
         imageExtension,
         name,
         region,
@@ -280,6 +290,7 @@ const steps = ({
       });
     case "job":
       return job({
+        cloudRun,
         imageExtension,
         name,
         domain,
@@ -322,6 +333,7 @@ const steps = ({
       });
     case "fact":
       return fact({
+        cloudRun,
         imageExtension,
         name,
         domain,
@@ -364,6 +376,7 @@ const steps = ({
       });
     case "command-gateway":
       return commandGateway({
+        cloudRun,
         imageExtension,
         publicKeyUrl,
         region,
@@ -405,6 +418,7 @@ const steps = ({
       });
     case "view-gateway":
       return viewGateway({
+        cloudRun,
         imageExtension,
         publicKeyUrl,
         region,
@@ -443,6 +457,7 @@ const steps = ({
       });
     case "fact-gateway":
       return factGateway({
+        cloudRun,
         imageExtension,
         publicKeyUrl,
         region,
@@ -513,6 +528,10 @@ const imageExtension = ({ service, context, domain, name, procedure }) => {
 };
 
 export default ({
+  cloudRun,
+  eventStore: eventStoreKind,
+  postgres,
+  buildServiceAccount,
   workingDir,
   region,
   domain,
@@ -579,6 +598,9 @@ export default ({
 
   const build = {
     steps: steps({
+      cloudRun,
+      eventStore: eventStoreKind,
+      postgres,
       imageExtension: i,
       region,
       domain,
@@ -625,6 +647,11 @@ export default ({
       runBaseIntegrationTests,
       strict,
     }).flat(),
+    // A user-specified build identity must choose its own log destination.
+    ...(buildServiceAccount && {
+      serviceAccount: `projects/${project}/serviceAccounts/${buildServiceAccount}`,
+      options: { logging: "CLOUD_LOGGING_ONLY" },
+    }),
   };
 
   fs.writeFileSync(buildPath, yaml.stringify(build));

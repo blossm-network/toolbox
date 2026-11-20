@@ -72,6 +72,25 @@ vendors:
         region: us-central1
         timeout: 120s
         memory: 512Mi
+      # Optional per-environment deployment settings. Omit any of them to keep
+      # the defaults: us.gcr.io/<project> images, the default build and runtime
+      # identities, the `<region>-network` VPC connector and internal ingress.
+      # Services other than gateways always require an authenticated caller.
+      #
+      # registries:
+      #   development: us-east1-docker.pkg.dev/development-12345/blossm
+      # buildServiceAccounts:
+      #   development: build@development-12345.iam.gserviceaccount.com
+      # runtimeServiceAccounts:
+      #   development: runtime@development-12345.iam.gserviceaccount.com
+      # vpcConnectors:
+      #   development: null # deploy without a connector
+      # ingress:
+      #   development: all
+      # maxInstances:
+      #   development: 1
+      # minInstances:
+      #   development: 0
 
   # The event store database you want to use, and how to connect to it.
   eventStore:
@@ -87,6 +106,20 @@ vendors:
         staging: # event-store-qwert.gcp.mongodb.net
         development: # event-store-qwerty.gcp.mongodb.net
       protocol: mongodb+srv
+    # Used when `defaults.eventStore` is `postgres`. Every event store shares
+    # the database under its own `service_domain` namespace. Cloud Run mounts
+    # the Cloud SQL instance and binds the password from Secret Manager.
+    #
+    # postgres:
+    #   connections:
+    #     development:
+    #       database: blossm
+    #       user: blossm_runtime
+    #       max: 2
+    #       cloudSqlInstance: development-12345:us-central1:blossm
+    #       passwordSecret:
+    #         name: blossm-postgres-password
+    #         version: "1"
 
   # The view store database you want to use, and how to connect to it.
   viewStore:
@@ -106,9 +139,16 @@ vendors:
 # The services Blossm should use to build your application that have been specified above.
 defaults:
   viewStore: mongodb
-  eventStore: mongodb
+  eventStore: mongodb # or postgres
   cloud: gcp
   cache: redis # optional. Remove if not wanted.
+
+# Optional hostname prefix of each environment. These are the defaults.
+# environmentPrefixes:
+#   production: ""
+#   sandbox: snd.
+#   staging: stg.
+#   development: dev.
 
 # The environment your CLI will use if no flag is provided.
 defaultEnv: development

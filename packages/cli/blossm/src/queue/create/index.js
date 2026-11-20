@@ -27,7 +27,8 @@ const create = async (input) => {
   const blossmConfig = rootDir.config();
   await gcpQueue.create({
     project: envProject({ config: blossmConfig, env }),
-    location: "us-central1",
+    // Runtime tasks are enqueued in the service region.
+    location: input.region,
     name: input.name,
   });
   //eslint-disable-next-line no-console
@@ -46,6 +47,13 @@ export default async (args) => {
         type: String,
         choices: ["production", "sandbox", "staging", "development"],
         default: blossmConfig.defaultEnv || "development",
+      },
+      {
+        name: "region",
+        short: "r",
+        type: String,
+        default:
+          blossmConfig.vendors?.cloud?.gcp?.defaults?.region || "us-central1",
       },
     ],
   });

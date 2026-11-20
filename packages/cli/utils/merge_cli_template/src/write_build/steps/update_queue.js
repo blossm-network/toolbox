@@ -1,6 +1,7 @@
 export default ({
   name,
   project,
+  region,
   maxDispatchPerSecond,
   maxConcurrentDispatches,
 }) => ({
@@ -11,7 +12,7 @@ export default ({
     "queues",
     "update",
     name,
-    "--location=us-central1",
+    `--location=${region}`,
     `--max-dispatches-per-second=${maxDispatchPerSecond}`,
     `--max-concurrent-dispatches=${maxConcurrentDispatches}`,
     `--project=${project}`,

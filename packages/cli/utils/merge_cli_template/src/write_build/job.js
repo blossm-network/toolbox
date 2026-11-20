@@ -20,6 +20,7 @@ import createQueue from "./steps/create_queue.js";
 import updateQueue from "./steps/update_queue.js";
 
 export default ({
+  cloudRun,
   name,
   domain,
   region,
@@ -103,6 +104,7 @@ export default ({
             procedure,
           }),
           deployRun({
+            cloudRun,
             serviceName,
             procedure,
             extension: imageExtension,
@@ -137,6 +139,7 @@ export default ({
             },
           }),
           createQueue({
+            region,
             name: `job${service ? `-${service}` : ""}${
               domain ? `-${domain}` : ""
             }-${name}`,
@@ -145,6 +148,7 @@ export default ({
             maxConcurrentDispatches: 100,
           }),
           updateQueue({
+            region,
             name: `job${service ? `-${service}` : ""}${
               domain ? `-${domain}` : ""
             }-${name}`,
