@@ -228,16 +228,36 @@ describe("PostgreSQL event-store build", () => {
     assert(!JSON.stringify(flat).includes("local-fixture-only"));
   });
 
-  it("denies public access and forces no connector when one is disabled", () => {
+  it("denies public access and clears the connector when one is disabled", () => {
     const { deploy } = deployment(generate());
     assert.deepEqual(flag(deploy, "--ingress"), ["--ingress=all"]);
     assert.deepEqual(flag(deploy, "--no-allow-unauthenticated"), [
       "--no-allow-unauthenticated",
     ]);
     assert.deepEqual(flag(deploy, "--allow-unauthenticated"), []);
+    // Cloud Run keeps a previous revision's connector unless it is cleared.
+    assert.deepEqual(flag(deploy, "--clear-vpc-connector"), [
+      "--clear-vpc-connector",
+    ]);
     assert.deepEqual(flag(deploy, "--vpc-connector"), []);
     assert.deepEqual(flag(deploy, "--vpc-egress"), []);
     assert(!JSON.stringify(deploy).includes("allUsers"));
+  });
+
+  it("attaches a configured connector beside the Cloud SQL socket", () => {
+    const config = profile();
+    config.vendors.cloud.gcp.vpcConnectors.development = "blossm-connector";
+    const { deploy } = deployment(
+      generate({ cloudRun: cloudRun({ env, config }) }),
+    );
+    assert.deepEqual(flag(deploy, "--vpc-connector"), [
+      "--vpc-connector=blossm-connector",
+    ]);
+    assert.deepEqual(flag(deploy, "--vpc-egress"), ["--vpc-egress=all"]);
+    assert.deepEqual(flag(deploy, "--clear-vpc-connector"), []);
+    assert.deepEqual(flag(deploy, "--add-cloudsql-instances"), [
+      "--add-cloudsql-instances=blossm-network-development:us-east1:blossm-pg",
+    ]);
   });
 
   it("provisions both task queues in the service region", () => {
@@ -297,6 +317,7 @@ describe("PostgreSQL event-store build", () => {
       "--vpc-connector=us-east1-network",
     ]);
     assert.deepEqual(flag(deploy, "--vpc-egress"), ["--vpc-egress=all"]);
+    assert.deepEqual(flag(deploy, "--clear-vpc-connector"), []);
     assert.deepEqual(flag(deploy, "--ingress"), ["--ingress=internal"]);
     assert.deepEqual(flag(deploy, "--allow-unauthenticated"), []);
     for (const name of [

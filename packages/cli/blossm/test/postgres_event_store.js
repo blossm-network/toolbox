@@ -2,72 +2,19 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 import yaml from "yaml";
-import { cliDir, load } from "./load.js";
+import { load } from "./load.js";
+import {
+  scriptDir,
+  profile,
+  handlersSource,
+  procedure,
+  node,
+  deploy,
+  deployment,
+} from "./postgres_deploy_fixture.js";
 import environmentPrefix from "../../utils/cli_root_dir/environment_prefix.js";
-
-// Runs the real deploy command and generator against a temporary workspace.
-// The child's PATH holds only a recording `gcloud` double, so no cloud command
-// can run; the double copies the assembled service before the CLI removes it.
-const scriptDir = path.join(cliDir, "blossm/src/event_store/deploy");
-const deployUrl = pathToFileURL(
-  path.join(cliDir, "utils/deploy_cli_template/index.js"),
-).href;
-
-const profile = (overrides = {}) => ({
-  network: "blossm.network",
-  blockSchedule: "0 5 * * *",
-  environmentPrefixes: {
-    development: "development.",
-    staging: "staging.",
-    production: "",
-  },
-  defaultEnv: "development",
-  defaults: { eventStore: "postgres", cloud: "gcp" },
-  vendors: {
-    cloud: {
-      gcp: {
-        projects: { development: "blossm-network-development" },
-        computeUrlIds: { development: "abc123" },
-        secretsBuckets: { development: "secrets" },
-        rolesBuckets: { development: "roles" },
-        registries: {
-          development:
-            "us-east1-docker.pkg.dev/blossm-network-development/blossm",
-        },
-        buildServiceAccounts: {
-          development:
-            "blossm-build@blossm-network-development.iam.gserviceaccount.com",
-        },
-        runtimeServiceAccounts: {
-          development:
-            "blossm-session@blossm-network-development.iam.gserviceaccount.com",
-        },
-        vpcConnectors: { development: null },
-        ingress: { development: "all" },
-        maxInstances: { development: 1 },
-        minInstances: { development: 0 },
-        defaults: { region: "us-east1", timeout: "120s", memory: "512Mi" },
-      },
-    },
-    eventStore: {
-      postgres: {
-        connections: {
-          development: {
-            database: "blossm",
-            user: "blossm_runtime",
-            max: 2,
-            cloudSqlInstance: "blossm-network-development:us-east1:blossm-pg",
-            passwordSecret: { name: "blossm-postgres-password", version: "1" },
-          },
-        },
-      },
-    },
-  },
-  ...overrides,
-});
 
 const mongoProfile = () => {
   const config = profile({ defaults: { eventStore: "mongodb" } });
@@ -90,82 +37,6 @@ const mongoProfile = () => {
     },
   };
   return config;
-};
-
-const handlersSource =
-  "export default { start: (state, payload) => ({ ...state, ...payload }) };\n";
-const procedure = {
-  procedure: "event-store",
-  domain: "session",
-  service: "core",
-  actions: ["start"],
-  schema: { device: "String" },
-  indexes: ["device"],
-  testing: {
-    handlers: [{ action: "start", examples: [{ payload: { device: "a" } }] }],
-    examples: [
-      { action: "start", payload: { device: "a" } },
-      { action: "start", payload: { device: "b" } },
-    ],
-  },
-};
-
-const node = (script, args, options) =>
-  spawnSync(
-    process.execPath,
-    ["--input-type=module", "-e", script, ...args],
-    { encoding: "utf8", ...options },
-  );
-
-const deploy = (root, config, args = []) => {
-  const workspace = fs.mkdtempSync(path.join(root, "workspace-"));
-  const source = path.join(workspace, "core/session/event_store");
-  const bin = path.join(workspace, "bin");
-  const capture = path.join(workspace, "capture");
-  const calls = path.join(workspace, "gcloud-calls");
-  fs.mkdirSync(source, { recursive: true });
-  fs.mkdirSync(bin);
-  fs.writeFileSync(path.join(workspace, "config.yaml"), yaml.stringify(config));
-  fs.writeFileSync(path.join(source, "blossm.yaml"), yaml.stringify(procedure));
-  fs.writeFileSync(path.join(source, "handlers.js"), handlersSource);
-  fs.writeFileSync(
-    path.join(bin, "gcloud"),
-    `#!/bin/sh\necho "$@" >> "${calls}"\n/bin/cp -R . "${capture}"\n`,
-    { mode: 0o755 },
-  );
-  const result = node(
-    `const [deploy, dir, ...args] = process.argv.slice(1);
-     await (await import(deploy)).default({ domain: "event-store", dir })(
-       args,
-       () => ({ operationName: "store", operationHash: "hash" }),
-     );`,
-    [deployUrl, scriptDir, "--env", "development", ...args],
-    { cwd: source, env: { PATH: bin, TMPDIR: workspace } },
-  );
-  const read = (file) => fs.readFileSync(path.join(capture, file), "utf8");
-  return {
-    result,
-    capture,
-    read,
-    calls: fs.existsSync(calls)
-      ? fs.readFileSync(calls, "utf8").trim().split("\n")
-      : [],
-    remaining: fs
-      .readdirSync(workspace)
-      .filter((entry) => entry.startsWith("blossm-")),
-  };
-};
-
-const deployment = (build) => {
-  const index = build.steps.findIndex((step) => step.args?.includes("deploy"));
-  return {
-    args: build.steps[index]?.args,
-    variables:
-      index > 0 &&
-      JSON.parse(
-        Buffer.from(build.steps[index - 1].args.at(-1), "base64").toString(),
-      ),
-  };
 };
 
 // The status expectations the generated integration suite will load.
@@ -225,26 +96,44 @@ describe("PostgreSQL event-store deployment", function () {
     );
     assert.equal(build.options.logging, "CLOUD_LOGGING_ONLY");
     const { args, variables } = deployment(build);
-    for (const expected of [
+    // The complete command: no flag beyond the profile and no public access.
+    assert.deepEqual(args, [
+      "run",
+      "deploy",
+      "us-east1-store-hash",
       "--image=us-east1-docker.pkg.dev/blossm-network-development/blossm/event-store.core.session",
-      "--add-cloudsql-instances=blossm-network-development:us-east1:blossm-pg",
-      "--set-secrets=PG_PASSWORD=blossm-postgres-password:1",
-      "--service-account=blossm-session@blossm-network-development.iam.gserviceaccount.com",
+      "--platform=managed",
+      "--memory=512Mi",
+      "--timeout=120s",
+      "--clear-vpc-connector",
       "--no-allow-unauthenticated",
       "--ingress=all",
+      "--service-account=blossm-session@blossm-network-development.iam.gserviceaccount.com",
       "--max-instances=1",
       "--min-instances=0",
+      "--add-cloudsql-instances=blossm-network-development:us-east1:blossm-pg",
+      "--set-secrets=PG_PASSWORD=blossm-postgres-password:1",
+      "--project=blossm-network-development",
       "--region=us-east1",
-    ])
-      assert(args.includes(expected), expected);
-    assert(!args.some((arg) => arg.startsWith("--vpc-")));
+      "--env-vars-file=.blossm-cloud-run-env.json",
+      "--labels=procedure=event-store,hash=hash,domain=session,service=core,",
+    ]);
+    assert.deepEqual(
+      Object.fromEntries(
+        Object.entries(variables).filter(([key]) => key.startsWith("PG_")),
+      ),
+      {
+        PG_HOST: "/cloudsql/blossm-network-development:us-east1:blossm-pg",
+        PG_DATABASE: "blossm",
+        PG_USER: "blossm_runtime",
+        PG_MAX: "2",
+        PG_NAMESPACE: "core_session",
+      },
+    );
+    // The image is built, pushed and deployed from the configured registry.
+    assert(!read("build.yaml").includes("gcr.io/blossm-network-development"));
     assert.equal(variables.NETWORK, "development.blossm.network");
     assert.equal(variables.HOST, "us-east1.development.blossm.network");
-    assert.equal(
-      variables.PG_HOST,
-      "/cloudsql/blossm-network-development:us-east1:blossm-pg",
-    );
-    assert.equal(variables.PG_NAMESPACE, "core_session");
     assert(!read("build.yaml").includes("us-central1"));
 
     const compose = yaml.parse(read("docker-compose.yaml"));
@@ -322,6 +211,31 @@ describe("PostgreSQL event-store deployment", function () {
         (config.vendors.cloud.gcp.runtimeServiceAccounts.development = "allUsers"),
       /runtimeServiceAccounts\.development/,
     ],
+    [
+      "an invalid build identity",
+      (config) =>
+        (config.vendors.cloud.gcp.buildServiceAccounts.development =
+          "someone@example.com"),
+      /buildServiceAccounts\.development/,
+    ],
+    [
+      "an invalid registry",
+      (config) =>
+        (config.vendors.cloud.gcp.registries.development = "bad registry"),
+      /registries\.development/,
+    ],
+    [
+      "an invalid Cloud SQL instance",
+      (config) =>
+        (config.vendors.eventStore.postgres.connections.development.cloudSqlInstance =
+          "blossm-pg"),
+      /cloudSqlInstance/,
+    ],
+    [
+      "an invalid environment prefix",
+      (config) => (config.environmentPrefixes.development = "development"),
+      /environmentPrefixes\.development/,
+    ],
   ]) {
     it(`rejects ${name} before any gcloud command`, () => {
       const config = profile();
@@ -361,6 +275,7 @@ describe("PostgreSQL event-store deployment", function () {
       "--ingress=internal",
     ])
       assert(args.includes(expected), expected);
+    assert(!args.includes("--clear-vpc-connector"));
     assert.equal(variables.NETWORK, "dev.blossm.network");
     assert.equal(variables.MONGODB_DATABASE, "core_session");
     assert.equal(variables.MONGODB_HOST, "mongo.example.test");

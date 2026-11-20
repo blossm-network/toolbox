@@ -26,7 +26,8 @@ export default ({
   labels = "",
   allowUnauthenticated = false,
   // Omitted options keep the historical connector and internal ingress.
-  // An explicit null connector deploys without one.
+  // An explicit null connector clears any connector a previous revision
+  // attached, because Cloud Run otherwise preserves it across deploys.
   cloudRun: {
     serviceAccount,
     vpcConnector = `${region}-network`,
@@ -72,7 +73,7 @@ export default ({
         `--timeout=${timeout}`,
         ...(vpcConnector
           ? [`--vpc-connector=${vpcConnector}`, `--vpc-egress=all`]
-          : []),
+          : ["--clear-vpc-connector"]),
         // Reachable ingress is never public access: internal services always
         // require an authenticated invoker.
         allowUnauthenticated
