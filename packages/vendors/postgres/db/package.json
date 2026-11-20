@@ -12,7 +12,8 @@
     "access": "public"
   },
   "scripts": {
-    "test": "mocha --recursive"
+    "test": "mocha --recursive --ignore \"test/integration/**\"",
+    "test:integration": "mocha --timeout 20000 \"test/integration/*.js\""
   },
   "dependencies": {
     "@blossm/logger": "^0.0.14",
