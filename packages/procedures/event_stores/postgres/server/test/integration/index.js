@@ -581,6 +581,85 @@ describe("Postgres event store integration", function () {
       ).to.equal(1);
     }));
 
+  it("should replay a known abort from the unchanged submission to one stable normalized event and notice, and reject a mixed batch whole", () =>
+    withDeclared(`${namespace}_retry`, async ({ declared, otherStores }) => {
+      const submitted = {
+        amount: "2",
+        label: 7,
+        when: "2026-01-01",
+        undeclared: true,
+      };
+      const original = structuredClone(submitted);
+      const attempts = [];
+      await declared.createTransactionFn(async (transaction) => {
+        await postTransaction({
+          ...declared,
+          saveEventsFn: async (options) => {
+            attempts.push(structuredClone(options.events[0]));
+            return declared.saveEventsFn(options);
+          },
+          eventData: [{ event: { ...event("retried"), payload: submitted } }],
+          tx: { id: 123 },
+        })(transaction);
+        // A known abort after the first attempt's writes; the driver replays.
+        if (attempts.length == 1)
+          throw Object.assign(new Error("serialization failure"), {
+            code: "40001",
+          });
+      });
+
+      expect(attempts).to.have.length(2);
+      expect(submitted).to.deep.equal(original);
+      const [first, retried] = attempts;
+      expect(retried.payload).to.deep.equal(first.payload);
+      expect(retried.headers.pHash).to.equal(first.headers.pHash);
+
+      // Only the replayed attempt is committed, as the bytes it hashed.
+      const events = await find({ store: otherStores.eventStore });
+      expect(events).to.have.length(1);
+      const [stored] = events;
+      expect(stored.hash).to.equal(retried.hash);
+      expect(stored.headers.number).to.equal(0);
+      expect(stored.payload).to.deep.equal({
+        amount: 2,
+        label: "7",
+        when: "2026-01-01T00:00:00.000Z",
+      });
+      expect(stored.headers.pHash).to.equal(hash(stored.payload).create());
+      expect(stored.headers.pHash).to.equal(first.headers.pHash);
+      expect(stored.hash).to.equal(hash(stored.headers).create());
+      expect(await declared.countFn({ root: "retried" })).to.equal(1);
+      const notices = await find({ store: otherStores.publicationsStore });
+      expect(notices).to.have.length(1);
+      expect(notices[0].hash).to.equal(stored.hash);
+      expect(notices[0].data.hash).to.equal(stored.hash);
+
+      // One uncastable payload rejects its valid neighbours too.
+      const invalid = await failure(() =>
+        declared.createTransactionFn(
+          postTransaction({
+            ...declared,
+            eventData: [
+              { event: event("valid") },
+              { event: { ...event("invalid"), payload: { amount: "many" } } },
+              { event: event("retried") },
+            ],
+            tx: { id: 123 },
+          }),
+        ),
+      );
+      expect(invalid.statusCode).to.equal(400);
+      expect(await declared.countFn({ root: "valid" })).to.equal(0);
+      expect(await declared.countFn({ root: "invalid" })).to.equal(0);
+      expect(await declared.countFn({ root: "retried" })).to.equal(1);
+      expect(await find({ store: otherStores.eventStore })).to.deep.equal(
+        events,
+      );
+      expect(
+        await find({ store: otherStores.publicationsStore }),
+      ).to.deep.equal(notices);
+    }));
+
   it("should reject an unsupported declared schema before connecting", async () => {
     const connect = fake();
     replace(deps.db, "connect", connect);
