@@ -66,3 +66,23 @@ publication, the container image, Cloud SQL connectivity or IAM.
 TEST_POSTGRES_URL=postgres://user:password@127.0.0.1:5432/database \
   yarn lerna run test:integration --scope @blossm/cli --stream
 ```
+
+## Integration suites in generated builds
+
+`src/write_build/steps/integration_suite.js` owns how every procedure's build
+runs `test:base-integration` and `test:integration`.
+
+A deploying build runs each suite directly. The first failure stops the build
+before any image push or deploy step.
+
+A test-only (dry run) build keeps going so the container logs are printed. Each
+suite records its exit status in a reserved `.blossm-dry-run-status-<script>`
+workspace file, and that step succeeds only if the record was written. The final
+step runs `docker compose logs` and then fails the build unless every suite the
+build ran recorded exactly `0`. A missing, empty or unreadable record counts as
+a failure, and a test failure is reported even when printing logs also fails.
+Cloud Build substitutes dollars in step args, so the owner doubles every shell
+dollar; the generated args never contain a bare one.
+`test/dry_run_suites.js` executes the generated shell against `yarn` and
+`docker` doubles to hold these cases, after rejecting any bare dollar and
+undoing the doubling the way Cloud Build does.

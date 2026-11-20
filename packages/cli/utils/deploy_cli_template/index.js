@@ -32,6 +32,7 @@ const build = async ({ workingDir, env }) => {
   deps.execFileSync(
     "gcloud",
     [
+      "beta",
       "builds",
       "submit",
       ".",

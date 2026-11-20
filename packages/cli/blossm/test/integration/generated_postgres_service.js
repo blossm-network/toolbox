@@ -137,7 +137,7 @@ describe("Generated PostgreSQL event-store service", function () {
     const { result, capture, read, calls } = deploy(root, profile());
     assert.equal(result.status, 0, result.stderr);
     assert.deepEqual(calls, [
-      "builds submit . --config=build.yaml --project=blossm-network-development",
+      "beta builds submit . --config=build.yaml --project=blossm-network-development",
     ]);
 
     // Link exactly the declared runtime dependencies to their workspace

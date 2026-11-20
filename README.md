@@ -332,6 +332,8 @@ Once you're ready to run unit tests and integration tests remotely:
 blossm deploy --dry-run 
 ```
 
+A dry run is test-only: it builds the service, runs the tests in Cloud Build and deploys nothing. If an integration suite fails, the build still prints the container logs and then finishes as failed, so the command exits with an error.
+
 And finally once you're ready to deploy after running unit and integration tests remotely:
 
 ```javascript
@@ -399,6 +401,10 @@ You should now have access to GCP under your new Google account!
 Install by running `~/.google-cloud-sdk/install.sh`
 
 2. Run `gcloud auth login` and login to your 
+
+3. Install the beta commands with `gcloud components install beta`. `blossm deploy` submits with `gcloud beta builds submit`, the release track that streams a build's Cloud Logging output to your terminal.
+
+4. Grant the account you deploy with `roles/logging.viewer` on each project, the permission needed to read that build output.
 
 #### Networking
 

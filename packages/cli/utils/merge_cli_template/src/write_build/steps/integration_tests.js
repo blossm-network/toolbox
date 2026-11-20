@@ -1,11 +1,3 @@
-import { nodeImage } from "../../../runtime.js";
+import { scripts, suite } from "./integration_suite.js";
 
-export default ({ strict = true } = {}) => {
-  return {
-    name: nodeImage,
-    entrypoint: strict ? "yarn" : "bash",
-    args: strict
-      ? ["test:integration"]
-      : ["-c", "yarn test:integration || exit 0"],
-  };
-};
+export default ({ strict } = {}) => suite({ script: scripts.custom, strict });
