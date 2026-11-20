@@ -41,6 +41,11 @@ description. `src/deployment_config.js` owns that validation and the optional
 `vendors.cloud.gcp` registry, identity, connector, ingress and instance
 settings.
 
+An omitted `vpcConnectors.<env>` entry keeps the `<region>-network` connector.
+A name attaches that connector with all egress. An explicit `null` deploys with
+`--clear-vpc-connector`, because Cloud Run otherwise keeps the connector of the
+previous revision.
+
 Local Compose ignores the deployment connection. It starts a disposable
 PostgreSQL 17 service with public fixture credentials, and the local entrypoint
 signs blocks with an in-process key instead of KMS. A test-only build therefore
@@ -48,3 +53,16 @@ creates no KMS key, queue, topic or Scheduler job.
 
 The adapter packages are version 0.0.1 and unpublished. Until they are on the
 registry, `yarn install` of a generated PostgreSQL service cannot resolve them.
+
+The CLI package's `test:integration` script starts the entrypoint the deploy
+command renders, with the generated local environment, against the disposable
+database named by `TEST_POSTGRES_URL`, and appends, reads and creates blocks
+over loopback HTTP. It links the service's declared dependencies to this
+workspace's packages and runs no install, Docker, Cloud Build or `gcloud`. It
+is excluded from the ordinary `test` script and does not establish registry
+publication, the container image, Cloud SQL connectivity or IAM.
+
+```sh
+TEST_POSTGRES_URL=postgres://user:password@127.0.0.1:5432/database \
+  yarn lerna run test:integration --scope @blossm/cli --stream
+```

@@ -74,7 +74,8 @@ export const buildServiceAccount = ({ env, config }) =>
   optional(config, "buildServiceAccounts", env, account, "a service account email");
 
 // Cloud Run options. An undefined entry lets the deploy step keep its default.
-// `vpcConnector: null` is an explicit request for no connector.
+// `vpcConnector: null` is an explicit request for no connector, which the
+// deploy step enforces with `--clear-vpc-connector`.
 export const cloudRun = ({ env, config }) => {
   const connectors = config.vendors.cloud.gcp.vpcConnectors;
   const vpcConnector =

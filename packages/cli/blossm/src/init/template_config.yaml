@@ -84,7 +84,7 @@ vendors:
       # runtimeServiceAccounts:
       #   development: runtime@development-12345.iam.gserviceaccount.com
       # vpcConnectors:
-      #   development: null # deploy without a connector
+      #   development: null # deploy without a connector, clearing any existing one
       # ingress:
       #   development: all
       # maxInstances:

@@ -5,10 +5,12 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "test": "mocha --recursive"
+    "test": "mocha --recursive --ignore \"test/integration/**\"",
+    "test:integration": "mocha --timeout 60000 \"test/integration/*.js\""
   },
   "devDependencies": {
     "@blossm/event-outcome-consts": "^0.0.2",
+    "@blossm/postgres-database": "^0.0.1",
     "arg": "^5.0.2",
     "chai": "^6.3.0",
     "chai-datetime": "^1.8.1",
