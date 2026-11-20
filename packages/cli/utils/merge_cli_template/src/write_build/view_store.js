@@ -175,6 +175,6 @@ export default ({
             project,
           }),
         ]
-      : [dockerComposeLogs]),
+      : [dockerComposeLogs({ runBaseIntegrationTests, runIntegrationTests })]),
   ];
 };

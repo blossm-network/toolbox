@@ -38,11 +38,14 @@ test("generated services select pinned supported runtime images", () => {
   }
   assert.equal(writeEnv().entrypoint, "node");
   assert.equal(database({}).image, mongoImage);
-  for (const step of [composeUp, composePs, composeLogs]) {
+  for (const step of [composeUp, composePs]) {
     assert.equal(step.name, dockerImage);
     assert.equal(step.entrypoint, "docker");
     assert.equal(step.args[0], "compose");
   }
+  assert.equal(composeLogs().name, dockerImage);
+  assert.equal(composeLogs().entrypoint, "sh");
+  assert.match(composeLogs().args[1], /^docker compose logs\n/);
   for (const image of [nodeImage, mongoImage, dockerImage]) {
     assert.match(image, /@sha256:[a-f0-9]{64}$/);
   }

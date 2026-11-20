@@ -5,6 +5,7 @@ import processDeps from "../../utils/deploy_cli_template/deps.js";
 
 const identity = (value) => value;
 const chalk = { green: { bold: identity }, red: { bold: identity } };
+const stdio = { stdin: {}, stdout: {}, stderr: {} };
 
 export const deployment = async ({
   input = {},
@@ -31,7 +32,7 @@ export const deployment = async ({
     path,
     chalk,
     os: { tmpdir: () => "/fixture" },
-    process: { cwd: () => "/caller", stdin: {}, stdout: {}, stderr: {} },
+    process: { cwd: () => "/caller", ...stdio },
     console: { log: (...args) => logs.push(args) },
   });
   return {
@@ -76,7 +77,25 @@ describe("CLI deployment result", () => {
       execFileSync: (...args) => calls.push(args),
     });
     await fixture.run();
-    assert.strictEqual(calls[0][0], "gcloud");
+    // Only the beta track streams a CLOUD_LOGGING_ONLY build to the terminal.
+    assert.deepStrictEqual(calls, [
+      [
+        "gcloud",
+        [
+          "beta",
+          "builds",
+          "submit",
+          ".",
+          "--config=build.yaml",
+          "--project=test",
+        ],
+        {
+          stdio: [stdio.stdin, stdio.stdout, stdio.stderr],
+          cwd: "/fixture/build",
+        },
+      ],
+    ]);
+    assert.deepStrictEqual(fixture.removed, ["/fixture/build"]);
     assert(fixture.logs.some((args) => args.includes("done")));
   });
 });

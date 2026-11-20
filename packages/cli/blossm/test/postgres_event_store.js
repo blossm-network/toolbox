@@ -57,7 +57,7 @@ describe("PostgreSQL event-store deployment", function () {
     assert.equal(result.status, 0, result.stderr);
     assert.deepEqual(calls, [
       ". --config=build.yaml --project=blossm-network-development",
-    ].map((rest) => `builds submit ${rest}`));
+    ].map((rest) => `beta builds submit ${rest}`));
     assert.deepEqual(remaining, []);
 
     const manifest = JSON.parse(read("package.json"));
