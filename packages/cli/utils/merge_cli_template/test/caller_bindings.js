@@ -2,7 +2,9 @@ import assert from "node:assert/strict";
 import hash from "@blossm/operation-hash";
 import operationShortName from "@blossm/operation-short-name";
 import directCallees from "../src/direct_callees.js";
-import callerBindings from "../src/write_build/caller_bindings.js";
+import callerBindings, {
+  keyBindings,
+} from "../src/write_build/caller_bindings.js";
 
 const runtime = "blossm-start@blossm-dev.iam.gserviceaccount.com";
 const executer = "executer@blossm-dev.iam.gserviceaccount.com";

@@ -35,6 +35,30 @@ const keyRoles = {
   decrypt: "roles/cloudkms.cryptoKeyDecrypter",
 };
 
+// The declared use of each key, granted to one member. The build identity
+// takes the same grants ahead of the suites, which use the real keys.
+export const keyBindings = ({ keys = [], member, project }) =>
+  keys.map(({ ring, name: key, location = "global", use }) => {
+    if (!ring || !key || !keyRoles[use])
+      throw new Error(
+        `Each entry of keys needs a ring, a name and a use of ${Object.keys(
+          keyRoles,
+        ).join(", ")}.`,
+      );
+    return addIamPolicyBinding({
+      group: ["kms", "keys"],
+      name: key,
+      flags: [
+        `--keyring=${ring}`,
+        `--location=${location}`,
+        "--condition=None",
+      ],
+      member,
+      role: keyRoles[use],
+      project,
+    });
+  });
+
 export default ({
   procedure,
   keys = [],
@@ -47,13 +71,6 @@ export default ({
   project,
 }) => {
   if (procedure == "event-store") return [];
-  for (const { ring, name: key, use } of keys)
-    if (!ring || !key || !keyRoles[use])
-      throw new Error(
-        `Each entry of keys needs a ring, a name and a use of ${Object.keys(
-          keyRoles,
-        ).join(", ")}.`,
-      );
   const executer = `executer@${project}.iam.gserviceaccount.com`;
   const invoke = (target, member) =>
     addIamPolicyBinding({
@@ -101,20 +118,7 @@ export default ({
               project,
             }),
           ),
-          ...keys.map(({ ring, name: key, location = "global", use }) =>
-            addIamPolicyBinding({
-              group: ["kms", "keys"],
-              name: key,
-              flags: [
-                `--keyring=${ring}`,
-                `--location=${location}`,
-                "--condition=None",
-              ],
-              member: serviceAccount,
-              role: keyRoles[use],
-              project,
-            }),
-          ),
+          ...keyBindings({ keys, member: serviceAccount, project }),
           // An enqueued task carries the executer's identity token.
           ...(queues.length
             ? [
