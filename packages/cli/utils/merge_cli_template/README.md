@@ -131,10 +131,14 @@ A configured build identity takes the same key grants for itself at the start
 of every build, dry runs included, because the integration suites use the real
 keys. It can do so with the `roles/cloudkms.admin` it already needs.
 
-What stays a one-time operator step per identity: creating the service
-account and letting the build identity act as it
-(`roles/iam.serviceAccountUser`). Automating either would need a project-wide
-IAM role on the build identity.
+`blossm deploy` itself creates a configured runtime identity that does not
+exist yet and lets the build identity deploy as it
+(`roles/iam.serviceAccountUser` on that one account). It does this with the
+credentials of the person deploying, before submitting the build, so the build
+identity holds no authority over service accounts. That first deployment needs
+a deployer who may create service accounts and set their policy, for example
+`roles/iam.serviceAccountAdmin`. An identity that already exists is left
+unchanged, and later deployments need no such role.
 
 ## Event-store deployment IAM
 

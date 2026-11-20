@@ -11,6 +11,7 @@ export const deployment = async ({
   input = {},
   execFileSync = () => {},
   testCliTemplate = async () => {},
+  ensureRuntimeIdentity = () => {},
 } = {}) => {
   const removed = [];
   const logs = [];
@@ -24,6 +25,7 @@ export const deployment = async ({
       removeSync: (target) => removed.push(target),
     },
     deps: { execFileSync },
+    ensureRuntimeIdentity,
     rootDir: {
       config: () => ({
         vendors: { cloud: { gcp: { projects: { development: "test" } } } },
@@ -97,5 +99,27 @@ describe("CLI deployment result", () => {
     ]);
     assert.deepStrictEqual(fixture.removed, ["/fixture/build"]);
     assert(fixture.logs.some((args) => args.includes("done")));
+  });
+  it("ensures the runtime identity before submitting and reports a new one", async () => {
+    const order = [];
+    const fixture = await deployment({
+      execFileSync: () => order.push("submit"),
+      ensureRuntimeIdentity: ({ workingDir, project, execFileSync }) => {
+        assert.deepStrictEqual(
+          [workingDir, project],
+          ["/fixture/build", "test"],
+        );
+        assert.equal(typeof execFileSync, "function");
+        order.push("identity");
+        return "start@test.iam.gserviceaccount.com";
+      },
+    });
+    await fixture.run();
+    assert.deepStrictEqual(order, ["identity", "submit"]);
+    assert(
+      fixture.logs.some(([line]) =>
+        line.includes("start@test.iam.gserviceaccount.com"),
+      ),
+    );
   });
 });

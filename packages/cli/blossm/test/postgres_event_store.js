@@ -55,12 +55,11 @@ describe("PostgreSQL event-store deployment", function () {
   it("assembles and submits a PostgreSQL service from blossm.yaml and handlers.js", async () => {
     const { result, read, calls, capture, remaining } = deploy(root, profile());
     assert.equal(result.status, 0, result.stderr);
-    assert.deepEqual(
-      calls,
-      [". --config=build.yaml --project=blossm-network-development"].map(
-        (rest) => `beta builds submit ${rest}`,
-      ),
-    );
+    // The gcloud double finds the runtime identity, so it is only looked up.
+    assert.deepEqual(calls, [
+      "iam service-accounts describe blossm-session@blossm-network-development.iam.gserviceaccount.com --project=blossm-network-development",
+      "beta builds submit . --config=build.yaml --project=blossm-network-development",
+    ]);
     assert.deepEqual(remaining, []);
 
     const manifest = JSON.parse(read("package.json"));
