@@ -454,8 +454,8 @@ describe("Postgres event store integration", function () {
     expect(await roots({ unsnapshottedOnly: true })).to.deep.equal([]);
   });
 
-  it("should cast declared payloads before hashing, store those bytes and guard snapshot state", async () => {
-    const other = `${namespace}_schema`;
+  // Composes a schema-declared store in its own namespace, without a server.
+  const withDeclared = async (other, fn) => {
     let declared;
     replace(deps, "eventStore", async (options) => {
       declared = options;
@@ -488,6 +488,19 @@ describe("Postgres event store integration", function () {
         isPublic: true,
       });
       restore();
+      await fn({
+        declared,
+        otherStores: await prepareStores({ database, namespace: other }),
+      });
+    } finally {
+      restore();
+      await database.query(`DROP SCHEMA IF EXISTS "${other}" CASCADE`);
+      if (running) await running.close();
+    }
+  };
+
+  it("should cast declared payloads before hashing, store those bytes and guard snapshot state", () =>
+    withDeclared(`${namespace}_schema`, async ({ declared, otherStores }) => {
       const post = (eventData) =>
         declared.createTransactionFn(
           postTransaction({
@@ -500,7 +513,6 @@ describe("Postgres event store integration", function () {
         declared.createTransactionFn(
           createBlockTransaction({ ...declared, blockLimit: 100 }),
         );
-      const otherStores = await prepareStores({ database, namespace: other });
 
       const submitted = {
         amount: "2",
@@ -567,12 +579,7 @@ describe("Postgres event store integration", function () {
       expect(
         (await find({ store: otherStores.snapshotStore })).length,
       ).to.equal(1);
-    } finally {
-      restore();
-      await database.query(`DROP SCHEMA IF EXISTS "${other}" CASCADE`);
-      if (running) await running.close();
-    }
-  });
+    }));
 
   it("should reject an unsupported declared schema before connecting", async () => {
     const connect = fake();
