@@ -75,10 +75,13 @@ export default ({
           ? [`--vpc-connector=${vpcConnector}`, `--vpc-egress=all`]
           : ["--clear-vpc-connector"]),
         // Reachable ingress is never public access: internal services always
-        // require an authenticated invoker.
-        allowUnauthenticated
-          ? "--allow-unauthenticated"
-          : "--no-allow-unauthenticated",
+        // require an authenticated invoker. A public service turns the invoker
+        // check off instead of binding allUsers, which organizations with
+        // domain restricted sharing reject while gcloud only warns. The check
+        // is restored explicitly because Cloud Run keeps it across deploys.
+        ...(allowUnauthenticated
+          ? ["--no-invoker-iam-check"]
+          : ["--no-allow-unauthenticated", "--invoker-iam-check"]),
         `--ingress=${allowUnauthenticated ? "all" : ingress}`,
         ...(serviceAccount ? [`--service-account=${serviceAccount}`] : []),
         ...(maxInstances == undefined
@@ -105,7 +108,10 @@ export default ({
           procedure,
           hash: operationHash,
           ...labels,
-        }).reduce((string, [key, value]) => (string += `${key}=${value},`), "")}`,
+        }).reduce(
+          (string, [key, value]) => (string += `${key}=${value},`),
+          "",
+        )}`,
       ],
     },
   ];

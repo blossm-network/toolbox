@@ -55,9 +55,12 @@ describe("PostgreSQL event-store deployment", function () {
   it("assembles and submits a PostgreSQL service from blossm.yaml and handlers.js", async () => {
     const { result, read, calls, capture, remaining } = deploy(root, profile());
     assert.equal(result.status, 0, result.stderr);
-    assert.deepEqual(calls, [
-      ". --config=build.yaml --project=blossm-network-development",
-    ].map((rest) => `beta builds submit ${rest}`));
+    assert.deepEqual(
+      calls,
+      [". --config=build.yaml --project=blossm-network-development"].map(
+        (rest) => `beta builds submit ${rest}`,
+      ),
+    );
     assert.deepEqual(remaining, []);
 
     const manifest = JSON.parse(read("package.json"));
@@ -107,6 +110,7 @@ describe("PostgreSQL event-store deployment", function () {
       "--timeout=120s",
       "--clear-vpc-connector",
       "--no-allow-unauthenticated",
+      "--invoker-iam-check",
       "--ingress=all",
       "--service-account=blossm-session@blossm-network-development.iam.gserviceaccount.com",
       "--max-instances=1",
@@ -137,7 +141,10 @@ describe("PostgreSQL event-store deployment", function () {
     assert(!read("build.yaml").includes("us-central1"));
 
     const compose = yaml.parse(read("docker-compose.yaml"));
-    assert.deepEqual(Object.keys(compose.services).sort(), ["main", "postgres"]);
+    assert.deepEqual(Object.keys(compose.services).sort(), [
+      "main",
+      "postgres",
+    ]);
     assert.equal(
       compose.services.main.image,
       "us-east1-docker.pkg.dev/blossm-network-development/blossm/event-store.core.session:latest",
@@ -197,7 +204,8 @@ describe("PostgreSQL event-store deployment", function () {
     ],
     [
       "a missing connection",
-      (config) => delete config.vendors.eventStore.postgres.connections.development,
+      (config) =>
+        delete config.vendors.eventStore.postgres.connections.development,
       /connections\.development/,
     ],
     [
@@ -208,7 +216,8 @@ describe("PostgreSQL event-store deployment", function () {
     [
       "an invalid runtime identity",
       (config) =>
-        (config.vendors.cloud.gcp.runtimeServiceAccounts.development = "allUsers"),
+        (config.vendors.cloud.gcp.runtimeServiceAccounts.development =
+          "allUsers"),
       /runtimeServiceAccounts\.development/,
     ],
     [
@@ -363,7 +372,10 @@ describe("PostgreSQL event-store deployment", function () {
         const { result, read } = deploy(root, config(), args, overrides);
         assert.equal(result.status, 0, result.stderr);
         // The expression the rendered entrypoint applies to config.json.
-        assert.match(read("index.js"), /isPublic: config\.isPublic \|\| false,/);
+        assert.match(
+          read("index.js"),
+          /isPublic: config\.isPublic \|\| false,/,
+        );
         const encrypts = !(JSON.parse(read("config.json")).isPublic || false);
         assert.equal(encrypts, !overrides.isPublic);
         const gcloud = yaml
@@ -380,7 +392,10 @@ describe("PostgreSQL event-store deployment", function () {
         // The private key and its one grant exist only for an encrypting store.
         assert.equal(count(gcloud, "kms keys create private"), +encrypts);
         assert.equal(count(gcloud, "kms keys describe private"), +encrypts);
-        assert.equal(count(gcloud, "roles/cloudkms.cryptoKeyEncrypter"), +encrypts);
+        assert.equal(
+          count(gcloud, "roles/cloudkms.cryptoKeyEncrypter"),
+          +encrypts,
+        );
         // No other step names the key: its ensure step and its grant.
         assert.equal(count(gcloud, " private "), encrypts ? 2 : 0);
         // Every store signs its blocks.
@@ -392,10 +407,7 @@ describe("PostgreSQL event-store deployment", function () {
         assert.deepEqual(
           grants
             .filter((call) => call.startsWith("kms "))
-            .map((call) => [
-              call.split(" ")[3],
-              call.match(/--role=(\S+)/)[1],
-            ]),
+            .map((call) => [call.split(" ")[3], call.match(/--role=(\S+)/)[1]]),
           [
             ...(encrypts
               ? [["private", "roles/cloudkms.cryptoKeyEncrypter"]]
@@ -409,7 +421,9 @@ describe("PostgreSQL event-store deployment", function () {
         // isPublic never opens the service itself.
         const deployed = gcloud.find((call) => call.startsWith("run deploy "));
         assert(deployed.includes(" --no-allow-unauthenticated "));
-        assert(!gcloud.some((call) => /allUsers|allAuthenticatedUsers/.test(call)));
+        assert(
+          !gcloud.some((call) => /allUsers|allAuthenticatedUsers/.test(call)),
+        );
       });
 
       it(`adds no IAM to a ${adapter} test-only build of ${name}`, () => {
@@ -517,7 +531,10 @@ describe("PostgreSQL event-store deployment", function () {
     delete incomplete.PG_PASSWORD;
     const refused = start(incomplete, "");
     assert.notEqual(refused.status, 0);
-    assert.match(refused.stderr, /Missing PostgreSQL configuration: PG_PASSWORD/);
+    assert.match(
+      refused.stderr,
+      /Missing PostgreSQL configuration: PG_PASSWORD/,
+    );
 
     // Deployed mode uses the Cloud Run variables and the cloud-backed functions.
     const { variables } = deployment(yaml.parse(read("build.yaml")));
@@ -533,12 +550,10 @@ describe("PostgreSQL event-store deployment", function () {
       password: "bound-by-cloud-run",
       max: 2,
     });
-    assert.deepEqual(fs.readFileSync(loaded, "utf8").trim().split("\n").sort(), [
-      "kms",
-      "pubsub",
-      "queue",
-      "token",
-    ]);
+    assert.deepEqual(
+      fs.readFileSync(loaded, "utf8").trim().split("\n").sort(),
+      ["kms", "pubsub", "queue", "token"],
+    );
   });
 
   it("declares the Mongo store's dependencies with only the adapter replaced", () => {
@@ -574,13 +589,15 @@ describe("Task queue region", () => {
       },
     }),
   });
-  const normalize = (overrides) => async ({ flags }) => ({
-    path: ".",
-    name: "queue",
-    ...Object.fromEntries(
-      flags.map((flag) => [flag.name, overrides[flag.name] ?? flag.default]),
-    ),
-  });
+  const normalize =
+    (overrides) =>
+    async ({ flags }) => ({
+      path: ".",
+      name: "queue",
+      ...Object.fromEntries(
+        flags.map((flag) => [flag.name, overrides[flag.name] ?? flag.default]),
+      ),
+    });
 
   for (const [configured, flag, expected] of [
     ["us-east1", undefined, "us-east1"],
