@@ -3,6 +3,7 @@ import deps from "./deps.js";
 export default ({
     saveEventsFn,
     normalizeTransactionFn,
+    normalizePayloadFn,
     reserveRootCountsFn,
     publishPendingFn,
     createTransactionFn,
@@ -30,6 +31,7 @@ export default ({
     await createTransactionFn(
       deps.postTransaction({
         normalizeTransactionFn,
+        ...(normalizePayloadFn && { normalizePayloadFn }),
         eventData: uniqueEventData,
         tx: req.body.tx,
         saveEventsFn,
