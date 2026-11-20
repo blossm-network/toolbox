@@ -825,6 +825,8 @@ const configure = async (workingDir, configFn, env, strict) => {
       containerRegistery,
       localNetwork,
       blockSchedule,
+      // The same parsed value the store reads from config.json at runtime.
+      isPublic: config.isPublic,
       envVars,
       devEnvVars,
       envUriSpecifier,

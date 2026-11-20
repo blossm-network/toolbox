@@ -284,6 +284,89 @@ describe("PostgreSQL event-store deployment", function () {
     assert.deepEqual(Object.keys(compose.services).sort(), ["db", "main"]);
   });
 
+  // blossm.yaml `isPublic` is read twice from one assembly: by the build
+  // generator and, through config.json, by the deployed entrypoint. These
+  // cases hold the two together for the whole deploy command.
+  for (const [adapter, config] of [
+    ["PostgreSQL", profile],
+    ["Mongo", mongoProfile],
+  ])
+    for (const [name, overrides] of [
+      ["a store without isPublic", {}],
+      ["a private store", { isPublic: false }],
+      ["a public store", { isPublic: true }],
+    ]) {
+      const rendered = (args) => {
+        const { result, read } = deploy(root, config(), args, overrides);
+        assert.equal(result.status, 0, result.stderr);
+        // The expression the rendered entrypoint applies to config.json.
+        assert.match(read("index.js"), /isPublic: config\.isPublic \|\| false,/);
+        const encrypts = !(JSON.parse(read("config.json")).isPublic || false);
+        assert.equal(encrypts, !overrides.isPublic);
+        const gcloud = yaml
+          .parse(read("build.yaml"))
+          .steps.filter((step) => step.name.includes("cloud-builders/gcloud"))
+          .map((step) => step.args.join(" "));
+        return { encrypts, gcloud };
+      };
+      const count = (gcloud, text) =>
+        gcloud.filter((call) => call.includes(text)).length;
+
+      it(`renders the ${adapter} KMS access of ${name}`, () => {
+        const { encrypts, gcloud } = rendered();
+        // The private key and its one grant exist only for an encrypting store.
+        assert.equal(count(gcloud, "kms keys create private"), +encrypts);
+        assert.equal(count(gcloud, "kms keys describe private"), +encrypts);
+        assert.equal(count(gcloud, "roles/cloudkms.cryptoKeyEncrypter"), +encrypts);
+        // No other step names the key: its ensure step and its grant.
+        assert.equal(count(gcloud, " private "), encrypts ? 2 : 0);
+        // Every store signs its blocks.
+        assert.equal(count(gcloud, "kms keyrings create"), 1);
+        assert.equal(count(gcloud, "kms keys create producer"), 1);
+        const grants = gcloud.filter((call) =>
+          call.includes("add-iam-policy-binding"),
+        );
+        assert.deepEqual(
+          grants
+            .filter((call) => call.startsWith("kms "))
+            .map((call) => [
+              call.split(" ")[3],
+              call.match(/--role=(\S+)/)[1],
+            ]),
+          [
+            ...(encrypts
+              ? [["private", "roles/cloudkms.cryptoKeyEncrypter"]]
+              : []),
+            ["producer", "roles/cloudkms.signer"],
+            ["producer", "roles/cloudkms.publicKeyViewer"],
+          ],
+        );
+        // One topic, the create-block queue, the executer and the invoker.
+        assert.equal(grants.length, (encrypts ? 3 : 2) + 4);
+        // isPublic never opens the service itself.
+        const deployed = gcloud.find((call) => call.startsWith("run deploy "));
+        assert(deployed.includes(" --no-allow-unauthenticated "));
+        assert(!gcloud.some((call) => /allUsers|allAuthenticatedUsers/.test(call)));
+      });
+
+      it(`adds no IAM to a ${adapter} test-only build of ${name}`, () => {
+        const { encrypts, gcloud } = rendered(["--dry-run"]);
+        assert.equal(count(gcloud, "iam"), 0);
+        assert.equal(count(gcloud, "run deploy"), 0);
+        // Mongo's local block creation uses KMS, so it keeps the keys its
+        // store calls. The PostgreSQL fixture has none.
+        assert.equal(
+          count(gcloud, "kms keys create private"),
+          adapter == "Mongo" ? +encrypts : 0,
+        );
+        assert.equal(
+          count(gcloud, "kms keys create producer"),
+          adapter == "Mongo" ? 1 : 0,
+        );
+        if (adapter == "PostgreSQL") assert.deepEqual(gcloud, []);
+      });
+    }
+
   it("starts the generated entrypoint locally without loading a cloud client", () => {
     const { result, read, capture } = deploy(root, profile());
     assert.equal(result.status, 0, result.stderr);

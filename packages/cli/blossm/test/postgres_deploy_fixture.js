@@ -91,7 +91,8 @@ export const node = (script, args, options) =>
     { encoding: "utf8", ...options },
   );
 
-export const deploy = (root, config, args = []) => {
+// `overrides` are merged into the store's blossm.yaml.
+export const deploy = (root, config, args = [], overrides = {}) => {
   const workspace = fs.mkdtempSync(path.join(root, "workspace-"));
   const source = path.join(workspace, "core/session/event_store");
   const bin = path.join(workspace, "bin");
@@ -100,7 +101,10 @@ export const deploy = (root, config, args = []) => {
   fs.mkdirSync(source, { recursive: true });
   fs.mkdirSync(bin);
   fs.writeFileSync(path.join(workspace, "config.yaml"), yaml.stringify(config));
-  fs.writeFileSync(path.join(source, "blossm.yaml"), yaml.stringify(procedure));
+  fs.writeFileSync(
+    path.join(source, "blossm.yaml"),
+    yaml.stringify({ ...procedure, ...overrides }),
+  );
   fs.writeFileSync(path.join(source, "handlers.js"), handlersSource);
   fs.writeFileSync(
     path.join(bin, "gcloud"),

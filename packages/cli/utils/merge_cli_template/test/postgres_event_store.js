@@ -294,7 +294,13 @@ describe("PostgreSQL event-store build", () => {
 
   it("keeps deployment keys but touches no cloud resource in a test-only build", () => {
     const kms = (steps) =>
-      steps.flat().filter((step) => step.args?.includes("kms"));
+      steps
+        .flat()
+        .filter(
+          (step) =>
+            step.args?.includes("kms") &&
+            !step.args.includes("add-iam-policy-binding"),
+        );
     assert.equal(kms(generate()).length, 3);
     const local = generate({ strict: false, postgres: undefined }).flat();
     assert.deepEqual(
@@ -320,8 +326,11 @@ describe("PostgreSQL event-store build", () => {
     assert.deepEqual(flag(deploy, "--clear-vpc-connector"), []);
     assert.deepEqual(flag(deploy, "--ingress"), ["--ingress=internal"]);
     assert.deepEqual(flag(deploy, "--allow-unauthenticated"), []);
+    // The default identity is named so the store's grants match the revision.
+    assert.deepEqual(flag(deploy, "--service-account"), [
+      "--service-account=${PROJECT_NUMBER}-compute@developer.gserviceaccount.com",
+    ]);
     for (const name of [
-      "--service-account",
       "--max-instances",
       "--min-instances",
       "--add-cloudsql-instances",
