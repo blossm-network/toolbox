@@ -1,6 +1,6 @@
 {
   "name": "@blossm/event-transaction-schema",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Builds the Mongoose schema for event transaction metadata.",
   "main": "index.js",
   "type": "module",

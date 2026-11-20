@@ -1,7 +1,7 @@
 {
   "name": "@blossm/event-store-post",
   "description": "An event store POST handler.",
-  "version": "0.0.158",
+  "version": "0.0.159",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@blossm/event-outcome-consts": "^0.0.2",
-    "@blossm/event-store-post-transaction": "^0.0.48"
+    "@blossm/event-store-post-transaction": "^0.0.49"
   },
   "devDependencies": {
     "chai-datetime": "^1.8.1",

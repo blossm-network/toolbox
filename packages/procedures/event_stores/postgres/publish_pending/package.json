@@ -1,7 +1,7 @@
 {
   "name": "@blossm/postgres-event-store-publish-pending",
   "description": "Durable PostgreSQL event notification delivery.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "type": "module",
   "author": "blossm.network",
@@ -15,8 +15,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@blossm/postgres-event-store-storage": "^0.0.1",
-    "@blossm/event-store-deliver-pending": "^0.0.2"
+    "@blossm/event-store-deliver-pending": "^0.0.2",
+    "@blossm/postgres-event-store-storage": "^0.0.2"
   },
   "devDependencies": {
     "chai": "^6.3.0",
