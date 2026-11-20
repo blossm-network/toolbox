@@ -1,0 +1,306 @@
+import { expect } from "chai";
+import { fake, replace, restore } from "sinon";
+
+import stores, {
+  find,
+  stream,
+  create,
+  save,
+  findPublications,
+  streamPendingRoots,
+  removePublication,
+  incrementPublicationAttempts,
+} from "../index.js";
+import deps from "../deps.js";
+
+const database = {};
+const eventStore = { database, kind: "events", table: '"public"."events"' };
+const snapshotStore = {
+  database,
+  kind: "snapshots",
+  table: '"public"."snapshots"',
+};
+const headers = {
+  nonce: "root_0",
+  root: "root",
+  number: 0,
+  created: "2026-10-22T00:00:00.000Z",
+  idempotency: "id",
+};
+const event = { hash: "hash", headers, payload: { count: 0 } };
+
+describe("Postgres event store storage", () => {
+  afterEach(restore);
+
+  it("initializes separate tables under one locked transaction", async () => {
+    const transaction = {};
+    const query = fake.resolves({ rows: [] });
+    const createTransaction = fake(async ({ fn }) => fn(transaction));
+    replace(deps, "db", { query, createTransaction });
+    const result = await stores({
+      database,
+      namespace: 'scope"; DROP TABLE events; --',
+      indexes: ["name"],
+    });
+    expect(createTransaction.firstCall.args[0].database).to.equal(database);
+    for (const call of query.getCalls()) {
+      expect(call.args[0].transaction).to.equal(transaction);
+      expect(call.args[0].database).to.equal(database);
+    }
+    expect(query.firstCall.args[0]).to.deep.equal({
+      database,
+      transaction,
+      text: "SELECT pg_advisory_xact_lock(hashtextextended($1, 0))",
+      values: ['blossm-event-store:scope"; DROP TABLE events; --'],
+    });
+    expect(query.secondCall.args[0].text).to.equal(
+      'CREATE SCHEMA IF NOT EXISTS "scope""; DROP TABLE events; --"',
+    );
+    expect(Object.values(result).map((store) => store.kind)).to.deep.equal([
+      "events",
+      "snapshots",
+      "counts",
+      "blockchain",
+      "publications",
+    ]);
+    expect(result.eventStore.table).to.equal(
+      '"scope""; DROP TABLE events; --"."events"',
+    );
+    const ddl = query
+      .getCalls()
+      .map((call) => call.args[0].text)
+      .join("\n");
+    expect(ddl).to.include("idempotency text NOT NULL UNIQUE");
+    expect(ddl).to.include("attempts bigint NOT NULL DEFAULT 0");
+    expect(ddl).to.include("publications_pending");
+    expect(ddl).to.include("nonce text NOT NULL UNIQUE");
+    expect(ddl).to.include("UNIQUE (root, number)");
+    expect(ddl).to.include("9007199254740991");
+    expect(ddl.match(/USING gin/g)).to.have.length(2);
+    expect(ddl).not.to.include("DROP TABLE IF");
+  });
+
+  it("rejects namespaces PostgreSQL cannot represent before touching the database", async () => {
+    const createTransaction = fake();
+    replace(deps, "db", { createTransaction });
+    for (const namespace of [
+      "",
+      null,
+      7,
+      "a\0b",
+      "n".repeat(64),
+      "é".repeat(32),
+    ])
+      try {
+        await stores({ database, namespace });
+        expect.fail("Expected rejection.");
+      } catch (error) {
+        expect(error).to.be.instanceOf(TypeError);
+      }
+    expect(createTransaction.called).to.equal(false);
+  });
+
+  it("omits optional document indexes without declaring query paths", async () => {
+    const query = fake.resolves({ rows: [] });
+    replace(deps, "db", { query, createTransaction: ({ fn }) => fn({}) });
+    const result = await stores({ database });
+    expect(result.eventStore.table).to.equal(eventStore.table);
+    expect(
+      query.getCalls().some((call) => call.args[0].text.includes("USING gin")),
+    ).to.equal(false);
+  });
+
+  it("passes parameterized queries and explicit transactions to the vendor", async () => {
+    const transaction = {};
+    const query = fake.resolves({ rows: [{ doc: event }] });
+    replace(deps, "db", { query });
+    expect(
+      await find({
+        store: eventStore,
+        query: { "headers.root": "root" },
+        transaction,
+      }),
+    ).to.deep.equal([event]);
+    expect(query.firstCall.args[0]).to.deep.equal({
+      database,
+      transaction,
+      text: 'SELECT doc FROM "public"."events" WHERE root = $1 LIMIT $2',
+      values: ["root", 100],
+    });
+  });
+
+  it("inserts a complete event batch in a single SQL statement", async () => {
+    const second = {
+      ...event,
+      hash: "next",
+      headers: { ...headers, number: 1, nonce: "root_1", idempotency: "next" },
+    };
+    const transaction = {};
+    const query = fake.resolves({ rows: [{ doc: event }, { doc: second }] });
+    replace(deps, "db", { query });
+    expect(
+      await create({ store: eventStore, data: [event, second], transaction }),
+    ).to.deep.equal([event, second]);
+    expect(query.callCount).to.equal(1);
+    const call = query.firstCall.args[0];
+    expect(call.transaction).to.equal(transaction);
+    expect(call.text).to.include(
+      "VALUES ($1, $2, $3, $4, $5, $6, $7), ($8, $9, $10, $11, $12, $13, $14)",
+    );
+    expect(call.values).to.have.length(14);
+    expect(JSON.parse(call.values[6])).to.deep.equal(event);
+    expect(JSON.parse(call.values[13])).to.deep.equal(second);
+  });
+
+  it("does not issue an invalid INSERT for an empty batch", async () => {
+    const query = fake();
+    replace(deps, "db", { query });
+    expect(await create({ store: eventStore, data: [] })).to.deep.equal([]);
+    expect(query.callCount).to.equal(0);
+  });
+
+  it("upserts snapshots by hash and preserves binary bytes", async () => {
+    const events = Buffer.from([0, 255]);
+    const doc = { hash: "snapshot", headers, state: {} };
+    const data = { ...doc, events };
+    const query = fake.resolves({ rows: [{ doc, events }] });
+    replace(deps, "db", { query });
+    expect(await save({ store: snapshotStore, data })).to.deep.equal(data);
+    expect(query.firstCall.args[0].text).to.include(
+      "ON CONFLICT (hash) DO UPDATE SET",
+    );
+    expect(query.firstCall.args[0].values.at(-1)).to.equal(events);
+  });
+
+  it("streams decoded documents without materializing the result set", async () => {
+    const events = Buffer.from([1]);
+    const doc = { hash: "snapshot", headers, state: {} };
+    const fn = fake.resolves();
+    const transaction = {};
+    const streamFake = fake(async ({ fn }) => fn({ doc, events }));
+    replace(deps, "db", { stream: streamFake });
+    await stream({
+      store: snapshotStore,
+      sort: { "headers.number": 1 },
+      parallel: 3,
+      transaction,
+      fn,
+    });
+    const call = streamFake.firstCall.args[0];
+    expect(call).to.include({ database, transaction, parallel: 3 });
+    expect(call.text).not.to.include("LIMIT");
+    expect(fn.firstCall.args[0]).to.deep.equal({ ...doc, events });
+  });
+
+  it("filters snapshot-covered roots in SQL before ordering and limiting", async () => {
+    const streamFake = fake(async ({ fn }) =>
+      fn({ root: "root", value: "2", updated: new Date(0) }),
+    );
+    replace(deps, "db", { stream: streamFake });
+    const fn = fake();
+    const transaction = {};
+    await streamPendingRoots({
+      store: { database, kind: "counts", table: '"public"."counts"' },
+      snapshotStore,
+      query: { updated: { $gte: "2026-01-01", $lt: "2026-02-01" } },
+      sort: { updated: 1, root: 1 },
+      limit: 5,
+      parallel: 2,
+      transaction,
+      fn,
+    });
+    const { text, values, ...call } = streamFake.firstCall.args[0];
+    expect(call).to.include({ database, transaction, parallel: 2 });
+    expect(text.replace(/\s+/g, " ")).to.equal(
+      "SELECT root, value, updated FROM (SELECT c.root, c.value, c.updated " +
+        'FROM "public"."counts" c WHERE c.value > COALESCE(( ' +
+        "SELECT (s.doc #>> '{headers,lastEventNumber}')::bigint " +
+        'FROM "public"."snapshots" s WHERE s.root = c.root ' +
+        "ORDER BY s.number DESC, s.created DESC LIMIT 1 ), -1) + 1) AS pending_roots " +
+        "WHERE updated >= $1 AND updated < $2 ORDER BY updated ASC, root ASC LIMIT $3",
+    );
+    expect(values).to.deep.equal(["2026-01-01", "2026-02-01", 5]);
+    expect(fn.firstCall.args[0]).to.deep.equal({
+      root: "root",
+      value: 2,
+      updated: "1970-01-01T00:00:00.000Z",
+    });
+  });
+
+  it("propagates persistence and callback failures unchanged", async () => {
+    const failure = new Error("database unavailable");
+    replace(deps, "db", {
+      query: fake.rejects(failure),
+      stream: ({ fn }) => fn({ doc: event }),
+    });
+    for (const operation of [
+      () => find({ store: eventStore }),
+      () => create({ store: eventStore, data: [event] }),
+      () =>
+        save({
+          store: snapshotStore,
+          data: { ...event, events: Buffer.from([]) },
+        }),
+      () =>
+        stream({
+          store: eventStore,
+          fn: async () => {
+            throw failure;
+          },
+        }),
+    ]) {
+      try {
+        await operation();
+        expect.fail("Expected failure.");
+      } catch (error) {
+        expect(error).to.equal(failure);
+      }
+    }
+  });
+});
+
+describe("Postgres pending publication storage", () => {
+  afterEach(restore);
+  const store = {
+    database,
+    kind: "publications",
+    table: '"public"."publications"',
+  };
+
+  it("reads a bounded batch in retry order and decodes its notice", async () => {
+    const notice = {
+      hash: "notice",
+      created: headers.created,
+      topic: "topic",
+      data: { root: "root" },
+    };
+    const query = fake.resolves({ rows: [{ doc: notice }] });
+    replace(deps, "db", { query });
+    expect(await findPublications({ store, limit: 100 })).to.deep.equal([
+      notice,
+    ]);
+    expect(query.firstCall.args[0]).to.deep.equal({
+      database,
+      text: 'SELECT doc FROM "public"."publications" ORDER BY attempts, created, hash LIMIT $1',
+      values: [100],
+    });
+  });
+
+  it("deletes and increments failed attempts only by parameterized hash", async () => {
+    const query = fake.resolves({ rows: [] });
+    replace(deps, "db", { query });
+    const hash = "notice'; DROP TABLE events; --";
+    await removePublication({ store, query: { hash } });
+    await incrementPublicationAttempts({ store, query: { hash } });
+    expect(query.firstCall.args[0]).to.deep.equal({
+      database,
+      text: 'DELETE FROM "public"."publications" WHERE hash = $1',
+      values: [hash],
+    });
+    expect(query.secondCall.args[0]).to.deep.equal({
+      database,
+      text: 'UPDATE "public"."publications" SET attempts = attempts + 1 WHERE hash = $1',
+      values: [hash],
+    });
+  });
+});
