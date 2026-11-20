@@ -52,3 +52,6 @@ is the Mongo adapter's existing behavior. When supplied, the server passes it
 through POST to the append transaction, where each payload is normalized before
 counters are reserved and before `headers.pHash` is computed. The adapter must
 then persist exactly the payload it is given; it must not cast or rehash again.
+The hook is called again on each transaction retry, so it must be deterministic
+and free of external side effects. It receives its own copy of the JSON payload
+per call; see the append transaction's README for the full contract.
