@@ -302,3 +302,11 @@ dollar; the generated args never contain a bare one.
 `test/dry_run_suites.js` executes the generated shell against `yarn` and
 `docker` doubles to hold these cases, after rejecting any bare dollar and
 undoing the doubling the way Cloud Build does.
+
+A command gateway's base suite posts to every command it routes. The generator
+copies the first payload under `testing.validate.ok` of each of the gateway's
+own commands into the gateway's `config.json` as `testing.payloads`, and the
+suite sends it, so the request passes validation and reaches the command's
+logic and its store. A command without an example is sent an empty payload.
+The suite requires a response that is not 401 and is below 500, not a success:
+a command that needs earlier state answers a valid payload with a 4xx.

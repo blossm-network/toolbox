@@ -434,12 +434,16 @@ Set up your network domain.
 
 5. Repeat steps 2 & 3 with the `sandbox` and `staging` projects using snd.[your domain] and stg.[your domain].
 
-6. Visit [this](https://www.google.com/webmasters/verification/home?hl=en) site and add your domain as a property. You’ll be given a TXT record to use. Keep this site open.
+6. Open [Search Console](https://search.google.com/search-console) and add your domain as a property.
+    * Click the property menu at the top left, then **Add property**.
+    * Choose **Domain**, enter your domain, and continue. You’ll be given a TXT record to use. Keep this site open.
 
 7. Back in the `production` project:
-    * Add a record set for your domain of type TXT. For the value, use the one show on the page from step 7. 
+    * Add a record set for your domain of type TXT. For the value, use the one shown in step 6.
 
-8. Click Verify on this site from step 7. Sometimes it takes a little while for the TXT record to propagate, so keep trying to verify if you don’t succeed at first.
+8. Click Verify in Search Console. Sometimes it takes a little while for the TXT record to propagate, so keep trying to verify if you don’t succeed at first.
+
+Once you own the domain, a Domain property for one of its subdomains, such as dev.\[your-domain\], is verified automatically when you add it.
 
 
 #### VPC
@@ -473,7 +477,7 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
    * **In IAM & Admin > IAM**, add the following roles to the **@cloudbuild.gserviceaccount.com** service account (the same one from the previous step):
       * **Cloud Run Admin** - allows the build process to deploy services.
       * **Cloud Tasks Queue Admin** - to create queues.
-      * **DNS Administrator** - to configure domains.
+      * **DNS Administrator** - to configure domains. This role can be granted on the environment's DNS zone alone instead of the whole project: a build only reads and adds records in that zone.
       * **Pub/Sub Admin** - to create topics and subscriptions.
       * **Cloud Scheduler Admin** - to create and modify jobs.
       * **Cloud KMS CryptoKey Signer/Verifier** - to sign and verify messages. Used in integration tests.
@@ -486,6 +490,8 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
       * **Cloud KMS CryptoKey Encrypter/Decrypter** - to decrypt encrypted values.
       * **Cloud KMS CryptoKey Signer/Verifier** - to sign data with encryption keys, and verify the signatures.
 
+   **Alternative: a named build identity.** Instead of the default **@cloudbuild.gserviceaccount.com** account, builds can run as a service account you create, named under `vendors.cloud.gcp.buildServiceAccounts.<env>` in **config.yaml**. Give it the build roles listed above, plus **Logs Writer** on the project, and **Storage Object Viewer** on the bucket `gs://[project-id]_cloudbuild` that `blossm deploy` uploads source to. Use its email wherever these instructions name the Cloud Build account, including domain ownership in step 3. Each person who deploys needs **Service Account User** on it, **Cloud Build Editor**, **Service Usage Consumer** and **Logs Viewer** on the project, and **Storage Object Admin** on that bucket.
+
    **Narrower alternative: one identity per service.** Instead of sharing the default identity above, a procedure can name its own runtime identity under `runtimeServiceAccounts.<env>` in its `blossm.yaml`. `blossm deploy` then creates that identity if it is missing, using the deployer's own credentials, and the build grants it exactly the services, queues and declared keys the procedure uses. No per-service IAM commands are needed. The first deployment of a new identity needs a deployer who may create service accounts and set their policy. See [Access granted by each deployment](packages/cli/utils/merge_cli_template/README.md#access-granted-by-each-deployment).
    * In **IAM & Admin > Service Accounts**
       * Create a service account named **“Executer”** with ID **executer@**. Give it roles:     
@@ -497,13 +503,16 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
 2. Repeat step 1 with the `production`, `sandbox` and `staging` projects.
 
 3. In the **development** project:
-    * Give the **@cloudbuild.gserviceaccount.com** service account ownership over the domain you registered in the Networking section by going to [this site](https://search.google.com/u/1/search-console/users?resource_id=sc-domain), selecting your domain from the top-left menu, and clicking settings.
-      * Next to your name, it should say Owner and have a three-dot menu. Click the menu and select Manage Property Owners.
-        * In the new site, click on your domain in the Properties list.
-          * At the bottom you should see a button to Add an owner. 
-            * Add the email address of the **@cloudbuild.gserviceaccount.com** service account.	
+    * Give the **@cloudbuild.gserviceaccount.com** service account ownership over the environment's domain, so its builds can map gateway subdomains to services. In [Search Console](https://search.google.com/search-console):
+      * Select the property for the environment's domain from the top-left menu, for example dev.\[your-domain\]. Add it as a Domain property first if it isn't listed.
+      * Open **Settings**, then **Users and permissions**.
+      * Click **Add user**, enter the email address of the **@cloudbuild.gserviceaccount.com** service account, and choose the **Owner** permission.
+
+   Ownership of an environment's domain covers the gateway subdomains beneath it, so the build of one environment does not need ownership of your whole domain.
 
 4. Repeat step 3 with the **production**, **sandbox** and **staging** projects.
+
+**Public gateways and domain restricted sharing.** Command, fact and view gateways are the only public services. They are deployed with Cloud Run's invoker check turned off for that one service, not with an `allUsers` binding, so they work in organizations that enforce domain restricted sharing (`constraints/iam.allowedPolicyMemberDomains`, the default for organizations created since 2024). No organization policy change is needed. See [Private and public stores](packages/cli/utils/merge_cli_template/README.md#private-and-public-stores).
 
 #### Authentication
 
