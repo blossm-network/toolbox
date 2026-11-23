@@ -48,7 +48,9 @@ const resolveTransientDependencies = (config) => {
   }
 };
 
-const findDependenciesAndEventsForDependency = (dependency, dir) => {
+// The blossm.yaml of a procedure in the repository. `null` ends the search of
+// a directory whose own procedure belongs to another domain.
+const findConfig = (dependency, dir) => {
   for (const file of fs.readdirSync(dir)) {
     const filePath = path.join(dir, file);
 
@@ -56,49 +58,44 @@ const findDependenciesAndEventsForDependency = (dependency, dir) => {
       const blossmConfig = yaml.parse(fs.readFileSync(filePath, "utf8"));
 
       //If the domain is not the same, the procedure wont be in this directory.
-      if (blossmConfig.domain != dependency.domain)
-        return { dependencies: [], events: [] };
-      if (dependencyIsConfig(dependency, blossmConfig)) {
-        return {
-          dependencies: resolveTransientDependencies(blossmConfig),
-          events:
-            blossmConfig.procedure == "event-store"
-              ? [
-                  {
-                    domain: blossmConfig.domain,
-                    service: blossmConfig.service,
-                    actions: blossmConfig.actions,
-                  },
-                ]
-              : [],
-        };
-      }
+      if (blossmConfig.domain != dependency.domain) return null;
+      if (dependencyIsConfig(dependency, blossmConfig)) return blossmConfig;
     } else if (fs.statSync(filePath).isDirectory()) {
-      const { dependencies, events } = findDependenciesAndEventsForDependency(
-        dependency,
-        filePath
-      );
-      if (dependencies.length > 0 || events.length > 0)
-        return { dependencies, events };
+      const found = findConfig(dependency, filePath);
+      if (found) return found;
     }
   }
+};
 
-  return { dependencies: [], events: [] };
+const findDependenciesAndEventsForDependency = (dependency, dir) => {
+  const blossmConfig = findConfig(dependency, dir);
+  if (!blossmConfig) return { dependencies: [], events: [] };
+  return {
+    dependencies: resolveTransientDependencies(blossmConfig),
+    events:
+      blossmConfig.procedure == "event-store"
+        ? [
+            {
+              domain: blossmConfig.domain,
+              service: blossmConfig.service,
+              actions: blossmConfig.actions,
+            },
+          ]
+        : [],
+  };
 };
 
 const findDependenciesAndEvents = (
   dependencies,
   dir,
   allDependencies,
-  allEvents
+  allEvents,
 ) => {
   const newDependencies = [];
   const newEvents = [];
   for (const dependency of dependencies) {
-    const {
-      dependencies: foundDependencies,
-      events: foundEvents,
-    } = findDependenciesAndEventsForDependency(dependency, dir);
+    const { dependencies: foundDependencies, events: foundEvents } =
+      findDependenciesAndEventsForDependency(dependency, dir);
     const filteredFoundDependencies = foundDependencies.filter((p) => {
       for (const s of newDependencies) {
         if (objectsEqual(s, p)) return false;
@@ -139,7 +136,7 @@ const findDependenciesAndEvents = (
     dependencyDifference,
     dir,
     [...allDependencies, ...dependencyDifference],
-    [...allEvents, ...eventDifference]
+    [...allEvents, ...eventDifference],
   );
 };
 
