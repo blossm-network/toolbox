@@ -140,6 +140,23 @@ const findDependenciesAndEvents = (
   );
 };
 
+// The first valid payload each of a gateway's own commands declares, by
+// command name. A command without one is absent.
+export const examplePayloads = (
+  { commands = [], domain, service },
+  dir = rootDir.path(),
+) =>
+  Object.fromEntries(
+    commands
+      .filter((command) => command.network == undefined && !command.local)
+      .map(({ name }) => [
+        name,
+        findConfig({ name, domain, service, procedure: "command" }, dir)
+          ?.testing?.validate?.ok?.[0],
+      ])
+      .filter(([, payload]) => payload),
+  );
+
 export default (dependencies) => {
   if (!dependencies) return;
   const dir = rootDir.path();

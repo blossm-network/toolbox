@@ -46,7 +46,9 @@ describe("Command gateway integration tests", () => {
               issued: dateString(),
               accepted: dateString(),
             },
-            payload: {},
+            // The command's first valid example, so the request reaches the
+            // command's logic and store instead of stopping at validation.
+            payload: config.testing.payloads?.[command.name] ?? {},
           },
           ...(needsToken && {
             headers: {

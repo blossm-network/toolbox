@@ -21,7 +21,9 @@ const access = promisify(fs.access);
 
 import writeCompose from "./src/write_compose/index.js";
 import writeBuild from "./src/write_build/index.js";
-import resolveTransientInfo from "./src/resolve_transient_info.js";
+import resolveTransientInfo, {
+  examplePayloads,
+} from "./src/resolve_transient_info.js";
 import {
   eventStoreKind,
   postgresConnection,
@@ -676,6 +678,10 @@ const writeConfig = ({
     ...config.testing,
     dependencies: adjustedDependencies,
     topics: topicsForDependencies(config, events),
+    // The gateway suite sends each command a payload that passes validation.
+    ...(config.procedure == "command-gateway" && {
+      payloads: examplePayloads(config),
+    }),
   };
 
   delete config.testing.events;
