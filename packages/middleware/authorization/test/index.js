@@ -299,4 +299,45 @@ describe("Authorization middleware", () => {
 
     expect(nextFake).to.have.been.calledWith(error);
   });
+  it("should refuse a token that lacks the context the route is scoped to", async () => {
+    for (const node of [false, true]) {
+      const authorizationFake = fake();
+      replace(deps, "authorize", authorizationFake);
+      const terminatedSessionCheckFake = fake();
+      const nextFake = fake();
+
+      await authorizationMiddleware({
+        permissionsLookupFn,
+        terminatedSessionCheckFn: terminatedSessionCheckFake,
+        deletedSceneCheckFn: fake(),
+        internalTokenFn,
+        permissions,
+        context: "some-context-key",
+        node,
+      })({ context: { session, principal }, token }, null, nextFake);
+
+      expect(nextFake).to.have.been.calledOnce;
+      expect(nextFake.firstCall.args[0].statusCode).to.equal(401);
+      expect(authorizationFake).to.not.have.been.called;
+      expect(terminatedSessionCheckFake).to.not.have.been.called;
+      restore();
+    }
+  });
+  it("should let a route without privileges through whatever the context", async () => {
+    const authorizationFake = fake();
+    replace(deps, "authorize", authorizationFake);
+    const nextFake = fake();
+
+    await authorizationMiddleware({
+      permissionsLookupFn,
+      terminatedSessionCheckFn: fake(),
+      deletedSceneCheckFn: fake(),
+      internalTokenFn,
+      permissions: "none",
+      context: "some-context-key",
+    })({ context: { session, principal }, token }, null, nextFake);
+
+    expect(nextFake).to.have.been.calledOnceWithExactly();
+    expect(authorizationFake).to.have.been.called;
+  });
 });
