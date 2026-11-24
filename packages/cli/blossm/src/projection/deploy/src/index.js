@@ -23,7 +23,7 @@ const pushToChannel = async ({ channel, view, id, trace, type }) => {
     await command({
       name: "push",
       domain: "updates",
-      service: "core",
+      service: "system",
       network: process.env.CORE_NETWORK,
     })
       .set({
@@ -114,9 +114,9 @@ const pushToChannels = async ({
             query: {
               parallel: 100,
             },
-          }
-        )
-    )
+          },
+        ),
+    ),
   );
 };
 
@@ -276,16 +276,16 @@ const replayIfNeeded = async ({
           ...result,
           ...op.update,
         }),
-        recursiveFullUpdate
+        recursiveFullUpdate,
       ),
       replayOps.reduce(
         (result, op) => ({
           ...result,
           ...op.query,
         }),
-        recursiveFullQuery
+        recursiveFullQuery,
       ),
-      matchDelimiter
+      matchDelimiter,
     );
 
     if (recursiveId || replayId) id = recursiveId || replayId;
@@ -313,7 +313,7 @@ const cleanIdQuery = (query) => {
           k != key &&
           k.endsWith(".id") &&
           k.startsWith(`${key.split(".")[0]}.`) &&
-          k.split(".").length < key.split(".").length
+          k.split(".").length < key.split(".").length,
       )
     )
       newQuery[key] = query[key];
@@ -328,17 +328,17 @@ const getValue = (object, key) => {
   if (keyParts.length <= 1) return object[keyParts[0]];
   return object[keyParts[0]] instanceof Array
     ? object[keyParts[0]].map((element) =>
-        getValue(element, keyParts.slice(1).join("."))
+        getValue(element, keyParts.slice(1).join(".")),
       )[0]
     : object[`${keyParts[0]}.${keyParts[1]}`] instanceof Array
-    ? object[`${keyParts[0]}.${keyParts[1]}`].map((element) =>
-        getValue(element, keyParts.slice(2).join("."))
-      )[0]
-    : getValue(object[keyParts[0]], keyParts.slice(1).join(".")) ||
-      getValue(
-        object[`${keyParts[0]}.${keyParts[1]}`],
-        keyParts.slice(2).join(".")
-      );
+      ? object[`${keyParts[0]}.${keyParts[1]}`].map((element) =>
+          getValue(element, keyParts.slice(2).join(".")),
+        )[0]
+      : getValue(object[keyParts[0]], keyParts.slice(1).join(".")) ||
+        getValue(
+          object[`${keyParts[0]}.${keyParts[1]}`],
+          keyParts.slice(2).join("."),
+        );
 };
 
 // prevents queries like
@@ -483,10 +483,10 @@ export default projection({
               {
                 parallel: 10,
                 query: composedIdQuery,
-              }
+              },
             );
         }
-      })
+      }),
     );
   },
   aggregateFn: async ({ root, domain, service, notFoundThrows = true }) => {
