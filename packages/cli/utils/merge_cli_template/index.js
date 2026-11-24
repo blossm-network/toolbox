@@ -472,7 +472,7 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
         },
         {
           domain: "connection",
-          service: "core",
+          service: "system",
           network: localCoreNetwork,
           procedure: "command-gateway",
           mocks: [
@@ -484,7 +484,7 @@ const addDefaultDependencies = ({ config, localCoreNetwork }) => {
         },
         {
           domain: "updates",
-          service: "core",
+          service: "system",
           network: localCoreNetwork,
           procedure: "command-gateway",
           mocks: [
