@@ -56,10 +56,17 @@ const processEvents = async ({
       : [normalizedEventData];
   }
 
-  const fns = [];
+  // Stores with an event that must land on a specific number are written first.
+  // The rest are only queued once those succeed, so a refused write doesn't
+  // leave the command's other events behind.
+  const guarded = [];
+  const queued = [];
   for (const service in eventDataPerStore) {
     for (const domain in eventDataPerStore[service]) {
-      fns.push(
+      const async = !eventDataPerStore[service][domain].some(
+        (normalizedEvent) => normalizedEvent.number != undefined,
+      );
+      (async ? queued : guarded).push(() =>
         Promise.resolve(
           addFn({
             domain,
@@ -68,15 +75,13 @@ const processEvents = async ({
             ...(claims && { claims }),
             eventData: eventDataPerStore[service][domain],
             returnOutcomes: true,
-            async: !eventDataPerStore[service][domain].some(
-              (normalizedEvent) => normalizedEvent.number != undefined
-            ),
+            async,
             tx: {
               ...(tx && tx.ip && { ip: tx.ip }),
               id: txId,
               path,
             },
-          })
+          }),
         ).then((result) => {
           const { body, delivery } = result || {};
           eventDataPerStore[service][domain].forEach((entry, index) => {
@@ -85,77 +90,78 @@ const processEvents = async ({
                 ? deps.QUEUED
                 : body?.outcomes?.[index] || deps.UNKNOWN;
           });
-        })
+        }),
       );
     }
   }
 
-  await Promise.all(fns);
+  await Promise.all(guarded.map((fn) => fn()));
+  await Promise.all(queued.map((fn) => fn()));
   return outcomes;
 };
 
 export default ({
-  mainFn,
-  validateFn,
-  normalizeFn,
-  fillFn,
-  aggregateFn,
-  commandFn,
-  queryAggregatesFn,
-  readFactFn,
-  streamFactFn,
-  countFn,
-  addFn,
-  contexts,
-  requiresRoot,
-}) => async (req, res) => {
-  if (
-    contexts &&
-    (!req.body.context ||
-      contexts.filter((c) => req.body.context[c]).length != contexts.length)
-  )
-    throw deps.forbiddenError.message("This context is forbidden.");
+    mainFn,
+    validateFn,
+    normalizeFn,
+    fillFn,
+    aggregateFn,
+    commandFn,
+    queryAggregatesFn,
+    readFactFn,
+    streamFactFn,
+    countFn,
+    addFn,
+    contexts,
+    requiresRoot,
+  }) =>
+  async (req, res) => {
+    if (
+      contexts &&
+      (!req.body.context ||
+        contexts.filter((c) => req.body.context[c]).length != contexts.length)
+    )
+      throw deps.forbiddenError.message("This context is forbidden.");
 
-  if (requiresRoot && !req.body.root)
-    throw deps.badRequestError.message("A root is required.");
+    if (requiresRoot && !req.body.root)
+      throw deps.badRequestError.message("A root is required.");
 
-  if (validateFn) {
-    await validateFn(req.body.payload, {
-      ...(req.body.context && { context: req.body.context }),
-    });
-  }
-  if (fillFn) req.body.payload = await fillFn(req.body.payload);
-  if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
+    if (validateFn) {
+      await validateFn(req.body.payload, {
+        ...(req.body.context && { context: req.body.context }),
+      });
+    }
+    if (fillFn) req.body.payload = await fillFn(req.body.payload);
+    if (normalizeFn) req.body.payload = await normalizeFn(req.body.payload);
 
-  const commandId = deps.uuid();
-  const txId = (req.body.tx && req.body.tx.id) || deps.uuid();
+    const commandId = deps.uuid();
+    const txId = (req.body.tx && req.body.tx.id) || deps.uuid();
 
-  const path = [
-    ...((req.body.tx && req.body.tx.path) || []),
-    {
-      procedure: process.env.PROCEDURE,
-      id: commandId,
-      timestamp: deps.dateString(),
-      issued: req.body.headers.issued,
-      name: process.env.NAME,
-      domain: process.env.DOMAIN,
-      service: process.env.SERVICE,
-      network: process.env.NETWORK,
-      host: process.env.HOST,
-      hash: process.env.OPERATION_HASH,
-    },
-  ];
+    const path = [
+      ...((req.body.tx && req.body.tx.path) || []),
+      {
+        procedure: process.env.PROCEDURE,
+        id: commandId,
+        timestamp: deps.dateString(),
+        issued: req.body.headers.issued,
+        name: process.env.NAME,
+        domain: process.env.DOMAIN,
+        service: process.env.SERVICE,
+        network: process.env.NETWORK,
+        host: process.env.HOST,
+        hash: process.env.OPERATION_HASH,
+      },
+    ];
 
-  let {
-    events = [],
-    response,
-    headers = {},
-    statusCode,
-    thenFn,
-    tokens,
-    revoke,
-  } =
-    (await mainFn({
+    let {
+      events = [],
+      response,
+      headers = {},
+      statusCode,
+      thenFn,
+      tokens,
+      revoke,
+    } = (await mainFn({
       payload: req.body.payload,
       ...(req.body.root && { root: req.body.root }),
       ...(req.body.options && { options: req.body.options }),
@@ -215,46 +221,49 @@ export default ({
       generateRootFn: deps.uuid,
     })) || {};
 
-  const outcomes = await processEvents({
-    events,
-    addFn,
-    ...(req.body.headers.idempotency && {
-      idempotency: req.body.headers.idempotency,
-    }),
-    ...(req.body.context && { context: req.body.context }),
-    ...(req.body.context && { context: req.body.context }),
-    ...(req.body.claims && { claims: req.body.claims }),
-    path,
-    ...(req.body.tx && { tx: req.body.tx }),
-    txId,
-  });
+    const outcomes = await processEvents({
+      events,
+      addFn,
+      ...(req.body.headers.idempotency && {
+        idempotency: req.body.headers.idempotency,
+      }),
+      ...(req.body.context && { context: req.body.context }),
+      ...(req.body.context && { context: req.body.context }),
+      ...(req.body.claims && { claims: req.body.claims }),
+      path,
+      ...(req.body.tx && { tx: req.body.tx }),
+      txId,
+    });
 
-  if (thenFn) {
-    const result = (await thenFn({ outcomes })) || {};
+    if (thenFn) {
+      const result = (await thenFn({ outcomes })) || {};
 
-    if (result.response != undefined)
-      response = { ...response, ...result.response };
-    if (result.headers != undefined) headers = { ...headers, ...result.headers };
-    if (result.tokens != undefined) tokens = [...(tokens || []), ...result.tokens];
-    if (result.revoke != undefined) revoke = [...(revoke || []), ...result.revoke];
-    if (result.statusCode != undefined) statusCode = result.statusCode;
-  }
+      if (result.response != undefined)
+        response = { ...response, ...result.response };
+      if (result.headers != undefined)
+        headers = { ...headers, ...result.headers };
+      if (result.tokens != undefined)
+        tokens = [...(tokens || []), ...result.tokens];
+      if (result.revoke != undefined)
+        revoke = [...(revoke || []), ...result.revoke];
+      if (result.statusCode != undefined) statusCode = result.statusCode;
+    }
 
-  if (tokens || revoke) {
-    if (!response) response = {};
-    response._tokens = tokens;
-    response._revoke = revoke;
-  }
+    if (tokens || revoke) {
+      if (!response) response = {};
+      response._tokens = tokens;
+      response._revoke = revoke;
+    }
 
-  if (response || events.length) {
-    res
-      .set(headers)
-      .status(statusCode || (events.length ? 202 : 200))
-      .send({
-        ...response,
-        ...(events.length && { _id: commandId, _tx: txId }),
-      });
-  } else {
-    res.set(headers).sendStatus(statusCode || 204);
-  }
-};
+    if (response || events.length) {
+      res
+        .set(headers)
+        .status(statusCode || (events.length ? 202 : 200))
+        .send({
+          ...response,
+          ...(events.length && { _id: commandId, _tx: txId }),
+        });
+    } else {
+      res.set(headers).sendStatus(statusCode || 204);
+    }
+  };

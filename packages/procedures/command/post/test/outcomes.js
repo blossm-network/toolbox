@@ -37,6 +37,41 @@ const fixture = (result, addFn = fake.resolves()) => {
 };
 
 describe("Event outcomes passed to thenFn", () => {
+  it("doesn't queue the other stores' events when a numbered write is refused", async () => {
+    const events = [
+      { action: "first", payload: {}, domain: "queued" },
+      { action: "second", payload: {}, domain: "numbered", correctNumber: 3 },
+    ];
+    const refused = new Error("wrong number");
+    const addFn = fake(async ({ domain }) => {
+      if (domain === "numbered") {
+        await new Promise(setImmediate);
+        throw refused;
+      }
+      return { delivery: DELIVERY_QUEUED };
+    });
+    await assert.rejects(fixture({ events }, addFn).run(), refused);
+    assert.deepEqual(
+      addFn.getCalls().map((call) => call.args[0].domain),
+      ["numbered"],
+    );
+  });
+  it("queues the other stores' events after a numbered write lands", async () => {
+    const events = [
+      { action: "first", payload: {}, domain: "queued" },
+      { action: "second", payload: {}, domain: "numbered", correctNumber: 3 },
+    ];
+    const addFn = fake(async ({ domain }) =>
+      domain === "numbered"
+        ? { body: { outcomes: [COMMITTED] } }
+        : { delivery: DELIVERY_QUEUED },
+    );
+    await fixture({ events }, addFn).run();
+    assert.deepEqual(
+      addFn.getCalls().map((call) => call.args[0].domain),
+      ["numbered", "queued"],
+    );
+  });
   it("keeps original order across interleaved stores and delayed responses", async () => {
     const events = [
       { action: "first", payload: {}, domain: "one", correctNumber: 0 },
@@ -68,7 +103,7 @@ describe("Event outcomes passed to thenFn", () => {
 
   for (const response of [undefined, null, {}, { statusCode: 204 }]) {
     it(`reports unknown for a legacy response ${JSON.stringify(
-      response
+      response,
     )}`, async () => {
       const event = { action: "answer", payload: {}, correctNumber: 0 };
       const thenFn = fake();
@@ -98,13 +133,13 @@ describe("Event outcomes passed to thenFn", () => {
             return effect();
           },
         },
-        fake.resolves({ body: { outcomes: [status] } })
+        fake.resolves({ body: { outcomes: [status] } }),
       );
       await f.run();
       assert.equal(f.res.send.firstCall.args[0].kept, true);
       assert.equal(
         f.res.send.firstCall.args[0].upgraded,
-        status === COMMITTED ? true : undefined
+        status === COMMITTED ? true : undefined,
       );
     }
     assert.equal(effect.callCount, 1);
@@ -117,7 +152,7 @@ describe("Event outcomes passed to thenFn", () => {
       async ({ logEventsFn }) => {
         logged = await logEventsFn([event]);
       },
-      fake.resolves({ body: { outcomes: [COMMITTED] } })
+      fake.resolves({ body: { outcomes: [COMMITTED] } }),
     ).run();
     assert.deepEqual(logged, [{ event, status: COMMITTED }]);
   });
