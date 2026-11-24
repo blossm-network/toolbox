@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@blossm/authorize": "^0.0.129",
+    "@blossm/errors": "^0.0.41",
     "express-async-handler": "^1.2.0"
   },
   "devDependencies": {

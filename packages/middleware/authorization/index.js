@@ -18,6 +18,20 @@ export default ({
 
     const relevantContext = req.context && context && req.context[context];
 
+    // A route scoped to a context checks permissions within that context. A
+    // token without it would otherwise be checked against every role the
+    // principal holds anywhere.
+    if (
+      context &&
+      permissions &&
+      permissions != "none" &&
+      permissionsLookupFn &&
+      !relevantContext
+    )
+      throw deps.invalidCredentialsError.message(
+        "There are missing permissions.",
+      );
+
     await Promise.all([
       // If there are permissions with a lookup fn, check if the permissions are met.
       ...(permissions &&
