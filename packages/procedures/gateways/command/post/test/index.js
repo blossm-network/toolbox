@@ -650,4 +650,35 @@ describe("Command gateway post", () => {
       expect(e).to.equal(error);
     }
   });
+  it("should pass on the address Google appended, never one the caller wrote", async () => {
+    const issueFake = fake.returns({ body: {}, statusCode: 200 });
+    const setFake = fake.returns({ issue: issueFake });
+    replace(deps, "validate", fake());
+    replace(deps, "command", fake.returns({ set: setFake }));
+    const res = { status: fake.returns({ send: fake() }), set: fake() };
+    res.set = fake.returns(res);
+    const addressFor = async (header, hops) => {
+      if (hops) process.env.CLIENT_ADDRESS_HOPS = hops;
+      else delete process.env.CLIENT_ADDRESS_HOPS;
+      await post({ name: "some-name", domain: "some-domain" })(
+        {
+          body: { payload: {}, headers: {} },
+          headers: { ...(header && { "x-forwarded-for": header }) },
+        },
+        res,
+      );
+      delete process.env.CLIENT_ADDRESS_HOPS;
+      return issueFake.lastCall.args[1].tx.ip;
+    };
+    // Called directly, Google appends the caller's address last.
+    expect(await addressFor("9.9.9.9, 203.0.113.5")).to.equal("203.0.113.5");
+    expect(await addressFor("203.0.113.5", "1")).to.equal("203.0.113.5");
+    // Behind a load balancer, its own address follows the caller's.
+    expect(await addressFor("9.9.9.9,203.0.113.5, 34.1.1.1", "2")).to.equal(
+      "203.0.113.5",
+    );
+    // Fewer addresses than Google would have appended: nothing to trust.
+    expect(await addressFor("203.0.113.5", "2")).to.equal(undefined);
+    expect(await addressFor(undefined, "2")).to.equal(undefined);
+  });
 });
