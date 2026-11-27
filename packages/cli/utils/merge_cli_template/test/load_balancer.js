@@ -67,6 +67,15 @@ describe("Gateways behind a load balancer", () => {
         "compute backend-services update gateway --global --security-policy=gateways",
       );
       const route = at(lines, "compute url-maps add-path-matcher gateways");
+      // The matcher is looked for by name in the map itself, and the build
+      // is told which name: the last argument of that step.
+      assert(
+        lines[route].includes(
+          "compute url-maps describe gateways --global --project=target --format=value(pathMatchers[].name)",
+        ),
+        lines[route],
+      );
+      assert(lines[route].endsWith(" gateway"), lines[route]);
       // The policy is on the backend before a hostname can reach it.
       assert(deploy < policy && policy < route);
       assert(
@@ -138,8 +147,8 @@ describe("Gateways behind a load balancer", () => {
     assert.throws(() => read("gateways"), /must be a load balancer definition/);
   });
 
-  // A filtered list succeeds with nothing to show when the resource is absent.
-  it("creates when a successful read comes back empty, only when asked to", () => {
+  // A read can succeed without the resource being there.
+  it("creates when a successful read lacks the resource, only when asked to", () => {
     const fixture = mkdtempSync(path.join(tmpdir(), "blossm-empty-read-"));
     try {
       const gcloud = path.join(fixture, "gcloud");
@@ -151,12 +160,12 @@ echo "$1" > "${fixture}/wrote"; exit 0
 `,
       );
       chmodSync(gcloud, 0o755);
-      const run = (emptyIsMissing, READ) => {
+      const run = (options, READ) => {
         rmSync(path.join(fixture, "wrote"), { force: true });
         const step = ensureResource({
           describe: ["read"],
           create: ["create"],
-          emptyIsMissing,
+          ...options,
         });
         const result = spawnSync(
           "/bin/bash",
@@ -168,9 +177,22 @@ echo "$1" > "${fixture}/wrote"; exit 0
           .stdout.toString()
           .trim();
       };
-      assert.equal(run(true, ""), "create");
-      assert.equal(run(true, "found"), "");
-      assert.equal(run(false, ""), "");
+      assert.equal(run({ emptyIsMissing: true }, ""), "create");
+      assert.equal(run({ emptyIsMissing: true }, "found"), "");
+      assert.equal(run({}, ""), "");
+      // A name is found only whole, among names joined by semicolons.
+      for (const [read, wrote] of [
+        ["", "create"],
+        ["other", "create"],
+        ["gateway-two;other", "create"],
+        ["a-gateway", "create"],
+        ["gateway", ""],
+        ["other;gateway", ""],
+        ["gateway;other", ""],
+      ])
+        assert.equal(run({ has: "gateway" }, read), wrote, read);
+      // A name is data, never a pattern.
+      assert.equal(run({ has: "*" }, "gateway"), "create");
     } finally {
       rmSync(fixture, { recursive: true, force: true });
     }

@@ -127,17 +127,17 @@ export default ({
       expected: uri,
     }),
     // The url map is shared, so the gateway's own matcher is looked for by
-    // name. Two gateway builds editing the map at once can collide; the
-    // loser fails and is safe to run again.
+    // name among the map's matchers. Two gateway builds editing the map at
+    // once can collide; the loser fails and is safe to run again.
     ensureResource({
       describe: [
         "compute",
         "url-maps",
-        "list",
+        "describe",
+        urlMap,
         "--global",
         ...scope,
-        `--filter=name=${urlMap} AND pathMatchers.name=${serviceName}`,
-        "--format=value(name)",
+        "--format=value(pathMatchers[].name)",
       ],
       create: [
         "compute",
@@ -150,7 +150,7 @@ export default ({
         `--new-hosts=${uri}`,
         ...write,
       ],
-      emptyIsMissing: true,
+      has: serviceName,
     }),
     ensureDnsRecord({ uri, dnsZone, project, type: "A", data: address }),
   ];

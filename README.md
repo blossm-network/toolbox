@@ -621,9 +621,9 @@ Put your public gateways behind a load balancer with a rate limit. Without this 
       --address=gateways --target-https-proxy=gateways --ports=443 --project=PROJECT
     ```
 
-    The rule allows each client address 300 requests a minute across all gateways and answers 429 beyond that. Change the two threshold numbers to suit your traffic. `gateways-default` has no backends on purpose: it answers hostnames that no gateway owns.
+    The rule allows each client address 300 requests a minute to each gateway, counted separately per gateway, and answers 429 beyond that. Change the two threshold numbers to suit your traffic. `gateways-default` has no backends on purpose: it answers hostnames that no gateway owns.
 
-3. Let the build identity add gateways to the load balancer. It needs to create network endpoint groups and backend services, edit the url map, use the security policy (`compute.securityPolicies.use`, `compute.backendServices.setSecurityPolicy`), and create Certificate Manager certificates and map entries. **Compute Load Balancer Admin** and **Certificate Manager Editor** are the roles to check first; confirm what a role holds with `gcloud iam roles describe`.
+3. Let the build identity add gateways to the load balancer. It needs to create network endpoint groups and backend services, edit the url map, use the security policy (`compute.securityPolicies.use`, `compute.backendServices.setSecurityPolicy`), and create Certificate Manager certificates and map entries. **Compute Load Balancer Admin** (`roles/compute.loadBalancerAdmin`) and **Certificate Manager Editor** (`roles/certificatemanager.editor`) are expected to cover these; confirm what each holds with `gcloud iam roles describe` before granting.
 
 4. Read the address, and name the load balancer in your **config.yaml**:
 
@@ -645,7 +645,9 @@ Put your public gateways behind a load balancer with a rate limit. Without this 
 
 5. Repeat steps 1 to 4 with the `production`, `sandbox` and `staging` projects.
 
-Gateways deployed after this are reachable only through the load balancer. A gateway's certificate is issued a few minutes after its first deployment. See the [build generator's guide](packages/cli/utils/merge_cli_template/README.md#gateways-behind-a-load-balancer) for what each deployment adds.
+Gateways deployed after this are reachable from the internet only through the load balancer. A gateway's certificate is issued a few minutes after its first deployment.
+
+A gateway that was already deployed without a load balancer keeps its Cloud Run domain mapping and its `CNAME` record. Remove both before redeploying it: its build cannot create the `A` record while the `CNAME` exists. See the [build generator's guide](packages/cli/utils/merge_cli_template/README.md#gateways-behind-a-load-balancer) for what each deployment adds.
 
 ###### [Deploy your database](#databases) and [onboard a developer](#new-developer-onboarding), then proceed to the next section.
 

@@ -312,7 +312,7 @@ Each is named after the gateway's Cloud Run service and is safe to repeat.
 
 | Order | Resource | Purpose |
 | --- | --- | --- |
-| 1 | the service, with ingress `internal-and-cloud-load-balancing` | refuses any request that did not come through the load balancer |
+| 1 | the service, with ingress `internal-and-cloud-load-balancing` | refuses requests from the internet that did not come through the load balancer |
 | 2 | a serverless network endpoint group | points the load balancer at the service |
 | 3 | a global backend service | the unit the policy attaches to |
 | 4 | the security policy on that backend, set on every build | the rate limit |
@@ -324,6 +324,11 @@ Each is named after the gateway's Cloud Run service and is safe to repeat.
 The policy is attached before the hostname is routed, so a gateway is never
 reachable without it. The ingress setting is what makes the policy binding:
 without it a client could call the service's `run.app` address directly.
+Callers inside the project's own network can still do that, and the policy
+does not see them.
+
+The policy is attached to each gateway's backend separately, so a limit
+counts a client's requests to one gateway, not to all of them together.
 
 No domain mapping and no `CNAME` is written. A gateway that was deployed with
 the direct mapping keeps its old mapping and `CNAME` until an operator removes
