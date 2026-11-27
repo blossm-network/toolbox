@@ -2,12 +2,22 @@
 // failed write. All resource values remain argv data, never shell source.
 // An expected projection permits exact-target reuse, never silent retargeting.
 // Double dollars survive Cloud Build substitution before Bash receives them.
-export default ({ describe, create, update = [], expected }) => ({
+// `emptyIsMissing` is for a read that succeeds with nothing to show, such as a
+// filtered list: no output then means the resource is still to be created.
+export default ({
+  describe,
+  create,
+  update = [],
+  expected,
+  emptyIsMissing = false,
+}) => ({
   name: "gcr.io/cloud-builders/gcloud",
   entrypoint: "bash",
   args: [
     "-c",
-    `if actual=$$(gcloud "$\${@:1:${describe.length}}" 2>/dev/null); then
+    `if actual=$$(gcloud "$\${@:1:${describe.length}}" 2>/dev/null)${
+      emptyIsMissing ? ' && [ -n "$$actual" ]' : ""
+    }; then
       ${
         expected === undefined
           ? ""

@@ -126,7 +126,14 @@ export default ({
             },
             labels: { ...(domain && { domain }), ...(service && { service }) },
           }),
-          expose({ uri: authUri, dnsZone, project, region, serviceName }),
+          expose({
+            uri: authUri,
+            dnsZone,
+            project,
+            region,
+            serviceName,
+            cloudRun,
+          }),
           scheduleJob({
             name: `fact-gateway${service ? `-${service}` : ""}${
               domain ? `-${domain}` : ""

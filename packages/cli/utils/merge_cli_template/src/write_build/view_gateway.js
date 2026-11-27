@@ -125,7 +125,14 @@ export default ({
               ...(context && { context }),
             },
           }),
-          expose({ uri: authUri, dnsZone, project, region, serviceName }),
+          expose({
+            uri: authUri,
+            dnsZone,
+            project,
+            region,
+            serviceName,
+            cloudRun,
+          }),
           scheduleJob({
             name: `view-gateway${context ? `-${context}` : ""}-check-in`,
             schedule: checkInSchedule,

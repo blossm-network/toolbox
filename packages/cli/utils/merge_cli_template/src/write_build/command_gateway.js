@@ -129,7 +129,14 @@ export default ({
             },
             labels: { domain, service },
           }),
-          expose({ uri: authUri, dnsZone, project, region, serviceName }),
+          expose({
+            uri: authUri,
+            dnsZone,
+            project,
+            region,
+            serviceName,
+            cloudRun,
+          }),
           scheduleJob({
             name: `command-gateway-${service}-${domain}-check-in`,
             schedule: checkInSchedule,
