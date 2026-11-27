@@ -165,12 +165,6 @@ export default ({
       flags: [`--location=${region}`],
       role: "roles/cloudtasks.enqueuer",
     },
-    {
-      group: ["iam", "service-accounts"],
-      name: runtime,
-      flags: [unconditional],
-      role: "roles/iam.serviceAccountUser",
-    },
   ].map((binding) =>
     addIamPolicyBinding({ ...binding, member: runtime, project }),
   );

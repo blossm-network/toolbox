@@ -3,6 +3,7 @@ import sinonChai from "sinon-chai";
 import { restore, replace, fake, useFakeTimers } from "sinon";
 
 import queue from "../index.js";
+import deps from "../deps.js";
 
 chai.use(sinonChai);
 const { expect } = chai;
@@ -151,16 +152,20 @@ describe("Queue", () => {
     const createTaskFake = fake.returns([taskResponse]);
     replace(queue.__client, "queuePath", queuePathFake);
     replace(queue.__client, "createTask", createTaskFake);
-    // With no account passed, the task is delivered as the service itself.
-    process.env.GCP_SERVICE_ACCOUNT =
-      "own@some-project.iam.gserviceaccount.com";
+    // With no account passed, the task is delivered as the service itself,
+    // read from the platform once and kept.
+    const identityFake = fake.resolves(
+      "own@some-project.iam.gserviceaccount.com",
+    );
+    replace(deps, "identity", identityFake);
     const result = await queue.enqueue({
       project,
       queue: name,
       wait: 4,
       location,
     })({ url });
-    delete process.env.GCP_SERVICE_ACCOUNT;
+    await queue.enqueue({ project, queue: name, location })({ url });
+    expect(identityFake).to.have.been.calledOnce;
     expect(queuePathFake).to.have.been.calledWith(project, location);
     expect(createTaskFake).to.have.been.calledWith({
       parent: queueParent,
@@ -220,18 +225,37 @@ describe("Queue", () => {
     });
     expect(result).to.equal(taskResponse);
   });
-  it("should refuse to enqueue with no identity to deliver the task as", async () => {
-    const createTaskFake = fake.returns([taskResponse]);
-    replace(queue.__client, "queuePath", fake.returns(queueParent));
-    replace(queue.__client, "createTask", createTaskFake);
-    delete process.env.GCP_SERVICE_ACCOUNT;
-    let error;
-    try {
-      await queue.enqueue({ project, queue: name, location })({ url });
-    } catch (e) {
-      error = e;
+});
+
+describe("Queue identity", () => {
+  afterEach(() => restore());
+  it("should not enqueue, nor remember the failure, when its identity can't be read", async () => {
+    // A fresh module, so no identity is held from an earlier test.
+    const { default: fresh } = await import(`../index.js?fresh=${Date.now()}`);
+    const createTaskFake = fake.returns(["task"]);
+    replace(fresh.__client, "queuePath", fake.returns("parent"));
+    replace(fresh.__client, "createTask", createTaskFake);
+    const identityFake = fake.rejects(new Error("unreachable"));
+    replace(deps, "identity", identityFake);
+    const enqueue = (extra) =>
+      fresh.enqueue({ project: "p", queue: "q", location: "l" })({
+        url: "https://example.invalid",
+        ...extra,
+      });
+    for (let attempt = 0; attempt < 2; attempt++) {
+      let error;
+      try {
+        await enqueue();
+      } catch (e) {
+        error = e;
+      }
+      expect(error.message).to.equal("unreachable");
     }
-    expect(error.message).to.include("GCP_SERVICE_ACCOUNT");
     expect(createTaskFake).to.not.have.been.called;
+    expect(identityFake).to.have.been.calledTwice;
+    // A caller's own token needs no identity at all.
+    await enqueue({ token: "t" });
+    expect(identityFake).to.have.been.calledTwice;
+    expect(createTaskFake).to.have.been.calledOnce;
   });
 });

@@ -14,6 +14,9 @@ const run = ({
   account = runtime,
   describe,
   withBuildIdentity = true,
+  queues = false,
+  refuseSelfGrant = false,
+  policy,
 } = {}) => {
   const workingDir = mkdtempSync(path.join(tmpdir(), "blossm-identity-"));
   writeFileSync(
@@ -29,6 +32,20 @@ const run = ({
             ...(account ? [`--service-account=${account}`] : []),
           ],
         },
+        ...(queues
+          ? [
+              {
+                name: "gcloud",
+                args: [
+                  "tasks",
+                  "queues",
+                  "add-iam-policy-binding",
+                  "q",
+                  "--role=roles/cloudtasks.enqueuer",
+                ],
+              },
+            ]
+          : []),
       ],
       ...(withBuildIdentity && {
         serviceAccount: `projects/${project}/serviceAccounts/${buildIdentity}`,
@@ -45,6 +62,14 @@ const run = ({
         calls.push(args.join(" "));
         if (args[2] == "describe" && describe)
           throw Object.assign(new Error("failed"), { stderr: describe });
+        if (args[2] == "get-iam-policy") return policy;
+        if (
+          refuseSelfGrant &&
+          args.includes(`--member=serviceAccount:${runtime}`)
+        )
+          throw Object.assign(new Error("failed"), {
+            stderr: "PERMISSION_DENIED",
+          });
       },
     });
   } finally {
@@ -90,6 +115,64 @@ describe("Runtime identity before a deployment", () => {
         describe: "NOT_FOUND",
       }),
       [],
+    );
+  });
+  const selfGrant = `iam service-accounts add-iam-policy-binding ${runtime} --member=serviceAccount:${runtime} --role=roles/iam.serviceAccountUser --condition=None --quiet --project=${project}`;
+
+  const look = `iam service-accounts get-iam-policy ${runtime} --format=json --project=${project}`;
+  const bindings = (...members) =>
+    JSON.stringify({
+      bindings: [{ role: "roles/iam.serviceAccountUser", members }],
+    });
+
+  it("grants nothing on a redeploy that already has it", () => {
+    assert.deepEqual(
+      run({
+        queues: true,
+        refuseSelfGrant: true,
+        policy: bindings(`serviceAccount:${runtime}`),
+      }),
+      [describeCall, look],
+    );
+    // Someone else's leave to act as it is not its own.
+    assert(
+      run({
+        queues: true,
+        policy: bindings(`serviceAccount:${buildIdentity}`),
+      }).includes(selfGrant),
+    );
+    // Nor is leave that holds only under a condition.
+    assert(
+      run({
+        queues: true,
+        policy: JSON.stringify({
+          bindings: [
+            {
+              role: "roles/iam.serviceAccountUser",
+              members: [`serviceAccount:${runtime}`],
+              condition: { expression: "false" },
+            },
+          ],
+        }),
+      }).includes(selfGrant),
+    );
+  });
+
+  it("lets a service that queues tasks act as itself, new or existing", () => {
+    assert.deepEqual(run({ queues: true }), [describeCall, look, selfGrant]);
+    assert.equal(
+      run({ queues: true, describe: "NOT_FOUND" }).at(-1),
+      selfGrant,
+    );
+    // A service that queues nothing gets no such grant.
+    assert(!run().includes(selfGrant));
+    assert(!run({ describe: "NOT_FOUND" }).includes(selfGrant));
+  });
+
+  it("stops the deployment when that grant can't be made", () => {
+    assert.throws(
+      () => run({ queues: true, refuseSelfGrant: true }),
+      /queues tasks as itself.*PERMISSION_DENIED/,
     );
   });
 });

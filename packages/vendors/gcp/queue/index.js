@@ -3,6 +3,14 @@ import deps from "./deps.js";
 let client;
 const getClient = () => (client ||= new deps.Client());
 
+// Read once. A failed read is not kept, so the next task tries again.
+let identity;
+const own = () =>
+  (identity ||= deps.identity().catch((error) => {
+    identity = undefined;
+    throw error;
+  }));
+
 const create = async ({ project, location, name }) => {
   const parent = getClient().locationPath(project, location);
 
@@ -26,11 +34,9 @@ const enqueue =
   async ({ url, data = {}, token, method = "post" }) => {
     const parent = getClient().queuePath(project, location, queue);
 
-    const identity = serviceAccountEmail || process.env.GCP_SERVICE_ACCOUNT;
-    if (!token && !identity)
-      throw new Error(
-        "A task needs an identity to be delivered as. Set GCP_SERVICE_ACCOUNT or pass serviceAccountEmail.",
-      );
+    // The task is delivered as the service that queued it, unless a caller
+    // outside the platform names the account to deliver it as.
+    const identity = token ? undefined : serviceAccountEmail || (await own());
 
     const string = JSON.stringify(data);
 

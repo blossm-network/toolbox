@@ -101,7 +101,6 @@ describe("Cloud Run environment file generation", () => {
   it("preserves literal commas, equals, dollars, quotes, backticks and newlines", async () => {
     const writeEnv = await writer();
     const deployRun = await load(`${buildDir}/steps/deploy_run.js`, {
-      runtimeIdentity: await load(`${buildDir}/steps/runtime_identity.js`),
       writeEnv,
     });
     const value =
@@ -160,7 +159,6 @@ describe("Cloud Run environment file generation", () => {
   it("flattens preparation and deployment steps in the generated build order", async () => {
     const writeEnv = await writer();
     const deployRun = await load(`${buildDir}/steps/deploy_run.js`, {
-      runtimeIdentity: await load(`${buildDir}/steps/runtime_identity.js`),
       writeEnv,
     });
     const [prepare, deploy] = deployRun({

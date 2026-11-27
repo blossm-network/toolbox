@@ -46,8 +46,6 @@ const invoker = (service, member) =>
   `run services ${service} ${member} run.invoker`;
 const enqueuer = (queue) =>
   `tasks queues ${queue} ${runtime} cloudtasks.enqueuer`;
-// A task is delivered as the service that queued it, never as a shared account.
-const actAsItself = `iam service-accounts ${runtime} ${runtime} iam.serviceAccountUser`;
 
 describe("Caller bindings", () => {
   const start = {
@@ -63,7 +61,6 @@ describe("Caller bindings", () => {
       invoker("own-service", runtime),
       invoker(store, runtime),
       enqueuer("event-store-core-session"),
-      actAsItself,
     ]);
   });
 
@@ -108,7 +105,6 @@ describe("Caller bindings", () => {
       invoker(serviceOf("upgrade", "session", "core", "command"), runtime),
       invoker(serviceOf("roles", "principal", "core", "fact"), runtime),
       enqueuer("command-core-session-upgrade"),
-      actAsItself,
     ]);
   });
 
@@ -165,7 +161,6 @@ describe("Caller bindings", () => {
       enqueuer("event-store-core-session"),
       enqueuer("view-store-account-sessions"),
       enqueuer("projection-account-sessions-play"),
-      actAsItself,
     ]);
   });
 

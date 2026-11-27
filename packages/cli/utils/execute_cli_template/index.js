@@ -84,8 +84,14 @@ const execute = async (input, configFn) => {
       blossmConfig.runtimeServiceAccounts?.[input.env] ??
       rootConfig.vendors.cloud.gcp.runtimeServiceAccounts?.[input.env];
 
+    // Outside the platform there is no identity to fall back on.
+    if (!serviceAccountEmail)
+      throw new Error(
+        `Name the account to deliver this as: set runtimeServiceAccounts.${input.env} in this procedure's blossm.yaml or under vendors.cloud.gcp in config.yaml.`,
+      );
+
     await gcpQueue.enqueue({
-      ...(serviceAccountEmail && { serviceAccountEmail }),
+      serviceAccountEmail,
       queue:
         input.queue || queueName({ config: blossmConfig, data: input.data }),
       // Queues live beside their service: the deployment creates them there.

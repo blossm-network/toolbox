@@ -81,12 +81,6 @@ const bindings = (member, { encrypts = true } = {}) => {
         member,
         "roles/cloudtasks.enqueuer",
       ),
-      grant(
-        // The store queues block continuations as itself.
-        `iam service-accounts add-iam-policy-binding ${member} --condition=None`,
-        member,
-        "roles/iam.serviceAccountUser",
-      ),
     ],
     after: grant(
       "run services add-iam-policy-binding us-east1-store-hash --region=us-east1 --platform=managed --condition=None",
@@ -338,7 +332,7 @@ exit 0
     const iam = ({ calls }) =>
       calls.filter((call) => call.includes("add-iam-policy-binding"));
     assert.deepEqual(iam(again), iam(first));
-    assert.equal(iam(again).length, 8);
+    assert.equal(iam(again).length, 7);
     // Existing keys, topics and queues are reused, not recreated.
     assert(
       !again.calls.some((call) => / (keys|topics|queues) create /.test(call)),
@@ -350,10 +344,10 @@ exit 0
     const iam = gcloudSteps(eventStore({ ...store, ...postgres, strict: true }))
       .filter((step) => step.args.includes("add-iam-policy-binding"))
       .map((step) => step.args);
-    assert.equal(iam.length, 8);
+    assert.equal(iam.length, 7);
     for (const args of iam) {
       const condition = args.filter((arg) => arg.startsWith("--condition"));
-      const supported = ["kms", "iam", "run"].includes(args[0]);
+      const supported = ["kms", "run"].includes(args[0]);
       assert(supported || ["pubsub", "tasks"].includes(args[0]), args[0]);
       assert.deepEqual(
         condition,
@@ -372,7 +366,7 @@ exit 0
         (step) =>
           step.args[0] == group && step.args.includes("add-iam-policy-binding"),
       );
-    for (const group of ["kms", "iam", "run"]) {
+    for (const group of ["kms", "run"]) {
       const step = binding(group);
       const args = step.args.filter((arg) => arg != "--condition=None");
       assert.equal(build([step]).status, 0, group);

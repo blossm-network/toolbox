@@ -6,7 +6,10 @@ import runtimeIdentity from "./steps/runtime_identity.js";
 
 // The access a deployed procedure needs from its callers, on its callees and
 // on the keys it declares,
-// granted by its own build. Every binding is additive, so a redeploy repeats
+// granted by its own build. A service that queues tasks also needs leave to
+// act as itself, since its tasks carry its own identity. That one grant is on
+// a service account, which a build has no authority over, so the deployer
+// makes it before the build starts. Every binding is additive, so a redeploy repeats
 // them without effect. The event store renders its own bindings.
 
 const publicProcedures = ["command-gateway", "fact-gateway", "view-gateway"];
@@ -121,20 +124,6 @@ export default ({
             }),
           ),
           ...keyBindings({ keys, member: serviceAccount, project }),
-          // An enqueued task carries this service's own identity token, which
-          // the service may only mint with leave to act as itself.
-          ...(queues.length
-            ? [
-                addIamPolicyBinding({
-                  group: ["iam", "service-accounts"],
-                  name: serviceAccount,
-                  flags: ["--condition=None"],
-                  member: serviceAccount,
-                  role: "roles/iam.serviceAccountUser",
-                  project,
-                }),
-              ]
-            : []),
         ]
       : []),
   ];

@@ -102,7 +102,6 @@ the next section.
 | `roles/run.invoker` | the procedure's runtime identity | the procedure's own service, unless it is a public gateway |
 | `roles/run.invoker` | the procedure's runtime identity | each service it calls |
 | `roles/cloudtasks.enqueuer` | the runtime identity of a command or projection | the queue of each store, command or view store it calls, and a projection's own play queue |
-| `roles/iam.serviceAccountUser` | the same identity, when it holds a queue grant | itself, since its tasks carry its own identity |
 | the role for each declared key use | the procedure's runtime identity | that Cloud KMS key |
 
 The services a procedure calls are read from its `blossm.yaml`: a gateway's
@@ -137,8 +136,9 @@ exist yet and lets the build identity deploy as it
 credentials of the person deploying, before submitting the build, so the build
 identity holds no authority over service accounts. That first deployment needs
 a deployer who may create service accounts and set their policy, for example
-`roles/iam.serviceAccountAdmin`. An identity that already exists is left
-unchanged, and later deployments need no such role.
+`roles/iam.serviceAccountAdmin`. Later deployments need no such role: an
+identity that already exists, and already may act as itself if it queues
+tasks, is left unchanged.
 
 ## Event-store deployment IAM
 
@@ -178,7 +178,6 @@ earlier revision of the service was given.
 | runtime | `roles/cloudkms.publicKeyViewer` | key `producer` in the same ring | all |
 | runtime | `roles/pubsub.publisher` | each topic `<action>.<domain>.<service>` | all |
 | runtime | `roles/cloudtasks.enqueuer` | queue `event-store-<service>-<domain>-create-block` | all |
-| runtime | `roles/iam.serviceAccountUser` | the runtime service account itself | all |
 | runtime | `roles/run.invoker` | the store's Cloud Run service | all |
 
 Only event stores receive these grants and these keys. The builds of other
@@ -249,13 +248,13 @@ through predefined or custom roles of the operator's choice:
 | Deploying as the runtime, and Scheduler jobs that call as it | `iam.serviceAccounts.actAs` on the runtime identity |
 
 Predefined roles that hold the policy permissions are `roles/cloudkms.admin`,
-`roles/pubsub.admin`, `roles/cloudtasks.admin`, `roles/run.admin` and
-`roles/iam.serviceAccountAdmin` on the runtime identity.
+`roles/pubsub.admin`, `roles/cloudtasks.admin` and `roles/run.admin`.
 `roles/iam.serviceAccountUser` holds `iam.serviceAccounts.actAs`, and the build
 identity needs it on the runtime identity: the build deploys the service as
 that account and creates both Scheduler jobs with it as their OIDC account.
-The runtime's own `roles/iam.serviceAccountUser` grant on itself in the table
-above covers the tasks the store enqueues, not the build. These are in
+The runtime's own `roles/iam.serviceAccountUser` grant on itself, which
+`blossm deploy` makes before the build, covers the tasks the store enqueues,
+not the build. These are in
 addition to what the build already needs to create keys, topics, queues,
 Scheduler jobs and the service. The Cloud Tasks and Cloud Scheduler service
 agents must be able to mint the runtime identity's OIDC tokens.
@@ -269,8 +268,18 @@ through a queue. Earlier versions delivered every task as
 `executer@<project>`. That account is no longer used, and its bindings can be
 removed once every service has been redeployed.
 
-The running service reads its own identity from `GCP_SERVICE_ACCOUNT`, which
-the deploy step sets.
+The running service reads its own identity from the metadata server, so it
+can only name the account its revision really runs as.
+
+To queue a task as itself, a service needs `roles/iam.serviceAccountUser` on
+its own account. A build has no authority over service accounts, so
+`blossm deploy` makes that one grant with the deployer's credentials before
+submitting the build, for every service whose build gives it a queue and
+that does not hold it yet. To make it the deployer needs
+`iam.serviceAccounts.setIamPolicy` on the runtime identity, for example
+`roles/iam.serviceAccountAdmin`; without it the deployment stops before the
+build. A service with no configured identity runs as the project's
+default account, whose access is not managed here.
 
 The build does not grant, and the operator provisions separately:
 
