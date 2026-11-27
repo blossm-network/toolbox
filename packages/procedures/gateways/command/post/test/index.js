@@ -16,7 +16,8 @@ const now = new Date();
 const response = { a: 1 };
 const payload = "some-payload";
 const issued = "some-issued";
-const ip = "some-ip";
+// A real address: text that is not one is never passed on.
+const ip = "203.0.113.9";
 const headers = {
   issued,
 };
@@ -680,5 +681,17 @@ describe("Command gateway post", () => {
     // Fewer addresses than Google would have appended: nothing to trust.
     expect(await addressFor("203.0.113.5", "2")).to.equal(undefined);
     expect(await addressFor(undefined, "2")).to.equal(undefined);
+    // IPv6, and surrounding spaces.
+    expect(await addressFor("evil , 2001:db8::1 ")).to.equal("2001:db8::1");
+    // A hop count that isn't a whole number of one or more: no address,
+    // never an entry counted from the caller's end.
+    for (const hops of ["-1", "0", "1.5", "two", "Infinity", " "])
+      expect(
+        await addressFor("9.9.9.9, 8.8.8.8, 203.0.113.5", hops),
+        hops,
+      ).to.equal(undefined);
+    // Text that isn't an address is never passed on.
+    expect(await addressFor("203.0.113.5, not-an-address")).to.equal(undefined);
+    expect(await addressFor("<script>, 203.0.113.5", "2")).to.equal(undefined);
   });
 });

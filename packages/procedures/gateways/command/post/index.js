@@ -1,15 +1,27 @@
+import { isIP } from "node:net";
+
 import deps from "./deps.js";
 
 // The caller's address, as Google saw it. Google appends to X-Forwarded-For
 // the address that connected to it, and then the load balancer's own when
 // there is one; CLIENT_ADDRESS_HOPS says how many it appended. Everything
 // before that was written by the caller, so it is never read.
-const callerAddress = (req) =>
-  String(req.headers["x-forwarded-for"] || "")
+//
+// When in doubt there is no address: a hop count that isn't a whole number of
+// one or more, a header shorter than the count, or an entry that isn't an
+// address. A count higher than what Google really appends would land on the
+// caller's own text, so a count above one is only right for a service that
+// can't be reached around its load balancer.
+const callerAddress = (req) => {
+  const hops = Number(process.env.CLIENT_ADDRESS_HOPS ?? 1);
+  if (!Number.isInteger(hops) || hops < 1) return undefined;
+  const address = String(req.headers["x-forwarded-for"] || "")
     .split(",")
-    .map((address) => address.trim())
+    .map((entry) => entry.trim())
     .filter(Boolean)
-    .at(-(Number(process.env.CLIENT_ADDRESS_HOPS) || 1));
+    .at(-hops);
+  return isIP(address || "") ? address : undefined;
+};
 
 export default ({
     name,
