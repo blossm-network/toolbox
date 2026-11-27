@@ -77,4 +77,18 @@ describe("Cors middleware", () => {
     expect(allowFake).to.have.been.calledWith([`https://${network}`]);
     expect(optionsFake).to.have.been.calledWith("*", corsResult);
   });
+  it("should not allow credentials when every origin is allowed", async () => {
+    const corsFake = fake.returns(corsResult);
+    replace(deps, "cors", corsFake);
+    replace(deps, "allow", fake.returns({ check }));
+
+    await corsMiddleware({
+      app: { use: fake(), options: fake() },
+      allow: ["*"],
+      credentials: true,
+      methods,
+    });
+
+    expect(corsFake.firstCall.args[0].credentials).to.be.false;
+  });
 });

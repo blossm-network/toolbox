@@ -118,6 +118,7 @@ describe("Command gateway post", () => {
       domain: tokenToRevokeNetwork,
       httpOnly: true,
       secure: true,
+      sameSite: "lax",
     });
     expect(setFake).to.have.been.calledWith({
       token: {
@@ -508,12 +509,14 @@ describe("Command gateway post", () => {
       domain: token1Network,
       httpOnly: true,
       secure: true,
+      sameSite: "lax",
       expires: new Date(dateString()),
     });
     expect(cookieFake).to.have.been.calledWith(token2Type, token2Value, {
       domain: token2Network,
       httpOnly: true,
       secure: true,
+      sameSite: "lax",
       expires: new Date(dateString()),
     });
     expect(validateFake).to.have.been.calledWith({

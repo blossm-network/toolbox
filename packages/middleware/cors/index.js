@@ -7,8 +7,9 @@ export default ({ app, allow = [], credentials = false, methods = [] }) => {
       methods: methods.join(","),
       preflightContinue: false,
       optionsSuccessStatus: 204,
-      credentials,
-    })
+      // Any origin with cookies would let any site act as the visitor.
+      credentials: credentials && !allow.includes("*"),
+    }),
   );
   app.options("*", deps.cors());
 };
