@@ -16,7 +16,8 @@ const now = new Date();
 const response = { a: 1 };
 const payload = "some-payload";
 const issued = "some-issued";
-const ip = "some-ip";
+// A real address: text that is not one is never passed on.
+const ip = "203.0.113.9";
 const headers = {
   issued,
 };
@@ -649,5 +650,48 @@ describe("Command gateway post", () => {
       });
       expect(e).to.equal(error);
     }
+  });
+  it("should pass on the address Google appended, never one the caller wrote", async () => {
+    const issueFake = fake.returns({ body: {}, statusCode: 200 });
+    const setFake = fake.returns({ issue: issueFake });
+    replace(deps, "validate", fake());
+    replace(deps, "command", fake.returns({ set: setFake }));
+    const res = { status: fake.returns({ send: fake() }), set: fake() };
+    res.set = fake.returns(res);
+    const addressFor = async (header, hops) => {
+      if (hops) process.env.CLIENT_ADDRESS_HOPS = hops;
+      else delete process.env.CLIENT_ADDRESS_HOPS;
+      await post({ name: "some-name", domain: "some-domain" })(
+        {
+          body: { payload: {}, headers: {} },
+          headers: { ...(header && { "x-forwarded-for": header }) },
+        },
+        res,
+      );
+      delete process.env.CLIENT_ADDRESS_HOPS;
+      return issueFake.lastCall.args[1].tx.ip;
+    };
+    // Called directly, Google appends the caller's address last.
+    expect(await addressFor("9.9.9.9, 203.0.113.5")).to.equal("203.0.113.5");
+    expect(await addressFor("203.0.113.5", "1")).to.equal("203.0.113.5");
+    // Behind a load balancer, its own address follows the caller's.
+    expect(await addressFor("9.9.9.9,203.0.113.5, 34.1.1.1", "2")).to.equal(
+      "203.0.113.5",
+    );
+    // Fewer addresses than Google would have appended: nothing to trust.
+    expect(await addressFor("203.0.113.5", "2")).to.equal(undefined);
+    expect(await addressFor(undefined, "2")).to.equal(undefined);
+    // IPv6, and surrounding spaces.
+    expect(await addressFor("evil , 2001:db8::1 ")).to.equal("2001:db8::1");
+    // A hop count that isn't a whole number of one or more: no address,
+    // never an entry counted from the caller's end.
+    for (const hops of ["-1", "0", "1.5", "two", "Infinity", " "])
+      expect(
+        await addressFor("9.9.9.9, 8.8.8.8, 203.0.113.5", hops),
+        hops,
+      ).to.equal(undefined);
+    // Text that isn't an address is never passed on.
+    expect(await addressFor("203.0.113.5, not-an-address")).to.equal(undefined);
+    expect(await addressFor("<script>, 203.0.113.5", "2")).to.equal(undefined);
   });
 });
