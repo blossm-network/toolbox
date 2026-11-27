@@ -135,6 +135,7 @@ export default ({
             serviceName,
           }),
           scheduleJob({
+            cloudRun,
             name: `fact-gateway${service ? `-${service}` : ""}${
               domain ? `-${domain}` : ""
             }-check-in`,

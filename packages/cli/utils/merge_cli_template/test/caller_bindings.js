@@ -7,7 +7,6 @@ import callerBindings, {
 } from "../src/write_build/caller_bindings.js";
 
 const runtime = "blossm-start@blossm-dev.iam.gserviceaccount.com";
-const executer = "executer@blossm-dev.iam.gserviceaccount.com";
 const serviceOf = (...parts) =>
   `us-east1-${operationShortName(parts)}-${hash(...parts)}`;
 
@@ -47,7 +46,6 @@ const invoker = (service, member) =>
   `run services ${service} ${member} run.invoker`;
 const enqueuer = (queue) =>
   `tasks queues ${queue} ${runtime} cloudtasks.enqueuer`;
-const actAsExecuter = `iam service-accounts ${executer} ${runtime} iam.serviceAccountUser`;
 
 describe("Caller bindings", () => {
   const start = {
@@ -60,10 +58,9 @@ describe("Caller bindings", () => {
 
   it("lets a command be checked in on and reach its own store", () => {
     assert.deepEqual(rendered(start), [
-      invoker("own-service", executer),
+      invoker("own-service", runtime),
       invoker(store, runtime),
       enqueuer("event-store-core-session"),
-      actAsExecuter,
     ]);
   });
 
@@ -104,11 +101,10 @@ describe("Caller bindings", () => {
       },
     };
     assert.deepEqual(rendered(command), [
-      invoker("own-service", executer),
+      invoker("own-service", runtime),
       invoker(serviceOf("upgrade", "session", "core", "command"), runtime),
       invoker(serviceOf("roles", "principal", "core", "fact"), runtime),
       enqueuer("command-core-session-upgrade"),
-      actAsExecuter,
     ]);
   });
 
@@ -159,13 +155,12 @@ describe("Caller bindings", () => {
       events: [{ domain: "session", service: "core", actions: ["start"] }],
     };
     assert.deepEqual(rendered(projection), [
-      invoker("own-service", executer),
+      invoker("own-service", runtime),
       invoker(store, runtime),
       invoker(serviceOf("sessions", "account", "view-store"), runtime),
       enqueuer("event-store-core-session"),
       enqueuer("view-store-account-sessions"),
       enqueuer("projection-account-sessions-play"),
-      actAsExecuter,
     ]);
   });
 
@@ -177,7 +172,7 @@ describe("Caller bindings", () => {
     assert.deepEqual(
       rendered({ procedure: "fact", name: "public-key", keys }),
       [
-        invoker("own-service", executer),
+        invoker("own-service", runtime),
         `kms keys global/jwt/access ${runtime} cloudkms.signer`,
         `kms keys us-east1/jwt/access ${runtime} cloudkms.publicKeyViewer`,
       ],
@@ -193,8 +188,12 @@ describe("Caller bindings", () => {
   });
 
   it("grants only the check-in without a configured runtime identity", () => {
+    // The service still has to be able to call itself, as whatever it runs as.
     assert.deepEqual(rendered(start, { serviceAccount: null }), [
-      invoker("own-service", executer),
+      invoker(
+        "own-service",
+        "${PROJECT_NUMBER}-compute@developer.gserviceaccount.com",
+      ),
     ]);
   });
 

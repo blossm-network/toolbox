@@ -159,6 +159,7 @@ export default ({
           //   serviceName,
           // }),
           scheduleJob({
+            cloudRun,
             name: `command-${service}-${domain}-${name}-check-in`,
             schedule: checkInSchedule,
             region,

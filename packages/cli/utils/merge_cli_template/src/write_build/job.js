@@ -167,6 +167,7 @@ export default ({
           //   region,
           // }),
           scheduleJob({
+            cloudRun,
             name: `job${service ? `-${service}` : ""}${
               domain ? `-${domain}` : ""
             }-${name}-check-in`,

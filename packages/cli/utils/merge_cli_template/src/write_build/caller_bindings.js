@@ -2,10 +2,14 @@ import hash from "@blossm/operation-hash";
 import operationShortName from "@blossm/operation-short-name";
 
 import addIamPolicyBinding from "./steps/add_iam_policy_binding.js";
+import runtimeIdentity from "./steps/runtime_identity.js";
 
 // The access a deployed procedure needs from its callers, on its callees and
 // on the keys it declares,
-// granted by its own build. Every binding is additive, so a redeploy repeats
+// granted by its own build. A service that queues tasks also needs leave to
+// act as itself, since its tasks carry its own identity. That one grant is on
+// a service account, which a build has no authority over, so the deployer
+// makes it before the build starts. Every binding is additive, so a redeploy repeats
 // them without effect. The event store renders its own bindings.
 
 const publicProcedures = ["command-gateway", "fact-gateway", "view-gateway"];
@@ -71,7 +75,6 @@ export default ({
   project,
 }) => {
   if (procedure == "event-store") return [];
-  const executer = `executer@${project}.iam.gserviceaccount.com`;
   const invoke = (target, member) =>
     addIamPolicyBinding({
       group: ["run", "services"],
@@ -91,11 +94,13 @@ export default ({
       ]
     : [];
   return [
-    // The check-in job, and any task delivered to this service, arrives as
-    // the executer. A public gateway has no invoker check to pass.
+    // The check-in job, and a task the service queues for itself, arrive as
+    // the service's own identity. A task another service queues arrives as
+    // that service, which holds its own invoker grant below. A public gateway
+    // has no invoker check to pass.
     ...(publicProcedures.includes(procedure)
       ? []
-      : [invoke(serviceName, executer)]),
+      : [invoke(serviceName, runtimeIdentity({ serviceAccount }))]),
     // Without a configured runtime identity the service runs as the
     // project's default account, whose access this build does not own.
     ...(serviceAccount
@@ -119,19 +124,6 @@ export default ({
             }),
           ),
           ...keyBindings({ keys, member: serviceAccount, project }),
-          // An enqueued task carries the executer's identity token.
-          ...(queues.length
-            ? [
-                addIamPolicyBinding({
-                  group: ["iam", "service-accounts"],
-                  name: executer,
-                  flags: ["--condition=None"],
-                  member: serviceAccount,
-                  role: "roles/iam.serviceAccountUser",
-                  project,
-                }),
-              ]
-            : []),
         ]
       : []),
   ];

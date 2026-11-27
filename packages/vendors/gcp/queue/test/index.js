@@ -3,6 +3,7 @@ import sinonChai from "sinon-chai";
 import { restore, replace, fake, useFakeTimers } from "sinon";
 
 import queue from "../index.js";
+import deps from "../deps.js";
 
 chai.use(sinonChai);
 const { expect } = chai;
@@ -75,7 +76,11 @@ describe("Queue", () => {
       data,
       method: "put",
     });
-    expect(queuePathFake).to.have.been.calledWith(project, "custom-region", name);
+    expect(queuePathFake).to.have.been.calledWith(
+      project,
+      "custom-region",
+      name,
+    );
     expect(createTaskFake).to.have.been.calledWith({
       parent: queueParent,
       task: {
@@ -84,7 +89,7 @@ describe("Queue", () => {
           httpMethod: "PUT",
           oidcToken: {
             serviceAccountEmail,
-            audience: url 
+            audience: url,
           },
           headers: {
             "content-type": "application/json",
@@ -115,7 +120,11 @@ describe("Queue", () => {
       data,
       method: "put",
     });
-    expect(queuePathFake).to.have.been.calledWith(project, "custom-region", name);
+    expect(queuePathFake).to.have.been.calledWith(
+      project,
+      "custom-region",
+      name,
+    );
     expect(createTaskFake).to.have.been.calledWith({
       parent: queueParent,
       task: {
@@ -124,7 +133,7 @@ describe("Queue", () => {
           httpMethod: "PUT",
           oidcToken: {
             serviceAccountEmail,
-            audience: url 
+            audience: url,
           },
           headers: {
             "content-type": "application/json",
@@ -143,12 +152,20 @@ describe("Queue", () => {
     const createTaskFake = fake.returns([taskResponse]);
     replace(queue.__client, "queuePath", queuePathFake);
     replace(queue.__client, "createTask", createTaskFake);
+    // With no account passed, the task is delivered as the service itself,
+    // read from the platform once and kept.
+    const identityFake = fake.resolves(
+      "own@some-project.iam.gserviceaccount.com",
+    );
+    replace(deps, "identity", identityFake);
     const result = await queue.enqueue({
       project,
       queue: name,
       wait: 4,
       location,
     })({ url });
+    await queue.enqueue({ project, queue: name, location })({ url });
+    expect(identityFake).to.have.been.calledOnce;
     expect(queuePathFake).to.have.been.calledWith(project, location);
     expect(createTaskFake).to.have.been.calledWith({
       parent: queueParent,
@@ -157,8 +174,7 @@ describe("Queue", () => {
           url,
           httpMethod: "POST",
           oidcToken: {
-            serviceAccountEmail:
-              "executer@some-project.iam.gserviceaccount.com",
+            serviceAccountEmail: "own@some-project.iam.gserviceaccount.com",
             audience: url,
           },
           headers: {
@@ -208,5 +224,38 @@ describe("Queue", () => {
       },
     });
     expect(result).to.equal(taskResponse);
+  });
+});
+
+describe("Queue identity", () => {
+  afterEach(() => restore());
+  it("should not enqueue, nor remember the failure, when its identity can't be read", async () => {
+    // A fresh module, so no identity is held from an earlier test.
+    const { default: fresh } = await import(`../index.js?fresh=${Date.now()}`);
+    const createTaskFake = fake.returns(["task"]);
+    replace(fresh.__client, "queuePath", fake.returns("parent"));
+    replace(fresh.__client, "createTask", createTaskFake);
+    const identityFake = fake.rejects(new Error("unreachable"));
+    replace(deps, "identity", identityFake);
+    const enqueue = (extra) =>
+      fresh.enqueue({ project: "p", queue: "q", location: "l" })({
+        url: "https://example.invalid",
+        ...extra,
+      });
+    for (let attempt = 0; attempt < 2; attempt++) {
+      let error;
+      try {
+        await enqueue();
+      } catch (e) {
+        error = e;
+      }
+      expect(error.message).to.equal("unreachable");
+    }
+    expect(createTaskFake).to.not.have.been.called;
+    expect(identityFake).to.have.been.calledTwice;
+    // A caller's own token needs no identity at all.
+    await enqueue({ token: "t" });
+    expect(identityFake).to.have.been.calledTwice;
+    expect(createTaskFake).to.have.been.calledOnce;
   });
 });

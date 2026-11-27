@@ -196,11 +196,12 @@ export default ({
                   region,
                   computeUrlId,
                   project,
-                })
-              )
+                }),
+              ),
             )
             .flat(),
           scheduleJob({
+            cloudRun,
             name: `projection${context ? `-${context}` : ""}-${name}-check-in`,
             schedule: checkInSchedule,
             serviceName,

@@ -56,8 +56,12 @@ describe("PostgreSQL event-store deployment", function () {
     const { result, read, calls, capture, remaining } = deploy(root, profile());
     assert.equal(result.status, 0, result.stderr);
     // The gcloud double finds the runtime identity, so it is only looked up.
+    // The store queues block continuations as itself, so the deployer lets
+    // it act as itself before the build starts.
     assert.deepEqual(calls, [
       "iam service-accounts describe blossm-session@blossm-network-development.iam.gserviceaccount.com --project=blossm-network-development",
+      "iam service-accounts get-iam-policy blossm-session@blossm-network-development.iam.gserviceaccount.com --format=json --project=blossm-network-development",
+      "iam service-accounts add-iam-policy-binding blossm-session@blossm-network-development.iam.gserviceaccount.com --member=serviceAccount:blossm-session@blossm-network-development.iam.gserviceaccount.com --role=roles/iam.serviceAccountUser --condition=None --quiet --project=blossm-network-development",
       "beta builds submit . --config=build.yaml --project=blossm-network-development",
     ]);
     assert.deepEqual(remaining, []);
@@ -415,8 +419,10 @@ describe("PostgreSQL event-store deployment", function () {
             ["producer", "roles/cloudkms.publicKeyViewer"],
           ],
         );
-        // One topic, the create-block queue, the executer and the invoker.
-        assert.equal(grants.length, (encrypts ? 3 : 2) + 4);
+        // One topic, the create-block queue and the invoker. Leave to act as
+        // itself is not the build's to give: the deployer grants it.
+        assert.equal(grants.length, (encrypts ? 3 : 2) + 3);
+        assert.equal(count(gcloud, "iam service-accounts"), 0);
         // isPublic never opens the service itself.
         const deployed = gcloud.find((call) => call.startsWith("run deploy "));
         assert(deployed.includes(" --no-allow-unauthenticated "));
@@ -575,13 +581,16 @@ describe("PostgreSQL event-store deployment", function () {
 });
 
 describe("Task queue region", () => {
-  const rootDir = (region) => ({
+  const rootDir = (region, account = "default@project") => ({
     config: () => ({
       vendors: {
         cloud: {
           gcp: {
             projects: { development: "project" },
             computeUrlIds: { development: "id" },
+            ...(account && {
+              runtimeServiceAccounts: { development: account },
+            }),
             ...(region && { defaults: { region } }),
           },
         },
@@ -651,6 +660,7 @@ describe("Task queue region", () => {
         operationHash: "hash",
       }));
       assert.equal(queue.location, expected);
+      assert.equal(queue.serviceAccountEmail, "default@project");
       assert.equal(queue.queue, "command-core-session-start");
       assert.equal(
         task.url,
@@ -658,6 +668,53 @@ describe("Task queue region", () => {
       );
     });
   }
+
+  const executeWith = async ({ procedure = {}, account }) => {
+    let queue;
+    const execute = await load("utils/execute_cli_template/index.js", {
+      normalize: normalize({}),
+      roboSay: (value) => value,
+      fs: {
+        readFileSync: () =>
+          yaml.stringify({
+            procedure: "command",
+            service: "core",
+            domain: "session",
+            name: "start",
+            ...procedure,
+          }),
+      },
+      rootDir: rootDir("us-east1", account),
+      path,
+      yaml,
+      gcpQueue: {
+        enqueue: (options) => {
+          queue = options;
+          return async () => {};
+        },
+      },
+      console: { log: () => {} },
+    });
+    await execute({ domain: "command" })([], () => ({
+      operationName: "name",
+      operationHash: "hash",
+    }));
+    return queue;
+  };
+
+  it("delivers a task as the procedure's own identity over the default", async () => {
+    const queue = await executeWith({
+      procedure: { runtimeServiceAccounts: { development: "own@project" } },
+    });
+    assert.equal(queue.serviceAccountEmail, "own@project");
+  });
+
+  it("refuses to execute with no identity to deliver the task as", async () => {
+    await assert.rejects(
+      executeWith({ account: null }),
+      /runtimeServiceAccounts\.development/,
+    );
+  });
 });
 
 describe("Environment hostname prefixes", () => {

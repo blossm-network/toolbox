@@ -16,6 +16,7 @@ describe("Installed Tasks HTTP request contract", () => {
         project: "offline",
         location: "region",
         queue: "commands",
+        serviceAccountEmail: "own@offline.iam.gserviceaccount.com",
       })({
         url: "https://example.invalid/run",
         data: { active: false, count: 0 },

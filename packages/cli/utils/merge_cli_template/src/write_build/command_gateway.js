@@ -138,6 +138,7 @@ export default ({
             serviceName,
           }),
           scheduleJob({
+            cloudRun,
             name: `command-gateway-${service}-${domain}-check-in`,
             schedule: checkInSchedule,
             serviceName,

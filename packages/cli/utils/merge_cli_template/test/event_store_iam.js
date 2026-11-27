@@ -43,7 +43,6 @@ const postgres = {
 };
 const custom = "blossm-session@blossm-dev.iam.gserviceaccount.com";
 const compute = "123456-compute@developer.gserviceaccount.com";
-const executer = "executer@blossm-dev.iam.gserviceaccount.com";
 
 // Cloud Build replaces its built-in project number and then unescapes doubled
 // dollars. Any other bare dollar would be substituted away, so reject it.
@@ -82,15 +81,10 @@ const bindings = (member, { encrypts = true } = {}) => {
         member,
         "roles/cloudtasks.enqueuer",
       ),
-      grant(
-        `iam service-accounts add-iam-policy-binding ${executer} --condition=None`,
-        member,
-        "roles/iam.serviceAccountUser",
-      ),
     ],
     after: grant(
       "run services add-iam-policy-binding us-east1-store-hash --region=us-east1 --platform=managed --condition=None",
-      executer,
+      member,
       "roles/run.invoker",
     ),
   };
@@ -199,7 +193,7 @@ exit 0
         ])
           assert(index(created) < calls.indexOf(before[0]), created);
         for (const grant of before) assert(calls.indexOf(grant) < deploy);
-        // The executer may invoke before Scheduler is pointed at the service.
+        // The store may invoke itself before Scheduler is pointed at the service.
         assert(deploy < calls.indexOf(after));
         assert(calls.indexOf(after) < index("scheduler jobs create"));
       });
@@ -308,7 +302,7 @@ exit 0
       assert(yaml.parse(rendered).steps.length, procedure);
       assert(!rendered.includes("kms"), procedure);
       // With no runtime identity configured, a private procedure holds only
-      // the executer's invoker grant, beside a projection's push-invoker one.
+      // its own invoker grant, beside a projection's push-invoker one.
       const grants = yaml
         .parse(rendered)
         .steps.filter((step) => step.args.includes("add-iam-policy-binding"))
@@ -318,7 +312,9 @@ exit 0
         grants.filter((member) => !member.includes("pubsub-invoker@")),
         gateway
           ? []
-          : ["--member=serviceAccount:executer@p.iam.gserviceaccount.com"],
+          : [
+              "--member=serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com",
+            ],
         procedure,
       );
       assert.equal(
@@ -336,7 +332,7 @@ exit 0
     const iam = ({ calls }) =>
       calls.filter((call) => call.includes("add-iam-policy-binding"));
     assert.deepEqual(iam(again), iam(first));
-    assert.equal(iam(again).length, 8);
+    assert.equal(iam(again).length, 7);
     // Existing keys, topics and queues are reused, not recreated.
     assert(
       !again.calls.some((call) => / (keys|topics|queues) create /.test(call)),
@@ -348,10 +344,10 @@ exit 0
     const iam = gcloudSteps(eventStore({ ...store, ...postgres, strict: true }))
       .filter((step) => step.args.includes("add-iam-policy-binding"))
       .map((step) => step.args);
-    assert.equal(iam.length, 8);
+    assert.equal(iam.length, 7);
     for (const args of iam) {
       const condition = args.filter((arg) => arg.startsWith("--condition"));
-      const supported = ["kms", "iam", "run"].includes(args[0]);
+      const supported = ["kms", "run"].includes(args[0]);
       assert(supported || ["pubsub", "tasks"].includes(args[0]), args[0]);
       assert.deepEqual(
         condition,
@@ -370,7 +366,7 @@ exit 0
         (step) =>
           step.args[0] == group && step.args.includes("add-iam-policy-binding"),
       );
-    for (const group of ["kms", "iam", "run"]) {
+    for (const group of ["kms", "run"]) {
       const step = binding(group);
       const args = step.args.filter((arg) => arg != "--condition=None");
       assert.equal(build([step]).status, 0, group);
