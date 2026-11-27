@@ -1,3 +1,5 @@
+import { isIPv4 } from "node:net";
+
 // Reads and validates the optional deployment profile in config.yaml. Every
 // omitted field keeps the generator's historical behavior. Invalid values
 // throw here, before a build description is written or submitted.
@@ -58,7 +60,8 @@ const optional = (config, key, env, valid, expectation) => {
   return value ?? undefined;
 };
 
-const account = (value) => typeof value == "string" && serviceAccount.test(value);
+const account = (value) =>
+  typeof value == "string" && serviceAccount.test(value);
 const count = (value) => Number.isSafeInteger(value) && value >= 0;
 
 export const registry = ({ env, config }) =>
@@ -66,12 +69,19 @@ export const registry = ({ env, config }) =>
     config,
     "registries",
     env,
-    (value) => typeof value == "string" && /^[a-z0-9][a-z0-9./_-]*$/.test(value),
-    "a container registry path"
+    (value) =>
+      typeof value == "string" && /^[a-z0-9][a-z0-9./_-]*$/.test(value),
+    "a container registry path",
   );
 
 export const buildServiceAccount = ({ env, config }) =>
-  optional(config, "buildServiceAccounts", env, account, "a service account email");
+  optional(
+    config,
+    "buildServiceAccounts",
+    env,
+    account,
+    "a service account email",
+  );
 
 // A procedure's blossm.yaml may name its own runtime identity per environment.
 // A configured map must be complete and valid: an empty, null or malformed
@@ -93,6 +103,23 @@ const procedureAccount = ({ env, procedure }) => {
   return Object.hasOwn(accounts, env) ? accounts[env] : undefined;
 };
 
+// The shared load balancer public gateways sit behind, when one is configured.
+// All four parts are needed: a partial entry fails instead of deploying a
+// gateway that is reachable around its protections.
+const resourceName = /^[a-z]([-a-z0-9]{0,61}[a-z0-9])?$/;
+const loadBalancer = ({ env, config }) => {
+  const path = `vendors.cloud.gcp.loadBalancers.${env}`;
+  const value = config.vendors.cloud.gcp.loadBalancers?.[env];
+  if (value == undefined) return undefined;
+  if (typeof value != "object") fail(path, "a load balancer definition");
+  for (const key of ["urlMap", "certificateMap", "securityPolicy"])
+    if (typeof value[key] != "string" || !resourceName.test(value[key]))
+      fail(`${path}.${key}`, "a resource name");
+  if (!isIPv4(value.address)) fail(`${path}.address`, "an IPv4 address");
+  const { urlMap, certificateMap, securityPolicy, address } = value;
+  return { urlMap, certificateMap, securityPolicy, address };
+};
+
 // Cloud Run options. An undefined entry lets the deploy step keep its default.
 // `vpcConnector: null` is an explicit request for no connector, which the
 // deploy step enforces with `--clear-vpc-connector`. `procedure` is the parsed
@@ -103,15 +130,32 @@ export const cloudRun = ({ env, config, procedure = {} }) => {
     connectors && Object.hasOwn(connectors, env) ? connectors[env] : undefined;
   if (
     vpcConnector != undefined &&
-    !(typeof vpcConnector == "string" && /^[a-z][a-z0-9/-]*$/.test(vpcConnector))
+    !(
+      typeof vpcConnector == "string" && /^[a-z][a-z0-9/-]*$/.test(vpcConnector)
+    )
   )
     fail(`vendors.cloud.gcp.vpcConnectors.${env}`, "a connector name or null");
-  const maxInstances = optional(config, "maxInstances", env, count, "a whole number");
-  const minInstances = optional(config, "minInstances", env, count, "a whole number");
+  const maxInstances = optional(
+    config,
+    "maxInstances",
+    env,
+    count,
+    "a whole number",
+  );
+  const minInstances = optional(
+    config,
+    "minInstances",
+    env,
+    count,
+    "a whole number",
+  );
   if (maxInstances === 0)
     fail(`vendors.cloud.gcp.maxInstances.${env}`, "at least 1");
   if (minInstances > maxInstances)
-    fail(`vendors.cloud.gcp.minInstances.${env}`, "no greater than maxInstances");
+    fail(
+      `vendors.cloud.gcp.minInstances.${env}`,
+      "no greater than maxInstances",
+    );
   return {
     serviceAccount:
       procedureAccount({ env, procedure }) ??
@@ -120,7 +164,7 @@ export const cloudRun = ({ env, config, procedure = {} }) => {
         "runtimeServiceAccounts",
         env,
         account,
-        "a service account email"
+        "a service account email",
       ),
     vpcConnector,
     ingress: optional(
@@ -128,9 +172,10 @@ export const cloudRun = ({ env, config, procedure = {} }) => {
       "ingress",
       env,
       (value) => ingresses.includes(value),
-      `one of ${ingresses.join(", ")}`
+      `one of ${ingresses.join(", ")}`,
     ),
     maxInstances,
     minInstances,
+    loadBalancer: loadBalancer({ env, config }),
   };
 };

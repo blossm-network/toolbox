@@ -283,6 +283,89 @@ key, service-account or Cloud Run binding without `--condition=None`, and a
 topic or queue binding with any condition. It does not establish live IAM
 behavior.
 
+## Gateways behind a load balancer
+
+By default Cloud Run maps a gateway's hostname straight onto its service, and
+nothing limits how fast a client may call it. Naming a load balancer for an
+environment puts every gateway of that environment behind a global external
+Application Load Balancer, where a Cloud Armor policy can limit and block
+requests before they reach a service:
+
+```yaml
+vendors:
+  cloud:
+    gcp:
+      loadBalancers:
+        production:
+          urlMap: gateways
+          certificateMap: gateways
+          securityPolicy: gateways
+          address: 203.0.113.7
+```
+
+All four are required. A partial or malformed entry fails before a build is
+written. An environment without an entry keeps the direct mapping.
+
+### What each gateway build adds
+
+Each is named after the gateway's Cloud Run service and is safe to repeat.
+
+| Order | Resource | Purpose |
+| --- | --- | --- |
+| 1 | the service, with ingress `internal-and-cloud-load-balancing` | refuses requests from the internet that did not come through the load balancer |
+| 2 | a serverless network endpoint group | points the load balancer at the service |
+| 3 | a global backend service | the unit the policy attaches to |
+| 4 | the security policy on that backend, set on every build | the rate limit |
+| 5 | the endpoint group as the backend's only backend | |
+| 6 | a Google-managed certificate for the hostname, and its entry in the certificate map | TLS |
+| 7 | a host rule and path matcher in the url map | routes the hostname to the backend |
+| 8 | an `A` record for the hostname | points it at the load balancer |
+
+The policy is attached before the hostname is routed, so a gateway is never
+reachable without it. The ingress setting is what makes the policy binding:
+without it a client could call the service's `run.app` address directly.
+Callers inside the project's own network can still do that, and the policy
+does not see them.
+
+The policy is attached to each gateway's backend separately, so a limit
+counts a client's requests to one gateway, not to all of them together.
+
+No domain mapping and no `CNAME` is written. A gateway that was deployed with
+the direct mapping keeps its old mapping and `CNAME` until an operator removes
+them; the `A` record cannot be created while the `CNAME` exists.
+
+Two gateway builds that edit the url map at the same moment can collide. The
+one that loses fails at step 7 and succeeds when run again.
+
+A certificate is issued once the hostname resolves to the load balancer, which
+can take some minutes after a gateway's first build.
+
+### What the operator creates once per environment
+
+A reserved global address, the security policy and its rules, the certificate
+map, the url map, a target HTTPS proxy joining the url map and the certificate
+map, and a forwarding rule on port 443 for the address. The url map needs a
+default for hostnames no gateway owns.
+
+The rate limit lives in the security policy, not in this repository. A rule
+of action `throttle` or `rate-based-ban` keyed on `IP` covers every gateway
+the policy is attached to.
+
+### What the build identity needs
+
+Beyond its existing roles: permission to create network endpoint groups and
+backend services, to edit the url map, to use the security policy
+(`compute.securityPolicies.use` and `compute.backendServices.setSecurityPolicy`),
+to create Certificate Manager certificates and map entries, and to write `A`
+records in the zone.
+
+### The caller's address
+
+A gateway's `CLIENT_ADDRESS_HOPS` is the number of addresses Google appends
+to `X-Forwarded-For` before a request reaches the service: the caller's, and
+then the load balancer's when there is one. Anything earlier in the header
+was sent by the caller and cannot be trusted.
+
 ## Integration suites in generated builds
 
 `src/write_build/steps/integration_suite.js` owns how every procedure's build

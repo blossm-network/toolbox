@@ -1,6 +1,14 @@
 import ensureResource from "./ensure_resource.js";
 
-export default ({ uri, dnsZone, project }) => {
+// A gateway mapped by Cloud Run is an alias of Google's front end. One behind a
+// load balancer points at that load balancer's address.
+export default ({
+  uri,
+  dnsZone,
+  project,
+  type = "CNAME",
+  data = "ghs.googlehosted.com.",
+}) => {
   const name = `${uri.replace(/\.$/, "")}.`;
   return ensureResource({
     describe: [
@@ -9,7 +17,7 @@ export default ({ uri, dnsZone, project }) => {
       "describe",
       name,
       `--zone=${dnsZone}`,
-      "--type=CNAME",
+      `--type=${type}`,
       `--project=${project}`,
       "--format=value(rrdatas)",
     ],
@@ -19,12 +27,12 @@ export default ({ uri, dnsZone, project }) => {
       "create",
       name,
       `--zone=${dnsZone}`,
-      "--type=CNAME",
+      `--type=${type}`,
       "--ttl=86400",
-      "--rrdatas=ghs.googlehosted.com.",
+      `--rrdatas=${data}`,
       `--project=${project}`,
       "--quiet",
     ],
-    expected: "ghs.googlehosted.com.",
+    expected: data,
   });
 };

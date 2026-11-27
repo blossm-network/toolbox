@@ -32,6 +32,7 @@ export default ({
     serviceAccount,
     vpcConnector = `${region}-network`,
     ingress = "internal",
+    loadBalancer,
     maxInstances,
     minInstances,
   } = {},
@@ -55,6 +56,9 @@ export default ({
     GCP_KMS_SECRET_BUCKET_KEY_LOCATION: secretBucketKeyLocation,
     GCP_KMS_SECRET_BUCKET_KEY_RING: secretBucketKeyRing,
     GCP_COMPUTE_URL_ID: computeUrlId,
+    // How many addresses Google appends to X-Forwarded-For before a public
+    // request arrives: the caller's, then the load balancer's when there is one.
+    ...(allowUnauthenticated && { CLIENT_ADDRESS_HOPS: loadBalancer ? 2 : 1 }),
     ...env,
   };
   return [
@@ -82,7 +86,15 @@ export default ({
         ...(allowUnauthenticated
           ? ["--no-invoker-iam-check"]
           : ["--no-allow-unauthenticated", "--invoker-iam-check"]),
-        `--ingress=${allowUnauthenticated ? "all" : ingress}`,
+        // Behind a load balancer a public service refuses direct requests,
+        // which would otherwise go around the load balancer's protections.
+        `--ingress=${
+          allowUnauthenticated
+            ? loadBalancer
+              ? "internal-and-cloud-load-balancing"
+              : "all"
+            : ingress
+        }`,
         ...(serviceAccount ? [`--service-account=${serviceAccount}`] : []),
         ...(maxInstances == undefined
           ? []

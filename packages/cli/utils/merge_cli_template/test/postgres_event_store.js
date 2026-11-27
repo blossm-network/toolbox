@@ -83,7 +83,10 @@ const deployment = (steps) => {
   const flat = steps.flat();
   const deploy = flat.find((step) => step.args?.includes("deploy"));
   const variables = JSON.parse(
-    Buffer.from(flat[flat.indexOf(deploy) - 1].args.at(-1), "base64").toString(),
+    Buffer.from(
+      flat[flat.indexOf(deploy) - 1].args.at(-1),
+      "base64",
+    ).toString(),
   );
   return { flat, deploy, variables };
 };
@@ -108,6 +111,7 @@ describe("PostgreSQL event-store deployment profile", () => {
       ingress: "all",
       maxInstances: 1,
       minInstances: 0,
+      loadBalancer: undefined,
     });
     assert.equal(
       registry({ env, config }),
@@ -122,7 +126,10 @@ describe("PostgreSQL event-store deployment profile", () => {
   it("keeps historical defaults when the optional profile is omitted", () => {
     const config = { vendors: { cloud: { gcp: {} } } };
     assert.equal(eventStoreKind(config), "mongodb");
-    assert.equal(eventStoreKind({ defaults: { eventStore: "mongodb" } }), "mongodb");
+    assert.equal(
+      eventStoreKind({ defaults: { eventStore: "mongodb" } }),
+      "mongodb",
+    );
     assert.equal(registry({ env, config }), undefined);
     assert.equal(buildServiceAccount({ env, config }), undefined);
     assert.deepEqual(cloudRun({ env, config }), {
@@ -131,6 +138,7 @@ describe("PostgreSQL event-store deployment profile", () => {
       ingress: undefined,
       maxInstances: undefined,
       minInstances: undefined,
+      loadBalancer: undefined,
     });
     // Another environment's explicit choice is not inherited.
     assert.equal(
@@ -139,7 +147,8 @@ describe("PostgreSQL event-store deployment profile", () => {
     );
   });
 
-  const own = "blossm-session-start@blossm-network-development.iam.gserviceaccount.com";
+  const own =
+    "blossm-session-start@blossm-network-development.iam.gserviceaccount.com";
   const root = profile().vendors.cloud.gcp.runtimeServiceAccounts.development;
   const identity = (procedure, config = profile()) =>
     cloudRun({ env, config, procedure }).serviceAccount;
@@ -162,7 +171,10 @@ describe("PostgreSQL event-store deployment profile", () => {
 
   it("falls back to config.yaml when the procedure names no identity for the environment", () => {
     assert.equal(identity({}), root);
-    assert.equal(identity({ runtimeServiceAccounts: { production: own } }), root);
+    assert.equal(
+      identity({ runtimeServiceAccounts: { production: own } }),
+      root,
+    );
     // With neither configured, the deploy step keeps its own default.
     assert.equal(
       identity(
@@ -196,11 +208,20 @@ describe("PostgreSQL event-store deployment profile", () => {
   const connection = (config) =>
     config.vendors.eventStore.postgres.connections.development;
   for (const [name, mutate, read = postgresConnection] of [
-    ["unknown event store", (c) => (c.defaults.eventStore = "mysql"), ({ config }) => eventStoreKind(config)],
+    [
+      "unknown event store",
+      (c) => (c.defaults.eventStore = "mysql"),
+      ({ config }) => eventStoreKind(config),
+    ],
     ["missing connection", (c) => delete c.vendors.eventStore.postgres],
-    ["another environment only", (c) => {
-      c.vendors.eventStore.postgres.connections = { production: connection(c) };
-    }],
+    [
+      "another environment only",
+      (c) => {
+        c.vendors.eventStore.postgres.connections = {
+          production: connection(c),
+        };
+      },
+    ],
     ["missing database", (c) => delete connection(c).database],
     ["unsafe database", (c) => (connection(c).database = "blossm;drop")],
     ["missing user", (c) => delete connection(c).user],
@@ -208,19 +229,66 @@ describe("PostgreSQL event-store deployment profile", () => {
     ["text pool", (c) => (connection(c).max = "2")],
     ["missing instance", (c) => delete connection(c).cloudSqlInstance],
     ["bare instance", (c) => (connection(c).cloudSqlInstance = "blossm-pg")],
-    ["instance injection", (c) => (connection(c).cloudSqlInstance = "a:b:c,d:e:f")],
+    [
+      "instance injection",
+      (c) => (connection(c).cloudSqlInstance = "a:b:c,d:e:f"),
+    ],
     ["missing secret", (c) => delete connection(c).passwordSecret],
-    ["secret path injection", (c) => (connection(c).passwordSecret.name = "a:1,B=c")],
-    ["unpinned secret", (c) => (connection(c).passwordSecret.version = "latest")],
-    ["missing secret version", (c) => delete connection(c).passwordSecret.version],
-    ["invalid registry", (c) => (c.vendors.cloud.gcp.registries.development = "bad registry"), registry],
-    ["invalid build account", (c) => (c.vendors.cloud.gcp.buildServiceAccounts.development = "someone@example.com"), buildServiceAccount],
-    ["invalid runtime account", (c) => (c.vendors.cloud.gcp.runtimeServiceAccounts.development = "allUsers"), cloudRun],
-    ["invalid connector", (c) => (c.vendors.cloud.gcp.vpcConnectors.development = false), cloudRun],
-    ["invalid ingress", (c) => (c.vendors.cloud.gcp.ingress.development = "public"), cloudRun],
-    ["zero max instances", (c) => (c.vendors.cloud.gcp.maxInstances.development = 0), cloudRun],
-    ["negative min instances", (c) => (c.vendors.cloud.gcp.minInstances.development = -1), cloudRun],
-    ["min above max", (c) => (c.vendors.cloud.gcp.minInstances.development = 2), cloudRun],
+    [
+      "secret path injection",
+      (c) => (connection(c).passwordSecret.name = "a:1,B=c"),
+    ],
+    [
+      "unpinned secret",
+      (c) => (connection(c).passwordSecret.version = "latest"),
+    ],
+    [
+      "missing secret version",
+      (c) => delete connection(c).passwordSecret.version,
+    ],
+    [
+      "invalid registry",
+      (c) => (c.vendors.cloud.gcp.registries.development = "bad registry"),
+      registry,
+    ],
+    [
+      "invalid build account",
+      (c) =>
+        (c.vendors.cloud.gcp.buildServiceAccounts.development =
+          "someone@example.com"),
+      buildServiceAccount,
+    ],
+    [
+      "invalid runtime account",
+      (c) =>
+        (c.vendors.cloud.gcp.runtimeServiceAccounts.development = "allUsers"),
+      cloudRun,
+    ],
+    [
+      "invalid connector",
+      (c) => (c.vendors.cloud.gcp.vpcConnectors.development = false),
+      cloudRun,
+    ],
+    [
+      "invalid ingress",
+      (c) => (c.vendors.cloud.gcp.ingress.development = "public"),
+      cloudRun,
+    ],
+    [
+      "zero max instances",
+      (c) => (c.vendors.cloud.gcp.maxInstances.development = 0),
+      cloudRun,
+    ],
+    [
+      "negative min instances",
+      (c) => (c.vendors.cloud.gcp.minInstances.development = -1),
+      cloudRun,
+    ],
+    [
+      "min above max",
+      (c) => (c.vendors.cloud.gcp.minInstances.development = 2),
+      cloudRun,
+    ],
   ]) {
     it(`rejects ${name}`, () => {
       const config = profile();
@@ -321,10 +389,14 @@ describe("PostgreSQL event-store build", () => {
       "event-store-core-session-create-block",
     ]) {
       const create = flat.filter((step) =>
-        JSON.stringify(step.args).includes(`"tasks","queues","create","${name}"`),
+        JSON.stringify(step.args).includes(
+          `"tasks","queues","create","${name}"`,
+        ),
       );
       const update = flat.filter((step) =>
-        JSON.stringify(step.args).includes(`"tasks","queues","update","${name}"`),
+        JSON.stringify(step.args).includes(
+          `"tasks","queues","update","${name}"`,
+        ),
       );
       assert.equal(create.length, 1, name);
       assert.equal(update.length, 1, name);
@@ -363,15 +435,16 @@ describe("PostgreSQL event-store build", () => {
     );
     assert(!JSON.stringify(local).includes("blossm-postgres-password"));
     // Mongo's local block creation still signs with KMS.
-    assert.equal(
-      kms(eventStoreBuild({ ...store, strict: false })).length,
-      3,
-    );
+    assert.equal(kms(eventStoreBuild({ ...store, strict: false })).length, 3);
   });
 
   it("leaves a Mongo deployment on its connector, ingress and database", () => {
     const { flat, deploy, variables } = deployment(
-      eventStoreBuild({ ...store, strict: true, containerRegistery: "us.gcr.io/p" }),
+      eventStoreBuild({
+        ...store,
+        strict: true,
+        containerRegistery: "us.gcr.io/p",
+      }),
     );
     assert.deepEqual(flag(deploy, "--vpc-connector"), [
       "--vpc-connector=us-east1-network",
@@ -429,7 +502,9 @@ describe("PostgreSQL event-store build", () => {
       assert.deepEqual(build.options, { logging: "CLOUD_LOGGING_ONLY" });
       assert(
         build.steps.some((step) =>
-          step.args?.includes("--set-secrets=PG_PASSWORD=blossm-postgres-password:1"),
+          step.args?.includes(
+            "--set-secrets=PG_PASSWORD=blossm-postgres-password:1",
+          ),
         ),
       );
       assert.deepEqual(Object.keys(write({})), ["steps"]);
@@ -523,7 +598,10 @@ describe("PostgreSQL event-store local fixture", () => {
   it("runs the store against a disposable PostgreSQL 17 service", async () => {
     const { file, services } = await generate();
     assert.deepEqual(Object.keys(services).sort(), ["main", "postgres"]);
-    assert.match(services.postgres.image, /^postgres:17\.\d+@sha256:[0-9a-f]{64}$/);
+    assert.match(
+      services.postgres.image,
+      /^postgres:17\.\d+@sha256:[0-9a-f]{64}$/,
+    );
     const fixture = services.postgres.environment;
     const main = services.main.environment;
     assert.equal(main.NODE_ENV, "local");
