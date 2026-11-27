@@ -9,7 +9,6 @@
     "@blossm/gcp-token": "*",
     "@blossm/node-external-token": "*",
     "@blossm/fact-rpc": "*",
-    "@blossm/channel-name": "*",
     "@blossm/logger": "*",
     "@blossm/gcp-queue": "*",
     "@blossm/compose-update": "*",

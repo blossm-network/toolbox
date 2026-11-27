@@ -1,7 +1,8 @@
 import channelName from "@blossm/channel-name";
-import { forbidden } from "@blossm/errors";
+import { badRequest, forbidden } from "@blossm/errors";
 
 export default {
   channelName,
   forbiddenError: forbidden,
+  badRequestError: badRequest,
 };
