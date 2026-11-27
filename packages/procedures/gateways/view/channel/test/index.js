@@ -11,6 +11,8 @@ const { expect } = chai;
 const name = "some-name";
 
 const context = "some-context";
+const network = "some.network";
+process.env.NETWORK = network;
 
 describe("View gateway get", () => {
   beforeEach(() => {
@@ -57,6 +59,7 @@ describe("View gateway get", () => {
     expect(sendFake).to.have.been.calledWith(channelName);
     expect(channelNameFake).to.have.been.calledWith({
       name,
+      network,
       key: "some-a-key",
       context: {
         root: queryContextRoot,
@@ -107,6 +110,7 @@ describe("View gateway get", () => {
     expect(sendFake).to.have.been.calledWith(channelName);
     expect(channelNameFake).to.have.been.calledWith({
       name,
+      network,
       principal: {
         root: contextPrincipalRoot,
         service: contextPrincipalService,
@@ -127,7 +131,7 @@ describe("View gateway get", () => {
       expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
-        "Missing required permissions."
+        "Missing required permissions.",
       );
       expect(e).to.equal(error);
     }
@@ -145,7 +149,7 @@ describe("View gateway get", () => {
       expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
-        "Missing required permissions."
+        "Missing required permissions.",
       );
       expect(e).to.equal(error);
     }

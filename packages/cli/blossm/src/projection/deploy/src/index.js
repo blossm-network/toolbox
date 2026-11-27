@@ -6,7 +6,6 @@ import gcpToken from "@blossm/gcp-token";
 import nodeExternalToken from "@blossm/node-external-token";
 import viewStore from "@blossm/view-store-rpc";
 import eventStore from "@blossm/event-store-rpc";
-import channelName from "@blossm/channel-name";
 import logger from "@blossm/logger";
 import gcpSecret from "@blossm/gcp-secret";
 import gcpQueue from "@blossm/gcp-queue";
@@ -18,7 +17,18 @@ import config from "./config.json" with { type: "json" };
 
 const matchDelimiter = ".$.";
 
-const pushToChannel = async ({ channel, view, id, trace, type }) => {
+// The updates service builds the channel from these parts and from the network
+// it knows the caller by, so a projection can only reach its own network's
+// channels.
+const pushToChannel = async ({
+  context,
+  principal,
+  key,
+  view,
+  id,
+  trace,
+  type,
+}) => {
   try {
     await command({
       name: "push",
@@ -37,7 +47,10 @@ const pushToChannel = async ({ channel, view, id, trace, type }) => {
         ...(trace && { trace }),
         id,
         type,
-        channel,
+        name: process.env.NAME,
+        ...(context && { context }),
+        ...(principal && { principal }),
+        ...(key && { key }),
       });
   } catch (err) {
     logger.error("Failed to push updates.", { err });
@@ -56,14 +69,9 @@ const pushToChannels = async ({
   if (context) {
     //Run once if there are no keys
     for (const key of keys || [null]) {
-      const channel = channelName({
-        name: process.env.NAME,
+      await pushToChannel({
         context,
         ...(key && { key }),
-      });
-
-      await pushToChannel({
-        channel,
         ...(view && { view }),
         id,
         ...(trace && { trace }),
@@ -90,18 +98,11 @@ const pushToChannels = async ({
         .stream(
           async (principal) => {
             for (const key of keys || [null]) {
-              const channel = channelName({
-                name: process.env.NAME,
-                ...(context && {
-                  context,
-                }),
-                principal,
-                ...(key && { key }),
-              });
-
               //If there is no context, the channel is always the principal's channel.
               await pushToChannel({
-                channel,
+                ...(context && { context }),
+                principal,
+                ...(key && { key }),
                 ...(view && { view }),
                 id,
                 ...(trace && { trace }),

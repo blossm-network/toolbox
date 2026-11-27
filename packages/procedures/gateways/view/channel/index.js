@@ -9,6 +9,8 @@ export default (req, res) => {
 
   const channel = deps.channelName({
     name: req.query.name,
+    // This gateway serves the view, so its network owns the channel.
+    network: process.env.NETWORK,
     ...(process.env.CONTEXT && {
       context: {
         root: req.query.context[process.env.CONTEXT].root,

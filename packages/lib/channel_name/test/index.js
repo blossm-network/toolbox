@@ -28,7 +28,7 @@ describe("Channel name", () => {
       key: "a",
     });
     expect(result).to.equal(
-      "some-name.some-context-root.some-context-domain.some-context-service.some-context-network.a.some-principal-root.some-principal-service.some-principal-network"
+      "some-name.some-context-root.some-context-domain.some-context-service.some-context-network.a.some-principal-root.some-principal-service.some-principal-network",
     );
   });
   it("should return the correct result with optionals omitted", () => {
@@ -36,5 +36,20 @@ describe("Channel name", () => {
       name,
     });
     expect(result).to.equal("some-name");
+  });
+  it("should put the owning network right after the name", () => {
+    expect(
+      channelName({
+        name,
+        network: "some.network",
+        context: { root: contextRoot, domain: contextDomain },
+        key: "a",
+      }),
+    ).to.equal(
+      "some-name.some.network.some-context-root.some-context-domain.a",
+    );
+    expect(channelName({ name, network: "some.network" })).to.equal(
+      "some-name.some.network",
+    );
   });
 });
