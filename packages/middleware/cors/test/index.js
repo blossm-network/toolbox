@@ -77,18 +77,49 @@ describe("Cors middleware", () => {
     expect(allowFake).to.have.been.calledWith([`https://${network}`]);
     expect(optionsFake).to.have.been.calledWith("*", corsResult);
   });
-  it("should not allow credentials when every origin is allowed", async () => {
+  it("should keep credentials from an origin let in only by a wildcard", async () => {
     const corsFake = fake.returns(corsResult);
     replace(deps, "cors", corsFake);
     replace(deps, "allow", fake.returns({ check }));
 
     await corsMiddleware({
       app: { use: fake(), options: fake() },
-      allow: ["*"],
+      allow: ["*", "https://named.example"],
       credentials: true,
       methods,
     });
 
-    expect(corsFake.firstCall.args[0].credentials).to.be.false;
+    // With a wildcard the options are decided per request.
+    const decide = corsFake.firstCall.args[0];
+    const credentialsFor = (origin) => {
+      let options;
+      decide(
+        { headers: { ...(origin && { origin }) } },
+        (_, o) => (options = o),
+      );
+      expect(options.origin).to.equal(check);
+      return options.credentials;
+    };
+    expect(credentialsFor("https://anything.example")).to.be.false;
+    expect(credentialsFor("*")).to.be.false;
+    expect(credentialsFor(undefined)).to.be.false;
+    expect(credentialsFor(`https://${network}`)).to.be.true;
+    expect(credentialsFor("https://named.example")).to.be.true;
+  });
+  it("should never give credentials with a wildcard when they are off", async () => {
+    const corsFake = fake.returns(corsResult);
+    replace(deps, "cors", corsFake);
+    replace(deps, "allow", fake.returns({ check }));
+    await corsMiddleware({
+      app: { use: fake(), options: fake() },
+      allow: ["*"],
+      methods,
+    });
+    let options;
+    corsFake.firstCall.args[0](
+      { headers: { origin: `https://${network}` } },
+      (_, o) => (options = o),
+    );
+    expect(options.credentials).to.be.false;
   });
 });
