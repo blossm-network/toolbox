@@ -9,7 +9,7 @@ const fixture = async ({ handler, response = { body: {} } }) => {
   const projection = await load("blossm/src/projection/deploy/src/index.js", {
     projection: (options) => options,
     config: { name: "cards" },
-    process: { env: { NODE_ENV: "local" } },
+    process: { env: { NODE_ENV: "local", NAME: "sessions" } },
     handlers: { animals: { bird: handler } },
     viewStore: () => ({
       set: () => ({
@@ -75,7 +75,6 @@ describe("Generated projection helper semantics", () => {
         ),
       },
     });
-    process.env.NAME = "sessions";
     await test.run(true);
     assert.deepStrictEqual(test.notifications[0].trace, trace);
     // The projection names the view and its context, never a channel: the
