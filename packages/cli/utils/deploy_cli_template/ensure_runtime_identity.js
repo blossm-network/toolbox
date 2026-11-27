@@ -17,19 +17,33 @@ export default ({ workingDir, project, execFileSync }) => {
   );
   const prefix = "--service-account=";
   const args = build.steps.flatMap((step) => step.args || []);
-  const runtime = args
+  const named = args
     .find((arg) => typeof arg == "string" && arg.startsWith(prefix))
     ?.slice(prefix.length);
   const suffix = `@${project}.iam.gserviceaccount.com`;
-  // Dry runs deploy nothing, and another project's identity is not ours to make.
-  if (!runtime || !runtime.endsWith(suffix)) return;
+  // Another project's identity is not ours to make.
+  if (named && !named.endsWith(suffix)) return;
+  // The build grants this role on a queue only to a service that queues.
+  const queues = args.includes("--role=roles/cloudtasks.enqueuer");
+  // A dry run deploys nothing.
+  if (!named && !queues) return;
 
+  const run = (...args) =>
+    execFileSync("gcloud", args, {
+      stdio: ["ignore", "pipe", "pipe"],
+      encoding: "utf8",
+    });
   const gcloud = (...args) =>
-    execFileSync(
-      "gcloud",
-      ["iam", "service-accounts", ...args, `--project=${project}`],
-      { stdio: ["ignore", "pipe", "pipe"], encoding: "utf8" },
-    );
+    run("iam", "service-accounts", ...args, `--project=${project}`);
+  // With no identity named, the service runs as the project's default one.
+  const runtime =
+    named ??
+    `${run(
+      "projects",
+      "describe",
+      project,
+      "--format=value(projectNumber)",
+    ).trim()}-compute@developer.gserviceaccount.com`;
   const actAs = (member) => [
     "add-iam-policy-binding",
     runtime,
@@ -39,17 +53,19 @@ export default ({ workingDir, project, execFileSync }) => {
     "--quiet",
   ];
   let created;
-  try {
-    gcloud("describe", runtime);
-  } catch (e) {
-    // Anything but a clear absence, such as no permission to look, is left
-    // for the build to report.
-    if (!/NOT_FOUND/.test(`${e.stderr}`)) return;
-    gcloud("create", runtime.slice(0, -suffix.length), "--quiet");
-    const buildIdentity = build.serviceAccount?.split("/").pop();
-    if (buildIdentity) gcloud(...actAs(buildIdentity));
-    created = runtime;
-  }
+  if (named)
+    try {
+      gcloud("describe", runtime);
+    } catch (e) {
+      // Anything but a clear absence, such as no permission to look, is
+      // left for the build to report: it deploys as this identity.
+      if (/NOT_FOUND/.test(`${e.stderr}`)) {
+        gcloud("create", runtime.slice(0, -suffix.length), "--quiet");
+        const buildIdentity = build.serviceAccount?.split("/").pop();
+        if (buildIdentity) gcloud(...actAs(buildIdentity));
+        created = runtime;
+      }
+    }
   // Already in place on a redeploy, which then needs no authority over the
   // account. Not being able to tell counts as not in place.
   const actsAsItself = () => {
@@ -66,14 +82,13 @@ export default ({ workingDir, project, execFileSync }) => {
       return false;
     }
   };
-  // The build grants this role on a queue only to a service that queues.
-  if (args.includes("--role=roles/cloudtasks.enqueuer") && !actsAsItself())
+  if (queues && !actsAsItself())
     try {
       gcloud(...actAs(runtime));
     } catch (e) {
       // Deploying anyway would give a service whose every task is refused.
       throw new Error(
-        `${runtime} queues tasks as itself and needs roles/iam.serviceAccountUser on itself, which could not be granted: ${`${e.stderr || e.message}`.trim()}`,
+        `${runtime} queues tasks as itself and needs roles/iam.serviceAccountUser on itself. It could not be confirmed (iam.serviceAccounts.getIamPolicy) or granted (setIamPolicy): ${`${e.stderr || e.message}`.trim()}`,
         { cause: e },
       );
     }

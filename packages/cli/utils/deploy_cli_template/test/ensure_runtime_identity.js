@@ -63,6 +63,7 @@ const run = ({
         if (args[2] == "describe" && describe)
           throw Object.assign(new Error("failed"), { stderr: describe });
         if (args[2] == "get-iam-policy") return policy;
+        if (args[0] == "projects") return "1234\n";
         if (
           refuseSelfGrant &&
           args.includes(`--member=serviceAccount:${runtime}`)
@@ -167,6 +168,22 @@ describe("Runtime identity before a deployment", () => {
     // A service that queues nothing gets no such grant.
     assert(!run().includes(selfGrant));
     assert(!run({ describe: "NOT_FOUND" }).includes(selfGrant));
+  });
+
+  it("makes that grant for the project's default identity when none is named", () => {
+    const fallback = "1234-compute@developer.gserviceaccount.com";
+    assert.deepEqual(run({ account: null, queues: true }), [
+      `projects describe ${project} --format=value(projectNumber)`,
+      `iam service-accounts get-iam-policy ${fallback} --format=json --project=${project}`,
+      `iam service-accounts add-iam-policy-binding ${fallback} --member=serviceAccount:${fallback} --role=roles/iam.serviceAccountUser --condition=None --quiet --project=${project}`,
+    ]);
+  });
+
+  it("still makes it when it cannot tell whether the identity exists", () => {
+    assert.equal(
+      run({ queues: true, describe: "PERMISSION_DENIED" }).at(-1),
+      selfGrant,
+    );
   });
 
   it("stops the deployment when that grant can't be made", () => {

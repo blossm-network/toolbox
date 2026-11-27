@@ -136,9 +136,10 @@ exist yet and lets the build identity deploy as it
 credentials of the person deploying, before submitting the build, so the build
 identity holds no authority over service accounts. That first deployment needs
 a deployer who may create service accounts and set their policy, for example
-`roles/iam.serviceAccountAdmin`. Later deployments need no such role: an
-identity that already exists, and already may act as itself if it queues
-tasks, is left unchanged.
+`roles/iam.serviceAccountAdmin`. Later deployments only need to read the
+identity's policy (`iam.serviceAccounts.getIamPolicy`): an identity that
+already exists, and already may act as itself if it queues tasks, is left
+unchanged.
 
 ## Event-store deployment IAM
 
@@ -278,8 +279,8 @@ submitting the build, for every service whose build gives it a queue and
 that does not hold it yet. To make it the deployer needs
 `iam.serviceAccounts.setIamPolicy` on the runtime identity, for example
 `roles/iam.serviceAccountAdmin`; without it the deployment stops before the
-build. A service with no configured identity runs as the project's
-default account, whose access is not managed here.
+build. A service with no configured identity runs as the project's default
+compute account, and that account is given the same grant on itself.
 
 The build does not grant, and the operator provisions separately:
 

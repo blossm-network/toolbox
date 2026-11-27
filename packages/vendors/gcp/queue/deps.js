@@ -6,7 +6,10 @@ import { CloudTasksClient } from "@google-cloud/tasks";
 const identity = async () => {
   const response = await fetch(
     "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/email",
-    { headers: { "Metadata-Flavor": "Google" } },
+    {
+      headers: { "Metadata-Flavor": "Google" },
+      signal: AbortSignal.timeout(5000),
+    },
   );
   if (!response.ok)
     throw new Error("This service's own identity could not be read.");
