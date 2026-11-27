@@ -1,4 +1,5 @@
 import writeEnv from "./write_env.js";
+import runtimeIdentity from "./runtime_identity.js";
 
 export default ({
   region,
@@ -48,6 +49,8 @@ export default ({
     SERVICE_NAME: serviceName,
     GCP_PROJECT: project,
     GCP_REGION: region,
+    // The identity the service queues tasks as: its own.
+    GCP_SERVICE_ACCOUNT: runtimeIdentity({ serviceAccount }),
     ...(redisHost && { REDIS_HOST: redisHost }),
     ...(redisPort && { REDIS_PORT: redisPort }),
     GCP_SECRET_BUCKET: secretBucket,

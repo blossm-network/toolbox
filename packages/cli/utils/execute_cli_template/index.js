@@ -58,7 +58,7 @@ const execute = async (input, configFn) => {
   const functionPath = path.resolve(
     process.cwd(),
     input.path || "",
-    "blossm.yaml"
+    "blossm.yaml",
   );
   const blossmConfig = yaml.parse(fs.readFileSync(functionPath, "utf8"));
 
@@ -77,7 +77,15 @@ const execute = async (input, configFn) => {
       env: input.env,
     });
 
+    // The task is delivered as the procedure's own runtime identity, the one
+    // caller its service always accepts. The operator needs leave to act as
+    // that account. A procedure's own entry wins over the root default.
+    const serviceAccountEmail =
+      blossmConfig.runtimeServiceAccounts?.[input.env] ??
+      rootConfig.vendors.cloud.gcp.runtimeServiceAccounts?.[input.env];
+
     await gcpQueue.enqueue({
+      ...(serviceAccountEmail && { serviceAccountEmail }),
       queue:
         input.queue || queueName({ config: blossmConfig, data: input.data }),
       // Queues live beside their service: the deployment creates them there.
@@ -85,10 +93,12 @@ const execute = async (input, configFn) => {
       computeUrlId,
       project,
     })({
-      url: `https://${input.region}-${operationName}-${operationHash}-${computeUrlId}.${input.region}.run.app/${urlPath({
-        config: blossmConfig,
-        data: input.data,
-      })}`,
+      url: `https://${input.region}-${operationName}-${operationHash}-${computeUrlId}.${input.region}.run.app/${urlPath(
+        {
+          config: blossmConfig,
+          data: input.data,
+        },
+      )}`,
       name: operationName,
       hash: operationHash,
       ...(input.data && { data: JSON.parse(input.data) }),
@@ -99,61 +109,61 @@ const execute = async (input, configFn) => {
   }
 };
 
-export default ({ domain }) => async (args, configFn) => {
-  const blossmConfig = rootDir.config();
-  const input = await normalize({
-    entrypointType: "path",
-    entrypointDefault: ".",
-    args,
-    flags: [
-      {
-        name: "env",
-        type: String,
-        short: "e",
-        choices: ["production", "sandbox", "staging", "development"],
-        default: blossmConfig.defaultEnv || "development",
-      },
-      {
-        name: "data",
-        type: String,
-        short: "d",
-      },
-      {
-        name: "region",
-        type: String,
-        short: "r",
-        choices: [
-          "asia-east1",
-          "asia-east2",
-          "asia-northeast1",
-          "asia-northeast2",
-          "asia-northeast3",
-          "asia-south1",
-          "asia-southeast1",
-          "australia-southeast1",
-          "europe-north1",
-          "europe-west1",
-          "europe-west2",
-          "europe-west3",
-          "europe-west4",
-          "europe-west6",
-          "northamerica-northeast1",
-          "southamerica-east1",
-          "us-central1",
-          "us-east1",
-          "us-east4",
-          "us-west1",
-          "us-west2",
-          "us-west3",
-          "us-west4",
-        ],
-        default:
-          blossmConfig.vendors?.cloud?.gcp?.defaults?.region || "us-central1",
-      },
-    ],
-  });
+export default ({ domain }) =>
+  async (args, configFn) => {
+    const blossmConfig = rootDir.config();
+    const input = await normalize({
+      entrypointType: "path",
+      entrypointDefault: ".",
+      args,
+      flags: [
+        {
+          name: "env",
+          type: String,
+          short: "e",
+          choices: ["production", "sandbox", "staging", "development"],
+          default: blossmConfig.defaultEnv || "development",
+        },
+        {
+          name: "data",
+          type: String,
+          short: "d",
+        },
+        {
+          name: "region",
+          type: String,
+          short: "r",
+          choices: [
+            "asia-east1",
+            "asia-east2",
+            "asia-northeast1",
+            "asia-northeast2",
+            "asia-northeast3",
+            "asia-south1",
+            "asia-southeast1",
+            "australia-southeast1",
+            "europe-north1",
+            "europe-west1",
+            "europe-west2",
+            "europe-west3",
+            "europe-west4",
+            "europe-west6",
+            "northamerica-northeast1",
+            "southamerica-east1",
+            "us-central1",
+            "us-east1",
+            "us-east4",
+            "us-west1",
+            "us-west2",
+            "us-west3",
+            "us-west4",
+          ],
+          default:
+            blossmConfig.vendors?.cloud?.gcp?.defaults?.region || "us-central1",
+        },
+      ],
+    });
 
-  //eslint-disable-next-line no-console
-  console.log(roboSay(`Executing your ${domain.split("-").join(" ")}.`));
-  await execute(input, configFn);
-};
+    console.log(roboSay(`Executing your ${domain.split("-").join(" ")}.`));
+    await execute(input, configFn);
+  };

@@ -146,6 +146,7 @@ export default ({
           //   region,
           // }),
           scheduleJob({
+            cloudRun,
             name: `view-composite${
               context ? `-${context}` : ""
             }-${name}-check-in`,

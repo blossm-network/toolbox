@@ -75,7 +75,11 @@ describe("Queue", () => {
       data,
       method: "put",
     });
-    expect(queuePathFake).to.have.been.calledWith(project, "custom-region", name);
+    expect(queuePathFake).to.have.been.calledWith(
+      project,
+      "custom-region",
+      name,
+    );
     expect(createTaskFake).to.have.been.calledWith({
       parent: queueParent,
       task: {
@@ -84,7 +88,7 @@ describe("Queue", () => {
           httpMethod: "PUT",
           oidcToken: {
             serviceAccountEmail,
-            audience: url 
+            audience: url,
           },
           headers: {
             "content-type": "application/json",
@@ -115,7 +119,11 @@ describe("Queue", () => {
       data,
       method: "put",
     });
-    expect(queuePathFake).to.have.been.calledWith(project, "custom-region", name);
+    expect(queuePathFake).to.have.been.calledWith(
+      project,
+      "custom-region",
+      name,
+    );
     expect(createTaskFake).to.have.been.calledWith({
       parent: queueParent,
       task: {
@@ -124,7 +132,7 @@ describe("Queue", () => {
           httpMethod: "PUT",
           oidcToken: {
             serviceAccountEmail,
-            audience: url 
+            audience: url,
           },
           headers: {
             "content-type": "application/json",
@@ -143,12 +151,16 @@ describe("Queue", () => {
     const createTaskFake = fake.returns([taskResponse]);
     replace(queue.__client, "queuePath", queuePathFake);
     replace(queue.__client, "createTask", createTaskFake);
+    // With no account passed, the task is delivered as the service itself.
+    process.env.GCP_SERVICE_ACCOUNT =
+      "own@some-project.iam.gserviceaccount.com";
     const result = await queue.enqueue({
       project,
       queue: name,
       wait: 4,
       location,
     })({ url });
+    delete process.env.GCP_SERVICE_ACCOUNT;
     expect(queuePathFake).to.have.been.calledWith(project, location);
     expect(createTaskFake).to.have.been.calledWith({
       parent: queueParent,
@@ -157,8 +169,7 @@ describe("Queue", () => {
           url,
           httpMethod: "POST",
           oidcToken: {
-            serviceAccountEmail:
-              "executer@some-project.iam.gserviceaccount.com",
+            serviceAccountEmail: "own@some-project.iam.gserviceaccount.com",
             audience: url,
           },
           headers: {
@@ -208,5 +219,19 @@ describe("Queue", () => {
       },
     });
     expect(result).to.equal(taskResponse);
+  });
+  it("should refuse to enqueue with no identity to deliver the task as", async () => {
+    const createTaskFake = fake.returns([taskResponse]);
+    replace(queue.__client, "queuePath", fake.returns(queueParent));
+    replace(queue.__client, "createTask", createTaskFake);
+    delete process.env.GCP_SERVICE_ACCOUNT;
+    let error;
+    try {
+      await queue.enqueue({ project, queue: name, location })({ url });
+    } catch (e) {
+      error = e;
+    }
+    expect(error.message).to.include("GCP_SERVICE_ACCOUNT");
+    expect(createTaskFake).to.not.have.been.called;
   });
 });

@@ -2,6 +2,7 @@ import hash from "@blossm/operation-hash";
 import operationShortName from "@blossm/operation-short-name";
 
 import addIamPolicyBinding from "./steps/add_iam_policy_binding.js";
+import runtimeIdentity from "./steps/runtime_identity.js";
 
 // The access a deployed procedure needs from its callers, on its callees and
 // on the keys it declares,
@@ -71,7 +72,6 @@ export default ({
   project,
 }) => {
   if (procedure == "event-store") return [];
-  const executer = `executer@${project}.iam.gserviceaccount.com`;
   const invoke = (target, member) =>
     addIamPolicyBinding({
       group: ["run", "services"],
@@ -91,11 +91,13 @@ export default ({
       ]
     : [];
   return [
-    // The check-in job, and any task delivered to this service, arrives as
-    // the executer. A public gateway has no invoker check to pass.
+    // The check-in job, and a task the service queues for itself, arrive as
+    // the service's own identity. A task another service queues arrives as
+    // that service, which holds its own invoker grant below. A public gateway
+    // has no invoker check to pass.
     ...(publicProcedures.includes(procedure)
       ? []
-      : [invoke(serviceName, executer)]),
+      : [invoke(serviceName, runtimeIdentity({ serviceAccount }))]),
     // Without a configured runtime identity the service runs as the
     // project's default account, whose access this build does not own.
     ...(serviceAccount
@@ -119,12 +121,13 @@ export default ({
             }),
           ),
           ...keyBindings({ keys, member: serviceAccount, project }),
-          // An enqueued task carries the executer's identity token.
+          // An enqueued task carries this service's own identity token, which
+          // the service may only mint with leave to act as itself.
           ...(queues.length
             ? [
                 addIamPolicyBinding({
                   group: ["iam", "service-accounts"],
-                  name: executer,
+                  name: serviceAccount,
                   flags: ["--condition=None"],
                   member: serviceAccount,
                   role: "roles/iam.serviceAccountUser",

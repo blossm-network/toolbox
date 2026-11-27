@@ -129,7 +129,11 @@ export default ({
               NAME: name,
               ...(context && { CONTEXT: context }),
               ...(bootstrapContext && { BOOTSTRAP_CONTEXT: bootstrapContext }),
-              MONGODB_DATABASE: databaseName({ procedure: "view-store", context, name }),
+              MONGODB_DATABASE: databaseName({
+                procedure: "view-store",
+                context,
+                name,
+              }),
               MONGODB_USER: mongodbUser,
               MONGODB_HOST: mongodbHost,
               MONGODB_PROTOCOL: mongodbProtocol,
@@ -165,6 +169,7 @@ export default ({
           //   region,
           // }),
           scheduleJob({
+            cloudRun,
             name: `view-store-${context ? `-${context}` : ""}-${name}-check-in`,
             schedule: checkInSchedule,
             serviceName,

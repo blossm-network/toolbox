@@ -1,4 +1,5 @@
 import ensureResource from "./ensure_resource.js";
+import runtimeIdentity from "./runtime_identity.js";
 
 export default ({
   name,
@@ -8,13 +9,15 @@ export default ({
   serviceName,
   computeUrlId,
   project,
+  cloudRun,
   method = "post",
 }) => {
   const options = [
     `--schedule=${schedule}`,
     `--uri=https://${uri}`,
     `--http-method=${method}`,
-    `--oidc-service-account-email=executer@${project}.iam.gserviceaccount.com`,
+    // The job calls the service as the service itself.
+    `--oidc-service-account-email=${runtimeIdentity(cloudRun)}`,
     `--oidc-token-audience=https://${serviceName}-${computeUrlId}.${region}.run.app`,
     `--project=${project}`,
     `--location=${region}`,

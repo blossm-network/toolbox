@@ -415,7 +415,7 @@ describe("PostgreSQL event-store deployment", function () {
             ["producer", "roles/cloudkms.publicKeyViewer"],
           ],
         );
-        // One topic, the create-block queue, the executer and the invoker.
+        // One topic, the create-block queue, the self grant and the invoker.
         assert.equal(grants.length, (encrypts ? 3 : 2) + 4);
         // isPublic never opens the service itself.
         const deployed = gcloud.find((call) => call.startsWith("run deploy "));

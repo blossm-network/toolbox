@@ -46,6 +46,9 @@ process.exit(Number(args.includes("describe") ? process.env.DESCRIBE_STATUS : pr
           );
 
           const generate = await load(`${buildDir}/steps/${filename}.js`, {
+            runtimeIdentity: await load(
+              `${buildDir}/steps/runtime_identity.js`,
+            ),
             ensureResource,
           });
           const step = generate({
@@ -133,6 +136,7 @@ process.exit(Number(args.includes("describe") ? process.env.DESCRIBE_STATUS : pr
   it("reconciles existing scheduler targets with structured arguments", async () => {
     const ensureResource = (options) => options;
     const schedule = await load(`${buildDir}/steps/schedule_job.js`, {
+      runtimeIdentity: await load(`${buildDir}/steps/runtime_identity.js`),
       ensureResource,
     });
     const options = schedule({
@@ -143,8 +147,22 @@ process.exit(Number(args.includes("describe") ? process.env.DESCRIBE_STATUS : pr
       region: "region",
       serviceName: "service",
       computeUrlId: "project",
+      cloudRun: { serviceAccount: "own@target.iam.gserviceaccount.com" },
     });
+    // With no identity configured the job calls as the default compute
+    // account, which is what the service then runs as.
+    assert(
+      schedule({ name: "n", project: "p" }).create.includes(
+        "--oidc-service-account-email=${PROJECT_NUMBER}-compute@developer.gserviceaccount.com",
+      ),
+    );
     for (const args of [options.create, options.update]) {
+      // The job calls the service as the service itself, never a shared account.
+      assert(
+        args.includes(
+          "--oidc-service-account-email=own@target.iam.gserviceaccount.com",
+        ),
+      );
       assert(args.includes("--uri=https://host/_check-in"));
       assert(args.includes("--schedule=0 * * * *"));
       assert(args.includes("--location=region"));

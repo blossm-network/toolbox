@@ -134,6 +134,7 @@ export default ({
             serviceName,
           }),
           scheduleJob({
+            cloudRun,
             name: `view-gateway${context ? `-${context}` : ""}-check-in`,
             schedule: checkInSchedule,
             serviceName,

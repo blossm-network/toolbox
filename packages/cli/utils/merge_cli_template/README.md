@@ -99,10 +99,10 @@ the next section.
 
 | Grant | To | On |
 | --- | --- | --- |
-| `roles/run.invoker` | `executer@<project>` | the procedure's own service, unless it is a public gateway |
+| `roles/run.invoker` | the procedure's runtime identity | the procedure's own service, unless it is a public gateway |
 | `roles/run.invoker` | the procedure's runtime identity | each service it calls |
 | `roles/cloudtasks.enqueuer` | the runtime identity of a command or projection | the queue of each store, command or view store it calls, and a projection's own play queue |
-| `roles/iam.serviceAccountUser` | the same identity, when it holds a queue grant | `executer@<project>`, whose identity its tasks carry |
+| `roles/iam.serviceAccountUser` | the same identity, when it holds a queue grant | itself, since its tasks carry its own identity |
 | the role for each declared key use | the procedure's runtime identity | that Cloud KMS key |
 
 The services a procedure calls are read from its `blossm.yaml`: a gateway's
@@ -178,8 +178,8 @@ earlier revision of the service was given.
 | runtime | `roles/cloudkms.publicKeyViewer` | key `producer` in the same ring | all |
 | runtime | `roles/pubsub.publisher` | each topic `<action>.<domain>.<service>` | all |
 | runtime | `roles/cloudtasks.enqueuer` | queue `event-store-<service>-<domain>-create-block` | all |
-| runtime | `roles/iam.serviceAccountUser` | service account `executer@<project>` | all |
-| `executer@<project>` | `roles/run.invoker` | the store's Cloud Run service | all |
+| runtime | `roles/iam.serviceAccountUser` | the runtime service account itself | all |
+| runtime | `roles/run.invoker` | the store's Cloud Run service | all |
 
 Only event stores receive these grants and these keys. The builds of other
 procedure kinds are not affected by `isPublic`.
@@ -207,7 +207,7 @@ for both.
 
 `isPublic` does not make the Cloud Run service public. Every store is deployed
 with `--no-allow-unauthenticated --invoker-iam-check` and the configured
-ingress, and the only invoker the build adds is `executer@<project>`.
+ingress, and the only invoker the build adds is the store's own runtime identity.
 
 Only the command, fact and view gateways are public. They are deployed with
 `--no-invoker-iam-check` and ingress `all`: Cloud Run skips the invoker check
@@ -244,23 +244,33 @@ through predefined or custom roles of the operator's choice:
 | KMS key grants | `cloudkms.cryptoKeys.getIamPolicy`, `cloudkms.cryptoKeys.setIamPolicy` |
 | Topic grants | `pubsub.topics.getIamPolicy`, `pubsub.topics.setIamPolicy` |
 | Queue grant | `cloudtasks.queues.getIamPolicy`, `cloudtasks.queues.setIamPolicy` |
-| `executer` grant | `iam.serviceAccounts.getIamPolicy`, `iam.serviceAccounts.setIamPolicy` on `executer@<project>` |
+| Runtime self grant | `iam.serviceAccounts.getIamPolicy`, `iam.serviceAccounts.setIamPolicy` on the runtime identity |
 | Service invoker grant | `run.services.getIamPolicy`, `run.services.setIamPolicy` |
-| Deploying as the runtime | `iam.serviceAccounts.actAs` on the runtime identity |
-| Scheduler jobs that call as `executer` | `iam.serviceAccounts.actAs` on `executer@<project>` |
+| Deploying as the runtime, and Scheduler jobs that call as it | `iam.serviceAccounts.actAs` on the runtime identity |
 
 Predefined roles that hold the policy permissions are `roles/cloudkms.admin`,
 `roles/pubsub.admin`, `roles/cloudtasks.admin`, `roles/run.admin` and
-`roles/iam.serviceAccountAdmin` on `executer@<project>`.
+`roles/iam.serviceAccountAdmin` on the runtime identity.
 `roles/iam.serviceAccountUser` holds `iam.serviceAccounts.actAs`, and the build
-identity needs it on both the runtime identity and `executer@<project>`: the
-build creates and updates both Scheduler jobs with `executer` as their OIDC
-account. The runtime's own `roles/iam.serviceAccountUser` grant on `executer`
-in the table above covers the tasks the store enqueues, not the build. These
-are in addition
-to what the build already needs to create keys, topics, queues, Scheduler jobs
-and the service. The `executer@<project>` account must exist, and the Cloud
-Tasks and Cloud Scheduler service agents must be able to mint its OIDC tokens.
+identity needs it on the runtime identity: the build deploys the service as
+that account and creates both Scheduler jobs with it as their OIDC account.
+The runtime's own `roles/iam.serviceAccountUser` grant on itself in the table
+above covers the tasks the store enqueues, not the build. These are in
+addition to what the build already needs to create keys, topics, queues,
+Scheduler jobs and the service. The Cloud Tasks and Cloud Scheduler service
+agents must be able to mint the runtime identity's OIDC tokens.
+
+### One identity per service, none shared
+
+A task or a Scheduler job is delivered as the service that queued or owns it.
+No account is shared between services, so a service's invoker list names
+exactly the services that may reach it, whether they call it directly or
+through a queue. Earlier versions delivered every task as
+`executer@<project>`. That account is no longer used, and its bindings can be
+removed once every service has been redeployed.
+
+The running service reads its own identity from `GCP_SERVICE_ACCOUNT`, which
+the deploy step sets.
 
 The build does not grant, and the operator provisions separately:
 

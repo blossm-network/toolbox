@@ -15,6 +15,7 @@ import createKeyRing from "./steps/create_key_ring.js";
 import createSymmetricEncryptKey from "./steps/create_symmetric_encrypt_key.js";
 import createAsymmetricSignKey from "./steps/create_asymmetric_sign_key.js";
 import scheduleJob from "./steps/schedule_job.js";
+import runtimeIdentity from "./steps/runtime_identity.js";
 // import startDnsTransaction from "./steps/start_dns_transaction.js";
 // import addDnsTransaction from "./steps/add_dns_transaction.js";
 // import executeDnsTransaction from "./steps/execute_dns_transaction.js";
@@ -127,11 +128,8 @@ export default ({
   // default is named explicitly and the grants below always match the
   // revision. Builds are submitted to `project`, so Cloud Build substitutes
   // its number into the default compute account Cloud Run would use.
-  const runtime =
-    cloudRun?.serviceAccount ??
-    "${PROJECT_NUMBER}-compute@developer.gserviceaccount.com";
-  // Task and Scheduler requests arrive with this account's OIDC token.
-  const executer = `executer@${project}.iam.gserviceaccount.com`;
+  // Task and Scheduler requests arrive with this same account's OIDC token.
+  const runtime = runtimeIdentity(cloudRun);
   // Without a condition choice, gcloud will not add a binding non-interactively
   // to a policy that already holds a conditional one. KMS keys, service
   // accounts and Cloud Run services accept an explicit unconditional choice,
@@ -148,7 +146,7 @@ export default ({
     ],
   });
   // What the running store calls: KMS for blocks, its topics for publication,
-  // and its create-block queue to continue a full block as the executer.
+  // and its create-block queue to continue a full block as itself.
   // Callers that enqueue `add` on the store queue hold their own grants.
   const runtimeBindings = [
     ...(encrypts
@@ -169,7 +167,7 @@ export default ({
     },
     {
       group: ["iam", "service-accounts"],
-      name: executer,
+      name: runtime,
       flags: [unconditional],
       role: "roles/iam.serviceAccountUser",
     },
@@ -272,7 +270,7 @@ export default ({
             group: ["run", "services"],
             name: serviceName,
             flags: [`--region=${region}`, "--platform=managed", unconditional],
-            member: executer,
+            member: runtime,
             role: "roles/run.invoker",
             project,
           }),
@@ -287,6 +285,7 @@ export default ({
           //   region,
           // }),
           scheduleJob({
+            cloudRun,
             name: `event-store-${service}-${domain}-create-block`,
             schedule: blockSchedule,
             region,
@@ -296,6 +295,7 @@ export default ({
             project,
           }),
           scheduleJob({
+            cloudRun,
             name: `event-store-${service}-${domain}-check-in`,
             schedule: checkInSchedule,
             region,

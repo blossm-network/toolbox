@@ -494,9 +494,6 @@ Lets specific Blossm processes manipulate specific parts of your compute infrast
 
    **Narrower alternative: one identity per service.** Instead of sharing the default identity above, a procedure can name its own runtime identity under `runtimeServiceAccounts.<env>` in its `blossm.yaml`. `blossm deploy` then creates that identity if it is missing, using the deployer's own credentials, and the build grants it exactly the services, queues and declared keys the procedure uses. No per-service IAM commands are needed. The first deployment of a new identity needs a deployer who may create service accounts and set their policy. See [Access granted by each deployment](packages/cli/utils/merge_cli_template/README.md#access-granted-by-each-deployment).
    * In **IAM & Admin > Service Accounts**
-      * Create a service account named **“Executer”** with ID **executer@**. Give it roles:     
-        * **Cloud Run Invoker** - allows the tasks queue executer to invoke Blossm services.
-        <!-- * **Service Account User** - not quite sure why. TODO. -->
       * Create a service account named **“Cloud Run PubSub Invoker”** with ID **cloud-run-pubsub-invoker@**. Give it the roles:
         * **Cloud Run Invoker** - allows pubsub to invoke Blossm services.
 
