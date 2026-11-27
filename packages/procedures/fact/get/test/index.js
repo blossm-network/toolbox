@@ -103,10 +103,10 @@ describe("Fact get", () => {
       params: {
         root,
       },
+      headers: { "blossm-token": token },
       query: {
         context,
         claims,
-        token,
       },
     };
 
@@ -232,7 +232,7 @@ describe("Fact get", () => {
             contexts: [context],
             query: undefined,
           },
-        }
+        },
       );
       expect(e).to.equal(error);
     }

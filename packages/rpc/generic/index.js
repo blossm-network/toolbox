@@ -11,7 +11,16 @@ const formatResponse = (data) => {
   }
 };
 
-const common = ({ method, dataParam, region, operationNameComponents, id, data, raw, onDataFn }) => {
+const common = ({
+  method,
+  dataParam,
+  region,
+  operationNameComponents,
+  id,
+  data,
+  raw,
+  onDataFn,
+}) => {
   return {
     in: ({ context, network, host = process.env.HOST }) => {
       return {
@@ -33,74 +42,83 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
           if (internal) {
             const hash = deps.hash(...operationNameComponents);
 
-            const { token: _token, type: _type } = await deps.operationToken({
-              tokenFn: internalTokenFn,
-              operationNameComponents,
-              hash
-            }) || {};
+            const { token: _token, type: _type } =
+              (await deps.operationToken({
+                tokenFn: internalTokenFn,
+                operationNameComponents,
+                hash,
+              })) || {};
             token = _token;
             type = _type;
 
             url = deps.operationUrl({
-                protocol: process.env.NODE_ENV == "local" ? "http" : "https",
-                host: process.env.NODE_ENV == "local" ? `${hash}.${host}` : `${region}-${deps.operationShortName(operationNameComponents)}-${hash}-${process.env.GCP_COMPUTE_URL_ID}.${region}.run.app`,
-                ...(path && { path }),
-                ...(id && { id }),
-              });
+              protocol: process.env.NODE_ENV == "local" ? "http" : "https",
+              host:
+                process.env.NODE_ENV == "local"
+                  ? `${hash}.${host}`
+                  : `${region}-${deps.operationShortName(operationNameComponents)}-${hash}-${process.env.GCP_COMPUTE_URL_ID}.${region}.run.app`,
+              ...(path && { path }),
+              ...(id && { id }),
+            });
           } else {
             const { token: _token, type: _type } = await deps.networkToken({
-                  tokenFn: externalTokenFn,
-                  network,
-                });
+              tokenFn: externalTokenFn,
+              network,
+            });
 
             token = _token;
             type = _type;
-            
+
             url = deps.networkUrl({
-                host,
-                ...(path && { path }),
-                ...(id && { id }),
-              });
+              host,
+              ...(path && { path }),
+              ...(id && { id }),
+            });
           }
-            
+
+          // A query string ends up in request logs, so the caller's token
+          // never goes in one. It travels as a header instead.
+          const tokenInHeader =
+            internal && currentToken && dataParam == "query";
+
           const requestData = {
             ...(data && { ...data }),
             ...(internal && {
               ...(context && { context }),
               ...(claims && { claims }),
-              ...(currentToken && { token: currentToken }),
+              ...(currentToken && !tokenInHeader && { token: currentToken }),
             }),
           };
 
           const shouldEnqueue = enqueueFn && method != deps.get;
           const enqueued = shouldEnqueue && process.env.NODE_ENV != "local";
 
-          const response =
-            enqueued
-              ? await deps.enqueueOperation({
-                  enqueueFn,
-                  url,
-                  data: requestData,
-                  method:
-                    method == deps.post
-                      ? "post"
-                      : method == deps.put
+          const response = enqueued
+            ? await deps.enqueueOperation({
+                enqueueFn,
+                url,
+                data: requestData,
+                method:
+                  method == deps.post
+                    ? "post"
+                    : method == deps.put
                       ? "put"
                       : method == deps.del
-                      ? "del"
-                      : null,
-                })
-              : await method(url, {
-                  [dataParam]: requestData,
-                  ...(token && {
-                    headers: {
-                      authorization: `${type} ${token}`,
-                    },
-                  }),
-                  ...(onDataFn && { onDataFn }),
-                  ...(timeout !== undefined && { timeout }),
-                  ...(signal && { signal }),
-                });
+                        ? "del"
+                        : null,
+              })
+            : await method(url, {
+                [dataParam]: requestData,
+                ...((token || tokenInHeader) && {
+                  headers: {
+                    ...(token && { authorization: `${type} ${token}` }),
+                    ...(tokenInHeader && { "blossm-token": currentToken }),
+                  },
+                }),
+                ...(onDataFn && { onDataFn }),
+                ...(timeout !== undefined && { timeout }),
+                ...(signal && { signal }),
+              });
 
           if (response?.statusCode >= 300) {
             logger.info("response errored: ", {
@@ -124,7 +142,9 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
           if (!response) return;
 
           //If the enqueuing was skipped because of local env, dont return.
-          return !includeDelivery && shouldEnqueue && process.env.NODE_ENV == "local"
+          return !includeDelivery &&
+            shouldEnqueue &&
+            process.env.NODE_ENV == "local"
             ? {}
             : {
                 ...(response.body && {
@@ -142,7 +162,7 @@ const common = ({ method, dataParam, region, operationNameComponents, id, data, 
   };
 };
 
-export default ({region, operationNameComponents}) => ({
+export default ({ region, operationNameComponents }) => ({
   post: (data) =>
     common({
       method: deps.post,
@@ -152,7 +172,14 @@ export default ({region, operationNameComponents}) => ({
       data,
     }),
   put: (id, data) =>
-    common({ method: deps.put, dataParam: "body", region, operationNameComponents, id, data }),
+    common({
+      method: deps.put,
+      dataParam: "body",
+      region,
+      operationNameComponents,
+      id,
+      data,
+    }),
   del: (id, data) =>
     common({
       method: deps.del,
@@ -173,7 +200,11 @@ export default ({region, operationNameComponents}) => ({
       raw,
     });
   },
-  stream: (fn, { id, ...query } = {}, { raw, onResponseFn, signal, timeout } = {}) => {
+  stream: (
+    fn,
+    { id, ...query } = {},
+    { raw, onResponseFn, signal, timeout } = {},
+  ) => {
     return common({
       method: async (url, data) => {
         const decoder = raw ? null : deps.jsonDecoder();
@@ -188,7 +219,7 @@ export default ({region, operationNameComponents}) => ({
             ...(onResponseFn && { onResponseFn }),
             ...(signal && { signal }),
             ...(timeout !== undefined && { timeout }),
-          }
+          },
         );
         if (decoder) for (const value of decoder.end()) await fn(value);
         return response;

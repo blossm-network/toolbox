@@ -70,7 +70,7 @@ describe("Operation", () => {
     const operationShortNameFake = fake.returns(operationShortName);
     replace(deps, "operationShortName", operationShortNameFake);
 
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .post(data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims });
@@ -88,7 +88,7 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
-      hash
+      hash,
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "https",
@@ -113,7 +113,7 @@ describe("Operation", () => {
     replace(deps, "operationShortName", operationShortNameFake);
 
     const enqueueFn = "some-enqueue-fn";
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .post(data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims, enqueueFn });
@@ -131,7 +131,7 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
-      hash
+      hash,
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "https",
@@ -156,7 +156,7 @@ describe("Operation", () => {
     replace(deps, "operationShortName", operationShortNameFake);
 
     const enqueueFn = "some-enqueue-fn";
-    await operation({region, operationNameComponents})
+    await operation({ region, operationNameComponents })
       .put(id, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims, enqueueFn });
@@ -189,7 +189,7 @@ describe("Operation", () => {
     replace(deps, "operationShortName", operationShortNameFake);
 
     const enqueueFn = "some-enqueue-fn";
-    await operation({region, operationNameComponents})
+    await operation({ region, operationNameComponents })
       .del(id, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims, enqueueFn });
@@ -223,7 +223,7 @@ describe("Operation", () => {
 
     const enqueueFn = "some-enqueue-fn";
     process.env.NODE_ENV = "local";
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .post(data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, claims, enqueueFn });
@@ -242,7 +242,7 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
-      hash
+      hash,
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "http",
@@ -270,7 +270,7 @@ describe("Operation", () => {
     const envHost = "some-env-host";
     process.env.HOST = envHost;
 
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .post(data)
       .in({ context })
       .with({ internalTokenFn: tokenFn, claims });
@@ -278,7 +278,7 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
-      hash
+      hash,
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "https",
@@ -299,7 +299,7 @@ describe("Operation", () => {
     const otherHost = "some-other-host";
     const otherNetwork = "some-other-network";
 
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .post(data)
       .in({ context, network: otherNetwork, host: otherHost })
       .with({ externalTokenFn: tokenFn, claims });
@@ -329,7 +329,7 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .post(data)
       .in({ context, host })
       .with({ claims });
@@ -361,7 +361,7 @@ describe("Operation", () => {
     replace(deps, "operationShortName", operationShortNameFake);
 
     const path = "/some/path";
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .post(data)
       .in({ context, host })
       .with({ path, internalTokenFn: tokenFn, currentToken, claims });
@@ -380,7 +380,7 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
-      hash
+      hash,
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "https",
@@ -400,13 +400,13 @@ describe("Operation", () => {
     const operationUrlFake = fake.returns(url);
     replace(deps, "operationUrl", operationUrlFake);
 
-    const hashFake = fake.returns(hash);  
+    const hashFake = fake.returns(hash);
     replace(deps, "hash", hashFake);
 
     const operationShortNameFake = fake.returns(operationShortName);
     replace(deps, "operationShortName", operationShortNameFake);
 
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .get(data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -416,16 +416,16 @@ describe("Operation", () => {
         ...data,
         context,
         claims,
-        token: currentToken,
       },
       headers: {
         authorization: `${type} ${token}`,
+        "blossm-token": currentToken,
       },
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
-      hash
+      hash,
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "https",
@@ -450,7 +450,7 @@ describe("Operation", () => {
     replace(deps, "operationShortName", operationShortNameFake);
 
     const enqueueFnFake = fake.returns("whatever");
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .get(data)
       .in({ context, host })
       .with({
@@ -465,16 +465,16 @@ describe("Operation", () => {
         ...data,
         context,
         claims,
-        token: currentToken,
       },
       headers: {
         authorization: `${type} ${token}`,
+        "blossm-token": currentToken,
       },
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
-      hash
+      hash,
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "https",
@@ -502,7 +502,7 @@ describe("Operation", () => {
     const operationShortNameFake = fake.returns(operationShortName);
     replace(deps, "operationShortName", operationShortNameFake);
 
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .get(data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -512,17 +512,16 @@ describe("Operation", () => {
         ...data,
         context,
         claims,
-        token: currentToken,
       },
       headers: {
         authorization: `${type} ${token}`,
+        "blossm-token": currentToken,
       },
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
-      hash
-
+      hash,
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "https",
@@ -549,7 +548,7 @@ describe("Operation", () => {
     const operationShortNameFake = fake.returns(operationShortName);
     replace(deps, "operationShortName", operationShortNameFake);
 
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .get({ ...data, id })
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -559,16 +558,16 @@ describe("Operation", () => {
         ...data,
         context,
         claims,
-        token: currentToken,
       },
       headers: {
         authorization: `${type} ${token}`,
+        "blossm-token": currentToken,
       },
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
-      hash
+      hash,
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "https",
@@ -597,7 +596,7 @@ describe("Operation", () => {
     replace(deps, "operationShortName", operationShortNameFake);
 
     const fnFake = fake();
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .stream(fnFake, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -616,17 +615,17 @@ describe("Operation", () => {
           ...data,
           context,
           claims,
-          token: currentToken,
         },
         headers: {
           authorization: `${type} ${token}`,
+          "blossm-token": currentToken,
         },
-      }
+      },
     );
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
-      hash
+      hash,
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "https",
@@ -651,7 +650,7 @@ describe("Operation", () => {
     replace(deps, "operationShortName", operationShortNameFake);
 
     const fnFake = fake();
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .stream(fnFake, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -667,17 +666,17 @@ describe("Operation", () => {
           ...data,
           context,
           claims,
-          token: currentToken,
         },
         headers: {
           authorization: `${type} ${token}`,
+          "blossm-token": currentToken,
         },
-      }
+      },
     );
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
-      hash
+      hash,
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "https",
@@ -719,7 +718,7 @@ describe("Operation", () => {
     replace(deps, "operationShortName", operationShortNameFake);
 
     const fnFake = fake();
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .stream(fnFake, { ...data, id })
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -738,17 +737,17 @@ describe("Operation", () => {
           ...data,
           context,
           claims,
-          token: currentToken,
         },
         headers: {
           authorization: `${type} ${token}`,
+          "blossm-token": currentToken,
         },
-      }
+      },
     );
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
-      hash
+      hash,
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "https",
@@ -773,7 +772,7 @@ describe("Operation", () => {
     const operationShortNameFake = fake.returns(operationShortName);
     replace(deps, "operationShortName", operationShortNameFake);
 
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .put(id, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -793,7 +792,7 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
-      hash
+      hash,
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "https",
@@ -819,7 +818,7 @@ describe("Operation", () => {
     replace(deps, "operationShortName", operationShortNameFake);
 
     const path = "/some/path";
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .put(id, data)
       .in({ context, host })
       .with({ path, internalTokenFn: tokenFn, currentToken, claims });
@@ -838,7 +837,7 @@ describe("Operation", () => {
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
-      hash
+      hash,
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "https",
@@ -860,11 +859,11 @@ describe("Operation", () => {
 
     const hashFake = fake.returns(hash);
     replace(deps, "hash", hashFake);
-    
+
     const operationShortNameFake = fake.returns(operationShortName);
     replace(deps, "operationShortName", operationShortNameFake);
 
-    const result = await operation({region, operationNameComponents})
+    const result = await operation({ region, operationNameComponents })
       .del(id, data)
       .in({ context, host })
       .with({ internalTokenFn: tokenFn, currentToken, claims });
@@ -873,17 +872,17 @@ describe("Operation", () => {
       query: {
         ...data,
         context,
-        token: currentToken,
         claims,
       },
       headers: {
         authorization: `${type} ${token}`,
+        "blossm-token": currentToken,
       },
     });
     expect(operationTokenFake).to.have.been.calledWith({
       tokenFn,
       operationNameComponents,
-      hash
+      hash,
     });
     expect(operationUrlFake).to.have.been.calledWith({
       protocol: "https",
@@ -924,7 +923,7 @@ describe("Operation", () => {
 
     const network = "some-network";
     try {
-      await operation({region, operationNameComponents})
+      await operation({ region, operationNameComponents })
         .del(id)
         .in({ context, host, network })
         .with({ tokenFn, claims });
@@ -969,7 +968,7 @@ describe("Operation", () => {
 
     const network = "some-network";
     try {
-      await operation({region, operationNameComponents})
+      await operation({ region, operationNameComponents })
         .del(id)
         .in({ context, host, network })
         .with({ tokenFn, claims });
@@ -1007,7 +1006,7 @@ describe("Operation", () => {
     replace(deps, "operationShortName", operationShortNameFake);
 
     try {
-      await operation({region, operationNameComponents})
+      await operation({ region, operationNameComponents })
         .del(query)
         .in({ context, host })
         .with({ tokenFn, claims });
@@ -1025,14 +1024,27 @@ describe("RPC upstream error composition", () => {
 
   for (const parsed of [true, false]) {
     it(`preserves a ${parsed ? "parsed" : "text"} JSON conflict response`, async () => {
-      const body = { code: "Conflict", message: "Expected revision does not match." };
-      replace(deps, "post", fake.resolves({ statusCode: 409, body: parsed ? body : JSON.stringify(body) }));
+      const body = {
+        code: "Conflict",
+        message: "Expected revision does not match.",
+      };
+      replace(
+        deps,
+        "post",
+        fake.resolves({
+          statusCode: 409,
+          body: parsed ? body : JSON.stringify(body),
+        }),
+      );
       replace(deps, "operationToken", fake.resolves(null));
       const { construct } = await import("../../../errors/index.js");
       replace(deps, "constructError", construct);
       let error;
       try {
-        await operation({ region, operationNameComponents }).post({}).in({}).with();
+        await operation({ region, operationNameComponents })
+          .post({})
+          .in({})
+          .with();
       } catch (err) {
         error = err;
       }
@@ -1046,7 +1058,11 @@ describe("RPC upstream error composition", () => {
 describe("RPC stream framing", () => {
   afterEach(restore);
 
-  for (const value of [{ a: 1 }, { text: 'quotes " and braces } {, slash \\ and Unicode 🦋' }, { nested: [{ enabled: true }, { n: 2 }] }]) {
+  for (const value of [
+    { a: 1 },
+    { text: 'quotes " and braces } {, slash \\ and Unicode 🦋' },
+    { nested: [{ enabled: true }, { n: 2 }] },
+  ]) {
     it(`preserves every possible byte split of ${JSON.stringify(value)}`, async () => {
       const bytes = Buffer.from(JSON.stringify(value));
       replace(deps, "operationToken", fake.resolves(null));
@@ -1058,7 +1074,10 @@ describe("RPC stream framing", () => {
         };
         try {
           const output = [];
-          await operation({ region, operationNameComponents }).stream((record) => output.push(record), {}).in({}).with();
+          await operation({ region, operationNameComponents })
+            .stream((record) => output.push(record), {})
+            .in({})
+            .with();
           expect(output).to.deep.equal([value]);
         } finally {
           deps.stream = original;
@@ -1069,11 +1088,18 @@ describe("RPC stream framing", () => {
 
   it("rejects a stream that ends within a JSON record", async () => {
     replace(deps, "operationToken", fake.resolves(null));
-    replace(deps, "stream", async (_, fn) => { await fn(Buffer.from('{"partial":')); });
+    replace(deps, "stream", async (_, fn) => {
+      await fn(Buffer.from('{"partial":'));
+    });
     let error;
     try {
-      await operation({ region, operationNameComponents }).stream(() => undefined, {}).in({}).with();
-    } catch (err) { error = err; }
+      await operation({ region, operationNameComponents })
+        .stream(() => undefined, {})
+        .in({})
+        .with();
+    } catch (err) {
+      error = err;
+    }
     expect(error).to.be.instanceOf(SyntaxError);
   });
 });
@@ -1085,8 +1111,14 @@ describe("RPC query ownership", () => {
     replace(deps, "get", fake.resolves({ statusCode: 204 }));
     replace(deps, "stream", fake.resolves());
     const query = Object.freeze({ id: "root", active: true });
-    await operation({ region, operationNameComponents }).get(query).in({}).with();
-    await operation({ region, operationNameComponents }).stream(() => undefined, query).in({}).with();
+    await operation({ region, operationNameComponents })
+      .get(query)
+      .in({})
+      .with();
+    await operation({ region, operationNameComponents })
+      .stream(() => undefined, query)
+      .in({})
+      .with();
     expect(query).to.deep.equal({ id: "root", active: true });
   });
 });

@@ -67,7 +67,7 @@ describe("View store get", () => {
         },
         params: {},
       },
-      { send: () => {} }
+      { send: () => {} },
     );
     expect(received).to.include.keys("body.nullable");
     expect(received["body.number"]).to.deep.equal({ $in: [2, 3] });
@@ -98,7 +98,7 @@ describe("View store get", () => {
       try {
         await get({ findFn, countFn })(
           { query: { context, ...pagination }, params: {} },
-          { send: () => {} }
+          { send: () => {} },
         );
       } catch (caught) {
         error = caught;
@@ -119,7 +119,7 @@ describe("View store get", () => {
     ]) {
       await get({ findFn, countFn })(
         { query: { context, ...pagination }, params: {} },
-        { send: () => {} }
+        { send: () => {} },
       );
       expect(findFn.lastCall.args[0]).to.include({ limit, skip });
     }
@@ -181,7 +181,7 @@ describe("View store get", () => {
     };
     await get({ findFn: findFake, countFn: countFake, formatFn: formatFake })(
       req,
-      res
+      res,
     );
     expect(findFake).to.have.been.calledWith({
       limit: 50,
@@ -223,7 +223,7 @@ describe("View store get", () => {
         query,
         skip: 50,
         limit: 50,
-      }
+      },
     );
     for (let i = 0; i < results.length; i++) {
       expect(formatFake.getCall(i)).to.have.been.calledWith({
@@ -408,9 +408,9 @@ describe("View store get", () => {
           ...query,
           "some-other-query-key.a.b": "something",
         },
-        token,
         text,
       },
+      headers: { "blossm-token": token },
       params: {
         id,
       },
@@ -477,7 +477,7 @@ describe("View store get", () => {
         text,
         skip: 50,
         limit: 50,
-      }
+      },
     );
     for (let i = 0; i < results.length; i++) {
       expect(formatFake.getCall(i)).to.have.been.calledWith({
@@ -613,7 +613,7 @@ describe("View store get", () => {
     };
     await get({ findFn: findFake, countFn: countFake, formatFn: formatFake })(
       req,
-      res
+      res,
     );
     expect(findFake).to.have.been.calledWith({
       limit: 1,
@@ -647,7 +647,7 @@ describe("View store get", () => {
         query,
         skip: 2,
         limit: 1,
-      }
+      },
     );
     expect(formatFake.getCall(0)).to.have.been.calledWith({
       body: obj,
@@ -714,7 +714,7 @@ describe("View store get", () => {
     };
     await get({ findFn: findFake, countFn: countFake, formatFn: formatFake })(
       req,
-      res
+      res,
     );
     expect(findFake).to.have.been.calledWith({
       limit: 1,
@@ -802,7 +802,7 @@ describe("View store get", () => {
     };
     await get({ findFn: findFake, countFn: countFake, formatFn: formatFake })(
       req,
-      res
+      res,
     );
     expect(findFake).to.have.been.calledWith({
       limit: 50,
@@ -1162,7 +1162,7 @@ describe("View store get", () => {
       expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
-        "There isn't a context to bootstrap."
+        "There isn't a context to bootstrap.",
       );
       expect(e).to.equal(error);
     }
@@ -1199,7 +1199,7 @@ describe("View store get", () => {
       expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
-        "There isn't a context to bootstrap."
+        "There isn't a context to bootstrap.",
       );
       expect(e).to.equal(error);
     }
@@ -1239,7 +1239,7 @@ describe("View store get", () => {
           info: {
             context: {},
           },
-        }
+        },
       );
       expect(e).to.equal(error);
     }
@@ -1271,7 +1271,7 @@ describe("View store get", () => {
       expect(2).to.equal(1);
     } catch (e) {
       expect(messageFake).to.have.been.calledWith(
-        "This request is missing a context."
+        "This request is missing a context.",
       );
       expect(e).to.equal(error);
     }
