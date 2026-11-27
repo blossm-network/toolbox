@@ -90,21 +90,45 @@ describe("Generated build steps", () => {
           region: "us-central1",
           serviceName: "gateway",
         });
-        const dns = steps.filter((step) => step.step === "ensureDnsRecord");
-        const mapping = steps.filter((step) => step.step === "mapDomain");
-        assert.strictEqual(dns.length, strict ? 1 : 0, procedure);
-        assert.strictEqual(mapping.length, strict ? 1 : 0, procedure);
+        // Each gateway hands its hostname to the one shared exposure step.
+        const exposed = steps.filter((step) => step.step === "expose");
+        assert.strictEqual(exposed.length, strict ? 1 : 0, procedure);
         assert(
-          !steps.some((step) => /DnsTransaction/.test(step.step)),
+          !steps.some((step) =>
+            /DnsTransaction|mapDomain|DnsRecord/.test(step.step),
+          ),
           procedure,
         );
         if (strict) {
-          assert.strictEqual(dns[0].options.uri, mapping[0].options.uri);
-          assert.strictEqual(dns[0].options.project, "target");
-          assert.strictEqual(mapping[0].options.serviceName, "gateway");
+          assert.match(exposed[0].options.uri, /\.staging\.example\.com$/);
+          assert.strictEqual(exposed[0].options.dnsZone, "zone");
+          assert.strictEqual(exposed[0].options.project, "target");
+          assert.strictEqual(exposed[0].options.region, "us-central1");
+          assert.strictEqual(exposed[0].options.serviceName, "gateway");
         }
       }
     }
+  });
+
+  it("exposes a gateway with one DNS record and one mapping for the same hostname", async () => {
+    const step = (name) => (options) => ({ step: name, options });
+    const expose = await load(`${buildDir}/steps/expose.js`, {
+      ensureDnsRecord: step("ensureDnsRecord"),
+      mapDomain: step("mapDomain"),
+    });
+    const [dns, mapping, ...rest] = expose({
+      uri: "c.bird.example.com",
+      dnsZone: "zone",
+      project: "target",
+      region: "us-central1",
+      serviceName: "gateway",
+    });
+    assert.strictEqual(rest.length, 0);
+    assert.strictEqual(dns.step, "ensureDnsRecord");
+    assert.strictEqual(mapping.step, "mapDomain");
+    assert.strictEqual(dns.options.uri, mapping.options.uri);
+    assert.strictEqual(dns.options.project, "target");
+    assert.strictEqual(mapping.options.serviceName, "gateway");
   });
 
   it("rejects existing resources whose selected target differs", async () => {
