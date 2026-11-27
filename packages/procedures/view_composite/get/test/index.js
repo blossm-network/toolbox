@@ -74,8 +74,8 @@ describe("Composite get", () => {
         query,
         context,
         claims,
-        token,
       },
+      headers: { "blossm-token": token },
     };
 
     const sendFake = fake();

@@ -36,7 +36,7 @@ export default ({
               process.env.NODE_ENV == "local"
                 ? `${hash}.${host}`
                 : `${region}-${deps.operationShortName(
-                    operationNameComponents
+                    operationNameComponents,
                   )}-${hash}-${
                     process.env.GCP_COMPUTE_URL_ID
                   }.${region}.run.app`,
@@ -61,11 +61,16 @@ export default ({
             ...(internal && {
               ...(context && { context }),
               ...(claims && { claims }),
-              ...(currentToken && { token: currentToken }),
             }),
           },
-          ...(identity?.token && {
-            headers: { authorization: `${identity.type} ${identity.token}` },
+          // The caller's token goes in a header: a query string ends up in logs.
+          ...((identity?.token || (internal && currentToken)) && {
+            headers: {
+              ...(identity?.token && {
+                authorization: `${identity.type} ${identity.token}`,
+              }),
+              ...(internal && currentToken && { "blossm-token": currentToken }),
+            },
           }),
         });
       }

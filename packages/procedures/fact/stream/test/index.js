@@ -98,6 +98,7 @@ describe("Fact stream", () => {
     const root = "some-root";
     const parallel = "some-parallel";
     const req = {
+      headers: { "blossm-token": token },
       params: {
         root,
       },
@@ -105,7 +106,6 @@ describe("Fact stream", () => {
         query,
         context,
         claims,
-        token,
         parallel,
       },
     };

@@ -47,11 +47,14 @@ describe("Merged stream RPC", () => {
     const target = streamMany.firstCall.args[0][0];
     assert.match(target.url, /\/stream\/root$/);
     assert.doesNotMatch(target.url, /object Object/);
-    assert.deepEqual(target.headers, { authorization: "Bearer fake-identity" });
+    // The caller's token is a header, never part of the URL.
+    assert.deepEqual(target.headers, {
+      authorization: "Bearer fake-identity",
+      "blossm-token": "fake-current",
+    });
     assert.deepEqual(target.query, {
       active: true,
       context: { principal: "p" },
-      token: "fake-current",
       claims: { role: "reader" },
     });
     assert.deepEqual(query, { id: "root", active: true });
@@ -108,7 +111,7 @@ describe("Merged stream RPC", () => {
             for (const part of values) controller.enqueue(Buffer.from(part));
             controller.close();
           },
-        })
+        }),
       );
     });
     const output = [];
@@ -130,7 +133,7 @@ describe("Merged stream RPC", () => {
     replace(
       requestDeps,
       "fetch",
-      async () => new Response('{"message":"busy"}', { status: 503 })
+      async () => new Response('{"message":"busy"}', { status: 503 }),
     );
     await assert.rejects(
       stream({
@@ -141,7 +144,7 @@ describe("Merged stream RPC", () => {
       })
         .in({})
         .with(),
-      (error) => error.statusCode === 503 && error.message === "busy"
+      (error) => error.statusCode === 503 && error.message === "busy",
     );
   });
 });
