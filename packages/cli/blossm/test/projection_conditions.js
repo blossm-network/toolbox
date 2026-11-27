@@ -23,7 +23,6 @@ const fixture = async ({ handler, response = { body: {} }, aggregateFn }) => {
     command: () => ({
       set: () => ({ issue: async (args) => notifications.push(args) }),
     }),
-    channelName: () => "channel",
     logger: { error: () => {} },
     gcpToken: () => {},
     gcpSecret: { get: () => {} },

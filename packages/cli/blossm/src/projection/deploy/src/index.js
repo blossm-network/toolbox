@@ -50,7 +50,9 @@ const pushToChannel = async ({
         name: process.env.NAME,
         ...(context && { context }),
         ...(principal && { principal }),
-        ...(key && { key }),
+        // A key is a value out of a view's body, and reaches the channel's
+        // name as the text a subscriber puts in a query.
+        ...(key && { key: String(key) }),
       });
   } catch (err) {
     logger.error("Failed to push updates.", { err });

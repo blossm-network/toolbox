@@ -7,7 +7,24 @@ export default (req, res) => {
   )
     throw deps.forbiddenError.message("Missing required permissions.");
 
-  const channel = deps.channelName({
+  const channel = name(req);
+  res.status(200).send(channel);
+};
+
+// The name and key come from the caller. One that can't be part of a channel
+// name is the caller's mistake, not a failure here.
+const name = (req) => {
+  try {
+    return build(req);
+  } catch (error) {
+    if (error instanceof TypeError)
+      throw deps.badRequestError.message("This channel isn't valid.");
+    throw error;
+  }
+};
+
+const build = (req) =>
+  deps.channelName({
     name: req.query.name,
     // This gateway serves the view, so its network owns the channel.
     network: process.env.NETWORK,
@@ -32,5 +49,3 @@ export default (req, res) => {
         },
       }),
   });
-  res.status(200).send(channel);
-};

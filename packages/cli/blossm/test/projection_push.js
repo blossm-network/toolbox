@@ -23,7 +23,6 @@ const fixture = async ({ handler, response = { body: {} } }) => {
     command: () => ({
       set: () => ({ issue: async (args) => notifications.push(args) }),
     }),
-    channelName: () => "channel",
     logger: { error: () => {} },
     gcpToken: () => {},
     nodeExternalToken: () => {},
@@ -76,7 +75,14 @@ describe("Generated projection helper semantics", () => {
         ),
       },
     });
+    process.env.NAME = "sessions";
     await test.run(true);
     assert.deepStrictEqual(test.notifications[0].trace, trace);
+    // The projection names the view and its context, never a channel: the
+    // updates service builds that from the network it knows the caller by.
+    const [pushed] = test.notifications;
+    assert.strictEqual(pushed.name, "sessions");
+    assert.deepStrictEqual(pushed.context, { root: "context" });
+    assert(!("channel" in pushed));
   });
 });
